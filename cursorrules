@@ -1,0 +1,43 @@
+# NTC Site — Cursor Rules
+
+## Project context
+This is the portfolio/landing site for New Terrain Creative (NTC), a video production company run by filmmaker Jadon Cal Fitzpatrick. The aesthetic is cinematic editorial: dark, minimal, precise. Every design decision should feel intentional and film-adjacent, not SaaS or agency-generic.
+
+## Design rules — never break these
+- Background is always `#0A0A0A`. Do not use pure black or off-blacks that diverge from this.
+- Accent color is `#C8A96E` (muted gold). Do not substitute with yellow, orange, or bright gold.
+- Display headlines use Cormorant Garamond weight 300. The italic form is used for the second/key word in stacked headlines.
+- Body and UI text uses Inter weight 300/400/500 only.
+- No navigation bar. The header is wordmark left + single CTA right, fixed, transparent until scroll.
+- Section dividers are `1px solid #1e1e1e` borders only — no decorative elements, gradients, or shadows between sections.
+- Hover states on work cards: scale the background image to 1.04, reveal corner action button, slide up meta text. Keep transitions at 0.4–0.8s cubic-bezier.
+- Do not add drop shadows, box shadows, or glows anywhere on the page.
+- Buttons are either: gold fill (`background: #C8A96E; color: #0A0A0A`) or bare text with a 1px underline. Nothing else.
+
+## Code conventions
+- All CSS custom properties are defined in `:root` on the `index.html` — reference them, don't hardcode hex values.
+- Class naming follows BEM-lite: `.section-name`, `.section-name__element`, `.modifier`. Examples: `.work-item`, `.work-meta`, `.work-action`.
+- JS is vanilla, no frameworks in the static version. IntersectionObserver for scroll reveal — do not replace with GSAP or ScrollTrigger unless migrating to Next.js.
+- Animations: load-in animations are CSS keyframes with `animation-delay`. Scroll-triggered reveals use the `.reveal` / `.reveal.visible` class toggle pattern already in place.
+- Do not add `!important` except in the mobile override for `.work-item:nth-child(n)` grid column (already present).
+
+## Asset handling
+- Images go in `/assets/images/` — JPG for stills, WebP preferred if optimizing
+- Video loops go in `/assets/video/` — MP4 only, silent, max 8 seconds, max 3MB
+- Portrait photo goes in `/assets/images/jadon-portrait.jpg`
+
+## What NOT to do
+- Do not add a hamburger menu or mobile nav drawer
+- Do not add a loading screen or preloader
+- Do not add scroll-jacking or parallax effects
+- Do not add any analytics, cookie banners, or tracking scripts without explicit instruction
+- Do not add social media icon links in the footer or header
+- Do not pitch any service categories in copy — no "social media management", no "content strategy", no "CRM"
+- Do not change "Our Own Podcast" label on the Off Script card to anything else
+- Do not add Cannes to the festival credentials
+- Do not list "Sony FX3", "DaVinci Resolve", or "Adobe Premiere" anywhere on the page
+
+## Deployment
+- Target: Vercel static
+- No build step required for the current `index.html` version
+- If migrating to Next.js: `npx create-next-app@latest ntc-site --js --tailwind --no-app-router`

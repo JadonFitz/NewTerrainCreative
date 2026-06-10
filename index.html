@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Terrain Creative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --surface: #141414;
+    --card: #1C1C1C;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .wordmark {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+    opacity: 0;
+    animation: fadeIn 1s 2.8s forwards;
+  }
+
+  .header-contact {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    opacity: 0;
+    animation: fadeIn 1s 3s forwards;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+    padding-bottom: 2px;
+  }
+  .header-contact:hover { border-color: var(--gold); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-rule {
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 48px;
+    animation: expandRule 1.2s 0.3s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+
+  .hero-headline {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--parchment);
+  }
+
+  .hero-headline .word {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-headline .word span {
+    display: block;
+    transform: translateY(110%);
+    animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+
+  .hero-headline .word:nth-child(1) span { animation-delay: 0.4s; }
+  .hero-headline .word:nth-child(2) span { animation-delay: 0.65s; color: var(--gold); font-style: italic; }
+  .hero-headline .word:nth-child(3) span { animation-delay: 0.9s; }
+
+  .hero-sub {
+    margin-top: 56px;
+    display: flex;
+    align-items: flex-start;
+    gap: 64px;
+    opacity: 0;
+    animation: fadeIn 1s 1.8s forwards;
+  }
+
+  .hero-desc {
+    max-width: 380px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #A09890;
+    font-weight: 300;
+  }
+
+  .hero-credits {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .credit-item {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .credit-item strong {
+    color: var(--parchment);
+    font-weight: 400;
+  }
+
+  .scroll-signal {
+    position: absolute;
+    bottom: 40px;
+    left: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeIn 1s 2.5s forwards;
+  }
+
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gold);
+    animation: scanLine 2s 3s ease-in-out infinite;
+  }
+
+  .scroll-text {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── SECTION SHARED ── */
+  section {
+    padding: 120px 48px;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .section-eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+  }
+
+  /* ── WORK GRID ── */
+  #work {
+    padding: 80px 48px 120px;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px;
+    margin-top: 64px;
+  }
+
+  .work-item {
+    position: relative;
+    overflow: hidden;
+    background: var(--card);
+    cursor: pointer;
+  }
+
+  .work-item::before {
+    content: '';
+    display: block;
+  }
+
+  /* Layout: row 1 */
+  .work-item:nth-child(1) { grid-column: span 7; }
+  .work-item:nth-child(1)::before { padding-top: 56.25%; }
+  .work-item:nth-child(2) { grid-column: span 5; }
+  .work-item:nth-child(2)::before { padding-top: 56.25%; }
+
+  /* Layout: row 2 */
+  .work-item:nth-child(3) { grid-column: span 5; }
+  .work-item:nth-child(3)::before { padding-top: 70%; }
+  .work-item:nth-child(4) { grid-column: span 7; }
+  .work-item:nth-child(4)::before { padding-top: 70%; }
+
+  /* Layout: row 3 */
+  .work-item:nth-child(5) { grid-column: span 4; }
+  .work-item:nth-child(5)::before { padding-top: 75%; }
+  .work-item:nth-child(6) { grid-column: span 4; }
+  .work-item:nth-child(6)::before { padding-top: 75%; }
+  .work-item:nth-child(7) { grid-column: span 4; }
+  .work-item:nth-child(7)::before { padding-top: 75%; }
+
+  .work-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .work-item:hover .work-bg {
+    transform: scale(1.04);
+  }
+
+  .work-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  }
+
+  .work-meta {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 24px;
+    transform: translateY(8px);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .work-item:hover .work-meta {
+    transform: translateY(0);
+  }
+
+  .work-type {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .work-title {
+    font-family: var(--display);
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.2;
+  }
+
+  .work-detail {
+    font-size: 11px;
+    color: #8a8480;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transition: opacity 0.4s 0.05s;
+  }
+
+  .work-item:hover .work-detail { opacity: 1; }
+
+  /* Corner action link */
+  .work-action {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(245,240,232,0.15);
+    padding: 7px 12px;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.3s, transform 0.3s, background 0.3s, color 0.3s;
+  }
+
+  .work-action:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+
+  .work-item:hover .work-action {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Placeholder backgrounds */
+  .bg-offrip   { background: linear-gradient(135deg, #1a2a3a 0%, #0d1821 100%); }
+  .bg-botnot   { background: linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%); }
+  .bg-aldertal { background: linear-gradient(135deg, #1e1a14 0%, #0f0d09 100%); }
+  .bg-gina     { background: linear-gradient(135deg, #1a1014 0%, #0d080a 100%); }
+  .bg-robbie   { background: linear-gradient(135deg, #1a2218 0%, #0d110c 100%); }
+  .bg-offscript{ background: linear-gradient(135deg, #10181e 0%, #080d10 100%); }
+  .bg-aldersoc { background: linear-gradient(135deg, #1e1a10 0%, #100e06 100%); }
+
+  .bg-offrip::after    { content: 'OFF RIP'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: clamp(36px,5vw,72px); font-weight: 300; letter-spacing: 0.15em; color: rgba(200,169,110,0.12); pointer-events: none; }
+  .bg-botnot::after    { content: 'BOT OR NOT'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: clamp(24px,3.5vw,52px); font-weight: 300; letter-spacing: 0.12em; color: rgba(200,169,110,0.1); pointer-events: none; }
+  .bg-aldertal::after  { content: 'ALDERTALK'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: clamp(24px,3vw,48px); font-weight: 300; letter-spacing: 0.15em; color: rgba(200,169,110,0.1); pointer-events: none; }
+  .bg-robbie::after    { content: 'ROBBIE'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: clamp(24px,3.5vw,54px); font-weight: 300; letter-spacing: 0.1em; color: rgba(200,169,110,0.1); pointer-events: none; }
+
+  /* ── SOCIAL PROOF STRIP ── */
+  #social-proof {
+    border-top: 1px solid #1e1e1e;
+    border-bottom: 1px solid #1e1e1e;
+    padding: 64px 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: #1e1e1e;
+  }
+
+  .proof-stat {
+    background: var(--black);
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .proof-number {
+    font-family: var(--display);
+    font-size: clamp(40px, 4vw, 64px);
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .proof-number span {
+    color: var(--gold);
+  }
+
+  .proof-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .proof-context {
+    font-size: 11px;
+    color: #504c48;
+    margin-top: 4px;
+  }
+
+  /* ── DISCIPLINES ── */
+  #disciplines {
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .disciplines-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 80px;
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .disc-item {
+    padding: 48px 0;
+    border-bottom: 1px solid #1e1e1e;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+    transition: background 0.3s;
+    padding-right: 40px;
+  }
+
+  .disc-item:nth-child(even) {
+    padding-left: 40px;
+    padding-right: 0;
+    border-left: 1px solid #1e1e1e;
+  }
+
+  .disc-item:hover { background: rgba(200,169,110,0.03); }
+
+  .disc-name {
+    font-family: var(--display);
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--parchment);
+  }
+
+  .disc-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+    padding-top: 6px;
+  }
+
+  .disc-tag {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+    opacity: 0.7;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    border-top: 1px solid #1e1e1e;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-pull {
+    font-family: var(--display);
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.25;
+    color: var(--parchment);
+    margin-bottom: 40px;
+  }
+
+  .about-pull em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .about-body {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #A09890;
+    margin-bottom: 24px;
+  }
+
+  .about-right { position: relative; }
+
+  .about-frame {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-frame-inner {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #1e1a14 0%, #0d0b08 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-frame-text {
+    font-family: var(--display);
+    font-size: 80px;
+    font-weight: 300;
+    color: rgba(200,169,110,0.08);
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .about-frame-rule {
+    position: absolute;
+    top: 32px; right: -1px;
+    width: 1px;
+    height: 80px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .about-credits-list {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .acl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .acl-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .acl-text {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: #A09890;
+    line-height: 1.6;
+  }
+
+  .acl-text strong {
+    color: var(--parchment);
+    font-weight: 400;
+  }
+
+  .acl-role {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  /* ── APPROACH ── */
+  #approach {
+    border-top: 1px solid #1e1e1e;
+    text-align: center;
+  }
+
+  .approach-title {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(48px, 8vw, 110px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 80px;
+    color: var(--parchment);
+  }
+
+  .approach-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .approach-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #1e1e1e;
+    text-align: left;
+  }
+
+  .approach-col {
+    background: var(--black);
+    padding: 48px 40px;
+  }
+
+  .approach-num {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .approach-col-title {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--parchment);
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+
+  .approach-col-body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    border-top: 1px solid #1e1e1e;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 48px;
+  }
+
+  .contact-pre {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+
+  .contact-title {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(48px, 8vw, 100px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 48px;
+  }
+
+  .contact-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    margin-bottom: 64px;
+  }
+
+  .contact-link {
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(245,240,232,0.2);
+    padding-bottom: 3px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .contact-link:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .contact-link.primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 16px 40px;
+    border: none;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    font-size: 11px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .contact-link.primary:hover {
+    background: var(--parchment);
+    color: var(--black);
+  }
+
+  .contact-location {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid #1e1e1e;
+    padding: 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-mark {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .footer-right {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes expandRule { from { width: 0; } to { width: 80px; } }
+  @keyframes slideUp { from { transform: translateY(110%); } to { transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scanLine {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    header { padding: 24px; }
+    #hero { padding: 100px 24px 80px; }
+    .hero-sub { flex-direction: column; gap: 32px; }
+    section { padding: 80px 24px; }
+    #work { padding: 60px 24px 80px; }
+    .work-grid { gap: 8px; }
+    .work-item:nth-child(n) { grid-column: span 12 !important; }
+    #social-proof { grid-template-columns: 1fr 1fr; padding: 48px 24px; gap: 1px; }
+    .proof-stat { padding: 28px 24px; }
+    .disciplines-grid { grid-template-columns: 1fr; }
+    .disc-item { grid-template-columns: 1fr; gap: 12px; padding-right: 0; }
+    .disc-item:nth-child(even) { padding-left: 0; border-left: none; }
+    #about { grid-template-columns: 1fr; gap: 48px; }
+    .about-right { order: -1; }
+    .approach-cols { grid-template-columns: 1fr; }
+    .contact-links { flex-direction: column; gap: 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .scroll-signal { left: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .hero-rule { width: 80px; }
+    .wordmark, .header-contact, .hero-sub, .scroll-signal { opacity: 1; }
+    .hero-headline .word span { transform: none; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="#hero" class="wordmark">New Terrain Creative</a>
+  <a href="#contact" class="header-contact">Let's Work</a>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-rule"></div>
+  <h1 class="hero-headline">
+    <div class="word"><span>Story.</span></div>
+    <div class="word"><span>Craft.</span></div>
+    <div class="word"><span>Innovation.</span></div>
+  </h1>
+  <div class="hero-sub">
+    <p class="hero-desc">Premium video production from an award-winning filmmaker who builds content the way films are built — with intention, visual discipline, and a story worth telling.</p>
+    <div class="hero-credits">
+      <div class="credit-item">Based in <strong>Los Angeles · Tampa</strong></div>
+      <div class="credit-item">Award-winning — <strong>Tribeca · Telluride · Gasparilla</strong></div>
+      <div class="credit-item">Direction by <strong>Jadon Cal Fitzpatrick</strong></div>
+    </div>
+  </div>
+  <div class="scroll-signal">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-eyebrow reveal">Selected Work</div>
+  <div class="work-grid">
+
+    <!-- Off Rip -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-offrip"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">Watch Trailer ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Feature Film · Sports Drama</div>
+        <div class="work-title">Off Rip</div>
+        <div class="work-detail">Grand Jury Award, Gasparilla · 9.3 IMDb · TVOD 2026</div>
+      </div>
+    </div>
+
+    <!-- Bot or Not -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-botnot"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">Watch Film ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Short Film · Sci-Fi Thriller</div>
+        <div class="work-title">Bot or Not</div>
+        <div class="work-detail">Lois Weber Best Sci-Fi · FilmQuest Official Selection</div>
+      </div>
+    </div>
+
+    <!-- AlderTalk -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-aldertal"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">Watch Doc ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Documentary</div>
+        <div class="work-title">AlderTalk Summit</div>
+        <div class="work-detail">Multi-camera · Full post production</div>
+      </div>
+    </div>
+
+    <!-- Gina Zapanta -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-gina"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">View Reel ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Social Content · Podcast · Brand</div>
+        <div class="work-title">Gina Zapanta</div>
+        <div class="work-detail">Ongoing retainer · EWG · Latina Fest</div>
+      </div>
+    </div>
+
+    <!-- Robbie Ain't Right -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-robbie"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">Watch Film ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Short Film · Performance</div>
+        <div class="work-title">Robbie Ain't Right No More</div>
+        <div class="work-detail">Tribeca · Telluride · Official Selections</div>
+      </div>
+    </div>
+
+    <!-- Off Script -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-offscript"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">Watch ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Our Own Podcast</div>
+        <div class="work-title">Off Script</div>
+        <div class="work-detail">Video podcast · Full production · End-to-end</div>
+      </div>
+    </div>
+
+    <!-- AlderTalk Social -->
+    <div class="work-item reveal">
+      <div class="work-bg bg-aldersoc"></div>
+      <div class="work-overlay"></div>
+      <a href="#" class="work-action">View Content ↗</a>
+      <div class="work-meta">
+        <div class="work-type">Social Growth · Short-Form</div>
+        <div class="work-title">AlderTalk Social</div>
+        <div class="work-detail">Reels · Shorts · Platform growth</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div id="social-proof">
+  <div class="proof-stat reveal">
+    <div class="proof-number">4<span>+</span></div>
+    <div class="proof-label">Festival Awards &amp; Selections</div>
+    <div class="proof-context">Tribeca · Telluride · Gasparilla · FilmQuest</div>
+  </div>
+  <div class="proof-stat reveal">
+    <div class="proof-number">9.3</div>
+    <div class="proof-label">IMDb Rating</div>
+    <div class="proof-context">Off Rip — feature debut</div>
+  </div>
+  <div class="proof-stat reveal">
+    <div class="proof-number">&#8593;<span>↑</span></div>
+    <div class="proof-label">Social Growth</div>
+    <div class="proof-context">Your numbers here — Gina + AlderTalk</div>
+  </div>
+  <div class="proof-stat reveal">
+    <div class="proof-number">3<span>+</span></div>
+    <div class="proof-label">Active Retainer Clients</div>
+    <div class="proof-context">Ongoing content partnerships</div>
+  </div>
+</div>
+
+<!-- DISCIPLINES -->
+<section id="disciplines">
+  <div class="section-eyebrow reveal">What We Make</div>
+  <div class="section-title reveal">Every format.<br>One visual language.</div>
+
+  <div class="disciplines-grid">
+
+    <div class="disc-item reveal">
+      <div>
+        <span class="disc-tag">Narrative</span>
+        <div class="disc-name">Documentary &amp; Film</div>
+      </div>
+      <div class="disc-desc">Long-form storytelling with cinematic craft. From feature films to branded documentaries — structure, visual language, and post-production handled start to finish.</div>
+    </div>
+
+    <div class="disc-item reveal">
+      <div>
+        <span class="disc-tag">Always On</span>
+        <div class="disc-name">Social &amp; Brand Content</div>
+      </div>
+      <div class="disc-desc">Consistent, scroll-stopping creative for platforms that demand both volume and vision. No filler. Shot and edited with the same eye that goes into features.</div>
+    </div>
+
+    <div class="disc-item reveal">
+      <div>
+        <span class="disc-tag">Audio · Video</span>
+        <div class="disc-name">Podcast Production</div>
+      </div>
+      <div class="disc-desc">Clean, professional podcast sets with full multi-camera capture, lighting, audio post, and delivery formatted for every distribution channel.</div>
+    </div>
+
+    <div class="disc-item reveal">
+      <div>
+        <span class="disc-tag">Events · Interviews</span>
+        <div class="disc-name">Field Production</div>
+      </div>
+      <div class="disc-desc">Multi-camera event coverage, interview-driven shoots, and b-roll acquisition. Adaptable, fast, and precise — whether it's a summit or a single subject.</div>
+    </div>
+
+    <div class="disc-item reveal">
+      <div>
+        <span class="disc-tag">In-House</span>
+        <div class="disc-name">Color &amp; Post</div>
+      </div>
+      <div class="disc-desc">Full post-production with in-house color grading, audio cleanup, and delivery across all platforms and aspect ratios. We own the look from first frame to last.</div>
+    </div>
+
+    <div class="disc-item reveal">
+      <div>
+        <span class="disc-tag">Motion · VFX</span>
+        <div class="disc-name">Motion &amp; Visual Effects</div>
+      </div>
+      <div class="disc-desc">After Effects compositing, motion graphics, and 3D integrated directly into production — not an add-on, but part of the creative toolkit from concept forward.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left">
+    <div class="section-eyebrow reveal">The Director</div>
+    <p class="about-pull reveal">"The best content<br>is made by people who <em>care</em><br>about the frame."</p>
+    <p class="about-body reveal">Jadon Cal Fitzpatrick is a filmmaker, director, and the founder of New Terrain Creative. His work has screened at Tribeca, Telluride, and Gasparilla — where his debut feature took home the Grand Jury Award. He builds NTC on that same foundation: cinematic intention, technical depth, and a story-first philosophy applied to every project, regardless of length or format.</p>
+    <p class="about-body reveal">NTC operates between Los Angeles and Tampa with a full production kit, in-house post, and a lean crew structure built for premium output without overhead bloat.</p>
+    <div class="about-credits-list reveal">
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>Grand Jury Award</strong> — Gasparilla Film Festival<span class="acl-role">Dir / Writer / Producer · Off Rip</span></span>
+      </div>
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>Tribeca &amp; Telluride</strong> — Official Selection<span class="acl-role">Actor · Robbie Ain't Right No More</span></span>
+      </div>
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>Lois Weber Best Sci-Fi · FilmQuest</strong><span class="acl-role">Dir / Writer / Producer · Bot or Not</span></span>
+      </div>
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>9.3 IMDb</strong> — Off Rip</span>
+      </div>
+    </div>
+  </div>
+  <div class="about-right reveal">
+    <div class="about-frame">
+      <div class="about-frame-inner">
+        <div class="about-frame-text">JCF</div>
+      </div>
+      <div class="about-frame-rule"></div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach">
+  <h2 class="approach-title reveal">Made like<br>a <em>film.</em></h2>
+  <div class="approach-cols">
+    <div class="approach-col reveal">
+      <span class="approach-num">I</span>
+      <div class="approach-col-title">Concept &amp; Story</div>
+      <p class="approach-col-body">Every project starts with what it's trying to say. We build story structure, interview frameworks, and creative approaches before a camera turns on — so the shoot has a reason for every shot.</p>
+    </div>
+    <div class="approach-col reveal">
+      <span class="approach-num">II</span>
+      <div class="approach-col-title">Production</div>
+      <p class="approach-col-body">Director-led field production with full ownership of camera, lighting, and audio. The eye behind the lens is the same one that built the story plan — no handoffs, no gaps in vision.</p>
+    </div>
+    <div class="approach-col reveal">
+      <span class="approach-num">III</span>
+      <div class="approach-col-title">Post &amp; Delivery</div>
+      <p class="approach-col-body">In-house editing, color grading, audio finishing, and multi-format delivery. The project isn't done until every deliverable looks like the vision we agreed on at the start.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="contact-pre reveal">New Terrain Creative</p>
+  <h2 class="contact-title reveal">Let's build<br>something <em>real.</em></h2>
+  <div class="contact-links reveal">
+    <a href="mailto:business@newterraincreative.com" class="contact-link primary">Start a Project</a>
+    <a href="mailto:business@newterraincreative.com" class="contact-link">business@newterraincreative.com</a>
+  </div>
+  <p class="contact-location reveal">Los Angeles, CA &nbsp;·&nbsp; Tampa, FL &nbsp;·&nbsp; Available worldwide</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-mark">New Terrain Creative © 2026</span>
+  <div class="footer-right">
+    <div>Jadon Cal Fitzpatrick · Director / Founder</div>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach((el) => {
+    const siblings = Array.from(el.parentElement?.children || []).filter(c => c.classList.contains('reveal'));
+    el.dataset.delay = siblings.indexOf(el) * 80;
+    observer.observe(el);
+  });
+
+  const header = document.querySelector('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) {
+      header.style.cssText = 'background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid #1e1e1e;';
+    } else {
+      header.style.cssText = '';
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>

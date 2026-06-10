@@ -1,0 +1,20 @@
+# Dependencies (for future Next.js migration)
+node_modules/
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+
+# Vercel
+.vercel/
