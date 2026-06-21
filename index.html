@@ -80,6 +80,37 @@
     overflow: hidden;
   }
 
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .hero-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(10,10,10,0.72) 0%,
+      rgba(10,10,10,0.45) 40%,
+      rgba(10,10,10,0.55) 70%,
+      rgba(10,10,10,0.78) 100%
+    );
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+  }
+
   .hero-rule {
     width: 0;
     height: 1px;
@@ -739,6 +770,84 @@
     text-align: right;
   }
 
+  /* ── VIDEO MODAL ── */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(10px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal-inner {
+    position: relative;
+    width: 90vw;
+    max-width: 1100px;
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .modal-backdrop.open .modal-inner {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-ratio {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #000;
+  }
+
+  .modal-ratio iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: none;
+    border: none;
+    color: var(--parchment);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 0;
+    font-family: var(--body);
+    font-weight: 400;
+  }
+
+  .modal-close:hover { opacity: 1; }
+
+  .modal-close::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: currentColor;
+  }
+
   /* ── ANIMATIONS ── */
   @keyframes expandRule { from { width: 0; } to { width: 80px; } }
   @keyframes slideUp { from { transform: translateY(110%); } to { transform: translateY(0); } }
@@ -798,23 +907,31 @@
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-rule"></div>
-  <h1 class="hero-headline">
-    <div class="word"><span>Story.</span></div>
-    <div class="word"><span>Craft.</span></div>
-    <div class="word"><span>Innovation.</span></div>
-  </h1>
-  <div class="hero-sub">
-    <p class="hero-desc">Premium video production from an award-winning filmmaker who builds content the way films are built — with intention, visual discipline, and a story worth telling.</p>
-    <div class="hero-credits">
-      <div class="credit-item">Based in <strong>Los Angeles · Tampa</strong></div>
-      <div class="credit-item">Award-winning — <strong>Tribeca · Telluride · Gasparilla</strong></div>
-      <div class="credit-item">Direction by <strong>Jadon Cal Fitzpatrick</strong></div>
+  <!-- Swap src below with your reel file, e.g. assets/hero-reel.mp4 -->
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="assets/hero-reel.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-rule"></div>
+    <h1 class="hero-headline">
+      <div class="word"><span>Story.</span></div>
+      <div class="word"><span>Craft.</span></div>
+      <div class="word"><span>Innovation.</span></div>
+    </h1>
+    <div class="hero-sub">
+      <p class="hero-desc">Premium video production from an award-winning filmmaker who builds content the way films are built — with intention, visual discipline, and a story worth telling.</p>
+      <div class="hero-credits">
+        <div class="credit-item">Based in <strong>Los Angeles · Tampa</strong></div>
+        <div class="credit-item">Award-winning — <strong>Tribeca · Telluride · Gasparilla</strong></div>
+        <div class="credit-item">Direction by <strong>Jadon Cal Fitzpatrick</strong></div>
+      </div>
     </div>
-  </div>
-  <div class="scroll-signal">
-    <div class="scroll-line"></div>
-    <span class="scroll-text">Scroll</span>
+    <div class="scroll-signal">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">Scroll</span>
+    </div>
   </div>
 </section>
 
@@ -827,7 +944,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-offrip"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">Watch Trailer ↗</a>
+      <button class="work-action" data-video="zgELvmeg0Yo">Watch Trailer ↗</button>
       <div class="work-meta">
         <div class="work-type">Feature Film · Sports Drama</div>
         <div class="work-title">Off Rip</div>
@@ -839,7 +956,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-botnot"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">Watch Film ↗</a>
+      <button class="work-action" data-video="KybQ0SDiDAk">Watch Film ↗</button>
       <div class="work-meta">
         <div class="work-type">Short Film · Sci-Fi Thriller</div>
         <div class="work-title">Bot or Not</div>
@@ -851,7 +968,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-aldertal"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">Watch Doc ↗</a>
+      <button class="work-action" data-video="O8G7Ou88mjM">Watch Doc ↗</button>
       <div class="work-meta">
         <div class="work-type">Documentary</div>
         <div class="work-title">AlderTalk Summit</div>
@@ -863,7 +980,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-gina"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">View Reel ↗</a>
+      <button class="work-action" data-video="PL1GAkTsr-x2Jp3CnnNkRSTZrbx8ooLF5t" data-is-list="true">View Reel ↗</button>
       <div class="work-meta">
         <div class="work-type">Social Content · Podcast · Brand</div>
         <div class="work-title">Gina Zapanta</div>
@@ -875,7 +992,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-robbie"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">Watch Film ↗</a>
+      <button class="work-action" data-video="2S4zX-l6UD4">Watch Film ↗</button>
       <div class="work-meta">
         <div class="work-type">Short Film · Performance</div>
         <div class="work-title">Robbie Ain't Right No More</div>
@@ -887,7 +1004,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-offscript"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">Watch ↗</a>
+      <button class="work-action" data-video="0KoAwn11OlE" data-list="PL-7hHxlDqSDA2qapzKaQl6hIdMZ4krd7t">Watch ↗</button>
       <div class="work-meta">
         <div class="work-type">Our Own Podcast</div>
         <div class="work-title">Off Script</div>
@@ -899,7 +1016,7 @@
     <div class="work-item reveal">
       <div class="work-bg bg-aldersoc"></div>
       <div class="work-overlay"></div>
-      <a href="#" class="work-action">View Content ↗</a>
+      <a href="https://www.youtube.com/@aldertalk" target="_blank" rel="noopener" class="work-action">View Channel ↗</a>
       <div class="work-meta">
         <div class="work-type">Social Growth · Short-Form</div>
         <div class="work-title">AlderTalk Social</div>
@@ -1061,6 +1178,16 @@
   <p class="contact-location reveal">Los Angeles, CA &nbsp;·&nbsp; Tampa, FL &nbsp;·&nbsp; Available worldwide</p>
 </section>
 
+<!-- VIDEO MODAL -->
+<div class="modal-backdrop" id="videoModal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="modal-inner">
+    <button class="modal-close" id="modalClose">Close</button>
+    <div class="modal-ratio">
+      <iframe id="modalFrame" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <span class="footer-mark">New Terrain Creative © 2026</span>
@@ -1086,6 +1213,44 @@
     el.dataset.delay = siblings.indexOf(el) * 80;
     observer.observe(el);
   });
+
+  // Video modal
+  const modal = document.getElementById('videoModal');
+  const frame = document.getElementById('modalFrame');
+
+  function openModal(src) {
+    frame.src = src;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    frame.src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-video]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.video;
+      const isList = btn.dataset.isList === 'true';
+      let src;
+      if (isList) {
+        src = `https://www.youtube.com/embed/videoseries?list=${id}&autoplay=1&rel=0`;
+      } else {
+        const params = new URLSearchParams({ autoplay: 1, rel: 0 });
+        if (btn.dataset.start) params.set('start', btn.dataset.start);
+        if (btn.dataset.list) params.set('list', btn.dataset.list);
+        src = `https://www.youtube.com/embed/${id}?${params}`;
+      }
+      openModal(src);
+    });
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
   const header = document.querySelector('header');
   window.addEventListener('scroll', () => {
