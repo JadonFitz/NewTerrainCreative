@@ -1020,7 +1020,7 @@
 
     <!-- Bot or Not -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/KybQ0SDiDAk/maxresdefault.jpg')"></div>
+      <div class="work-bg" data-yt="KybQ0SDiDAk"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="KybQ0SDiDAk">Watch Film ↗</button>
       <div class="work-meta">
@@ -1032,7 +1032,7 @@
 
     <!-- Robbie Ain't Right -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/2S4zX-l6UD4/maxresdefault.jpg')"></div>
+      <div class="work-bg" data-yt="2S4zX-l6UD4"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="2S4zX-l6UD4">Watch Film ↗</button>
       <div class="work-meta">
@@ -1044,7 +1044,7 @@
 
     <!-- AlderTalk Summit -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/O8G7Ou88mjM/maxresdefault.jpg')"></div>
+      <div class="work-bg" data-yt="O8G7Ou88mjM"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="O8G7Ou88mjM">Watch Doc ↗</button>
       <div class="work-meta">
@@ -1065,7 +1065,7 @@
 
     <!-- Gina Zapanta -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/hb43rVkEAZc/maxresdefault.jpg')"></div>
+      <div class="work-bg" data-yt="hb43rVkEAZc"></div>
       <div class="work-overlay"></div>
       <a href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener" class="work-ig">Instagram ↗</a>
       <button class="work-action" data-video="PL1GAkTsr-x2Jp3CnnNkRSTZrbx8ooLF5t" data-is-list="true">View Content ↗</button>
@@ -1078,7 +1078,7 @@
 
     <!-- AlderTalk Social -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/O8G7Ou88mjM/maxresdefault.jpg')"></div>
+      <div class="work-bg" data-yt="O8G7Ou88mjM"></div>
       <div class="work-overlay"></div>
       <a href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener" class="work-ig">Instagram ↗</a>
       <a href="https://www.youtube.com/@aldertalk" target="_blank" rel="noopener" class="work-action">View Channel ↗</a>
@@ -1091,7 +1091,7 @@
 
     <!-- Off Script -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/0KoAwn11OlE/maxresdefault.jpg')"></div>
+      <div class="work-bg" data-yt="0KoAwn11OlE"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="0KoAwn11OlE" data-list="PL-7hHxlDqSDA2qapzKaQl6hIdMZ4krd7t">Watch ↗</button>
       <div class="work-meta">
@@ -1290,6 +1290,15 @@
     const siblings = Array.from(el.parentElement?.children || []).filter(c => c.classList.contains('reveal'));
     el.dataset.delay = siblings.indexOf(el) * 80;
     observer.observe(el);
+  });
+
+  // YouTube thumbnail loader with maxres → hq fallback
+  document.querySelectorAll('.work-bg[data-yt]').forEach((el) => {
+    const id = el.dataset.yt;
+    const img = new Image();
+    img.onload = () => { el.style.backgroundImage = `url('https://img.youtube.com/vi/${id}/maxresdefault.jpg')`; };
+    img.onerror = () => { el.style.backgroundImage = `url('https://img.youtube.com/vi/${id}/hqdefault.jpg')`; };
+    img.src = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
   });
 
   // Video modal
