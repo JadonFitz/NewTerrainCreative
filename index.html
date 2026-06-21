@@ -254,11 +254,40 @@
     padding: 80px 48px 120px;
   }
 
+  .work-section-label {
+    margin-top: 96px;
+    margin-bottom: 0;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #1e1e1e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .work-section-label:first-child {
+    margin-top: 0;
+  }
+
+  .work-section-title {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(22px, 2.5vw, 32px);
+    letter-spacing: -0.01em;
+    color: var(--parchment);
+  }
+
+  .work-section-sub {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
   .work-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 12px;
-    margin-top: 64px;
+    margin-top: 12px;
   }
 
   .work-item {
@@ -273,25 +302,19 @@
     display: block;
   }
 
-  /* Layout: row 1 */
-  .work-item:nth-child(1) { grid-column: span 7; }
-  .work-item:nth-child(1)::before { padding-top: 56.25%; }
-  .work-item:nth-child(2) { grid-column: span 5; }
-  .work-item:nth-child(2)::before { padding-top: 56.25%; }
+  /* Cinematic layout */
+  .work-grid--cinematic .work-item:nth-child(1) { grid-column: span 7; }
+  .work-grid--cinematic .work-item:nth-child(1)::before { padding-top: 56.25%; }
+  .work-grid--cinematic .work-item:nth-child(2) { grid-column: span 5; }
+  .work-grid--cinematic .work-item:nth-child(2)::before { padding-top: 56.25%; }
+  .work-grid--cinematic .work-item:nth-child(3) { grid-column: span 5; }
+  .work-grid--cinematic .work-item:nth-child(3)::before { padding-top: 65%; }
+  .work-grid--cinematic .work-item:nth-child(4) { grid-column: span 7; }
+  .work-grid--cinematic .work-item:nth-child(4)::before { padding-top: 65%; }
 
-  /* Layout: row 2 */
-  .work-item:nth-child(3) { grid-column: span 5; }
-  .work-item:nth-child(3)::before { padding-top: 70%; }
-  .work-item:nth-child(4) { grid-column: span 7; }
-  .work-item:nth-child(4)::before { padding-top: 70%; }
-
-  /* Layout: row 3 */
-  .work-item:nth-child(5) { grid-column: span 4; }
-  .work-item:nth-child(5)::before { padding-top: 75%; }
-  .work-item:nth-child(6) { grid-column: span 4; }
-  .work-item:nth-child(6)::before { padding-top: 75%; }
-  .work-item:nth-child(7) { grid-column: span 4; }
-  .work-item:nth-child(7)::before { padding-top: 75%; }
+  /* Social layout */
+  .work-grid--social .work-item { grid-column: span 4; }
+  .work-grid--social .work-item::before { padding-top: 120%; }
 
   .work-bg {
     position: absolute;
@@ -378,6 +401,40 @@
   .work-item:hover .work-action {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .work-ig {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(245,240,232,0.15);
+    padding: 7px 12px;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.3s, transform 0.3s, background 0.3s, color 0.3s;
+  }
+
+  .work-ig:hover {
+    background: #E1306C;
+    border-color: #E1306C;
+    color: #fff;
+  }
+
+  .work-item:hover .work-ig {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Social card bottom strip */
+  .work-grid--social .work-meta {
+    padding: 24px 20px;
   }
 
   /* Placeholder backgrounds */
@@ -874,7 +931,10 @@
     section { padding: 80px 24px; }
     #work { padding: 60px 24px 80px; }
     .work-grid { gap: 8px; }
-    .work-item:nth-child(n) { grid-column: span 12 !important; }
+    .work-grid--cinematic .work-item,
+    .work-grid--social .work-item { grid-column: span 12 !important; }
+    .work-grid--social .work-item::before { padding-top: 75% !important; }
+    .work-section-label { flex-direction: column; align-items: flex-start; gap: 8px; }
     #social-proof { grid-template-columns: 1fr 1fr; padding: 48px 24px; gap: 1px; }
     .proof-stat { padding: 28px 24px; }
     .disciplines-grid { grid-template-columns: 1fr; }
@@ -937,8 +997,13 @@
 
 <!-- WORK -->
 <section id="work">
-  <div class="section-eyebrow reveal">Selected Work</div>
-  <div class="work-grid">
+
+  <!-- Cinematic Projects -->
+  <div class="work-section-label reveal">
+    <div class="work-section-title">Cinematic Projects</div>
+    <span class="work-section-sub">Film · Documentary · Campaign</span>
+  </div>
+  <div class="work-grid work-grid--cinematic">
 
     <!-- Off Rip -->
     <div class="work-item reveal">
@@ -964,30 +1029,6 @@
       </div>
     </div>
 
-    <!-- AlderTalk -->
-    <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/O8G7Ou88mjM/maxresdefault.jpg')"></div>
-      <div class="work-overlay"></div>
-      <button class="work-action" data-video="O8G7Ou88mjM">Watch Doc ↗</button>
-      <div class="work-meta">
-        <div class="work-type">Documentary</div>
-        <div class="work-title">AlderTalk Summit</div>
-        <div class="work-detail">Multi-camera · Full post production</div>
-      </div>
-    </div>
-
-    <!-- Gina Zapanta -->
-    <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/hb43rVkEAZc/maxresdefault.jpg')"></div>
-      <div class="work-overlay"></div>
-      <button class="work-action" data-video="PL1GAkTsr-x2Jp3CnnNkRSTZrbx8ooLF5t" data-is-list="true">View Reel ↗</button>
-      <div class="work-meta">
-        <div class="work-type">Social Content · Podcast · Brand</div>
-        <div class="work-title">Gina Zapanta</div>
-        <div class="work-detail">Ongoing retainer · EWG · Latina Fest</div>
-      </div>
-    </div>
-
     <!-- Robbie Ain't Right -->
     <div class="work-item reveal">
       <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/2S4zX-l6UD4/maxresdefault.jpg')"></div>
@@ -1000,15 +1041,37 @@
       </div>
     </div>
 
-    <!-- Off Script -->
+    <!-- AlderTalk Summit -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/0KoAwn11OlE/maxresdefault.jpg')"></div>
+      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/O8G7Ou88mjM/maxresdefault.jpg')"></div>
       <div class="work-overlay"></div>
-      <button class="work-action" data-video="0KoAwn11OlE" data-list="PL-7hHxlDqSDA2qapzKaQl6hIdMZ4krd7t">Watch ↗</button>
+      <button class="work-action" data-video="O8G7Ou88mjM">Watch Doc ↗</button>
       <div class="work-meta">
-        <div class="work-type">Our Own Podcast</div>
-        <div class="work-title">Off Script</div>
-        <div class="work-detail">Video podcast · Full production · End-to-end</div>
+        <div class="work-type">Documentary</div>
+        <div class="work-title">AlderTalk Summit</div>
+        <div class="work-detail">Multi-camera · Full post production</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Social Growth Partners -->
+  <div class="work-section-label reveal">
+    <div class="work-section-title">Social Growth Partners</div>
+    <span class="work-section-sub">Ongoing Retainer · Content &amp; Strategy</span>
+  </div>
+  <div class="work-grid work-grid--social">
+
+    <!-- Gina Zapanta -->
+    <div class="work-item reveal">
+      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/hb43rVkEAZc/maxresdefault.jpg')"></div>
+      <div class="work-overlay"></div>
+      <a href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener" class="work-ig">Instagram ↗</a>
+      <button class="work-action" data-video="PL1GAkTsr-x2Jp3CnnNkRSTZrbx8ooLF5t" data-is-list="true">View Content ↗</button>
+      <div class="work-meta">
+        <div class="work-type">Social · Podcast · Brand</div>
+        <div class="work-title">Gina Zapanta</div>
+        <div class="work-detail">Ongoing retainer · EWG · Latina Fest</div>
       </div>
     </div>
 
@@ -1016,15 +1079,29 @@
     <div class="work-item reveal">
       <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/O8G7Ou88mjM/maxresdefault.jpg')"></div>
       <div class="work-overlay"></div>
+      <a href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener" class="work-ig">Instagram ↗</a>
       <a href="https://www.youtube.com/@aldertalk" target="_blank" rel="noopener" class="work-action">View Channel ↗</a>
       <div class="work-meta">
         <div class="work-type">Social Growth · Short-Form</div>
-        <div class="work-title">AlderTalk Social</div>
+        <div class="work-title">AlderTalk</div>
         <div class="work-detail">Reels · Shorts · Platform growth</div>
       </div>
     </div>
 
+    <!-- Off Script -->
+    <div class="work-item reveal">
+      <div class="work-bg" style="background-image:url('https://img.youtube.com/vi/0KoAwn11OlE/maxresdefault.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="0KoAwn11OlE" data-list="PL-7hHxlDqSDA2qapzKaQl6hIdMZ4krd7t">Watch ↗</button>
+      <div class="work-meta">
+        <div class="work-type">Video Podcast · Production</div>
+        <div class="work-title">Off Script</div>
+        <div class="work-detail">Full production · End-to-end · NTC Original</div>
+      </div>
+    </div>
+
   </div>
+
 </section>
 
 <!-- SOCIAL PROOF -->
