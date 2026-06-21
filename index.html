@@ -295,6 +295,7 @@
     overflow: hidden;
     background: var(--card);
     cursor: pointer;
+    user-select: none;
   }
 
   .work-item::before {
@@ -1322,6 +1323,15 @@
         src = `https://www.youtube.com/embed/${id}?${params}`;
       }
       openModal(src);
+    });
+  });
+
+  // Make entire card clickable
+  document.querySelectorAll('.work-item').forEach((item) => {
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.work-action') || e.target.closest('.work-ig')) return;
+      const action = item.querySelector('.work-action');
+      if (action) action.click();
     });
   });
 
