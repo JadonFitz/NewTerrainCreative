@@ -950,9 +950,183 @@
     .hero-headline .word span { transform: none; }
     .reveal { opacity: 1; transform: none; }
   }
+  /* ── INTRO ── */
+  #intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--black);
+    transition: opacity 0.9s ease;
+  }
+
+  #intro.intro-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .intro-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .intro-end {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 24px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.4s ease;
+    background: radial-gradient(ellipse at center, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.55) 100%);
+  }
+
+  #intro.intro-finished { cursor: pointer; }
+  #intro.intro-finished .intro-end {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .intro-title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(40px, 8vw, 104px);
+    line-height: 1.05;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    /* Layers, top to bottom: fine grit speckle, broad weathering mottle, gold gradient */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.9 0.9 0 -0.85'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='4'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.25 0 0 0 0 0.18 0 0 0 0 0.08 0.5 0.5 0.5 0 -0.55'/%3E%3C/filter%3E%3Crect width='700' height='700' filter='url(%23m)' opacity='0.6'/%3E%3C/svg%3E"),
+      linear-gradient(
+        180deg,
+        #F9EDC0 0%,
+        #E8CE85 24%,
+        #B9893C 48%,
+        #F2DC9C 66%,
+        #C89A4B 82%,
+        #8F6A2A 100%
+      );
+    background-size: 240px 240px, 700px 700px, 100% 220%;
+    background-position: 0 0, 0 0, 50% 0%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter:
+      drop-shadow(0 2px 2px rgba(0,0,0,0.85))
+      drop-shadow(0 14px 36px rgba(0,0,0,0.7))
+      drop-shadow(0 3px 16px rgba(200,169,110,0.3));
+    animation: introFloat 5s ease-in-out infinite, introShimmer 6s ease-in-out infinite;
+  }
+
+  @keyframes introFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  @keyframes introShimmer {
+    0%, 100% { background-position: 0 0, 0 0, 50% 0%; }
+    50% { background-position: 0 0, 0 0, 50% 100%; }
+  }
+
+  .intro-hint {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    opacity: 0;
+    animation: fadeIn 1.2s 0.8s forwards;
+  }
+
+  #intro.intro-finished .intro-hint { animation-play-state: running; }
+
+  .intro-skip,
+  .intro-sound {
+    position: absolute;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 3;
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(10,10,10,0.5);
+    border: 1px solid rgba(200,169,110,0.4);
+    padding: 13px 22px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .intro-skip { right: calc(20px + env(safe-area-inset-right, 0px)); }
+  .intro-sound { left: calc(20px + env(safe-area-inset-left, 0px)); }
+
+  .intro-skip:hover,
+  .intro-sound:hover {
+    border-color: var(--gold);
+    background: rgba(10,10,10,0.78);
+  }
+
+  .intro-replay {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    background: none;
+    border: none;
+    opacity: 0.55;
+    cursor: pointer;
+    padding: 8px 14px;
+    transition: opacity 0.3s;
+  }
+
+  .intro-replay:hover { opacity: 1; }
+
+  @media (min-width: 768px) {
+    .intro-skip { right: 48px; bottom: 40px; }
+    .intro-sound { left: 48px; bottom: 40px; }
+  }
+
+  /* Hold the hero/header entrance animations until the intro is dismissed */
+  body.intro-lock { overflow: hidden; }
+  body.intro-lock header *,
+  body.intro-lock #hero .hero-content,
+  body.intro-lock #hero .hero-content * { animation-play-state: paused; }
 </style>
 </head>
-<body>
+<body class="intro-lock">
+<noscript><style>#intro { display: none; } body.intro-lock { overflow: auto; }
+  body.intro-lock header *, body.intro-lock #hero .hero-content,
+  body.intro-lock #hero .hero-content * { animation-play-state: running; }</style></noscript>
+
+<!-- INTRO -->
+<div id="intro" role="dialog" aria-label="Intro animation">
+  <!-- Drop your animation at assets/intro.mp4 -->
+  <video id="introVideo" class="intro-video" autoplay muted playsinline preload="auto">
+    <source src="assets/intro.mp4" type="video/mp4">
+  </video>
+  <div class="intro-end">
+    <div class="intro-title">New Terrain<br>Creative</div>
+    <div class="intro-hint">Click to Enter</div>
+    <button class="intro-replay" id="introReplay">↻ Replay</button>
+  </div>
+  <button class="intro-sound" id="introSound">Sound On</button>
+  <button class="intro-skip" id="introSkip">Skip Intro →</button>
+</div>
 
 <!-- HEADER -->
 <header>
@@ -1269,6 +1443,86 @@
 </footer>
 
 <script>
+  // ── Intro animation ──
+  (() => {
+    const intro = document.getElementById('intro');
+    const vid = document.getElementById('introVideo');
+    const skip = document.getElementById('introSkip');
+
+    const seen = (() => {
+      try { return sessionStorage.getItem('ntcIntroSeen'); } catch { return null; }
+    })();
+
+    // ?intro=1 always forces the intro (handy for testing); otherwise skip
+    // on repeat visits this session and for reduced-motion users
+    const forced = new URLSearchParams(location.search).get('intro') === '1';
+    if (!forced && (seen || matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      intro.remove();
+      document.body.classList.remove('intro-lock');
+      return;
+    }
+
+    let finished = false;
+
+    // remember=false on failure paths (missing/stalled video) so the intro
+    // still gets a real chance on the next page load
+    function dismiss(remember = true) {
+      if (!intro.parentNode || intro.classList.contains('intro-out')) return;
+      if (remember) { try { sessionStorage.setItem('ntcIntroSeen', '1'); } catch {} }
+      document.body.classList.remove('intro-lock');
+      intro.classList.add('intro-out');
+      vid.pause();
+      setTimeout(() => intro.remove(), 950);
+    }
+
+    function showEnd() {
+      if (finished) return;
+      finished = true;
+      intro.classList.add('intro-finished');
+      skip.textContent = 'Enter Site →';
+    }
+
+    // Start forming the title 1.5s before the video ends so the
+    // transition into the end state feels continuous, not abrupt
+    vid.addEventListener('timeupdate', () => {
+      if (!finished && vid.duration && vid.duration - vid.currentTime <= 1.5) showEnd();
+    });
+    vid.addEventListener('ended', showEnd);
+    vid.addEventListener('error', () => dismiss(false));
+
+    // Sound: autoplay must start muted; this unmutes on user gesture
+    const sound = document.getElementById('introSound');
+    sound.addEventListener('click', (e) => {
+      e.stopPropagation();
+      vid.muted = !vid.muted;
+      sound.textContent = vid.muted ? 'Sound On' : 'Sound Off';
+    });
+
+    // Replay: rewind and return to playback state
+    document.getElementById('introReplay').addEventListener('click', (e) => {
+      e.stopPropagation();
+      finished = false;
+      intro.classList.remove('intro-finished');
+      skip.textContent = 'Skip Intro →';
+      vid.currentTime = 0;
+      vid.play();
+    });
+
+    // If the video hasn't started within 3s (missing file, slow network,
+    // blocked autoplay), don't strand the visitor on a black screen
+    const watchdog = setTimeout(() => {
+      if (vid.readyState < 2) { dismiss(false); return; }
+      if (vid.paused) vid.play().catch(() => dismiss(false));
+    }, 3000);
+    vid.addEventListener('playing', () => clearTimeout(watchdog), { once: true });
+
+    skip.addEventListener('click', (e) => { e.stopPropagation(); dismiss(); });
+    intro.addEventListener('click', () => { if (finished) dismiss(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && intro.parentNode) dismiss();
+    });
+  })();
+
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
