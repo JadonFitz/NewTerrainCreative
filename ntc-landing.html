@@ -1002,21 +1002,35 @@
     line-height: 1.05;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    /* Layers, top to bottom: fine grit speckle, broad weathering mottle, gold gradient */
+    /* Layers, top to bottom: sweeping light sheen, clustered grit (fine
+       noise gated by low-freq patch mask), vertical wash streaks, broad
+       dark mottle, pale worn highlights, gold gradient. Different tile
+       sizes keep repeats from aligning; stitchTiles makes tiles seamless. */
     background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.9 0.9 0 -0.85'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='4'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.25 0 0 0 0 0.18 0 0 0 0 0.08 0.5 0.5 0.5 0 -0.55'/%3E%3C/filter%3E%3Crect width='700' height='700' filter='url(%23m)' opacity='0.6'/%3E%3C/svg%3E"),
+      linear-gradient(
+        115deg,
+        rgba(255,248,225,0) 30%,
+        rgba(255,246,215,0.45) 44%,
+        rgba(255,252,240,0.8) 50%,
+        rgba(255,246,215,0.45) 56%,
+        rgba(255,248,225,0) 70%
+      ),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='11' stitchTiles='stitch' result='f'/%3E%3CfeColorMatrix in='f' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.9 0.9 0 -0.7' result='fa'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='2' seed='3' stitchTiles='stitch' result='m'/%3E%3CfeColorMatrix in='m' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 1.5 1.5 0 -1.2' result='ma'/%3E%3CfeComposite in='fa' in2='ma' operator='arithmetic' k1='2.4' k2='0' k3='0' k4='0'/%3E%3C/filter%3E%3Crect width='480' height='480' filter='url(%23g)' opacity='0.3'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.06 0.006' numOctaves='2' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.13 0 0 0 0 0.09 0 0 0 0 0.03 0.8 0.8 0.8 0 -0.75'/%3E%3C/filter%3E%3Crect width='640' height='640' filter='url(%23s)' opacity='0.18'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='4' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.2 0 0 0 0 0.14 0 0 0 0 0.05 0.6 0.6 0.6 0 -0.62'/%3E%3C/filter%3E%3Crect width='700' height='700' filter='url(%23m)' opacity='0.22'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='560' height='560'%3E%3Cfilter id='h'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' seed='19' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.97 0 0 0 0 0.93 0 0 0 0 0.77 0.8 0.8 0.8 0 -0.68'/%3E%3C/filter%3E%3Crect width='560' height='560' filter='url(%23h)' opacity='0.8'/%3E%3C/svg%3E"),
       linear-gradient(
         180deg,
         #F9EDC0 0%,
         #E8CE85 24%,
-        #B9893C 48%,
+        #D9AE60 48%,
         #F2DC9C 66%,
-        #C89A4B 82%,
-        #8F6A2A 100%
+        #D6AC5E 82%,
+        #A87F3A 100%
       );
-    background-size: 240px 240px, 700px 700px, 100% 220%;
-    background-position: 0 0, 0 0, 50% 0%;
+    background-size: 250% 100%, 480px 480px, 640px 640px, 700px 700px, 560px 560px, 100% 220%;
+    background-position: 180% 0, 0 0, 0 0, 0 0, 0 0, 50% 0%;
+    background-repeat: no-repeat, repeat, repeat, repeat, repeat, no-repeat;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -1033,8 +1047,9 @@
   }
 
   @keyframes introShimmer {
-    0%, 100% { background-position: 0 0, 0 0, 50% 0%; }
-    50% { background-position: 0 0, 0 0, 50% 100%; }
+    0% { background-position: 180% 0, 0 0, 0 0, 0 0, 0 0, 50% 0%; }
+    50% { background-position: 50% 0, 0 0, 0 0, 0 0, 0 0, 50% 100%; }
+    100% { background-position: -80% 0, 0 0, 0 0, 0 0, 0 0, 50% 0%; }
   }
 
   .intro-hint {
