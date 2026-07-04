@@ -1486,8 +1486,13 @@
       if (remember) { try { sessionStorage.setItem('ntcIntroSeen', '1'); } catch {} }
       document.body.classList.remove('intro-lock');
       intro.classList.add('intro-out');
-      vid.pause();
-      setTimeout(() => intro.remove(), 950);
+      // Ramp the audio down in step with the visual fade (iOS ignores
+      // volume writes, so the removal below is the hard stop)
+      const fade = setInterval(() => {
+        vid.volume = Math.max(0, vid.volume - 0.12);
+        if (vid.volume <= 0) { vid.pause(); clearInterval(fade); }
+      }, 90);
+      setTimeout(() => { clearInterval(fade); vid.pause(); intro.remove(); }, 950);
     }
 
     function showEnd() {
@@ -1497,10 +1502,12 @@
       skip.textContent = 'Enter Site →';
     }
 
-    // Start forming the title 1.5s before the video ends so the
-    // transition into the end state feels continuous, not abrupt
+    // The vista settles ~6s in; bring the title up shortly after while
+    // the animation and score keep running underneath (video is 60s and
+    // holds on the final frame when it ends)
+    const REVEAL_AT = 8;
     vid.addEventListener('timeupdate', () => {
-      if (!finished && vid.duration && vid.duration - vid.currentTime <= 1.5) showEnd();
+      if (!finished && vid.currentTime >= REVEAL_AT) showEnd();
     });
     vid.addEventListener('ended', showEnd);
     vid.addEventListener('error', () => dismiss(false));
