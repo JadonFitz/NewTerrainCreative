@@ -432,6 +432,37 @@
     padding: 24px 20px;
   }
 
+  /* Social ticker badges */
+  .social-tickers { display: flex; gap: 7px; margin-top: 12px; flex-wrap: wrap; }
+  .ticker-item {
+    display: flex; align-items: center; gap: 5px;
+    background: linear-gradient(135deg, rgba(200,169,110,0.13) 0%, rgba(200,169,110,0.04) 100%);
+    border: 1px solid rgba(200,169,110,0.3);
+    border-radius: 100px;
+    padding: 4px 10px 4px 7px;
+    box-shadow: 0 0 10px rgba(200,169,110,0.08), inset 0 1px 0 rgba(255,235,160,0.05);
+  }
+  .ticker-logo { width: 13px; height: 13px; flex-shrink: 0; }
+  .ticker-count {
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em;
+    color: #c8a96e;
+    text-shadow: 0 0 8px rgba(200,169,110,0.4);
+    font-variant-numeric: tabular-nums;
+    min-width: 3.5ch;
+  }
+  .ticker-combined { gap: 3px; padding-left: 6px; }
+  .ticker-combined .ticker-logo { margin-right: 1px; }
+  .ticker-settlement { padding: 4px 11px; background: linear-gradient(135deg, rgba(200,169,110,0.18) 0%, rgba(200,169,110,0.07) 100%); border-color: rgba(200,169,110,0.42); box-shadow: 0 0 14px rgba(200,169,110,0.13), inset 0 1px 0 rgba(255,235,160,0.08); }
+  .ticker-settlement-text { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e; text-shadow: 0 0 8px rgba(200,169,110,0.4); }
+  /* Partner logo watermark */
+  .partner-logo { position: absolute; top: 16px; left: 16px; z-index: 3; width: 72px; height: 72px; border-radius: 14px; object-fit: cover; opacity: 0.95; box-shadow: 0 4px 16px rgba(0,0,0,0.6); pointer-events: none; }
+  .work-action { z-index: 4; }
+  .work-ig { z-index: 4; }
+  /* Social partner card hover darkening */
+  .work-overlay { transition: background 0.4s ease; }
+  .work-grid--social .work-item { cursor: pointer; }
+  .work-grid--social .work-item:hover .work-overlay { background: linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.18) 100%); }
+
   /* Placeholder backgrounds */
   .bg-offrip   { background: linear-gradient(135deg, #1a2a3a 0%, #0d1821 100%); }
   .bg-botnot   { background: linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%); }
@@ -617,6 +648,14 @@
     height: 80px;
     background: var(--gold);
     opacity: 0.4;
+  }
+
+  .about-frame-caption {
+    margin-top: 10px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .about-credits-list {
@@ -1152,7 +1191,7 @@
 <!-- HERO -->
 <section id="hero">
   <!-- Swap src below with your reel file, e.g. assets/hero-reel.mp4 -->
-  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+  <video class="hero-video" muted loop playsinline preload="auto">
     <source src="assets/hero-reel.mp4" type="video/mp4">
   </video>
   <div class="hero-video-overlay"></div>
@@ -1205,7 +1244,7 @@
     <div class="work-item reveal">
       <div class="work-bg" style="background-image: url('assets/botnot-thumbnail.jpg')"></div>
       <div class="work-overlay"></div>
-      <button class="work-action" data-video="KybQ0SDiDAk">Watch Film ↗</button>
+      <button class="work-action" data-video="KybQ0SDiDAk">Watch Trailer ↗</button>
       <div class="work-meta">
         <div class="work-type">Short Film · Sci-Fi Thriller</div>
         <div class="work-title">Bot or Not</div>
@@ -1215,7 +1254,7 @@
 
     <!-- Robbie Ain't Right -->
     <div class="work-item reveal">
-      <div class="work-bg" data-yt="2S4zX-l6UD4"></div>
+      <div class="work-bg" style="background-image:url('assets/robbie-thumbnail.jpg')"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="2S4zX-l6UD4">Watch Film ↗</button>
       <div class="work-meta">
@@ -1227,7 +1266,7 @@
 
     <!-- AlderTalk Summit -->
     <div class="work-item reveal">
-      <div class="work-bg" data-yt="O8G7Ou88mjM"></div>
+      <div class="work-bg" style="background-image:url('assets/aldertalk-thumbnail.jpg')"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="O8G7Ou88mjM">Watch Doc ↗</button>
       <div class="work-meta">
@@ -1242,7 +1281,7 @@
   <!-- Social Growth Partners -->
   <div class="work-section-label reveal">
     <div class="work-section-title">Social Growth Partners</div>
-    <span class="work-section-sub">Ongoing Retainer · Content &amp; Strategy</span>
+    <span class="work-section-sub">Past &amp; Present Clients · Content &amp; Strategy</span>
   </div>
   <div class="work-grid work-grid--social">
 
@@ -1250,12 +1289,21 @@
     <div class="work-item reveal">
       <div class="work-bg" data-yt="hb43rVkEAZc"></div>
       <div class="work-overlay"></div>
+      <img class="partner-logo" src="assets/gina-logo.png" alt="Empowered with Gina">
       <a href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener" class="work-ig">Instagram ↗</a>
-      <button class="work-action" data-video="PL1GAkTsr-x2Jp3CnnNkRSTZrbx8ooLF5t" data-is-list="true">View Content ↗</button>
+      <button class="work-action" data-video="T7zNEw1Cufo">Watch ↗</button>
       <div class="work-meta">
         <div class="work-type">Social · Podcast · Brand</div>
         <div class="work-title">Gina Zapanta</div>
         <div class="work-detail">Ongoing retainer · EWG · Latina Fest</div>
+        <div class="social-tickers">
+          <div class="ticker-item ticker-combined">
+            <svg class="ticker-logo" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig-gina" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="30%" stop-color="#F77737"/><stop offset="65%" stop-color="#C13584"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig-gina)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig-gina)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="url(#ig-gina)"/></svg>
+            <svg class="ticker-logo" viewBox="0 0 24 24"><path fill="#FF0000" d="M22.5 7a3 3 0 0 0-2.1-2.1C18.6 4.5 12 4.5 12 4.5s-6.6 0-8.4.4A3 3 0 0 0 1.5 7 31 31 0 0 0 1.1 12a31 31 0 0 0 .4 5 3 3 0 0 0 2.1 2.1c1.8.4 8.4.4 8.4.4s6.6 0 8.4-.4a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .4-5 31 31 0 0 0-.4-5zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
+            <svg class="ticker-logo" viewBox="0 0 24 24"><path fill="white" d="M19.6 7a4.8 4.8 0 0 1-3.8-4.3V2H12v13.7a2.9 2.9 0 1 1-2.1-2.8V9.1A6.3 6.3 0 1 0 16 15.3V9a8.3 8.3 0 0 0 4.8 1.5V6.8A4.8 4.8 0 0 1 19.6 7z"/></svg>
+            <span class="ticker-count" data-target="100984">100.9K</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1263,12 +1311,25 @@
     <div class="work-item reveal">
       <div class="work-bg" data-yt="O8G7Ou88mjM"></div>
       <div class="work-overlay"></div>
+      <img class="partner-logo" src="assets/aldertalk-logo.png" alt="AlderTalk">
       <a href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener" class="work-ig">Instagram ↗</a>
-      <a href="https://www.youtube.com/@aldertalk" target="_blank" rel="noopener" class="work-action">View Channel ↗</a>
+      <button class="work-action" data-video="NuSualq-bFU">Watch ↗</button>
+
       <div class="work-meta">
         <div class="work-type">Social Growth · Short-Form</div>
         <div class="work-title">AlderTalk</div>
         <div class="work-detail">Reels · Shorts · Platform growth</div>
+        <div class="social-tickers">
+          <div class="ticker-item ticker-combined">
+            <svg class="ticker-logo" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig-alder" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="30%" stop-color="#F77737"/><stop offset="65%" stop-color="#C13584"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig-alder)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig-alder)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="url(#ig-alder)"/></svg>
+            <svg class="ticker-logo" viewBox="0 0 24 24"><path fill="#FF0000" d="M22.5 7a3 3 0 0 0-2.1-2.1C18.6 4.5 12 4.5 12 4.5s-6.6 0-8.4.4A3 3 0 0 0 1.5 7 31 31 0 0 0 1.1 12a31 31 0 0 0 .4 5 3 3 0 0 0 2.1 2.1c1.8.4 8.4.4 8.4.4s6.6 0 8.4-.4a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .4-5 31 31 0 0 0-.4-5zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
+            <svg class="ticker-logo" viewBox="0 0 24 24"><path fill="white" d="M19.6 7a4.8 4.8 0 0 1-3.8-4.3V2H12v13.7a2.9 2.9 0 1 1-2.1-2.8V9.1A6.3 6.3 0 1 0 16 15.3V9a8.3 8.3 0 0 0 4.8 1.5V6.8A4.8 4.8 0 0 1 19.6 7z"/></svg>
+            <span class="ticker-count" data-target="58176">58.2K</span>
+          </div>
+          <div class="ticker-item ticker-settlement">
+            <span class="ticker-settlement-text">$3.1B+ in settlements</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1281,6 +1342,29 @@
         <div class="work-type">Video Podcast · Production</div>
         <div class="work-title">Off Script</div>
         <div class="work-detail">Full production · End-to-end · NTC Original</div>
+        <div class="social-tickers">
+          <div class="ticker-item ticker-settlement">
+            <span class="ticker-settlement-text">Ongoing · NTC Original</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWFL Famous Installations -->
+    <div class="work-item reveal">
+      <div class="work-bg" data-yt="mAOFhIXY9sY"></div>
+      <div class="work-overlay"></div>
+      <img class="partner-logo" src="assets/swfl-logo.png" alt="SWFL Famous Installations">
+      <button class="work-action" data-video="mAOFhIXY9sY">Watch ↗</button>
+      <div class="work-meta">
+        <div class="work-type">Social Growth · Brand</div>
+        <div class="work-title">SWFL Famous Installations</div>
+        <div class="work-detail">Content strategy · Production · Growth</div>
+        <div class="social-tickers">
+          <div class="ticker-item ticker-settlement">
+            <span class="ticker-settlement-text">B2B Media</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1399,9 +1483,10 @@
   <div class="about-right reveal">
     <div class="about-frame">
       <div class="about-frame-inner">
-        <div class="about-frame-text">JCF</div>
+        <img src="assets/jadon-cal.jpg" alt="Jadon Cal Fitzpatrick" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
       </div>
       <div class="about-frame-rule"></div>
+      <div class="about-frame-caption">Jadon Cal Fitzpatrick · Director / Founder</div>
     </div>
   </div>
 </section>
@@ -1485,6 +1570,8 @@
       if (!intro.parentNode || intro.classList.contains('intro-out')) return;
       if (remember) { try { sessionStorage.setItem('ntcIntroSeen', '1'); } catch {} }
       document.body.classList.remove('intro-lock');
+      const heroVid = document.querySelector('.hero-video');
+      if (heroVid) heroVid.play().catch(() => {});
       intro.classList.add('intro-out');
       // Ramp the audio down in step with the visual fade (iOS ignores
       // volume writes, so the removal below is the hard stop)
@@ -1512,10 +1599,19 @@
     vid.addEventListener('ended', showEnd);
     vid.addEventListener('error', () => dismiss(false));
 
-    // Sound: autoplay must start muted; this unmutes on user gesture
+    // Sound: autoplay requires muted start; auto-unmute on first interaction
     const sound = document.getElementById('introSound');
+    let soundUnlocked = false;
+    function unlockSound() {
+      if (soundUnlocked) return;
+      soundUnlocked = true;
+      vid.muted = false;
+      sound.textContent = 'Sound Off';
+    }
+    intro.addEventListener('click', unlockSound, { capture: true, once: true });
     sound.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (!soundUnlocked) { unlockSound(); return; }
       vid.muted = !vid.muted;
       sound.textContent = vid.muted ? 'Sound On' : 'Sound Off';
     });
@@ -1605,10 +1701,12 @@
     });
   });
 
-  // Make entire card clickable
+  // Make entire card clickable; data-href overrides to external link
   document.querySelectorAll('.work-item').forEach((item) => {
     item.addEventListener('click', (e) => {
       if (e.target.closest('.work-action') || e.target.closest('.work-ig')) return;
+      const href = item.dataset.href;
+      if (href) { window.open(href, '_blank', 'noopener'); return; }
       const action = item.querySelector('.work-action');
       if (action) action.click();
     });
@@ -1617,6 +1715,46 @@
   document.getElementById('modalClose').addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // Social ticker count-up animation (starts at 85% of target, ease-out to final)
+  (function() {
+    function fmtCount(n, max) {
+      if (max >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+      if (max >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+      return n.toString();
+    }
+    const tickerObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.querySelectorAll('.ticker-count[data-target]').forEach(el => {
+          const target = +el.dataset.target;
+          if (!target) return;
+          const startVal = Math.floor(target * 0.85);
+          const dur = 2200, t0 = performance.now();
+          const step = (now) => {
+            const p = Math.min((now - t0) / dur, 1);
+            const ease = 1 - Math.pow(1 - p, 3);
+            el.textContent = fmtCount(Math.round(startVal + ease * (target - startVal)), target);
+            if (p < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+        tickerObs.unobserve(entry.target);
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.social-tickers').forEach(t => {
+      const card = t.closest('.work-item');
+      if (card) tickerObs.observe(card);
+    });
+  })();
+
+  // Wordmark replays the intro
+  document.querySelector('.wordmark').addEventListener('click', (e) => {
+    e.preventDefault();
+    try { sessionStorage.removeItem('ntcIntroSeen'); } catch {}
+    window.scrollTo(0, 0);
+    window.location.reload();
+  });
 
   const header = document.querySelector('header');
   window.addEventListener('scroll', () => {
