@@ -600,6 +600,32 @@
     max-width: 520px;
   }
 
+  .result-mini {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px 32px;
+    margin-top: 28px;
+    max-width: 640px;
+  }
+
+  .mini-num {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--parchment);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .mini-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 7px;
+    line-height: 1.5;
+  }
+
   /* ── ENGAGEMENTS ── */
   #engage {
     border-top: 1px solid #1e1e1e;
@@ -694,7 +720,8 @@
   .engage-note a:hover { border-color: var(--gold); }
 
   /* ── ABOUT ── */
-  #about {
+  #about,
+  #about-meghan {
     border-top: 1px solid #1e1e1e;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1089,8 +1116,9 @@
     .result-row { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
     .engage-cols { grid-template-columns: 1fr; margin-top: 56px; }
     .engage-col { padding: 40px 24px; }
-    #about { grid-template-columns: 1fr; gap: 48px; }
+    #about, #about-meghan { grid-template-columns: 1fr; gap: 48px; }
     .about-right { order: -1; }
+    .result-mini { grid-template-columns: 1fr 1fr; gap: 20px 24px; }
     .approach-cols { grid-template-columns: 1fr; }
     .contact-links { flex-direction: column; gap: 24px; }
     footer { flex-direction: column; gap: 16px; text-align: center; }
@@ -1475,7 +1503,7 @@
 
     <!-- SWFL Famous Installations -->
     <div class="work-item reveal">
-      <div class="work-bg" style="background-image:url('assets/swfl-logo.png');background-size:cover;background-position:center;"></div>
+      <div class="work-bg" style="background-image:url('assets/swfl-plaque.jpg');background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#1c1209;"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="mAOFhIXY9sY">Watch ↗</button>
       <div class="work-meta">
@@ -1560,6 +1588,38 @@
   <div class="results-rows">
     <div class="result-row reveal">
       <div>
+        <div class="result-number">338K+</div>
+        <div class="result-label">Organic Reach · First 9 Days</div>
+      </div>
+      <div>
+        <div class="result-client">Bot or Not — Launch</div>
+        <p class="result-desc">Uploaded to YouTube in late June 2026 and shared once on r/Filmmakers. Zero paid spend — the post became #2 of the day and the audience followed the film across platforms. The demand question investors ask of any concept, answered with data.</p>
+        <div class="result-mini">
+          <div>
+            <div class="mini-num">168K+</div>
+            <div class="mini-label">Reddit views in 4 days · 91.6% upvoted</div>
+          </div>
+          <div>
+            <div class="mini-num">20K</div>
+            <div class="mini-label">IG views · one organic trailer post</div>
+          </div>
+          <div>
+            <div class="mini-num">12K</div>
+            <div class="mini-label">YouTube views · 97.5% from recommendations</div>
+          </div>
+          <div>
+            <div class="mini-num">8:55</div>
+            <div class="mini-label">Avg. watch time on a 21-min short</div>
+          </div>
+          <div>
+            <div class="mini-num">US · CA · UK</div>
+            <div class="mini-label">~72% of viewers in primary buyer markets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="result-row reveal">
+      <div>
         <div class="result-number">101K+</div>
         <div class="result-label">Combined Following</div>
       </div>
@@ -1624,6 +1684,39 @@
       </div>
       <div class="about-frame-rule"></div>
       <div class="about-frame-caption">Jadon Cal Fitzpatrick · Director / Founder</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT — MEGHAN -->
+<section id="about-meghan">
+  <div class="about-right reveal">
+    <div class="about-frame">
+      <div class="about-frame-inner">
+        <img src="assets/meghan-bw.jpg" alt="Meghan [Last Name]" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+      </div>
+      <div class="about-frame-rule"></div>
+      <div class="about-frame-caption">Meghan [Last Name] · [Title / Role]</div>
+    </div>
+  </div>
+  <div class="about-left">
+    <div class="section-eyebrow reveal">[The Producer]</div>
+    <p class="about-pull reveal">"[Placeholder pull quote —<br>something in <em>her</em> voice.]"</p>
+    <p class="about-body reveal">[Placeholder bio — Meghan is the co-head of New Terrain Creative. Two or three sentences on her background, what she owns at NTC (production management, client strategy, post supervision…), and the credibility behind it.]</p>
+    <p class="about-body reveal">[Placeholder second paragraph — how she and Jadon split the work, and what that means for clients: one of them is always on your project.]</p>
+    <div class="about-credits-list reveal">
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>[Credit / credential]</strong> — [detail]<span class="acl-role">[Role · Project]</span></span>
+      </div>
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>[Credit / credential]</strong> — [detail]<span class="acl-role">[Role · Project]</span></span>
+      </div>
+      <div class="acl-item">
+        <div class="acl-dot"></div>
+        <span class="acl-text"><strong>[Credit / credential]</strong> — [detail]</span>
+      </div>
     </div>
   </div>
 </section>
