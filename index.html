@@ -307,6 +307,10 @@
   .work-grid--cinematic .work-item { grid-column: span 6; }
   .work-grid--cinematic .work-item::before { padding-top: 56.25%; }
 
+  /* Featured cinematic card — full row, wider ratio */
+  .work-grid--cinematic .work-item--featured { grid-column: span 12; }
+  .work-grid--cinematic .work-item--featured::before { padding-top: 46%; }
+
   /* Social layout */
   .work-grid--social .work-item { grid-column: span 4; }
   .work-grid--social .work-item::before { padding-top: 100%; }
@@ -533,6 +537,161 @@
     display: block;
     opacity: 0.7;
   }
+
+  /* ── RESULTS ── */
+  #results {
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .results-intro {
+    max-width: 560px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #A09890;
+    margin-bottom: 72px;
+  }
+
+  .results-rows {
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .result-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+    padding: 44px 0;
+    border-bottom: 1px solid #1e1e1e;
+    align-items: start;
+    transition: background 0.3s;
+  }
+
+  .result-row:hover { background: rgba(200,169,110,0.03); }
+
+  .result-number {
+    font-family: var(--display);
+    font-size: clamp(48px, 5vw, 76px);
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .result-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  .result-client {
+    font-family: var(--display);
+    font-size: clamp(22px, 2.5vw, 30px);
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.2;
+  }
+
+  .result-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-top: 10px;
+    max-width: 520px;
+  }
+
+  /* ── ENGAGEMENTS ── */
+  #engage {
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .engage-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #1e1e1e;
+    margin-top: 80px;
+  }
+
+  .engage-col {
+    background: var(--black);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s;
+  }
+
+  .engage-col:hover { background: #0d0d0d; }
+
+  .engage-tag {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 18px;
+  }
+
+  .engage-name {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+
+  .engage-body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .engage-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .engage-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #A09890;
+    line-height: 1.6;
+  }
+
+  .engage-list li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .engage-note {
+    margin-top: 48px;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+
+  .engage-note a {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.3s;
+  }
+
+  .engage-note a:hover { border-color: var(--gold); }
 
   /* ── ABOUT ── */
   #about {
@@ -926,6 +1085,10 @@
     .disciplines-grid { grid-template-columns: 1fr; }
     .disc-item { grid-template-columns: 1fr; gap: 12px; padding-right: 0; }
     .disc-item:nth-child(even) { padding-left: 0; border-left: none; }
+    .work-grid--cinematic .work-item--featured::before { padding-top: 56.25% !important; }
+    .result-row { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
+    .engage-cols { grid-template-columns: 1fr; margin-top: 56px; }
+    .engage-col { padding: 40px 24px; }
     #about { grid-template-columns: 1fr; gap: 48px; }
     .about-right { order: -1; }
     .approach-cols { grid-template-columns: 1fr; }
@@ -1179,7 +1342,7 @@
   <div class="work-grid work-grid--cinematic">
 
     <!-- Off Rip -->
-    <div class="work-item reveal">
+    <div class="work-item work-item--featured reveal">
       <div class="work-bg" style="background-image:url('assets/offrip-thumbnail.jpg')"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="zgELvmeg0Yo">Watch Trailer ↗</button>
@@ -1223,6 +1386,18 @@
         <div class="work-type">Documentary</div>
         <div class="work-title">AlderTalk Summit</div>
         <div class="work-detail">Multi-camera · Full post production</div>
+      </div>
+    </div>
+
+    <!-- Ghirardelli Spec -->
+    <div class="work-item reveal">
+      <div class="work-bg" data-yt="XPzlTc6Shsg"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="XPzlTc6Shsg">Watch Spot ↗</button>
+      <div class="work-meta">
+        <div class="work-type">Spec Commercial</div>
+        <div class="work-title">Ghirardelli</div>
+        <div class="work-detail">Spec spot — direction, cinematography, post</div>
       </div>
     </div>
 
@@ -1377,6 +1552,45 @@
   </div>
 </section>
 
+<!-- RESULTS -->
+<section id="results">
+  <div class="section-eyebrow reveal">Results</div>
+  <div class="section-title reveal">Story moves<br>numbers.</div>
+  <p class="results-intro reveal">Most brand content gets scrolled past — not because the budget was too small, but because there was no reason to care. Every audience we've grown started with the same question a film starts with: <em>why should anyone watch this?</em></p>
+  <div class="results-rows">
+    <div class="result-row reveal">
+      <div>
+        <div class="result-number">101K+</div>
+        <div class="result-label">Combined Following</div>
+      </div>
+      <div>
+        <div class="result-client">Gina Zapanta</div>
+        <p class="result-desc">A podcast and short-form engine across Instagram, YouTube, and TikTok — built episode by episode around her voice, not a content calendar template.</p>
+      </div>
+    </div>
+    <div class="result-row reveal">
+      <div>
+        <div class="result-number">58K+</div>
+        <div class="result-label">Followers Built</div>
+      </div>
+      <div>
+        <div class="result-client">Mike Alder</div>
+        <p class="result-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into a personal brand people actually follow.</p>
+      </div>
+    </div>
+    <div class="result-row reveal">
+      <div>
+        <div class="result-number">9.3</div>
+        <div class="result-label">IMDb · Grand Jury Award</div>
+      </div>
+      <div>
+        <div class="result-client">Off Rip</div>
+        <p class="result-desc">A feature film made story-first on an independent budget — Grand Jury Award at Gasparilla, TVOD release 2026. The same discipline goes into every brand piece we cut.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about">
   <div class="about-left">
@@ -1434,6 +1648,48 @@
       <p class="approach-col-body">In-house editing, color grading, audio finishing, and multi-format delivery. The project isn't done until every deliverable looks like the vision we agreed on at the start.</p>
     </div>
   </div>
+</section>
+
+<!-- ENGAGEMENTS -->
+<section id="engage">
+  <div class="section-eyebrow reveal">Ways to Work</div>
+  <div class="section-title reveal">Three ways in.</div>
+  <div class="engage-cols">
+    <div class="engage-col reveal">
+      <div class="engage-tag">Single Project</div>
+      <div class="engage-name">Production</div>
+      <p class="engage-body">A film, commercial, documentary, or podcast build-out — one project, owned from concept through delivery.</p>
+      <ul class="engage-list">
+        <li>Concept &amp; story development</li>
+        <li>Director-led production</li>
+        <li>In-house post, color &amp; sound</li>
+        <li>Delivery in every format you need</li>
+      </ul>
+    </div>
+    <div class="engage-col reveal">
+      <div class="engage-tag">Monthly Retainer</div>
+      <div class="engage-name">Growth Partner</div>
+      <p class="engage-body">Ongoing social content and channel management with a cinematic bar — the engine behind every number on this page.</p>
+      <ul class="engage-list">
+        <li>Content strategy &amp; calendar</li>
+        <li>Recurring shoot &amp; edit cadence</li>
+        <li>Posting &amp; channel management</li>
+        <li>Monthly analytics &amp; direction</li>
+      </ul>
+    </div>
+    <div class="engage-col reveal">
+      <div class="engage-tag">End to End</div>
+      <div class="engage-name">Full Studio</div>
+      <p class="engage-body">New Terrain as your brand's content department — every format, one visual language, one team accountable for all of it.</p>
+      <ul class="engage-list">
+        <li>Brand &amp; campaign direction</li>
+        <li>Production + social engine combined</li>
+        <li>Podcast &amp; event coverage</li>
+        <li>Quarterly strategy &amp; reporting</li>
+      </ul>
+    </div>
+  </div>
+  <p class="engage-note reveal">Every engagement starts with a conversation — <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a></p>
 </section>
 
 <!-- CONTACT -->
