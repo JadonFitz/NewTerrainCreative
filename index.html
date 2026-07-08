@@ -135,8 +135,8 @@
   .hero-headline {
     font-family: var(--display);
     font-weight: 300;
-    font-size: clamp(72px, 12vw, 160px);
-    line-height: 0.9;
+    font-size: clamp(36px, 6.5vw, 88px);
+    line-height: 1.05;
     letter-spacing: -0.02em;
     color: var(--parchment);
   }
@@ -635,6 +635,64 @@
     color: var(--muted);
     margin-top: 7px;
     line-height: 1.5;
+  }
+
+  /* ── VERSUS ── */
+  #versus {
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .vs-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: #1e1e1e;
+    margin-top: 80px;
+  }
+
+  .vs-col {
+    background: var(--black);
+    padding: 48px 40px;
+  }
+
+  .vs-col-title {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .vs-col--ntc .vs-col-title { color: var(--parchment); }
+
+  .vs-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .vs-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .vs-mark {
+    flex-shrink: 0;
+    font-size: 12px;
+    line-height: 1.9;
+    opacity: 0.5;
+  }
+
+  .vs-col--ntc .vs-list li { color: #A09890; }
+
+  .vs-col--ntc .vs-mark {
+    color: var(--gold);
+    opacity: 1;
   }
 
   /* ── ENGAGEMENTS ── */
@@ -1158,6 +1216,7 @@
   @media (max-width: 768px) {
     header { padding: 24px; }
     #hero { padding: 100px 24px 80px; }
+    .hero-headline { font-size: clamp(30px, 9.5vw, 40px); line-height: 1.12; }
     .hero-sub { flex-direction: column; gap: 32px; }
     section { padding: 80px 24px; }
     #work { padding: 60px 24px 80px; }
@@ -1173,6 +1232,8 @@
     .result-row { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
     .engage-cols { grid-template-columns: 1fr; margin-top: 56px; }
     .engage-col { padding: 40px 24px; }
+    .vs-cols { grid-template-columns: 1fr; margin-top: 56px; }
+    .vs-col { padding: 40px 24px; }
     #about, #about-meghan { grid-template-columns: 1fr; gap: 48px; }
     .about-right { order: -1; }
     .result-mini { grid-template-columns: 1fr 1fr; gap: 20px 24px; }
@@ -1397,12 +1458,11 @@
   <div class="hero-content">
     <div class="hero-rule"></div>
     <h1 class="hero-headline">
-      <div class="word"><span>Story.</span></div>
-      <div class="word"><span>Craft.</span></div>
-      <div class="word"><span>Innovation.</span></div>
+      <div class="word"><span>Your competitors post content.</span></div>
+      <div class="word"><span>You'll run cinema.</span></div>
     </h1>
     <div class="hero-sub">
-      <p class="hero-desc">Your competitors post content. You'll run cinema. Award-winning video production that turns attention into customers.</p>
+      <p class="hero-desc">Award-winning video production that turns attention into customers.</p>
       <div class="hero-credits">
         <div class="credit-item">Based in <strong>Los Angeles · Tampa</strong></div>
         <div class="credit-item">Award-winning · <strong>Tribeca · Telluride · Gasparilla</strong></div>
@@ -1434,7 +1494,7 @@
       <div class="work-meta">
         <div class="work-type">Feature Film · Sports Drama</div>
         <div class="work-title">Off Rip</div>
-        <div class="work-detail">Grand Jury Award, Gasparilla · 9.3 IMDb · TVOD 2026</div>
+        <div class="work-detail">Grand Jury Award, Gasparilla · 9.3 IMDb · Apple TV 2026</div>
       </div>
     </div>
 
@@ -1712,7 +1772,7 @@
       </div>
       <div>
         <div class="result-client">Off Rip</div>
-        <p class="result-desc">A feature film made story-first on an independent budget: Grand Jury Award at Gasparilla, TVOD release 2026. The same discipline goes into every brand piece we cut.</p>
+        <p class="result-desc">A feature film made story-first on an independent budget: Grand Jury Award at Gasparilla, now on Apple TV pre-order. The same discipline goes into every brand piece we cut.</p>
       </div>
     </div>
   </div>
@@ -1814,6 +1874,34 @@
   </div>
 </section>
 
+<!-- VERSUS -->
+<section id="versus">
+  <div class="section-eyebrow reveal">The Difference</div>
+  <div class="section-title reveal">Why New Terrain?</div>
+  <div class="vs-cols">
+    <div class="vs-col reveal">
+      <div class="vs-col-title">The typical video guy</div>
+      <ul class="vs-list">
+        <li><span class="vs-mark">✕</span>Shoots the footage, hands you a hard drive, disappears</li>
+        <li><span class="vs-mark">✕</span>One deliverable per shoot; every cutdown costs extra</li>
+        <li><span class="vs-mark">✕</span>You get files, not a plan</li>
+        <li><span class="vs-mark">✕</span>A gear renter with a camera and a day rate</li>
+        <li><span class="vs-mark">✕</span>Books out weeks ahead, ghosts on fast turnarounds</li>
+      </ul>
+    </div>
+    <div class="vs-col vs-col--ntc reveal">
+      <div class="vs-col-title">New Terrain Creative</div>
+      <ul class="vs-list">
+        <li><span class="vs-mark">✓</span>Full pipeline: shot, edited, colored, captioned, delivered ready to post</li>
+        <li><span class="vs-mark">✓</span>40 deliverables a month on retainer, cutdowns included</li>
+        <li><span class="vs-mark">✓</span>Every project starts knowing what it needs to say and who it needs to move</li>
+        <li><span class="vs-mark">✓</span>A working filmmaker: festival wins and a feature headed to Apple TV</li>
+        <li><span class="vs-mark">✓</span>You never chase an edit, write a hook, or manage a freelancer again</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- ENGAGEMENTS -->
 <section id="engage">
   <div class="section-eyebrow reveal">Ways to Work</div>
@@ -1843,12 +1931,13 @@
       <ul class="engage-list">
         <li>Four half-day shoots per month: event coverage or content days, your choice</li>
         <li>Monthly Ad Sprint XL: 15 ready-to-run creatives</li>
-        <li>15 talking-head clips a month, filmed within your shoot days: founder stories, testimonials, thought leadership</li>
+        <li>25 talking-head clips a month, filmed within your shoot days: founder stories, testimonials, thought leadership</li>
         <li>Monthly analytics &amp; creative direction</li>
       </ul>
       <div class="engage-tiers">
-        <div class="engage-tier"><span><strong>Retainer</strong> · everything above, every month</span><span class="engage-tier-price">$15,000/mo</span></div>
+        <div class="engage-tier"><span><strong>Retainer</strong> · 40 deliverables, every month</span><span class="engage-tier-price">$15,000/mo</span></div>
       </div>
+      <p class="engage-guarantee">If your audience isn't growing by month three, month four is on us.</p>
     </div>
     <div class="engage-col reveal">
       <div class="engage-tag">Production</div>
