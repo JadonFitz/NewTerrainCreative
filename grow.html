@@ -114,6 +114,23 @@
 
   .header-cta:hover { background: var(--gold); color: var(--black); }
 
+  .header-links { display: flex; align-items: center; gap: 28px; }
+
+  .header-side {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .header-side:hover { color: var(--gold); }
+
+  @media (max-width: 560px) {
+    .header-side { display: none; }
+  }
+
   /* ── HERO ── */
   #hero { padding-top: 130px; padding-bottom: 90px; }
 
@@ -463,8 +480,11 @@
 <body>
 
 <header>
-  <a class="wordmark" href="index.html">New Terrain Creative <span>· Social Growth</span></a>
-  <a class="header-cta" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a>
+  <a class="wordmark" href="#hero">New Terrain Creative <span>· Social Growth</span></a>
+  <div class="header-links">
+    <a class="header-side" href="index.html">The Cinema Side</a>
+    <a class="header-cta" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a>
+  </div>
 </header>
 
 <!-- HERO -->
