@@ -709,10 +709,14 @@
 
   .engage-cols {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     background: #1e1e1e;
     margin-top: 80px;
+  }
+
+  @media (max-width: 1100px) {
+    .engage-cols { grid-template-columns: 1fr; }
   }
 
   .engage-col {
@@ -816,6 +820,16 @@
     line-height: 1.7;
     color: var(--muted);
   }
+
+  .engage-guarantee a {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 1px;
+    transition: border-color 0.3s;
+  }
+
+  .engage-guarantee a:hover { border-color: var(--gold); }
 
   .engage-note {
     margin-top: 48px;
@@ -1905,11 +1919,11 @@
 <!-- ENGAGEMENTS -->
 <section id="engage">
   <div class="section-eyebrow reveal">Ways to Work</div>
-  <div class="section-title reveal">Four ways in.</div>
-  <p class="engage-lede reveal">Rather than hundreds of AI clips that get buried, every piece we make is designed to earn attention.</p>
+  <div class="section-title reveal">Three ways in.</div>
+  <p class="engage-lede reveal">Rather than hundreds of AI clips that get buried, every piece we make is designed to earn attention. Wherever your brand is right now, there's a door that fits.</p>
   <div class="engage-cols">
     <div class="engage-col reveal">
-      <div class="engage-tag">Launch Package</div>
+      <div class="engage-tag">Launch Package · One-Time</div>
       <div class="engage-name">Ad Sprint</div>
       <p class="engage-body">One shoot day. A full testing arsenal of ready-to-run ads, delivered in under two weeks. Fixed price, fixed scope, no surprises.</p>
       <ul class="engage-list">
@@ -1925,45 +1939,39 @@
       <p class="engage-guarantee">If nothing we make outperforms your current content, your next shoot day is free.</p>
     </div>
     <div class="engage-col reveal">
-      <div class="engage-tag">Monthly Retainer</div>
-      <div class="engage-name">Brand Builder</div>
-      <p class="engage-body">The engine. Recurring production for your personal brand, beyond just advertising: the same system delivering 10 longforms and 30 shorts every month for our retainer clients.</p>
+      <div class="engage-tag">Monthly Retainers</div>
+      <div class="engage-name">Growth Retainers</div>
+      <p class="engage-body">Content that compounds, month after month. Pick the rung that fits &mdash; from founder-shot footage we polish and post, to a full production engine with paid media managed under the same roof.</p>
       <ul class="engage-list">
-        <li>Four half-day shoots per month: event coverage or content days, your choice</li>
-        <li>Monthly Ad Sprint XL: 15 ready-to-run creatives</li>
-        <li>25 talking-head clips a month, filmed within your shoot days: founder stories, testimonials, thought leadership</li>
+        <li>Short-form edits, cutdowns &amp; talking-head clips: captioned, formatted for every platform</li>
+        <li>Posting, scheduling &amp; channel management</li>
+        <li>Ad management across Meta + Apple Maps, built from your own creative</li>
         <li>Monthly analytics &amp; creative direction</li>
+        <li>20, 30, or 40 deliverables a month &mdash; shoot days scale with your tier: none, two, or four</li>
       </ul>
       <div class="engage-tiers">
-        <div class="engage-tier"><span><strong>Retainer</strong> · 40 deliverables, every month</span><span class="engage-tier-price">$15,000/mo</span></div>
+        <div class="engage-tier"><span><strong>Content Engine</strong> · 20 deliverables, founder-shot</span><span class="engage-tier-price">$2,000/mo</span></div>
+        <div class="engage-tier"><span><strong>Growth Partner</strong> · 30 deliverables + paid media</span><span class="engage-tier-price">$6,500/mo</span></div>
+        <div class="engage-tier"><span><strong>Brand Builder</strong> · 40 deliverables, full volume</span><span class="engage-tier-price">$15,000/mo</span></div>
       </div>
-      <p class="engage-guarantee">If your audience isn't growing by month three, month four is on us.</p>
+      <p class="engage-guarantee">If you're not growing by month three, month four is on us. <a href="grow.html">Full retainer details &rarr;</a></p>
     </div>
     <div class="engage-col reveal">
-      <div class="engage-tag">Production</div>
-      <div class="engage-name">Signature Project</div>
-      <p class="engage-body">A commercial, documentary, brand film, or podcast build-out. One project, owned from concept through delivery.</p>
+      <div class="engage-tag">Production · End to End</div>
+      <div class="engage-name">Signature Work</div>
+      <p class="engage-body">The cinema. A commercial, documentary, brand film, or podcast build-out &mdash; up to New Terrain as your brand's entire content department. One project or the whole visual language, owned from concept through delivery.</p>
       <ul class="engage-list">
         <li>Concept &amp; story development</li>
         <li>Director-led production</li>
         <li>In-house post, color &amp; sound</li>
-        <li>Every delivery format you need</li>
+        <li>Brand &amp; campaign direction at studio scale</li>
       </ul>
-    </div>
-    <div class="engage-col reveal">
-      <div class="engage-tag">End to End</div>
-      <div class="engage-name">Full Studio</div>
-      <p class="engage-body">New Terrain as your brand's content department: every format, one visual language, one team accountable for all of it.</p>
-      <ul class="engage-list">
-        <li>Brand &amp; campaign direction</li>
-        <li>Production + social engine combined</li>
-        <li>Posting &amp; channel management</li>
-        <li>Podcast &amp; event coverage</li>
-        <li>Quarterly strategy &amp; reporting</li>
-      </ul>
+      <div class="engage-tiers">
+        <div class="engage-tier"><span><strong>Signature Work</strong> · scoped to the story</span><span class="engage-tier-price">Let's talk</span></div>
+      </div>
     </div>
   </div>
-  <p class="engage-note reveal">Every engagement starts with a conversation: <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a></p>
+  <p class="engage-note reveal">Prepay &amp; save: six months up front, one month free &mdash; a year up front, two. Every engagement starts with a conversation: <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a></p>
 </section>
 
 <!-- CONTACT -->
@@ -1971,7 +1979,7 @@
   <p class="contact-pre reveal">New Terrain Creative</p>
   <h2 class="contact-title reveal">Let's build<br>something <em>real.</em></h2>
   <div class="contact-links reveal">
-    <a href="mailto:business@newterraincreative.com" class="contact-link primary">Start a Project</a>
+    <a href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener" class="contact-link primary">Book a Call</a>
     <a href="mailto:business@newterraincreative.com" class="contact-link">business@newterraincreative.com</a>
   </div>
   <p class="contact-location reveal">Los Angeles, CA &nbsp;·&nbsp; Tampa, FL &nbsp;·&nbsp; Available worldwide</p>

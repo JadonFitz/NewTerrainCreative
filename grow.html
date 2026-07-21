@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Terrain Creative — Growth. Content that gets you leads.</title>
+<meta name="description" content="We make the ads and we run the media — one team, one roof, judged on what it brings back. Retainers from $2,000/mo. Meta + Apple Maps managed.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="New Terrain Creative — Growth">
+<meta property="og:description" content="Content that gets you leads, not just likes. Creative and paid media under one roof.">
+<meta property="og:image" content="assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --line: #1e1e1e;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  section { padding: 110px 6vw; max-width: 1280px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-size: clamp(34px, 4.6vw, 58px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--parchment);
+  }
+
+  .title em { font-style: italic; color: var(--gold); }
+
+  .lede {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 580px;
+  }
+
+  .btn {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 34px;
+    transition: all 0.3s;
+  }
+
+  .btn--gold { background: var(--gold); color: var(--black); font-weight: 500; }
+  .btn--gold:hover { background: var(--parchment); }
+  .btn--ghost { color: var(--parchment); border: 1px solid #2c2c2c; }
+  .btn--ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 26px 6vw;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wordmark {
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+
+  .wordmark span { color: var(--gold); }
+
+  .header-cta {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(200,169,110,0.4);
+    padding: 11px 22px;
+    transition: all 0.3s;
+  }
+
+  .header-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* ── HERO ── */
+  #hero { padding-top: 130px; padding-bottom: 90px; }
+
+  #hero .title { font-size: clamp(44px, 6.4vw, 86px); max-width: 800px; }
+
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 15px;
+    line-height: 1.9;
+    color: #A09890;
+    max-width: 540px;
+  }
+
+  .hero-ctas { margin-top: 44px; display: flex; gap: 16px; flex-wrap: wrap; }
+
+  /* ── STAT BAR ── */
+  .statbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stat {
+    background: var(--black);
+    padding: 38px 28px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── ONE ROOF ── */
+  .roof-cols {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+  }
+
+  .roof-num {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .roof-title { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--parchment); margin-bottom: 14px; }
+
+  .roof-body { font-size: 13px; line-height: 1.85; color: var(--muted); }
+
+  /* ── APPLE MAPS ── */
+  #wedge { border-top: 1px solid var(--line); }
+
+  .wedge-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: start; }
+
+  .wedge-points { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+
+  .wedge-point {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 1.8;
+    color: #A09890;
+  }
+
+  .wedge-point::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+  /* ── PRICING ── */
+  #pricing { border-top: 1px solid var(--line); }
+
+  .price-cards {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .price-card {
+    background: var(--black);
+    padding: 46px 36px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .price-card:hover { background: #0d0d0d; }
+
+  .price-card--featured { background: #0f0d09; }
+
+  .chip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 8px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 6px 14px;
+  }
+
+  .chip--ghost { background: none; color: var(--gold); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+  .price-name {
+    font-family: var(--display);
+    font-size: 27px;
+    font-weight: 300;
+    color: var(--parchment);
+  }
+
+  .price-for {
+    margin-top: 10px;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .price-amount {
+    margin-top: 26px;
+    font-family: var(--display);
+    font-size: 44px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .price-amount small { font-family: var(--body); font-size: 11px; letter-spacing: 0.1em; color: var(--muted); }
+
+  .price-list {
+    list-style: none;
+    margin: 30px 0 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .price-list li {
+    display: flex;
+    gap: 13px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.65;
+    color: #A09890;
+  }
+
+  .price-list li::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .price-cta { margin-top: auto; text-align: center; }
+
+  .price-note {
+    margin-top: 16px;
+    font-size: 10.5px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* secondary offers */
+  .alt-rows { margin-top: 1px; display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); border-top: none; }
+
+  .alt-row {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    gap: 32px;
+    align-items: center;
+    padding: 32px 36px;
+    transition: background 0.3s;
+  }
+
+  .alt-row:hover { background: #0d0d0d; }
+
+  .alt-name { font-family: var(--display); font-size: 21px; font-weight: 300; color: var(--parchment); }
+
+  .alt-tag { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.7; display: block; margin-bottom: 8px; }
+
+  .alt-body { font-size: 12px; line-height: 1.75; color: var(--muted); }
+
+  .alt-price { font-family: var(--display); font-size: 22px; color: var(--gold); white-space: nowrap; text-align: right; }
+
+  .alt-price small { font-family: var(--body); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 4px; }
+
+  /* ── GUARANTEES ── */
+  #promise { border-top: 1px solid var(--line); }
+
+  .promise-cols { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+
+  .promise-col { border-top: 1px solid rgba(200,169,110,0.35); padding-top: 26px; }
+
+  .promise-head { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--parchment); margin-bottom: 12px; }
+
+  .promise-body { font-size: 13px; line-height: 1.85; color: var(--muted); }
+
+  /* ── PREPAY ── */
+  .prepay-scroll { overflow-x: auto; margin-top: 56px; }
+
+  .prepay-table { width: 100%; border-collapse: collapse; min-width: 540px; }
+
+  .prepay-table th {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--gold);
+    opacity: 0.75;
+    text-align: left;
+    padding: 0 16px 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .prepay-table td {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #A09890;
+    padding: 18px 16px 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .prepay-table td:first-child { color: var(--parchment); font-weight: 400; }
+  .prepay-table td:last-child { color: var(--gold); white-space: nowrap; }
+
+  .prepay-note { margin-top: 18px; font-size: 11px; font-style: italic; color: var(--muted); line-height: 1.7; }
+
+  /* ── PROOF ── */
+  #proof { border-top: 1px solid var(--line); }
+
+  .proof-rows { margin-top: 64px; border-top: 1px solid var(--line); }
+
+  .proof-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .proof-num { font-family: var(--display); font-size: 46px; font-weight: 300; color: var(--gold); line-height: 1; }
+
+  .proof-label { margin-top: 10px; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+
+  .proof-client { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--parchment); margin-bottom: 10px; }
+
+  .proof-desc { font-size: 13px; line-height: 1.85; color: var(--muted); max-width: 640px; }
+
+  /* ── FINAL CTA ── */
+  #close { text-align: center; padding-top: 140px; padding-bottom: 140px; }
+
+  #close .title { font-size: clamp(40px, 5.5vw, 72px); }
+
+  #close .lede { margin-left: auto; margin-right: auto; }
+
+  .close-ctas { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  .close-mail {
+    display: block;
+    margin-top: 28px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .close-mail:hover { color: var(--gold); }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 30px 6vw;
+    border-top: 1px solid var(--line);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  footer a:hover { color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .price-cards { grid-template-columns: 1fr; }
+    .roof-cols, .promise-cols { grid-template-columns: 1fr; gap: 36px; }
+    .wedge-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 72px 24px; }
+    #hero { padding-top: 84px; }
+    .statbar { grid-template-columns: 1fr 1fr; }
+    .alt-row { grid-template-columns: 1fr; gap: 18px; padding: 30px 24px; }
+    .alt-price { text-align: left; }
+    .proof-row { grid-template-columns: 1fr; gap: 18px; }
+    .price-card { padding: 38px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="wordmark" href="index.html">New Terrain <span>Creative</span></a>
+  <a class="header-cta" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="eyebrow reveal">Growth · Content · Paid Media</div>
+  <h1 class="title reveal">Less noise.<br>More <em>leads.</em></h1>
+  <p class="hero-sub reveal">Most agencies hand you content and wish you luck, or run ads on stock footage that looks like everyone else's. We make the creative and we run the media &mdash; one team, one roof, judged on one number: what it brings back.</p>
+  <div class="hero-ctas reveal">
+    <a class="btn btn--gold" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a>
+    <a class="btn btn--ghost" href="#pricing">See Pricing</a>
+  </div>
+</section>
+
+<!-- STAT BAR -->
+<div class="statbar">
+  <div class="stat reveal"><div class="stat-num">338K+</div><div class="stat-label">Organic reach<br>in 9 days · zero spend</div></div>
+  <div class="stat reveal"><div class="stat-num">460K</div><div class="stat-label">Views on one<br>trailer campaign</div></div>
+  <div class="stat reveal"><div class="stat-num">101K+</div><div class="stat-label">Following built<br>for one client</div></div>
+  <div class="stat reveal"><div class="stat-num">$3.1B+</div><div class="stat-label">In settlements behind<br>a brand we built</div></div>
+</div>
+
+<!-- ONE ROOF -->
+<section id="roof">
+  <div class="eyebrow reveal">Why It Works</div>
+  <h2 class="title reveal">Creative and media,<br>under one roof.</h2>
+  <div class="roof-cols">
+    <div class="reveal">
+      <span class="roof-num">I</span>
+      <div class="roof-title">Ads that don't look like ads</div>
+      <p class="roof-body">Every piece is cut with the same eye that cuts award-winning films. In a feed full of stock footage and AI filler, yours is the one that earns the stop.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">II</span>
+      <div class="roof-title">Media run against revenue</div>
+      <p class="roof-body">We build the campaigns from your own creative and optimize weekly against real revenue &mdash; not impressions, not vanity metrics. When a hook wins, we scale it. When it dies, we cut it.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">III</span>
+      <div class="roof-title">One team accountable</div>
+      <p class="roof-body">No hand-offs between a production company and an ad agency blaming each other. The people who made the ad are the people spending your budget on it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- APPLE MAPS WEDGE -->
+<section id="wedge">
+  <div class="wedge-grid">
+    <div>
+      <div class="eyebrow reveal">The Wedge</div>
+      <h2 class="title reveal">While everyone fights<br>over Google.</h2>
+      <p class="lede reveal">We put you in front of high-intent iPhone users searching Apple Maps &mdash; near-zero competition for placement, dramatically lower cost per lead. Most agencies don't even mention it.</p>
+    </div>
+    <div class="wedge-points reveal">
+      <div class="wedge-point">High-intent searches: people already looking for what you sell, near where you sell it</div>
+      <div class="wedge-point">Near-zero competition for placement while the market crowds onto Google</div>
+      <div class="wedge-point">Dramatically lower cost per lead than saturated channels</div>
+      <div class="wedge-point">Run alongside Meta, from the same creative, in the same weekly optimization loop</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="eyebrow reveal">Pricing</div>
+  <h2 class="title reveal">Pick your rung.</h2>
+  <p class="lede reveal">Three retainers, one system. Start where you are; every tier is built to graduate into the next as the numbers grow.</p>
+
+  <div class="price-cards">
+    <div class="price-card reveal">
+      <div class="chip chip--ghost">Limited Slots</div>
+      <div class="price-name">Content Engine</div>
+      <p class="price-for">You're already the face &mdash; you just don't have time to make it look good or keep it consistent.</p>
+      <div class="price-amount">$2,000<small> /mo</small></div>
+      <ul class="price-list">
+        <li>20 short-form edits a month from your own phone footage &mdash; cut, captioned, formatted for every platform</li>
+        <li>Posting &amp; scheduling across your channels</li>
+        <li>Monthly shot-list &amp; creative direction, so what you film is actually usable</li>
+        <li>Monthly analytics: what's landing, what to shoot next</li>
+        <li>No shoot days &mdash; lean, fast, founder-shot</li>
+      </ul>
+      <div class="price-cta"><a class="btn btn--ghost" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Start Here</a></div>
+      <p class="price-note">Capped so every feed gets real attention &mdash; when it's full, it's full. Community management +$750/mo.</p>
+    </div>
+
+    <div class="price-card price-card--featured reveal">
+      <div class="chip">Content + Conversion</div>
+      <div class="price-name">Growth Partner</div>
+      <p class="price-for">The conversion tier: we make the cinema and we run the media, so your best-looking ads are the ones spending your budget.</p>
+      <div class="price-amount">$6,500<small> /mo</small></div>
+      <ul class="price-list">
+        <li>2 half-day shoots per month &mdash; content days or event coverage, your call</li>
+        <li>30 deliverables a month: short-form edits, cutdowns &amp; talking-head clips, every platform</li>
+        <li>Everything in Content Engine included &mdash; phone footage between shoot days gets cut and posted too</li>
+        <li>Ad management included &mdash; Meta + Apple Maps, optimized weekly against real revenue</li>
+        <li>Monthly analytics &amp; creative direction: what's working, what's next</li>
+      </ul>
+      <div class="price-cta"><a class="btn btn--gold" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a></div>
+      <p class="price-note">If paid isn't beating your organic baseline by month three, month four's ad management is on us.</p>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="chip chip--ghost">Flagship</div>
+      <div class="price-name">Brand Builder</div>
+      <p class="price-for">The engine at full volume: the system delivering 10 longforms and 30 shorts every month for our retainer clients.</p>
+      <div class="price-amount">$15,000<small> /mo</small></div>
+      <ul class="price-list">
+        <li>Four half-day shoots per month &mdash; event coverage or content days</li>
+        <li>Monthly Ad Sprint XL: 15 ready-to-run creatives</li>
+        <li>25 talking-head clips a month: founder stories, testimonials, thought leadership</li>
+        <li>Monthly analytics &amp; creative direction</li>
+      </ul>
+      <div class="price-cta"><a class="btn btn--ghost" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a></div>
+      <p class="price-note">40 deliverables, every month. Full ad management +$1,500/mo. If your audience isn't growing by month three, month four is on us.</p>
+    </div>
+  </div>
+
+  <div class="alt-rows">
+    <div class="alt-row reveal">
+      <div><span class="alt-tag">Not ready for a retainer?</span><div class="alt-name">Ad Sprint</div></div>
+      <p class="alt-body">One shoot day, a full testing arsenal of ready-to-run ads in under two weeks. 8 creatives at $2,500, or 15 at $4,500. If nothing outperforms your current content, your next shoot day is free.</p>
+      <div class="alt-price">From $2,500<small>one-time</small></div>
+    </div>
+    <div class="alt-row reveal">
+      <div><span class="alt-tag">Already have footage?</span><div class="alt-name">Ad Management</div></div>
+      <p class="alt-body">We run Meta + Apple Maps campaigns from your existing creative, optimized weekly against revenue. You pay platforms directly for ad spend &mdash; clean, transparent, your budget stays yours.</p>
+      <div class="alt-price">$1,500/mo<small>or 15% of spend</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEES -->
+<section id="promise">
+  <div class="eyebrow reveal">Skin in the Game</div>
+  <h2 class="title reveal">We bet on our own work.</h2>
+  <div class="promise-cols">
+    <div class="promise-col reveal">
+      <div class="promise-head">Ad Sprint</div>
+      <p class="promise-body">If nothing we make outperforms your current content, your next shoot day is free.</p>
+    </div>
+    <div class="promise-col reveal">
+      <div class="promise-head">Growth Partner</div>
+      <p class="promise-body">If your paid results aren't beating your organic baseline by month three, month four's ad management is on us.</p>
+    </div>
+    <div class="promise-col reveal">
+      <div class="promise-head">Brand Builder</div>
+      <p class="promise-body">If your audience isn't growing by month three, month four is on us.</p>
+    </div>
+  </div>
+
+  <div class="prepay-scroll reveal">
+    <table class="prepay-table">
+      <thead>
+        <tr><th>Prepay &amp; Save</th><th>Monthly</th><th>12 Months Upfront</th><th>You Save</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Content Engine*</td><td>$2,000/mo</td><td>$20,000</td><td>$4,000</td></tr>
+        <tr><td>Growth Partner</td><td>$6,500/mo</td><td>$65,000</td><td>$13,000</td></tr>
+        <tr><td>Brand Builder</td><td>$15,000/mo</td><td>$150,000</td><td>$30,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="prepay-note reveal">Six months upfront = one month free. *Subject to slot availability.</p>
+</section>
+
+<!-- PROOF -->
+<section id="proof">
+  <div class="eyebrow reveal">Proof</div>
+  <h2 class="title reveal">Story moves numbers.</h2>
+  <div class="proof-rows">
+    <div class="proof-row reveal">
+      <div><div class="proof-num">58K+</div><div class="proof-label">Followers Built</div></div>
+      <div><div class="proof-client">Mike Alder</div><p class="proof-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into a personal brand people actually follow.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">101K+</div><div class="proof-label">Combined Following</div></div>
+      <div><div class="proof-client">Gina Zapanta</div><p class="proof-desc">A podcast and short-form engine across Instagram, YouTube, and TikTok, built episode by episode around her voice, not a content calendar template.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">338K+</div><div class="proof-label">Organic Reach · 9 Days</div></div>
+      <div><div class="proof-client">Bot or Not · Launch</div><p class="proof-desc">One upload, one share, zero paid spend &mdash; and the audience followed the film across platforms. The same hooks-first discipline goes into every ad we cut.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">460K</div><div class="proof-label">Trailer Views</div></div>
+      <div><div class="proof-client">FOUR · Trailer Campaign</div><p class="proof-desc">Just under half a million views and 294 reshares on a trailer cut in-house. When the creative connects, the audience does the distribution for you.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section id="close">
+  <div class="eyebrow reveal">New Terrain Creative</div>
+  <h2 class="title reveal">Let's fill<br>your <em>pipeline.</em></h2>
+  <p class="lede reveal">One call. We'll look at what you're running now, tell you honestly which rung fits, and map the first ninety days.</p>
+  <div class="close-ctas reveal">
+    <a class="btn btn--gold" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+  <a class="close-mail reveal" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+</section>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
+  <a href="index.html">See the studio →</a>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
