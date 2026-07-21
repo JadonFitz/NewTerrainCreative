@@ -84,11 +84,17 @@
 
   /* ── HEADER ── */
   header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 26px 6vw;
+    padding: 20px 6vw;
     border-bottom: 1px solid var(--line);
+    background: rgba(10, 10, 10, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .wordmark {
@@ -132,7 +138,7 @@
   }
 
   /* ── HERO ── */
-  #hero { padding-top: 130px; padding-bottom: 90px; }
+  #hero { padding-top: 190px; padding-bottom: 90px; }
 
   #hero .title { font-size: clamp(44px, 6.4vw, 86px); max-width: 800px; }
 
@@ -468,7 +474,7 @@
 
   @media (max-width: 768px) {
     section { padding: 72px 24px; }
-    #hero { padding-top: 84px; }
+    #hero { padding-top: 140px; }
     .statbar { grid-template-columns: 1fr 1fr; }
     .alt-row { grid-template-columns: 1fr; gap: 18px; padding: 30px 24px; }
     .alt-price { text-align: left; }
