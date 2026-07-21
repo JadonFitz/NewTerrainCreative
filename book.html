@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opening your calendar · New Terrain Creative</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<!-- Auto-forward to the Google Calendar booking page -->
+<meta http-equiv="refresh" content="2;url=https://calendar.app.google/qardoZkWtaBsq2RG9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<!--
+  GOOGLE ADS CONVERSION TAG GOES HERE.
+  Once you have your AW- conversion ID and label from Google Ads, this page
+  will fire the conversion on load (more reliable than URL detection).
+  Example:
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXXXX');
+    gtag('event', 'conversion', {'send_to': 'AW-XXXXXXXXXX/LABEL'});
+  </script>
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #0A0A0A;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, sans-serif;
+  }
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .wrap { max-width: 480px; }
+  .mark {
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--parchment);
+  }
+  .mark span { color: var(--gold); }
+  .spinner {
+    width: 34px; height: 34px;
+    margin: 44px auto 40px;
+    border: 1px solid #2c2c2c;
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 300;
+    line-height: 1.15;
+  }
+  h1 em { font-style: italic; color: var(--gold); }
+  p {
+    margin-top: 18px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--muted);
+  }
+  .fallback {
+    display: inline-block;
+    margin-top: 30px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.35);
+    padding-bottom: 3px;
+    transition: border-color 0.3s;
+  }
+  .fallback:hover { border-color: var(--gold); }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mark">New Terrain <span>Creative</span></div>
+    <div class="spinner"></div>
+    <h1>Opening your <em>calendar…</em></h1>
+    <p>We're taking you to the booking page to pick a time. If it doesn't open in a moment, use the link below.</p>
+    <a class="fallback" href="https://calendar.app.google/qardoZkWtaBsq2RG9">Open the calendar</a>
+  </div>
+  <script>
+    // Immediate forward (the meta refresh above is the fallback for no-JS)
+    setTimeout(function () {
+      window.location.replace('https://calendar.app.google/qardoZkWtaBsq2RG9');
+    }, 900);
+  </script>
+</body>
+</html>
