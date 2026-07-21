@@ -129,6 +129,20 @@
 
   .hero-ctas { margin-top: 44px; display: flex; gap: 16px; flex-wrap: wrap; }
 
+  .hero-mail {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .hero-mail:hover { color: var(--gold); border-color: var(--gold); }
+
   /* ── STAT BAR ── */
   .statbar {
     display: grid;
@@ -462,6 +476,7 @@
     <a class="btn btn--gold" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Book a Call</a>
     <a class="btn btn--ghost" href="#pricing">See Pricing</a>
   </div>
+  <a class="hero-mail reveal" href="mailto:business@newterraincreative.com">Prefer email? business@newterraincreative.com</a>
 </section>
 
 <!-- STAT BAR -->
@@ -652,6 +667,7 @@
 
 <footer>
   <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
   <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
   <a href="index.html">See the studio →</a>
 </footer>
