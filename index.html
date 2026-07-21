@@ -82,6 +82,46 @@
   }
   .header-contact:hover { border-color: var(--gold); }
 
+  .header-links { display: flex; align-items: center; gap: 32px; }
+
+  .header-growth {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #A09890;
+    text-decoration: none;
+    opacity: 0;
+    animation: fadeIn 1s 3s forwards;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s;
+  }
+
+  .header-growth:hover { color: var(--gold); }
+
+  /* ── FORK BAND ── */
+  .fork-band {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 22px 24px;
+    border-top: 1px solid #1e1e1e;
+    border-bottom: 1px solid #1e1e1e;
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transition: background 0.3s;
+  }
+
+  .fork-band:hover { background: #0d0d0d; }
+  .fork-q { color: var(--muted); }
+  .fork-a { color: var(--gold); }
+
   /* ── HERO ── */
   #hero {
     min-height: 100vh;
@@ -1260,7 +1300,7 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .hero-rule { width: 80px; }
-    .wordmark, .header-contact, .hero-sub, .scroll-signal { opacity: 1; }
+    .wordmark, .header-contact, .header-growth, .hero-sub, .scroll-signal { opacity: 1; }
     .hero-headline .word span { transform: none; }
     .reveal { opacity: 1; transform: none; }
   }
@@ -1459,7 +1499,10 @@
 <!-- HEADER -->
 <header>
   <a href="#hero" class="wordmark">New Terrain Creative</a>
-  <a href="#contact" class="header-contact">Let's Work</a>
+  <div class="header-links">
+    <a href="grow.html" class="header-growth">Social Growth</a>
+    <a href="#contact" class="header-contact">Let's Work</a>
+  </div>
 </header>
 
 <!-- HERO -->
@@ -1489,6 +1532,11 @@
     </div>
   </div>
 </section>
+
+<a class="fork-band" href="grow.html">
+  <span class="fork-q">Looking for social growth, ads &amp; lead gen?</span>
+  <span class="fork-a">See growth plans &rarr;</span>
+</a>
 
 <!-- WORK -->
 <section id="work">
