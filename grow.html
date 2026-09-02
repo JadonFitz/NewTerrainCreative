@@ -362,6 +362,11 @@
   }
 
   .alt-row:hover { background: #0d0d0d; }
+  .alt-row--link { text-decoration: none; color: inherit; }
+  .alt-row--link .alt-name,
+  .alt-row--link .alt-price { transition: color 0.3s; }
+  .alt-row--link:hover .alt-name { color: var(--gold); }
+  .alt-row--link:focus-visible { outline: 1px solid var(--gold); outline-offset: -1px; }
 
   .alt-name { font-family: var(--display); font-size: 21px; font-weight: 300; color: var(--parchment); }
 
@@ -620,11 +625,11 @@
   </div>
 
   <div class="alt-rows">
-    <div class="alt-row reveal">
+    <a class="alt-row alt-row--link reveal" href="/sprint">
       <div><span class="alt-tag">Not ready for a retainer?</span><div class="alt-name">Ad Sprint</div></div>
       <p class="alt-body">One shoot day, a full testing arsenal of ready-to-run ads in under two weeks. 8 creatives at $2,500, or 15 at $4,500. If nothing outperforms your current content, your next shoot day is free.</p>
-      <div class="alt-price">From $2,500<small>one-time</small></div>
-    </div>
+      <div class="alt-price">From $2,500<small>see the details &rarr;</small></div>
+    </a>
     <div class="alt-row reveal">
       <div><span class="alt-tag">Running an event?</span><div class="alt-name">Event &amp; Summit Coverage</div></div>
       <p class="alt-body">Conferences, summits, launches, multi-day productions. Crewed to the room, cut for the recap and for a year of short-form after it. Scoped to the event rather than counted against a retainer.</p>
