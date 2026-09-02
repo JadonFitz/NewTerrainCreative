@@ -143,7 +143,95 @@
     letter-spacing: 0.04em;
   }
 
-  /* ── VIDEO SLOT ── */
+/* ── FOUNDING FIVE ── */
+  #founding { padding-top: 0; padding-bottom: 90px; }
+  .found-panel {
+    border: 1px solid rgba(200,169,110,0.38);
+    background: #0f0d09;
+    padding: 52px 48px;
+  }
+  .found-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+  .found-title {
+    font-family: var(--display);
+    font-size: clamp(30px, 3.6vw, 46px);
+    font-weight: 300;
+    line-height: 1.12;
+    color: var(--parchment);
+    margin: 0;
+  }
+  .found-title em { font-style: italic; color: var(--gold); }
+  .found-count { text-align: right; flex-shrink: 0; }
+  .found-dots { display: flex; gap: 8px; justify-content: flex-end; }
+  .dot {
+    width: 11px; height: 11px;
+    border: 1px solid var(--gold);
+    display: block;
+  }
+  .dot.taken { background: var(--gold); }
+  .found-count-n {
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .found-lede {
+    margin: 30px 0 0;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #A09890;
+    max-width: 74ch;
+  }
+  .found-terms {
+    margin: 36px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 44px;
+  }
+  .found-terms li {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 16px;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .found-terms b { color: var(--parchment); font-weight: 400; display: block; margin-bottom: 4px; }
+  .found-n {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--gold);
+    line-height: 1.2;
+  }
+  .found-terms li:last-child { grid-column: 1 / -1; grid-template-columns: 30px minmax(0, 62ch); }
+  .found-cta { margin-top: 44px; padding-top: 34px; border-top: 1px solid var(--line); }
+  .found-fine {
+    margin: 20px 0 0;
+    font-size: 11px;
+    font-style: italic;
+    line-height: 1.85;
+    color: var(--muted);
+    max-width: 76ch;
+  }
+  @media (max-width: 900px) {
+    .found-panel { padding: 38px 26px; }
+    .found-terms { grid-template-columns: 1fr; gap: 22px; }
+    .found-count { text-align: left; }
+    .found-dots { justify-content: flex-start; }
+  }
+
+    /* ── VIDEO SLOT ── */
   #video { padding-top: 20px; padding-bottom: 90px; }
   .video-frame {
     max-width: 900px;
@@ -453,8 +541,43 @@
 <section id="hero">
   <h1 class="title reveal">Your ads look like <em>ads.</em></h1>
   <p class="hero-sub reveal">One day on location with you. A full set of ready-to-run ads, start to finish in under 14 days, shot to look like a real person instead of a commercial. Then you find out which ones bring in leads.</p>
-  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="book.html" target="_blank" rel="noopener">Claim a Shoot Day</a></div>
-  <p class="hero-micro reveal">If nothing we make outperforms your current content, your next shoot day is free.</p>
+  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="book.html" target="_blank" rel="noopener">Claim a Founding Slot</a></div>
+  <p class="hero-micro reveal">We are giving the next five away. No fee, in exchange for the ad account and an honest review.</p>
+</section>
+
+<!-- FOUNDING FIVE -->
+<section id="founding">
+  <div class="found-panel reveal">
+    <div class="found-head">
+      <div>
+        <div class="eyebrow">The Founding Five</div>
+        <h2 class="found-title">We are giving the next<br>five away <em>free.</em></h2>
+      </div>
+      <!-- ══ SLOT COUNTER ══ As slots fill, add class "taken" to a dot and
+           update the number in .found-count-n. Five dots, five slots. -->
+      <div class="found-count">
+        <div class="found-dots">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="found-count-n">5 of 5 open</div>
+      </div>
+    </div>
+
+    <p class="found-lede">This is not a discount and it is not a trial. It is a trade. We are new enough that we want proof more than we want your money, so for five businesses in Los Angeles we will do the entire Ad Sprint at no fee, and take the results and an honest review as payment instead.</p>
+
+    <ol class="found-terms">
+      <li><span class="found-n">1</span><div><b>You commit $3,000 in ad spend over 30 days.</b> Paid to Meta directly, never to us, and never marked up. This is the only real requirement, and it exists because creative nobody runs teaches neither of us anything.</div></li>
+      <li><span class="found-n">2</span><div><b>We get admin access to the ad account before the shoot.</b> Not after delivery. If we cannot see what the ads actually do, the whole point of this is gone.</div></li>
+      <li><span class="found-n">3</span><div><b>You leave an honest review on delivery.</b> Honest is the operative word. If the work is not good, say that.</div></li>
+      <li><span class="found-n">4</span><div><b>We can publish the numbers.</b> Cost per lead, what won, what did not. Your name stays in or comes out, your call.</div></li>
+      <li><span class="found-n">5</span><div><b>You are in Los Angeles.</b> We shoot on location at your business, and for these five we are not travelling.</div></li>
+    </ol>
+
+    <div class="found-cta">
+      <a class="btn btn--gold" data-cta="founding" href="book.html" target="_blank" rel="noopener">Claim a Founding Slot</a>
+      <p class="found-fine">Everything below is what this costs once the five are gone. If the spend commitment is not met inside the 30 days, the Sprint converts to the standard rate. We would rather say that up front than surprise anybody with it.</p>
+    </div>
+  </div>
 </section>
 
 <!-- VSL SLOT -->
@@ -546,9 +669,9 @@
 
 <!-- OPTIONS -->
 <section id="options">
-  <div class="eyebrow reveal">Pick One</div>
+  <div class="eyebrow reveal">After the Five</div>
   <h2 class="title reveal">Eight, or <em>fifteen.</em></h2>
-  <p class="lede reveal">Same day on location, same turnaround either way. The only question is how much you want to walk away with.</p>
+  <p class="lede reveal">Once the founding slots are gone, this is what it costs. Same day on location, same turnaround either way. The only question is how much you want to walk away with.</p>
 
   <div class="opt-cards">
     <div class="opt-card reveal">
