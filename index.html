@@ -384,6 +384,11 @@
     background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
   }
 
+  /* stronger scrim for light key art */
+  .work-item--light .work-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.12) 100%);
+  }
+
   .work-meta {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -1569,7 +1574,7 @@
   <div class="work-grid work-grid--cinematic">
 
     <!-- Off Rip -->
-    <div class="work-item work-item--featured reveal">
+    <div class="work-item reveal">
       <div class="work-bg" style="background-image:url('assets/offrip-thumbnail.jpg')"></div>
       <div class="work-overlay"></div>
       <button class="work-action" data-video="9eEiEanqUXg">Watch Trailer ↗</button>
@@ -1625,6 +1630,18 @@
         <div class="work-type">Spec Commercial</div>
         <div class="work-title">Ghirardelli</div>
         <div class="work-detail">Spec spot · Direction, cinematography, post</div>
+      </div>
+    </div>
+
+    <!-- FOUR -->
+    <div class="work-item work-item--light reveal">
+      <div class="work-bg" style="background-image:url('assets/four-thumbnail.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="LxgDdkYP2gE">Watch Trailer ↗</button>
+      <div class="work-meta">
+        <div class="work-type">Feature Trailer · Drama</div>
+        <div class="work-title">FOUR</div>
+        <div class="work-detail">460K views · 294 reshares · Trailer cut in-house</div>
       </div>
     </div>
 
