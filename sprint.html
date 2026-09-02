@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Sprint · New Terrain Creative. A full set of ads in two weeks.</title>
+<meta name="description" content="One shoot day. A full testing arsenal of ready-to-run ads in under two weeks, cut by an award-winning film team. If nothing outperforms your current content, your next shoot day is free.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="Ad Sprint · New Terrain Creative">
+<meta property="og:description" content="A full set of ready-to-run ads in under two weeks. Cut by the team behind award-winning films.">
+<meta property="og:image" content="assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  TRACKING · WIRE THESE BEFORE SPENDING A DOLLAR
+  Replace the placeholder IDs, then uncomment each block.
+  Do the same for the conversion tag in book.html (line ~18).
+  ════════════════════════════════════════════════════════════════
+
+  META PIXEL  ·  replace YOUR_PIXEL_ID
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR_PIXEL_ID');
+    fbq('track', 'PageView');
+  </script>
+
+  GA4  ·  replace G-XXXXXXXXXX
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+-->
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --line: #1e1e1e;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  section { padding: 100px 6vw; max-width: 1180px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-size: clamp(34px, 4.6vw, 56px);
+    font-weight: 300;
+    line-height: 1.12;
+    color: var(--parchment);
+  }
+  .title em { font-style: italic; color: var(--gold); }
+
+  .lede {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 600px;
+  }
+
+  .btn {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 17px 38px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .btn--gold { background: var(--gold); color: var(--black); font-weight: 500; }
+  .btn--gold:hover { background: var(--parchment); }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ── MINIMAL BAR · wordmark only, no navigation off this page ── */
+  .bar {
+    display: flex;
+    justify-content: center;
+    padding: 26px 6vw;
+    border-bottom: 1px solid var(--line);
+  }
+  .wordmark {
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+  .wordmark span { color: var(--gold); }
+
+  /* ── HERO ── */
+  #hero { padding-top: 92px; padding-bottom: 60px; text-align: center; }
+  #hero .title { font-size: clamp(40px, 5.6vw, 74px); max-width: 940px; margin: 0 auto; }
+  .hero-sub {
+    margin: 30px auto 0;
+    font-size: 15.5px;
+    line-height: 1.9;
+    color: #A09890;
+    max-width: 620px;
+  }
+  .hero-cta { margin-top: 42px; }
+  .hero-micro {
+    margin-top: 22px;
+    font-size: 11.5px;
+    font-style: italic;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── VIDEO SLOT ── */
+  #video { padding-top: 20px; padding-bottom: 90px; }
+  .video-frame {
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
+  .video-ph { text-align: center; padding: 30px; }
+  .video-ph-mark {
+    font-family: var(--display);
+    font-size: 40px;
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.45;
+  }
+  .video-ph-note {
+    margin-top: 16px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
+  /* ── OLD WAY / NEW WAY ── */
+  #contrast { border-top: 1px solid var(--line); }
+  .contrast-grid {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .contrast-col { background: var(--black); padding: 44px 38px; }
+  .contrast-col--new { background: #0f0d09; }
+  .contrast-head {
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-bottom: 26px;
+  }
+  .contrast-col .contrast-head { color: var(--muted); }
+  .contrast-col--new .contrast-head { color: var(--gold); }
+  .contrast-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .contrast-list li {
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #A09890;
+  }
+  .contrast-list li::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 8px;
+    background: #3a3632;
+  }
+  .contrast-col--new .contrast-list li::before { background: var(--gold); }
+
+  /* ── WHAT YOU GET ── */
+  #deliver { border-top: 1px solid var(--line); }
+  .deliver-grid {
+    margin-top: 62px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .deliver-step { }
+  .deliver-num {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 21px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 14px;
+  }
+  .deliver-when {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .deliver-title {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    margin-bottom: 13px;
+  }
+  .deliver-body { font-size: 12.5px; line-height: 1.85; color: var(--muted); }
+
+  /* ── OPTIONS ── */
+  #options { border-top: 1px solid var(--line); }
+  .opt-cards {
+    margin-top: 62px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .opt-card {
+    background: var(--black);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background 0.3s;
+  }
+  .opt-card:hover { background: #0d0d0d; }
+  .opt-card--featured { background: #0f0d09; }
+  .opt-card--featured:hover { background: #131009; }
+  .chip {
+    position: absolute;
+    top: 0; right: 0;
+    font-size: 8px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 6px 14px;
+  }
+  .opt-name { font-family: var(--display); font-size: 29px; font-weight: 300; color: var(--parchment); }
+  .opt-for { margin-top: 10px; font-size: 11.5px; font-style: italic; color: var(--muted); line-height: 1.7; }
+  .opt-amount {
+    margin-top: 26px;
+    font-family: var(--display);
+    font-size: 46px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .opt-amount small { font-family: var(--body); font-size: 11px; letter-spacing: 0.1em; color: var(--muted); }
+  .opt-list {
+    list-style: none;
+    margin: 30px 0 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .opt-list li {
+    display: flex;
+    gap: 13px;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    line-height: 1.7;
+    color: #A09890;
+  }
+  .opt-list li::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 8px;
+  }
+  .opt-cta { margin-top: auto; text-align: center; }
+
+  /* ── SPEED ── */
+  .speed-row {
+    margin-top: 1px;
+    background: var(--black);
+    border: 1px solid var(--line);
+    border-top: none;
+    display: grid;
+    grid-template-columns: 210px 1fr auto;
+    gap: 34px;
+    align-items: center;
+    padding: 34px 40px;
+  }
+  .speed-tag { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.75; display: block; margin-bottom: 8px; }
+  .speed-name { font-family: var(--display); font-size: 22px; font-weight: 300; color: var(--parchment); }
+  .speed-body { font-size: 12.5px; line-height: 1.8; color: var(--muted); }
+  .speed-price { font-family: var(--display); font-size: 22px; color: var(--gold); white-space: nowrap; text-align: right; }
+  .speed-price small { font-family: var(--body); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 4px; }
+
+  .fine {
+    margin-top: 30px;
+    font-size: 11px;
+    font-style: italic;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 900px;
+  }
+
+  /* ── PROOF ── */
+  #proof { border-top: 1px solid var(--line); }
+  .proof-rows { margin-top: 60px; display: flex; flex-direction: column; }
+  .proof-row {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 40px;
+    padding: 34px 0;
+    border-top: 1px solid var(--line);
+    align-items: start;
+  }
+  .proof-row:last-child { border-bottom: 1px solid var(--line); }
+  .proof-num { font-family: var(--display); font-size: 40px; font-weight: 300; color: var(--gold); line-height: 1; }
+  .proof-label { margin-top: 10px; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); line-height: 1.7; }
+  .proof-tier { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.7; display: block; margin-bottom: 9px; }
+  .proof-client { font-family: var(--display); font-size: 22px; font-weight: 300; color: var(--parchment); margin-bottom: 10px; }
+  .proof-desc { font-size: 12.5px; line-height: 1.85; color: var(--muted); max-width: 640px; }
+
+  /* ── OBJECTIONS ── */
+  #answers { border-top: 1px solid var(--line); }
+  .qa-list { margin-top: 56px; border-top: 1px solid var(--line); }
+  .qa {
+    border-bottom: 1px solid var(--line);
+    padding: 30px 0;
+  }
+  .qa-q {
+    font-family: var(--display);
+    font-size: 21px;
+    font-weight: 300;
+    color: var(--parchment);
+    margin-bottom: 14px;
+  }
+  .qa-a { font-size: 13px; line-height: 1.9; color: var(--muted); max-width: 780px; }
+
+  /* ── GUARANTEE ── */
+  #promise { border-top: 1px solid var(--line); }
+  .promise-box {
+    margin-top: 50px;
+    border: 1px solid rgba(200,169,110,0.32);
+    background: #0f0d09;
+    padding: 54px 48px;
+    max-width: 860px;
+  }
+  .promise-head {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 1.35;
+  }
+  .promise-body { margin-top: 22px; font-size: 13.5px; line-height: 1.95; color: #A09890; }
+
+  /* ── CLOSE ── */
+  #close { border-top: 1px solid var(--line); text-align: center; }
+  #close .title { max-width: 760px; margin: 0 auto; }
+  #close .lede { margin-left: auto; margin-right: auto; }
+  .close-cta { margin-top: 40px; }
+  .close-mail {
+    display: inline-block;
+    margin-top: 26px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .close-mail:hover { color: var(--gold); border-color: var(--gold); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 34px 6vw;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  footer a:hover { color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    section { padding: 76px 7vw; }
+    .contrast-grid { grid-template-columns: 1fr; }
+    .deliver-grid { grid-template-columns: 1fr 1fr; gap: 34px; }
+    .opt-cards { grid-template-columns: 1fr; }
+    .speed-row { grid-template-columns: 1fr; gap: 16px; text-align: left; }
+    .speed-price { text-align: left; }
+    .proof-row { grid-template-columns: 1fr; gap: 18px; }
+  }
+  @media (max-width: 560px) {
+    .deliver-grid { grid-template-columns: 1fr; }
+    .promise-box { padding: 40px 28px; }
+    #hero { padding-top: 66px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="wordmark">New Terrain <span>Creative</span></span>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <h1 class="title reveal">Your ads look like <em>everyone else's ads.</em></h1>
+  <p class="hero-sub reveal">One shoot day. A full arsenal of ready-to-run ads in under two weeks, cut by the team behind award-winning films. Then you find out which one prints.</p>
+  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="book.html" target="_blank" rel="noopener">Claim a Shoot Day</a></div>
+  <p class="hero-micro reveal">If nothing we make outperforms your current content, your next shoot day is free.</p>
+</section>
+
+<!-- VSL SLOT -->
+<section id="video">
+  <div class="video-frame reveal">
+    <!--
+      ════════════════════════════════════════════════════════════
+      VSL GOES HERE. Delete the .video-ph div below and drop in:
+
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0"
+                title="New Terrain Creative · Ad Sprint"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+      or a self-hosted cut:
+
+        <video src="assets/vsl-sprint.mp4" poster="assets/vsl-poster.jpg" controls playsinline></video>
+      ════════════════════════════════════════════════════════════
+    -->
+    <div class="video-ph">
+      <div class="video-ph-mark">NTC</div>
+      <div class="video-ph-note">VSL slot<br>Drop the embed here</div>
+    </div>
+  </div>
+</section>
+
+<!-- OLD WAY / NEW WAY -->
+<section id="contrast">
+  <div class="eyebrow reveal">Why Most Ads Die</div>
+  <h2 class="title reveal">Same stock footage.<br>Same <em>result.</em></h2>
+  <p class="lede reveal">Nearly every ad in your category was built the same way, by people who have never had to hold an audience's attention for ninety minutes. It shows, and the feed scrolls past it.</p>
+
+  <div class="contrast-grid reveal">
+    <div class="contrast-col">
+      <div class="contrast-head">The usual way</div>
+      <ul class="contrast-list">
+        <li>Stock footage and AI filler that looks like the four ads before it</li>
+        <li>One creative, run until it dies, then a scramble for the next one</li>
+        <li>A production company that hands you files and wishes you luck</li>
+        <li>An ad agency that blames the creative, and a creative team that blames the media buyer</li>
+        <li>Six weeks from the idea to something you can actually run</li>
+      </ul>
+    </div>
+    <div class="contrast-col contrast-col--new">
+      <div class="contrast-head">The Ad Sprint</div>
+      <ul class="contrast-list">
+        <li>Cut with the same eye that cuts award-winning films, so yours earns the stop</li>
+        <li>A full set of variants built to be tested against each other from day one</li>
+        <li>Hooks written first, because the first two seconds decide the other twenty-eight</li>
+        <li>One team that made it and knows exactly how it is meant to run</li>
+        <li>In your hands in under two weeks, formatted for every placement</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section id="deliver">
+  <div class="eyebrow reveal">How It Runs</div>
+  <h2 class="title reveal">One day on camera.<br>Two weeks to <em>ready.</em></h2>
+
+  <div class="deliver-grid">
+    <div class="deliver-step reveal">
+      <span class="deliver-num">I</span>
+      <div class="deliver-when">Days 1 to 3</div>
+      <div class="deliver-title">The Angle Call</div>
+      <p class="deliver-body">Forty-five minutes on what you sell, who says no and why, and what has already worked. You leave with a shot list and a set of hooks worth testing. Nothing gets shot before this is settled.</p>
+    </div>
+    <div class="deliver-step reveal">
+      <span class="deliver-num">II</span>
+      <div class="deliver-when">Day 5 to 7</div>
+      <div class="deliver-title">The Shoot Day</div>
+      <p class="deliver-body">One day, our crew and our gear, on location or in studio. We shoot every hook and every angle in a single block, which is the entire reason this costs what it costs instead of five times more.</p>
+    </div>
+    <div class="deliver-step reveal">
+      <span class="deliver-num">III</span>
+      <div class="deliver-when">Day 8 to 13</div>
+      <div class="deliver-title">The Cut</div>
+      <p class="deliver-body">Every creative built out, captioned, colored, scored from our licensed libraries, and exported for each placement. Vertical, square, and horizontal, with the hooks split out so you can test them independently.</p>
+    </div>
+    <div class="deliver-step reveal">
+      <span class="deliver-num">IV</span>
+      <div class="deliver-when">Day 14</div>
+      <div class="deliver-title">The Handoff</div>
+      <p class="deliver-body">Files delivered with a one-page testing plan: what to run first, what to spend, what to watch, and when to call a winner. Run it yourself or have us run it. Either works.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OPTIONS -->
+<section id="options">
+  <div class="eyebrow reveal">Pick One</div>
+  <h2 class="title reveal">Eight, or <em>fifteen.</em></h2>
+  <p class="lede reveal">Same shoot day, same crew, same two weeks. The only question is how much of it you want to walk away with.</p>
+
+  <div class="opt-cards">
+    <div class="opt-card reveal">
+      <div class="opt-name">The Eight</div>
+      <p class="opt-for">Enough to find out whether this works for you.</p>
+      <div class="opt-amount">$2,500 <small>one-time</small></div>
+      <ul class="opt-list">
+        <li>8 ready-to-run ad creatives</li>
+        <li>One full shoot day, crew and gear included</li>
+        <li>The Angle Call and the hook set</li>
+        <li>Every placement: vertical, square, horizontal</li>
+        <li>Captions, color, and licensed music</li>
+        <li>One-page testing plan at handoff</li>
+        <li>Delivered in under two weeks</li>
+      </ul>
+      <div class="opt-cta"><a class="btn btn--gold" data-cta="eight" href="book.html" target="_blank" rel="noopener">Start With Eight</a></div>
+    </div>
+
+    <div class="opt-card opt-card--featured reveal">
+      <div class="chip">Most Take This</div>
+      <div class="opt-name">The Fifteen</div>
+      <p class="opt-for">Enough variants to actually learn something from the test.</p>
+      <div class="opt-amount">$4,500 <small>one-time</small></div>
+      <ul class="opt-list">
+        <li>15 ready-to-run ad creatives</li>
+        <li>Everything in The Eight</li>
+        <li>Wider hook coverage, so you are testing angles and not just edits</li>
+        <li>Enough volume to keep rotating for a full quarter</li>
+        <li>Deeper cutdown set from the same shoot day</li>
+        <li>Priority scheduling on the shoot date</li>
+      </ul>
+      <div class="opt-cta"><a class="btn btn--gold" data-cta="fifteen" href="book.html" target="_blank" rel="noopener">Go With Fifteen</a></div>
+    </div>
+  </div>
+
+  <div class="speed-row reveal">
+    <div>
+      <span class="speed-tag">Optional</span>
+      <div class="speed-name">Front of the Line</div>
+    </div>
+    <p class="speed-body">Seven days instead of fourteen. You get the next shoot slot on the calendar and your cut jumps the queue in post. If we miss the date, you do not pay the priority fee.</p>
+    <div class="speed-price">+20%<small>$500 on Eight · $900 on Fifteen</small></div>
+  </div>
+
+  <p class="fine reveal">Ad spend is separate and always yours: you pay Meta and Apple directly and we never mark up or hold your budget. Music from our licensed libraries is included. Prices exclude ad spend, paid media placements, talent, and travel outside Los Angeles or Tampa. Running the media is not included here and is available separately, or built into the monthly retainers if you decide to keep going.</p>
+</section>
+
+<!-- PROOF -->
+<section id="proof">
+  <div class="eyebrow reveal">Proof</div>
+  <h2 class="title reveal">Story moves <em>numbers.</em></h2>
+
+  <div class="proof-rows">
+    <div class="proof-row reveal">
+      <div><div class="proof-num">460K</div><div class="proof-label">Trailer Views</div></div>
+      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">FOUR · Trailer Campaign</div><p class="proof-desc">Just under half a million views and 294 reshares on a trailer cut in-house. When the creative connects, the audience does the distribution for you.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">338K+</div><div class="proof-label">Organic Reach · 9 Days</div></div>
+      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">Bot or Not · Launch</div><p class="proof-desc">One upload, one share, zero paid spend. The audience followed the film across platforms. The same hooks-first discipline goes into every ad we cut.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">101K+</div><div class="proof-label">Combined Following</div></div>
+      <div><span class="proof-tier">Retainer Client</span><div class="proof-client">Gina Zapanta</div><p class="proof-desc">A podcast and short-form engine across Instagram, YouTube, and TikTok, built episode by episode around her voice, not a content calendar template.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">58K+</div><div class="proof-label">Followers Built</div></div>
+      <div><span class="proof-tier">Retainer Client</span><div class="proof-client">Mike Alder</div><p class="proof-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into a personal brand people actually follow.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section id="answers">
+  <div class="eyebrow reveal">Straight Answers</div>
+  <h2 class="title reveal">What you are<br>probably <em>thinking.</em></h2>
+
+  <div class="qa-list">
+    <div class="qa reveal">
+      <div class="qa-q">I already have someone making my content.</div>
+      <p class="qa-a">Then you are most of the way there, and this is a different job. Content keeps an audience warm. Ads have to stop a stranger and sell them something, which is a separate craft with separate rules. Most content people were never asked to do it, and it is not a knock on them that it shows.</p>
+    </div>
+    <div class="qa reveal">
+      <div class="qa-q">Two weeks sounds rushed.</div>
+      <p class="qa-a">It is fast because the planning happens before anyone picks up a camera. By the shoot day the hooks are written and the shot list is locked, so the day is execution instead of discovery. The speed comes out of the process, not out of the work.</p>
+    </div>
+    <div class="qa reveal">
+      <div class="qa-q">What if none of them work?</div>
+      <p class="qa-a">Then your next shoot day is free. We are betting a full production day that at least one of these beats what you are running now, and that is a bet we would rather make than argue about.</p>
+    </div>
+    <div class="qa reveal">
+      <div class="qa-q">Do I have to be on camera?</div>
+      <p class="qa-a">No. Plenty of the strongest performers are product-led, customer-led, or built from footage with no founder in frame at all. If you do want to be the face, we will make it painless, and the Angle Call is where we decide which version of this you are actually doing.</p>
+    </div>
+    <div class="qa reveal">
+      <div class="qa-q">I am not in Los Angeles or Tampa.</div>
+      <p class="qa-a">We work with clients worldwide. Travel outside Los Angeles or Tampa gets quoted on top, and we will tell you what it costs on the call before you commit to anything. For some businesses the better answer is a hybrid: we direct remotely and cut from footage shot on your end.</p>
+    </div>
+    <div class="qa reveal">
+      <div class="qa-q">Will you run the ads too?</div>
+      <p class="qa-a">Not inside the Sprint. This gets you the creative and the plan to test it. If you would rather hand off the whole thing, we run Meta and Apple Maps as a monthly engagement, and most people make that call after they have seen what the first set does.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section id="promise">
+  <div class="eyebrow reveal">Skin in the Game</div>
+  <h2 class="title reveal">We bet on our<br>own <em>work.</em></h2>
+
+  <div class="promise-box reveal">
+    <p class="promise-head">If nothing we make outperforms your current content, your next shoot day is free.</p>
+    <p class="promise-body">Not a partial refund and not a credit toward something else. Another full production day, our crew and our gear, at no cost, until we get you a creative that beats your baseline. We can offer that because we would rather carry the risk than spend the call talking you out of it.</p>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section id="close">
+  <div class="eyebrow reveal">New Terrain Creative</div>
+  <h2 class="title reveal">One day of shooting.<br>A quarter of <em>ads.</em></h2>
+  <p class="lede reveal">Book the call and we will tell you honestly whether this is the right move for you, which of the two sizes actually fits, and when we could get you on the calendar.</p>
+  <div class="close-cta reveal"><a class="btn btn--gold" data-cta="close" href="book.html" target="_blank" rel="noopener">Claim a Shoot Day</a></div>
+  <a class="close-mail reveal" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+</section>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // CTA click events. Fires only once the pixels above are uncommented and wired.
+  document.querySelectorAll('[data-cta]').forEach(el => {
+    el.addEventListener('click', () => {
+      const where = el.getAttribute('data-cta');
+      if (window.fbq) fbq('track', 'Lead', { content_name: 'ad-sprint', position: where });
+      if (window.gtag) gtag('event', 'cta_click', { cta_position: where, offer: 'ad-sprint' });
+    });
+  });
+</script>
+
+</body>
+</html>
