@@ -1,0 +1,15 @@
+# Camera and export masters live here so they stay next to the web cuts,
+# but they are far too heavy to commit. The lowercase files the site
+# actually loads (loop-*.mp4, poster-*.jpg, NAME.mp4) are tracked.
+40523b4aa7524b2e9d1dc3d373a6a159.MOV
+Hey LEO.MP4
+IMG_8146.MOV
+LEFT HANGING - WITH SUBTITLES (AD 2).MP4
+MIKE AD 4 - HAMSTER WHEEL.MP4
+Off Script EP2 Short-1.MP4
+PING PONG CRASH - AD 3.MP4
+v15044gf0000d9h8kufog65rp3julmag.mov
+v15044gf0000d9ieg3nog65qeqmrnetg.mov
+
+# Jadon's hand-cut loop masters. The re-encoded loop-*.mp4 files are what ship.
+loop/

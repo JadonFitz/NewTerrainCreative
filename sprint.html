@@ -108,7 +108,7 @@
   .reveal.on { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
-  /* ── MINIMAL BAR · wordmark only, no navigation off this page ── */
+  /* ── MINIMAL BAR · wordmark is the only way off this page ── */
   .bar {
     display: flex;
     justify-content: center;
@@ -123,6 +123,9 @@
     text-decoration: none;
   }
   .wordmark span { color: var(--gold); }
+  a.wordmark { transition: color 0.3s; }
+  a.wordmark:hover { color: var(--gold); }
+  a.wordmark:hover span { color: var(--parchment); }
 
   /* ── HERO ── */
   #hero { padding-top: 92px; padding-bottom: 60px; text-align: center; }
@@ -514,6 +517,308 @@
   footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
   footer a:hover { color: var(--gold); }
 
+  /* ── THE REEL · horizontal showcase of vertical work ──
+     One row of 9:16 cards that loop silently, gloss on the glass,
+     and open the full cut on click. Card copy lives in the markup. */
+  #reel { --reel-max: 1180px; max-width: none; padding-left: 0; padding-right: 0; }
+  .reel-head {
+    max-width: var(--reel-max);
+    margin: 0 auto;
+    padding: 0 6vw;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .reel-nav { display: flex; gap: 10px; flex-shrink: 0; padding-bottom: 6px; }
+  .reel-arrow {
+    width: 44px; height: 44px;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.4s cubic-bezier(0.16,1,0.3,1), color 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s;
+  }
+  .reel-arrow:hover { border-color: var(--gold); color: var(--gold); }
+  .reel-arrow[disabled] { opacity: 0.25; cursor: default; border-color: var(--line); color: var(--parchment); }
+
+  .reel-viewport { position: relative; margin-top: 44px; }
+  .reel-viewport::before,
+  .reel-viewport::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 10vw;
+    max-width: 150px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .reel-viewport::before {
+    left: 0;
+    background: linear-gradient(to left, rgba(10,10,10,0) 0%, var(--black) 88%);
+  }
+  .reel-viewport::after {
+    right: 0;
+    background: linear-gradient(to right, rgba(10,10,10,0) 0%, var(--black) 88%);
+  }
+  .reel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 2px max(6vw, calc((100vw - var(--reel-max)) / 2 + 6vw));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .reel-track::-webkit-scrollbar { display: none; }
+
+  .reel-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 258px;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #0f0f0f;
+    cursor: pointer;
+    transition: border-color 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover,
+  .reel-card:focus-visible { border-color: rgba(200,169,110,0.5); outline: none; }
+
+  .reel-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover .reel-media,
+  .reel-card:focus-visible .reel-media { transform: scale(1.04); }
+
+
+  /* Gloss · a fixed specular pass over the glass, plus a sweep on hover */
+  .reel-gloss,
+  .reel-shine,
+  .reel-scrim,
+  .reel-veil { position: absolute; inset: 0; pointer-events: none; }
+  .reel-gloss {
+    background:
+      linear-gradient(158deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0) 44%),
+      linear-gradient(to top, rgba(10,10,10,0.28) 0%, rgba(10,10,10,0) 34%);
+  }
+  /* A wide, soft leak that drifts once across the glass. It runs as a
+     keyframe rather than a transition so that pulling the cursor away
+     stops it where it is instead of racing it back the other way. */
+  .reel-shine {
+    background: linear-gradient(104deg,
+      rgba(255,255,255,0) 20%,
+      rgba(255,255,255,0.05) 38%,
+      rgba(255,255,255,0.12) 50%,
+      rgba(255,255,255,0.05) 62%,
+      rgba(255,255,255,0) 80%);
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  .reel-card:hover .reel-shine,
+  .reel-card:focus-visible .reel-shine {
+    animation: reelLeak 2.1s cubic-bezier(0.33,0,0.2,1) 0.12s both;
+  }
+  @keyframes reelLeak {
+    0%   { transform: translateX(-100%); opacity: 0; }
+    22%  { opacity: 1; }
+    78%  { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+  .reel-scrim {
+    background: linear-gradient(to top, rgba(8,8,8,0.96) 0%, rgba(8,8,8,0.84) 28%, rgba(8,8,8,0.32) 56%, rgba(8,8,8,0) 78%);
+    opacity: 0.94;
+    transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover .reel-scrim,
+  .reel-card:focus-visible .reel-scrim { opacity: 1; }
+  .reel-veil {
+    background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.76) 46%, rgba(8,8,8,0.36) 80%, rgba(8,8,8,0.12) 100%);
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover .reel-veil,
+  .reel-card:focus-visible .reel-veil { opacity: 1; }
+
+  .reel-body {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 22px 20px 20px;
+    pointer-events: none;
+  }
+  .reel-tag {
+    font-size: 8.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 9px;
+  }
+  .reel-name {
+    font-family: var(--display);
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--parchment);
+    margin: 0;
+  }
+  .reel-figure {
+    margin-top: 12px;
+    padding-top: 11px;
+    border-top: 1px solid rgba(200,169,110,0.28);
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    color: var(--parchment);
+    font-weight: 400;
+  }
+  .reel-figure small {
+    display: block;
+    margin-top: 4px;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #948C84;
+    font-weight: 300;
+  }
+
+  /* Hover panel · the story behind the number */
+  .reel-more {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
+  }
+  .reel-card:hover .reel-more,
+  .reel-card:focus-visible .reel-more { max-height: 220px; opacity: 1; }
+  .reel-note {
+    margin: 14px 0 0;
+    font-size: 11.5px;
+    line-height: 1.75;
+    color: #A09890;
+  }
+  .reel-card--noplay { cursor: default; }
+  .reel-play {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 9.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 3px;
+  }
+
+  .reel-fine {
+    max-width: var(--reel-max);
+    margin: 42px auto 0;
+    padding: 0 6vw;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* ── VERTICAL PLAYER ── */
+  .vmodal {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    background: rgba(10,10,10,0.94);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .vmodal.open { opacity: 1; pointer-events: all; }
+  .vmodal-inner {
+    position: relative;
+    transform: translateY(18px) scale(0.98);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .vmodal.open .vmodal-inner { transform: none; }
+  .vmodal-stage {
+    position: relative;
+    height: min(84vh, 900px);
+    max-width: 92vw;
+    aspect-ratio: 9 / 16;
+    background: #000;
+    border: 1px solid var(--line);
+  }
+  .vmodal-stage video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+  /* A 9:16 player is narrow enough that the browser drops volume from its
+     own control bar, so the sound lives up here instead. */
+  .vmodal-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 12px;
+  }
+  .vmodal-btn {
+    background: none;
+    border: none;
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s, color 0.2s;
+    padding: 0;
+    white-space: nowrap;
+  }
+  .vmodal-btn:hover { opacity: 1; }
+  .vmodal-mute[data-muted="true"] { color: var(--muted); }
+  .vmodal-close { margin-left: auto; }
+
+  .vmodal-vol {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 92px;
+    height: 12px;
+    background: none;
+    cursor: pointer;
+  }
+  .vmodal-vol::-webkit-slider-runnable-track { height: 1px; background: #3a3733; }
+  .vmodal-vol::-moz-range-track { height: 1px; background: #3a3733; }
+  .vmodal-vol::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 9px; height: 9px;
+    margin-top: -4px;
+    background: var(--gold);
+    border: none;
+    border-radius: 0;
+  }
+  .vmodal-vol::-moz-range-thumb {
+    width: 9px; height: 9px;
+    background: var(--gold);
+    border: none;
+    border-radius: 0;
+  }
+  .vmodal-vol:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+
+  @media (hover: none) {
+    .reel-more { max-height: 220px; opacity: 1; }
+    .reel-nav { display: none; }
+    .reel-shine { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reel-shine { display: none; animation: none; }
+    .reel-media, .reel-more, .reel-scrim { transition: none; }
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     section { padding: 76px 7vw; }
@@ -524,8 +829,15 @@
     .speed-price { text-align: left; }
     .proof-row { grid-template-columns: 1fr; gap: 18px; }
   }
+  @media (max-width: 900px) {
+    .reel-head { padding: 0 7vw; }
+    .reel-track { padding-left: 7vw; padding-right: 7vw; }
+    .reel-fine { padding: 0 7vw; }
+    .reel-nav { display: none; }
+  }
   @media (max-width: 560px) {
     .deliver-grid { grid-template-columns: 1fr; }
+    .reel-card { width: 212px; }
     .promise-box { padding: 40px 28px; }
     #hero { padding-top: 66px; }
   }
@@ -534,7 +846,7 @@
 <body>
 
 <div class="bar">
-  <span class="wordmark">New Terrain <span>Creative</span></span>
+  <a class="wordmark" href="index.html">New Terrain <span>Creative</span></a>
 </div>
 
 <!-- HERO -->
@@ -633,6 +945,250 @@
     </div>
   </div>
 </section>
+
+
+<!-- THE REEL -->
+<!--
+  ════════════════════════════════════════════════════════════════
+  HOW TO EDIT THIS SECTION
+
+  Each card is one <article class="reel-card">, and each one points at three
+  files in assets/reel. To add a card, copy an existing one and change:
+
+    • THE LOOP        <source src="assets/reel/loop-NAME.mp4">
+                      Silent, 6s, 540x960. Autoplays in the card.
+
+    • THE POSTER      poster="assets/reel/poster-NAME.jpg"
+                      540x960 still, held until the loop decodes. If the loop
+                      file is ever missing the poster stands in on its own.
+
+    • WHAT PLAYS      data-src="assets/reel/NAME.mp4"
+                      The full cut with audio, 720x1280. The player is 9:16
+                      only, on purpose: everything in this row is a social
+                      reel, so nothing horizontal belongs in it.
+
+                      assets/reel/README.md has the ffmpeg lines that
+                      produced all three from a master file.
+
+    • THE NUMBER      .reel-figure is the headline, <small> is the qualifier.
+                      The per-ad hooks are placeholders for real campaign
+                      numbers: swap in cost per lead, CAC, or cases signed
+                      as they land, but only ones you can stand behind, since
+                      the Founding Five terms put these in writing.
+
+    • THE HOVER       .reel-note is the line that opens on hover.
+  ════════════════════════════════════════════════════════════════
+-->
+<section id="reel">
+  <div class="reel-head">
+    <div>
+      <div class="eyebrow reveal">The Reel</div>
+      <h2 class="title reveal">Shot vertical.<br>Judged on <em>numbers.</em></h2>
+    </div>
+    <div class="reel-nav reveal">
+      <button class="reel-arrow reel-arrow--prev" type="button" aria-label="Scroll the reel left">&#8592;</button>
+      <button class="reel-arrow reel-arrow--next" type="button" aria-label="Scroll the reel right">&#8594;</button>
+    </div>
+  </div>
+
+  <div class="reel-viewport reveal">
+    <div class="reel-track">
+      <!-- Left Hanging · Ad Sprint &middot; Personal Injury -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Left Hanging" data-src="assets/reel/left-hanging.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-left-hanging.jpg">
+          <source src="assets/reel/loop-left-hanging.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Ad Sprint &middot; Personal Injury</div>
+          <h3 class="reel-name">Left Hanging</h3>
+          <div class="reel-figure">Hook one &middot; Insurance<small>Mike Alder &middot; one shoot day</small></div>
+          <div class="reel-more">
+            <p class="reel-note">The insurance angle, opened cold off a ledge. First of the set, and the reason the other two exist: nobody knows which hook wins until all of them run.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Rip · Feature Film &middot; Love Story -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip" data-src="assets/reel/off-rip-love-story.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-love-story.jpg">
+          <source src="assets/reel/loop-off-rip-love-story.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Feature Film &middot; Love Story</div>
+          <h3 class="reel-name">Off Rip</h3>
+          <div class="reel-figure">137K organic views<small>800K streaming minutes on the film</small></div>
+          <div class="reel-more">
+            <p class="reel-note">A vertical cut from the feature, posted organically and left to do its own work. The same footage carried the film from a festival win onto both major storefronts.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Ping Pong Crash · Ad Sprint &middot; Personal Injury -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Ping Pong Crash" data-src="assets/reel/ping-pong-crash.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-ping-pong-crash.jpg">
+          <source src="assets/reel/loop-ping-pong-crash.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Ad Sprint &middot; Personal Injury</div>
+          <h3 class="reel-name">Ping Pong Crash</h3>
+          <div class="reel-figure">Hook two &middot; The client call<small>Mike Alder &middot; one shoot day</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Same day, same office, a completely different way in. Written to be tested against Left Hanging rather than to replace it.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Script · Video Podcast &middot; Jack Tenney -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Script" data-src="assets/reel/off-script-jack-tenney.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-script-jack-tenney.jpg">
+          <source src="assets/reel/loop-off-script-jack-tenney.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Jack Tenney</div>
+          <h3 class="reel-name">Off Script</h3>
+          <div class="reel-figure">5.5M subscribers in the chair<small>NTC Original &middot; shot and cut in-house</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Our own show. The short-form format we build for clients, run on ourselves first so there is somewhere to point when we pitch it.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Hamster Wheel · Ad Sprint &middot; Personal Injury -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hamster Wheel" data-src="assets/reel/hamster-wheel.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-hamster-wheel.jpg">
+          <source src="assets/reel/loop-hamster-wheel.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Ad Sprint &middot; Personal Injury</div>
+          <h3 class="reel-name">Hamster Wheel</h3>
+          <div class="reel-figure">Hook three &middot; Negotiating<small>Mike Alder &middot; one shoot day</small></div>
+          <div class="reel-more">
+            <p class="reel-note">The negotiating angle, shot back to back with the other two. Three ready-to-run creatives out of one day on location, captioned and cut for every placement.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Rip · Feature Film &middot; Drama -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip" data-src="assets/reel/off-rip-drama.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-drama.jpg">
+          <source src="assets/reel/loop-off-rip-drama.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Feature Film &middot; Drama</div>
+          <h3 class="reel-name">Off Rip</h3>
+          <div class="reel-figure">800K streaming minutes<small>Grand Jury Award &middot; Gasparilla</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Cut for the feed rather than for a trailer. The scene has to work cold, with no setup and nothing to click into first.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- The Shoot Day · Behind the Ad Sprint -->
+      <article class="reel-card reel-card--noplay" aria-label="The Shoot Day">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-bts-ads.jpg">
+          <source src="assets/reel/loop-bts-ads.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Behind the Ad Sprint</div>
+          <h3 class="reel-name">The Shoot Day</h3>
+          <div class="reel-figure">One room, one afternoon<small>Three creatives &middot; no crew</small></div>
+          <div class="reel-more">
+            <p class="reel-note">A table, a fan, a light, and one person filming. No crew standing around is the whole point: it is why people stop performing and start sounding like themselves.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Script · Video Podcast &middot; Meghan -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Script" data-src="assets/reel/off-script-meghan.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-script-meghan.jpg">
+          <source src="assets/reel/loop-off-script-meghan.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Meghan</div>
+          <h3 class="reel-name">Off Script</h3>
+          <div class="reel-figure">Full production, end to end<small>NTC Original &middot; booking to final cut</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Booked, shot, cut, captioned, and cut down to shorts by the same person. The episode and the clips come out of one pass, not two.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Hey Leo · Short-Form &middot; Direct Address -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hey Leo" data-src="assets/reel/hey-leo.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-hey-leo.jpg">
+          <source src="assets/reel/loop-hey-leo.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Short-Form &middot; Direct Address</div>
+          <h3 class="reel-name">Hey Leo</h3>
+          <div class="reel-figure">A pitch, cut from his own footage<small>Editorial &middot; no dialogue rewritten</small></div>
+          <div class="reel-more">
+            <p class="reel-note">An open letter assembled entirely in the edit, out of performances that already exist. Proof the cut is doing more work than most people give it credit for.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <p class="reel-fine reveal">Every clip here was cut for a feed, not trimmed down from a horizontal edit. Hover for what it was for and what it moved. Click to watch the whole thing.</p>
+</section>
+
+<!-- REEL PLAYER -->
+<div class="vmodal" id="reelModal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="vmodal-inner">
+    <div class="vmodal-bar">
+      <button class="vmodal-btn vmodal-mute" type="button" data-muted="false" aria-label="Mute">Sound</button>
+      <input class="vmodal-vol" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+      <button class="vmodal-btn vmodal-close" type="button">Close</button>
+    </div>
+    <div class="vmodal-stage"></div>
+  </div>
+</div>
 
 <!-- WHAT YOU GET -->
 <section id="deliver">
@@ -801,7 +1357,182 @@
   <span>New Terrain Creative © 2026</span>
   <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
   <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
+  <a href="index.html">See the cinema side &#8594;</a>
 </footer>
+
+<!-- THE REEL -->
+<script>
+(function () {
+  const track = document.querySelector('.reel-track');
+  if (!track) return;
+
+  const prev = document.querySelector('.reel-arrow--prev');
+  const next = document.querySelector('.reel-arrow--next');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Seamless loop ──
+  // Three copies of the row, parked on the middle one. Wrapping between
+  // identical copies is invisible, and it leaves a full row of runway in
+  // both directions before the next wrap, so dragging never hits a wall.
+  const originals = Array.prototype.slice.call(track.querySelectorAll('.reel-card'));
+  const SETS = 3;
+  for (let i = 1; i < SETS; i++) {
+    originals.forEach((c) => {
+      const clone = c.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.removeAttribute('tabindex');
+      track.appendChild(clone);
+    });
+  }
+  const cards = Array.prototype.slice.call(track.querySelectorAll('.reel-card'));
+
+  let loopW = 0;
+  let pos = 0;
+  function measure() {
+    loopW = originals.length ? cards[originals.length].offsetLeft - cards[0].offsetLeft : 0;
+    if (loopW && track.scrollLeft < loopW) track.scrollLeft = loopW;
+    pos = track.scrollLeft;
+  }
+  function wrap() {
+    if (!loopW) return;
+    if (track.scrollLeft >= loopW * 2) { track.scrollLeft -= loopW; pos -= loopW; }
+    else if (track.scrollLeft < loopW) { track.scrollLeft += loopW; pos += loopW; }
+  }
+  measure();
+  window.addEventListener('resize', measure);
+
+  // Loop only the cards actually on screen. Twenty-odd silent videos running
+  // at once is a tax nobody sees.
+  const watcher = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const v = e.target.querySelector('.reel-media');
+      if (!v || v.tagName !== 'VIDEO') return;
+      if (e.isIntersecting && !reduce) { v.play().catch(() => {}); }
+      else { v.pause(); }
+    });
+  }, { root: track, threshold: 0.15 });
+  cards.forEach((c) => watcher.observe(c));
+
+  // ── Drift ──
+  // Right to left, slow enough to read. Holds while you are hovering,
+  // dragging, or have just used an arrow, so nothing slides out from under you.
+  const SPEED = 26; // px per second
+  let hovering = false, dragging = false, holdUntil = 0, lastTs = 0;
+
+  function frame(ts) {
+    const dt = lastTs ? Math.min(64, ts - lastTs) : 0;
+    lastTs = ts;
+    if (!reduce && !hovering && !dragging && ts > holdUntil && !document.hidden) {
+      // Carry the position as a float. At this speed a frame is well under a
+      // pixel, and handing scrollLeft a sub-pixel delta every frame rounds
+      // straight back to where it started, so the row never moves.
+      if (Math.abs(pos - track.scrollLeft) > 1.5) pos = track.scrollLeft;
+      pos += SPEED * dt / 1000;
+      track.scrollLeft = pos;
+    } else {
+      pos = track.scrollLeft;
+    }
+    wrap();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  ['pointerenter', 'focusin'].forEach((ev) => track.addEventListener(ev, () => { hovering = true; }));
+  ['pointerleave', 'focusout'].forEach((ev) => track.addEventListener(ev, () => { hovering = false; }));
+
+  function step() {
+    return cards.length ? cards[0].getBoundingClientRect().width + 20 : 278;
+  }
+  function nudge(dir) {
+    holdUntil = performance.now() + 900;
+    track.scrollBy({ left: dir * step() * 2, behavior: 'smooth' });
+  }
+  if (prev) prev.addEventListener('click', () => nudge(-1));
+  if (next) next.addEventListener('click', () => nudge(1));
+
+  // Drag to pan. Deltas are taken frame to frame rather than from a fixed
+  // origin, so a wrap mid-drag does not yank the row.
+  let lastX = 0, moved = 0;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') return;
+    dragging = true; moved = 0; lastX = e.clientX;
+  });
+  track.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const d = e.clientX - lastX;
+    lastX = e.clientX;
+    moved += Math.abs(d);
+    if (moved > 4) track.scrollLeft -= d;
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => {
+    track.addEventListener(ev, () => { dragging = false; });
+  });
+
+  // Player
+  const modal = document.getElementById('reelModal');
+  const stage = modal.querySelector('.vmodal-stage');
+  const volEl = modal.querySelector('.vmodal-vol');
+  const muteEl = modal.querySelector('.vmodal-mute');
+  let vol = 1, muted = false, playing = null;
+
+  function applySound() {
+    if (playing) { playing.volume = vol; playing.muted = muted || vol === 0; }
+    volEl.value = muted ? 0 : vol;
+    muteEl.textContent = (muted || vol === 0) ? 'Muted' : 'Sound';
+    muteEl.dataset.muted = String(muted || vol === 0);
+    muteEl.setAttribute('aria-label', (muted || vol === 0) ? 'Unmute' : 'Mute');
+  }
+
+  volEl.addEventListener('input', () => {
+    vol = parseFloat(volEl.value);
+    muted = vol === 0;
+    applySound();
+  });
+  muteEl.addEventListener('click', () => {
+    muted = !(muted || vol === 0);
+    if (!muted && vol === 0) vol = 1;
+    applySound();
+  });
+
+  function openPlayer(card) {
+    const src = card.dataset.src;
+    if (!src) return;
+    // Built and started by hand rather than with an autoplay attribute. A
+    // parser-started video does not inherit the click's user activation, so
+    // Chrome refuses to give it sound; an explicit play() inside the handler
+    // does inherit it and comes up with audio.
+    const v = document.createElement('video');
+    v.src = src;
+    v.controls = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+    stage.innerHTML = '';
+    stage.appendChild(v);
+    playing = v;
+    applySound();
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    v.play().catch(() => {});
+  }
+  function closePlayer() {
+    modal.classList.remove('open');
+    stage.innerHTML = '';
+    playing = null;
+    document.body.style.overflow = '';
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => { if (moved <= 4) openPlayer(card); });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPlayer(card); }
+    });
+  });
+
+  modal.querySelector('.vmodal-close').addEventListener('click', closePlayer);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closePlayer(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closePlayer(); });
+})();
+</script>
 
 <script>
   const io = new IntersectionObserver((entries) => {
