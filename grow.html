@@ -709,12 +709,63 @@
   .vmodal.open .vmodal-inner { transform: none; }
   .vmodal-stage {
     position: relative;
-    height: min(84vh, 900px);
+    height: min(80vh, 880px);
     max-width: 92vw;
     aspect-ratio: 9 / 16;
     background: #000;
     border: 1px solid var(--line);
   }
+
+  /* What the clip was, and how it did where it ran. Engagement sits here
+     rather than on the card so the row keeps one number per card. */
+  .vmodal-meta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 14px;
+  }
+  .vmodal-meta:empty { display: none; }
+  .vmodal-meta-name {
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.2;
+  }
+  .vmodal-meta-tag {
+    margin-top: 5px;
+    font-size: 8.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .vmodal-stats {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .vmodal-stats b {
+    font-weight: 500;
+    color: var(--parchment);
+    letter-spacing: 0;
+  }
+  .vmodal-stats a {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.45);
+    padding-bottom: 2px;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: border-color 0.3s;
+  }
+  .vmodal-stats a:hover { border-color: var(--gold); }
   .vmodal-stage video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 
   /* A 9:16 player is narrow enough that the browser drops volume from its
@@ -887,6 +938,23 @@
                       the Founding Five terms put these in writing.
 
     • THE HOVER       .reel-note is the line that opens on hover.
+
+    • HOW IT DID      Optional attributes on the <article>, shown in the
+                      player rather than on the card, so the row keeps one
+                      number per card:
+
+                        data-views="137000"
+                        data-likes="4200"
+                        data-comments="318"
+                        data-shares="294"
+                        data-ig="https://www.instagram.com/p/XXXXXXXX/"
+
+                      Give raw numbers, not "4.2K" — they get formatted.
+                      Any you leave off are simply not shown, and a card
+                      with none of them still shows its title in the
+                      player. The Instagram link is worth more than the
+                      counts on their own: it lands on the real post, where
+                      the numbers are current and can be checked.
   ════════════════════════════════════════════════════════════════
 -->
 <section id="reel">
@@ -1097,6 +1165,7 @@
       <button class="vmodal-btn vmodal-close" type="button">Close</button>
     </div>
     <div class="vmodal-stage"></div>
+    <div class="vmodal-meta"></div>
   </div>
 </div>
 
@@ -1379,6 +1448,7 @@
   const stage = modal.querySelector('.vmodal-stage');
   const volEl = modal.querySelector('.vmodal-vol');
   const muteEl = modal.querySelector('.vmodal-mute');
+  const metaEl = modal.querySelector('.vmodal-meta');
   let vol = 1, muted = false, playing = null;
 
   function applySound() {
@@ -1400,6 +1470,39 @@
     applySound();
   });
 
+  function tally(n) {
+    const x = parseFloat(n);
+    if (!isFinite(x)) return null;
+    if (x >= 1e6) return (x / 1e6).toFixed(x % 1e6 === 0 ? 0 : 1) + 'M';
+    if (x >= 1e4) return Math.round(x / 1e3) + 'K';
+    if (x >= 1e3) return (x / 1e3).toFixed(1) + 'K';
+    return String(Math.round(x));
+  }
+
+  // Everything here is optional. Give a card data-likes, data-comments,
+  // data-views or data-ig and it shows up; leave them off and the strip
+  // collapses to the title, or disappears entirely.
+  function fillMeta(card) {
+    const name = card.querySelector('.reel-name');
+    const tag = card.querySelector('.reel-tag');
+    const stats = [];
+    [['views', 'views'], ['likes', 'likes'], ['comments', 'comments'], ['shares', 'shares']]
+      .forEach(([key, label]) => {
+        const n = tally(card.dataset[key]);
+        if (n) stats.push('<span><b>' + n + '</b> ' + label + '</span>');
+      });
+    if (card.dataset.ig) {
+      stats.push('<a href="' + card.dataset.ig + '" target="_blank" rel="noopener">View on Instagram &#8599;</a>');
+    }
+    if (!name && !stats.length) { metaEl.innerHTML = ''; return; }
+    metaEl.innerHTML =
+      '<div>' +
+        (name ? '<div class="vmodal-meta-name">' + name.textContent + '</div>' : '') +
+        (tag ? '<div class="vmodal-meta-tag">' + tag.innerHTML + '</div>' : '') +
+      '</div>' +
+      (stats.length ? '<div class="vmodal-stats">' + stats.join('') + '</div>' : '');
+  }
+
   function openPlayer(card) {
     const src = card.dataset.src;
     if (!src) return;
@@ -1415,6 +1518,7 @@
     stage.innerHTML = '';
     stage.appendChild(v);
     playing = v;
+    fillMeta(card);
     applySound();
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1423,6 +1527,7 @@
   function closePlayer() {
     modal.classList.remove('open');
     stage.innerHTML = '';
+    metaEl.innerHTML = '';
     playing = null;
     document.body.style.overflow = '';
   }
