@@ -850,8 +850,15 @@
   }
   .vmodal-vol:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
 
+  /* Touch has no hover to reveal with, and a card is far narrower here, so
+     the description stays shut until it is asked for. One tap opens it,
+     the next one plays. */
   @media (hover: none) {
-    .reel-more { max-height: 220px; opacity: 1; }
+    .reel-more { max-height: 0; opacity: 0; }
+    .reel-card.is-open .reel-more { max-height: 190px; opacity: 1; }
+    .reel-card.is-open .reel-veil { opacity: 1; }
+    .reel-card.is-open { border-color: rgba(200,169,110,0.5); }
+    .reel-card.is-open .reel-note { font-size: 11px; line-height: 1.65; }
     .reel-nav { display: none; }
     .reel-shine { display: none; }
   }
@@ -1612,11 +1619,15 @@
   // dragging, or have just used an arrow, so nothing slides out from under you.
   const SPEED = 26; // px per second
   let hovering = false, dragging = false, holdUntil = 0, lastTs = 0;
+  // Touch gets a read step before the play step, so tapping to see what a
+  // clip is does not launch it.
+  const coarse = window.matchMedia('(hover: none)').matches;
+  let opened = null;
 
   function frame(ts) {
     const dt = lastTs ? Math.min(64, ts - lastTs) : 0;
     lastTs = ts;
-    if (!reduce && !hovering && !dragging && ts > holdUntil && !document.hidden) {
+    if (!reduce && !hovering && !dragging && !opened && ts > holdUntil && !document.hidden) {
       // Carry the position as a float. At this speed a frame is well under a
       // pixel, and handing scrollLeft a sub-pixel delta every frame rounds
       // straight back to where it started, so the row never moves.
@@ -1631,8 +1642,12 @@
   }
   requestAnimationFrame(frame);
 
-  ['pointerenter', 'focusin'].forEach((ev) => track.addEventListener(ev, () => { hovering = true; }));
-  ['pointerleave', 'focusout'].forEach((ev) => track.addEventListener(ev, () => { hovering = false; }));
+  if (!coarse) {
+    track.addEventListener('pointerenter', () => { hovering = true; });
+    track.addEventListener('pointerleave', () => { hovering = false; });
+  }
+  track.addEventListener('focusin', () => { hovering = true; });
+  track.addEventListener('focusout', () => { hovering = false; });
 
   function step() {
     return cards.length ? cards[0].getBoundingClientRect().width + 20 : 278;
@@ -1758,10 +1773,24 @@
     metaEl.innerHTML = '';
     playing = null;
     document.body.style.overflow = '';
+    closeOpened();
+  }
+
+  function closeOpened() {
+    if (opened) { opened.classList.remove('is-open'); opened = null; }
   }
 
   cards.forEach((card) => {
-    card.addEventListener('click', () => { if (moved <= 4) openPlayer(card); });
+    card.addEventListener('click', () => {
+      if (moved > 4) return;
+      if (coarse && !card.classList.contains('is-open')) {
+        closeOpened();
+        card.classList.add('is-open');
+        opened = card;
+        return;
+      }
+      openPlayer(card);
+    });
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPlayer(card); }
     });
@@ -1770,6 +1799,7 @@
   modal.querySelector('.vmodal-close').addEventListener('click', closePlayer);
   modal.addEventListener('click', (e) => { if (e.target === modal) closePlayer(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closePlayer(); });
+  document.addEventListener('click', (e) => { if (opened && !e.target.closest('.reel-card')) closeOpened(); });
 })();
 </script>
 
