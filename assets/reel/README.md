@@ -27,6 +27,23 @@ set; they are far lighter now). The in and out points are untouched.
 | `off-script-meghan` | Off Script · Meghan | `loop/Off Script Meghan Loop Thumbnail.mp4` | `Off Script EP2 Short-1.MP4` |
 | `hey-leo` | Hey Leo | `loop/Hey Leo Loop Thumbnail.mp4` | `Hey LEO.MP4` |
 
+Second batch, cut from the masters in `new batch/` rather than from
+hand-cut loops. Loop points and posters were chosen per clip; the trim and
+encode settings are the same as everything above.
+
+| NAME | Card | Master in `new batch/` |
+| --- | --- | --- |
+| `aldertalk-podcast` | AlderTalk | `AlderTalk Podcast Short.mp4` |
+| `altadena-fires` | Altadena | `Altadena Fires.mp4` |
+| `ewg-keesha-scott` | Empowered with Gina · Keesha Scott | `Keesha Scott EWG Episode.mp4` |
+| `kids-need-space` | Kids Need Space (Empowered with Gina event) | `Kids Need Space.mp4` |
+| `ewg-tracy-mccubbin` | Empowered with Gina · Tracy McCubbin | `Tracy McCubbin Podcast Episode EWG.mp4` |
+| `aldertalk-summit-speech` | AlderTalk Summit | `Mike Alder Summit Speech with Captions.mp4` |
+
+`aldertalk summit speech short before captioning.mp4` is the superseded
+uncaptioned export, kept only as a fallback. Every clip in the row now carries
+burned-in text, which is what makes them work on a silent autoplay loop.
+
 Everything in this row is a vertical social reel and the player is 9:16 only.
 
 **The Shoot Day loops but does not open.** `loop/BTS Ads Loop Thumbnail.mp4`
