@@ -755,17 +755,7 @@
     color: var(--parchment);
     letter-spacing: 0;
   }
-  .vmodal-stats a {
-    color: var(--gold);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(200,169,110,0.45);
-    padding-bottom: 2px;
-    font-size: 9.5px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transition: border-color 0.3s;
-  }
-  .vmodal-stats a:hover { border-color: var(--gold); }
+
   .vmodal-stage video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 
   /* A 9:16 player is narrow enough that the browser drops volume from its
@@ -944,17 +934,19 @@
                       number per card:
 
                         data-views="137000"
-                        data-likes="4200"
-                        data-comments="318"
+                        data-likes="3400"
+                        data-comments="82"
                         data-shares="294"
-                        data-ig="https://www.instagram.com/p/XXXXXXXX/"
 
-                      Give raw numbers, not "4.2K" — they get formatted.
+                      Give raw numbers, not "3.4K" — they get formatted.
                       Any you leave off are simply not shown, and a card
                       with none of them still shows its title in the
-                      player. The Instagram link is worth more than the
-                      counts on their own: it lands on the real post, where
-                      the numbers are current and can be checked.
+                      player. Nothing here links out: the point is to keep
+                      people on the page.
+
+                      data-ig records which post a card's numbers came
+                      from. It is never rendered, it is there so the
+                      figures can be checked and refreshed later.
   ════════════════════════════════════════════════════════════════
 -->
 <section id="reel">
@@ -1092,7 +1084,10 @@
       </article>
 
       <!-- Off Rip · Feature Film &middot; Drama -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip" data-src="assets/reel/off-rip-drama.mp4">
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip"
+               data-src="assets/reel/off-rip-drama.mp4"
+               data-likes="3400" data-comments="82"
+               data-ig="https://www.instagram.com/reel/DbJqeimyNjQ/">
         <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-drama.jpg">
           <source src="assets/reel/loop-off-rip-drama.mp4" type="video/mp4">
         </video>
@@ -1131,7 +1126,9 @@
       </article>
 
       <!-- Hey Leo · Instagram Reel &middot; Off Rip Promo -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hey Leo" data-src="assets/reel/hey-leo.mp4">
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hey Leo"
+               data-src="assets/reel/hey-leo.mp4"
+               data-ig="https://www.instagram.com/reel/DbwsW7jhyr_/">
         <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-hey-leo.jpg">
           <source src="assets/reel/loop-hey-leo.mp4" type="video/mp4">
         </video>
@@ -1491,9 +1488,6 @@
         const n = tally(card.dataset[key]);
         if (n) stats.push('<span><b>' + n + '</b> ' + label + '</span>');
       });
-    if (card.dataset.ig) {
-      stats.push('<a href="' + card.dataset.ig + '" target="_blank" rel="noopener">View on Instagram &#8599;</a>');
-    }
     if (!name && !stats.length) { metaEl.innerHTML = ''; return; }
     metaEl.innerHTML =
       '<div>' +
