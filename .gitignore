@@ -19,3 +19,6 @@ Thumbs.db
 # Vercel
 .vercel/
 .vercel
+
+# Internal working docs (repo root is the deployed directory)
+scripts/
