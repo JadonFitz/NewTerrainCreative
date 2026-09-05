@@ -111,9 +111,30 @@
   /* ── MINIMAL BAR · wordmark is the only way off this page ── */
   .bar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
     padding: 26px 6vw;
     border-bottom: 1px solid var(--line);
+  }
+
+  .bar-links { display: flex; align-items: center; gap: 26px; }
+
+  .bar-link {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .bar-link:hover { color: var(--gold); }
+  .bar-link:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+
+  @media (max-width: 620px) {
+    .bar { justify-content: center; }
+    .bar-links { display: none; }
   }
   .wordmark {
     font-size: 11px;
@@ -895,6 +916,10 @@
 
 <div class="bar">
   <a class="wordmark" href="index.html">New Terrain <span>Creative</span></a>
+  <div class="bar-links">
+    <a class="bar-link" href="grow.html">Social Growth</a>
+    <a class="bar-link" href="index.html">The Cinema Side</a>
+  </div>
 </div>
 
 <!-- HERO -->
