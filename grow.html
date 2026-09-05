@@ -481,6 +481,37 @@
   footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
   footer a:hover { color: var(--gold); }
 
+  /* ── VIDEO SLOT ── */
+  #video { padding-top: 0; padding-bottom: 90px; }
+  .video-frame {
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
+  .video-ph { text-align: center; padding: 30px; }
+  .video-ph-mark {
+    font-family: var(--display);
+    font-size: 40px;
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.45;
+  }
+  .video-ph-note {
+    margin-top: 16px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
   /* ── THE REEL · horizontal showcase of vertical work ──
      One row of 9:16 cards that loop silently, gloss on the glass,
      and open the full cut on click. Card copy lives in the markup. */
@@ -907,6 +938,30 @@
   </div>
 </section>
 
+
+<!-- VSL SLOT -->
+<section id="video">
+  <div class="video-frame reveal">
+    <!--
+      ════════════════════════════════════════════════════════════
+      VSL GOES HERE. Delete the .video-ph div below and drop in:
+
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0"
+                title="New Terrain Creative · The Growth Engine"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+      or a self-hosted cut:
+
+        <video src="assets/vsl-growth-engine.mp4" poster="assets/vsl-poster.jpg" controls playsinline></video>
+      ════════════════════════════════════════════════════════════
+    -->
+    <div class="video-ph">
+      <div class="video-ph-mark">NTC</div>
+      <div class="video-ph-note">VSL slot<br>Drop the embed here</div>
+    </div>
+  </div>
+</section>
 
 <!-- THE REEL -->
 <!--
