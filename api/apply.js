@@ -141,6 +141,12 @@ async function sendCapi(d, req, eventId) {
         event_source_url: 'https://www.newterraincreative.com/apply',
         user_data
       }],
+      // Set META_TEST_EVENT_CODE to watch events land in Events Manager's
+      // Test Events tab. Remove it before running live traffic: events sent
+      // with a test code are not used for optimisation or attribution.
+      ...(process.env.META_TEST_EVENT_CODE
+        ? { test_event_code: process.env.META_TEST_EVENT_CODE }
+        : {}),
       access_token: token
     })
   });
