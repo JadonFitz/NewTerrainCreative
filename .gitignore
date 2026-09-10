@@ -22,3 +22,7 @@ Thumbs.db
 
 # Internal working docs (repo root is the deployed directory)
 scripts/
+
+# Reference recordings — large, and not ours to publish
+assets/Screen Recording*.mov
+assets/*.reference.mp4
