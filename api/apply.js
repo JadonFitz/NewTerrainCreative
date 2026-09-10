@@ -1,9 +1,11 @@
 // Founding Three application handler.
-// Zero dependencies: calls the Resend REST API with native fetch, so this
-// project stays buildless (no package.json, no npm install).
+// Zero dependencies: talks to Twilio SendGrid or Resend over REST with native
+// fetch, so this project stays buildless (no package.json, no npm install).
+// Set SENDGRID_API_KEY or RESEND_API_KEY; SendGrid wins if both exist.
+// APPLY_FROM must be a sender you have verified with whichever provider.
 
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
-const FROM = process.env.APPLY_FROM || 'New Terrain Creative <onboarding@resend.dev>';
+const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
 const BOOKING_URL = process.env.BOOKING_URL || 'https://calendar.app.google/qardoZkWtaBsq2RG9';
 
 const REQUIRED = ['name', 'email', 'phone', 'business', 'sell', 'spend',
@@ -56,6 +58,51 @@ function emailBody(d, verdict) {
   </div>`;
 }
 
+function parseFrom(v) {
+  const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(v);
+  return m ? { name: m[1], email: m[2] } : { name: '', email: String(v).trim() };
+}
+
+async function notify(subject, html, replyTo) {
+  const from = parseFrom(FROM);
+
+  if (process.env.SENDGRID_API_KEY) {
+    const r = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: TO }] }],
+        from: from.name ? from : { email: from.email },
+        reply_to: { email: replyTo },
+        subject,
+        content: [{ type: 'text/html', value: html }]
+      })
+    });
+    // SendGrid returns 202 with an empty body on success
+    if (!r.ok) throw new Error(`sendgrid ${r.status} ${await r.text()}`);
+    return 'sendgrid';
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ from: FROM, to: [TO], reply_to: replyTo, subject, html })
+    });
+    if (!r.ok) throw new Error(`resend ${r.status} ${await r.text()}`);
+    return 'resend';
+  }
+
+  console.warn('No SENDGRID_API_KEY or RESEND_API_KEY set — application not emailed');
+  return 'none';
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -79,30 +126,13 @@ export default async function handler(req, res) {
   const verdict = decide(d);
 
   // Notify, but never let a mail failure cost us the applicant.
-  if (process.env.RESEND_API_KEY) {
-    try {
-      const r = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: FROM,
-          to: [TO],
-          reply_to: String(d.email),
-          subject: `${verdict.qualified ? 'QUALIFIED' : 'declined'} · ${String(d.business).slice(0, 60)}`,
-          html: emailBody(d, verdict)
-        })
-      });
-      if (!r.ok) console.error('resend failed', r.status, await r.text());
-    } catch (e) {
-      console.error('resend threw', e);
-    }
-  } else {
-    console.warn('RESEND_API_KEY missing — application not emailed', {
-      business: d.business, qualified: verdict.qualified
-    });
+  // Works with Twilio SendGrid or Resend, whichever key is present.
+  const subject = `${verdict.qualified ? 'QUALIFIED' : 'declined'} · ${String(d.business).slice(0, 60)}`;
+  const html = emailBody(d, verdict);
+  try {
+    await notify(subject, html, String(d.email));
+  } catch (e) {
+    console.error('notify failed', e && e.message);
   }
 
   return res.status(200).json(verdict);
