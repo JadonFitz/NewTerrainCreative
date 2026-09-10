@@ -129,16 +129,11 @@ export default async function handler(req, res) {
   // Works with Twilio SendGrid or Resend, whichever key is present.
   const subject = `${verdict.qualified ? 'QUALIFIED' : 'declined'} · ${String(d.business).slice(0, 60)}`;
   const html = emailBody(d, verdict);
-  let mail;
   try {
-    mail = 'sent via ' + (await notify(subject, html, String(d.email)));
+    await notify(subject, html, String(d.email));
   } catch (e) {
-    mail = String((e && e.message) || e);
-    console.error('notify failed', mail);
+    console.error('notify failed', (e && e.message) || e);
   }
-
-  // Diagnostics are header-gated so an applicant never sees them.
-  if (req.headers['x-diag'] === '1') return res.status(200).json({ ...verdict, mail });
 
   return res.status(200).json(verdict);
 }
