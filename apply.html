@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply · The Founding Three · New Terrain Creative</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  TRACKING · fires only on a QUALIFIED submission, not on page load.
+  Replace the IDs, then uncomment. See fireConversions() below.
+  ════════════════════════════════════════════════════════════════
+-->
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #0A0A0A;
+    --raised: #101010;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --soft: #A09890;
+    --line: #1e1e1e;
+    --bad: #B4655A;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  body {
+    background: var(--black);
+    color: var(--soft);
+    font-family: var(--body);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 26px 6vw; border-bottom: 1px solid var(--line);
+  }
+  .wordmark {
+    font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+    color: var(--parchment); text-decoration: none;
+  }
+  .wordmark span { color: var(--gold); }
+  .slots {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 68px 24px 110px; }
+
+  .eyebrow {
+    font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 300;
+    font-size: clamp(38px, 7vw, 60px); line-height: 1.05;
+    color: var(--parchment); margin-bottom: 20px; text-wrap: balance;
+  }
+  h1 em { font-style: italic; color: var(--gold); }
+  .lede { font-size: 14px; line-height: 1.9; color: var(--soft); max-width: 52ch; }
+  .lede b { color: var(--parchment); font-weight: 400; }
+
+  form { margin-top: 52px; display: flex; flex-direction: column; gap: 38px; }
+
+  .q { display: flex; flex-direction: column; gap: 12px; }
+  .q > label, .q .qlabel {
+    font-size: 13.5px; color: var(--parchment); font-weight: 400; line-height: 1.6;
+  }
+  .q .hint { font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+  input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea {
+    background: var(--raised);
+    border: 1px solid var(--line);
+    color: var(--parchment);
+    font-family: var(--body); font-size: 14px; font-weight: 300;
+    padding: 13px 15px; width: 100%;
+    transition: border-color .25s;
+  }
+  textarea { resize: vertical; min-height: 92px; line-height: 1.7; }
+  input:focus, textarea:focus { outline: none; border-color: var(--gold); }
+  input::placeholder, textarea::placeholder { color: #4a4540; }
+
+  .opts { display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .opt {
+    background: var(--black); padding: 13px 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+    cursor: pointer; transition: background .2s;
+    font-size: 13px; color: var(--soft);
+  }
+  .opt:hover { background: var(--raised); }
+  .opt input { accent-color: var(--gold); margin-top: 3px; flex-shrink: 0; }
+  .opt:has(input:checked) { background: var(--raised); color: var(--parchment); }
+
+  .consent {
+    border: 1px solid var(--line); padding: 20px;
+    display: flex; gap: 13px; align-items: flex-start;
+  }
+  .consent input { accent-color: var(--gold); margin-top: 4px; flex-shrink: 0; }
+  .consent-body { font-size: 12px; line-height: 1.75; color: var(--muted); }
+  .consent-body b { display: block; color: var(--parchment); font-weight: 400; font-size: 13px; margin-bottom: 5px; }
+
+  /* honeypot */
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .btn {
+    appearance: none; cursor: pointer;
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    font-family: var(--body); font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase; padding: 17px 34px;
+    transition: background .3s, color .3s;
+    align-self: flex-start;
+  }
+  .btn:hover { background: var(--gold); color: var(--black); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn:disabled:hover { background: transparent; color: var(--gold); }
+
+  .fine { font-size: 11.5px; font-style: italic; color: var(--muted); line-height: 1.8; }
+  .err { color: var(--bad); font-size: 12.5px; }
+
+  /* result states */
+  .state { display: none; }
+  .state.on { display: block; }
+  .state h2 {
+    font-family: var(--display); font-weight: 300;
+    font-size: clamp(30px, 5vw, 44px); line-height: 1.1;
+    color: var(--parchment); margin-bottom: 20px;
+  }
+  .state h2 em { font-style: italic; color: var(--gold); }
+  .state p { font-size: 14px; line-height: 1.9; color: var(--soft); max-width: 52ch; margin-bottom: 18px; }
+  .state .btn { margin-top: 14px; text-decoration: none; display: inline-block; }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 26px 6vw;
+    display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
+  @media (max-width: 620px) {
+    .wrap { padding: 48px 20px 80px; }
+    .bar { padding: 20px; }
+    .slots { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="wordmark" href="/founding">New Terrain <span>Creative</span></a>
+  <span class="slots">Three founding slots</span>
+</div>
+
+<div class="wrap">
+
+  <!-- ── FORM ── -->
+  <div class="state on" id="state-form">
+    <div class="eyebrow">The Founding Three</div>
+    <h1>Tell us about <em>your business.</em></h1>
+    <p class="lede">This is an application, not a contact form. It takes about two minutes. If we don't think the Growth Engine fits what you're doing, <b>we'll tell you</b> rather than book a call to find out on the phone.</p>
+
+    <form id="apply" novalidate>
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="company_website_confirm" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="q">
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+      </div>
+
+      <div class="q">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+      </div>
+
+      <div class="q">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+      </div>
+
+      <div class="q">
+        <label for="business">Business name and website</label>
+        <input type="text" id="business" name="business" placeholder="Acme Law · acmelaw.com" required>
+      </div>
+
+      <div class="q">
+        <label for="sell">What do you sell, and who buys it?</label>
+        <textarea id="sell" name="sell" required></textarea>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Are you running paid ads right now?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="spend" value="Not yet" required> Not yet</label>
+          <label class="opt"><input type="radio" name="spend" value="Under $1,500/mo"> Yes, under $1,500 a month</label>
+          <label class="opt"><input type="radio" name="spend" value="$1,500-5,000/mo"> Yes, $1,500 to $5,000 a month</label>
+          <label class="opt"><input type="radio" name="spend" value="$5,000+/mo"> Yes, $5,000 a month or more</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Who runs them today?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="who_runs" value="Nobody" required> Nobody yet</label>
+          <label class="opt"><input type="radio" name="who_runs" value="In-house"> Someone in-house</label>
+          <label class="opt"><input type="radio" name="who_runs" value="Agency/freelancer"> An agency or freelancer</label>
+          <label class="opt"><input type="radio" name="who_runs" value="Me"> Me</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Can you commit $1,500 in ad spend for month one, paid directly to the platforms?</span>
+        <p class="hint">That money goes to Meta and Google. It does not come to us. It is the one requirement, because creative nobody runs teaches neither of us anything.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="budget" value="Yes" required> Yes</label>
+          <label class="opt"><input type="radio" name="budget" value="No"> Not right now</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Do you have a landing page and tracking in place?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="infra" value="Yes, working" required> Yes, and it works</label>
+          <label class="opt"><input type="radio" name="infra" value="Partial"> Some of it</label>
+          <label class="opt"><input type="radio" name="infra" value="No"> No</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Are you in or near Los Angeles?</span>
+        <p class="hint">We shoot on location at your business, and for these three we are not travelling.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="la" value="Yes" required> Yes</label>
+          <label class="opt"><input type="radio" name="la" value="No"> No</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label for="capacity">Roughly how many new customers could you handle a month?</label>
+        <input type="text" id="capacity" name="capacity" required>
+      </div>
+
+      <div class="q">
+        <label for="goal">What would you want this to fix in the first month?</label>
+        <textarea id="goal" name="goal" required></textarea>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="sms" name="sms_consent" value="yes">
+        <div class="consent-body">
+          <b>Text me about my application (optional)</b>
+          By ticking this box you agree to receive text messages from New Terrain Creative about this
+          application and your booked call. Message frequency varies and will be low. Message and data
+          rates may apply. Reply STOP at any time to opt out, or HELP for help. Consent is not a
+          condition of applying, and we will not text you about anything else.
+        </div>
+      </div>
+
+      <div class="q">
+        <button class="btn" type="submit" id="submit">Send the application</button>
+        <p class="err" id="err" hidden></p>
+        <p class="fine">We read every one. If it is a fit you will get a booking link straight away. If it is not, we will say so and tell you why.</p>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── QUALIFIED ── -->
+  <div class="state" id="state-yes">
+    <div class="eyebrow">Received</div>
+    <h1>Let's put a time <em>on the calendar.</em></h1>
+    <p>Thanks. From what you have told us this looks like a fit, so rather than make you wait on an email, pick a time now.</p>
+    <p>Bring your current numbers if you have them: what you are spending, what a customer is worth, and what you have already tried. The more concrete that is, the more useful the call is for both of us.</p>
+    <a class="btn" id="book-link" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Pick a time</a>
+  </div>
+
+  <!-- ── NOT A FIT ── -->
+  <div class="state" id="state-no">
+    <div class="eyebrow">Received</div>
+    <h1>Straight answer: <em>not right now.</em></h1>
+    <p id="no-reason"></p>
+    <p>We would rather tell you that here than take a call and tell you the same thing thirty minutes in. Nothing about this is a judgement on your business.</p>
+    <p>If what you actually want is the production on its own, the Ad Sprint is a one-time package with no retainer attached, and it is the same work the founding partners get in month one.</p>
+    <a class="btn" href="/sprint">See the Ad Sprint</a>
+  </div>
+
+</div>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <span>Los Angeles, CA · Tampa, FL</span>
+</footer>
+
+<script>
+(function () {
+  var form = document.getElementById('apply');
+  var btn = document.getElementById('submit');
+  var err = document.getElementById('err');
+  var CAL = 'https://calendar.app.google/qardoZkWtaBsq2RG9';
+
+  function show(id) {
+    ['state-form', 'state-yes', 'state-no'].forEach(function (s) {
+      document.getElementById(s).classList.toggle('on', s === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function fireConversions() {
+    // Google Ads — uncomment once the AW- id and label are real
+    // if (typeof gtag === 'function') {
+    //   gtag('event', 'conversion', { send_to: 'AW-XXXXXXXXXX/LABEL' });
+    // }
+    // Meta — uncomment once the pixel is installed
+    // if (typeof fbq === 'function') { fbq('track', 'Lead'); }
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.hidden = true;
+
+    if (!form.checkValidity()) {
+      err.textContent = 'A few answers are still missing.';
+      err.hidden = false;
+      form.reportValidity();
+      return;
+    }
+
+    var data = Object.fromEntries(new FormData(form).entries());
+    data.utm = window.location.search || '';
+    data.referrer = document.referrer || '';
+
+    // the two hard gates, mirrored server side
+    var qualified = data.budget === 'Yes' && data.la === 'Yes';
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    fetch('/api/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
+    }).then(function (res) {
+      if (res.qualified) {
+        if (res.bookingUrl) document.getElementById('book-link').href = res.bookingUrl;
+        fireConversions();
+        show('state-yes');
+      } else {
+        document.getElementById('no-reason').textContent = res.reason ||
+          'Based on what you told us, this is not the right moment for the founding programme.';
+        show('state-no');
+      }
+    }).catch(function () {
+      // never lose the applicant to a backend hiccup
+      if (qualified) {
+        fireConversions();
+        show('state-yes');
+      } else {
+        document.getElementById('no-reason').textContent =
+          data.budget !== 'Yes'
+            ? 'The founding programme needs $1,500 in month-one ad spend to produce anything either of us can learn from, and you told us that is not workable right now.'
+            : 'For these three we are shooting on location in Los Angeles and not travelling.';
+        show('state-no');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Send the application';
+    });
+  });
+})();
+</script>
+</body>
+</html>
