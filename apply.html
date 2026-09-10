@@ -338,9 +338,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function fireConversions() {
+  // One id shared by the browser pixel and the server-side Conversions API,
+  // so Meta treats them as one event instead of two.
+  function newEventId() {
+    try { return crypto.randomUUID(); }
+    catch (e) { return 'e' + Date.now() + Math.random().toString(36).slice(2, 10); }
+  }
+
+  function fireConversions(eventId) {
     // Meta — a qualified applicant only, never a page view or a decline
-    if (typeof fbq === 'function') { fbq('track', 'Lead'); }
+    if (typeof fbq === 'function') { fbq('track', 'Lead', {}, { eventID: eventId }); }
     // Google Ads (YouTube) — uncomment once the AW- id and label are real
     // if (typeof gtag === 'function') {
     //   gtag('event', 'conversion', { send_to: 'AW-XXXXXXXXXX/LABEL' });
@@ -361,6 +368,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     var data = Object.fromEntries(new FormData(form).entries());
     data.utm = window.location.search || '';
     data.referrer = document.referrer || '';
+    data.event_id = newEventId();
 
     // the two hard gates, mirrored server side
     var qualified = data.budget === 'Yes' && data.la === 'Yes';
@@ -377,7 +385,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }).then(function (res) {
       if (res.qualified) {
         if (res.bookingUrl) document.getElementById('book-link').href = res.bookingUrl;
-        fireConversions();
+        fireConversions(data.event_id);
         show('state-yes');
       } else {
         document.getElementById('no-reason').textContent = res.reason ||
@@ -387,7 +395,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }).catch(function () {
       // never lose the applicant to a backend hiccup
       if (qualified) {
-        fireConversions();
+        fireConversions(data.event_id);
         show('state-yes');
       } else {
         document.getElementById('no-reason').textContent =

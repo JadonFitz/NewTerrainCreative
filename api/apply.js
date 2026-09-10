@@ -4,7 +4,10 @@
 // Set SENDGRID_API_KEY or RESEND_API_KEY; SendGrid wins if both exist.
 // APPLY_FROM must be a sender you have verified with whichever provider.
 
+import { createHash } from 'node:crypto';
+
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
+const META_PIXEL_ID = process.env.META_PIXEL_ID || '1634935111618929';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
 const BOOKING_URL = process.env.BOOKING_URL || 'https://calendar.app.google/qardoZkWtaBsq2RG9';
 
@@ -103,6 +106,48 @@ async function notify(subject, html, replyTo) {
   return 'none';
 }
 
+// ── Meta Conversions API ───────────────────────────────────────────────
+// Server side twin of the browser Lead event. Same event_id on both so Meta
+// deduplicates rather than double counting. Fires on qualified only, exactly
+// like the pixel does.
+const sha256 = (v) => createHash('sha256').update(String(v).trim().toLowerCase()).digest('hex');
+
+// Meta wants phone numbers digits-only, country code included.
+const normPhone = (v) => String(v).replace(/[^0-9]/g, '').replace(/^0+/, '');
+
+async function sendCapi(d, req, eventId) {
+  const token = process.env.META_CAPI_TOKEN;
+  if (!token) return 'skipped (no META_CAPI_TOKEN)';
+
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  const user_data = {
+    em: [sha256(d.email)],
+    external_id: [sha256(d.email)]
+  };
+  const phone = normPhone(d.phone);
+  if (phone.length >= 7) user_data.ph = [sha256(phone)];
+  if (ip) user_data.client_ip_address = ip;
+  if (req.headers['user-agent']) user_data.client_user_agent = req.headers['user-agent'];
+
+  const r = await fetch(`https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      data: [{
+        event_name: 'Lead',
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: eventId,
+        action_source: 'website',
+        event_source_url: 'https://www.newterraincreative.com/apply',
+        user_data
+      }],
+      access_token: token
+    })
+  });
+  if (!r.ok) throw new Error(`capi ${r.status} ${await r.text()}`);
+  return 'sent';
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -133,6 +178,15 @@ export default async function handler(req, res) {
     await notify(subject, html, String(d.email));
   } catch (e) {
     console.error('notify failed', (e && e.message) || e);
+  }
+
+  // Only a qualified applicant is a conversion, matching the browser pixel.
+  if (verdict.qualified && d.event_id) {
+    try {
+      console.log('capi', await sendCapi(d, req, String(d.event_id)));
+    } catch (e) {
+      console.error('capi failed', (e && e.message) || e);
+    }
   }
 
   return res.status(200).json(verdict);
