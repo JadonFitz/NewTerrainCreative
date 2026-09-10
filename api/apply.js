@@ -181,13 +181,18 @@ export default async function handler(req, res) {
   }
 
   // Only a qualified applicant is a conversion, matching the browser pixel.
+  let capi = 'not attempted';
   if (verdict.qualified && d.event_id) {
     try {
-      console.log('capi', await sendCapi(d, req, String(d.event_id)));
+      capi = await sendCapi(d, req, String(d.event_id));
+      console.log('capi', capi);
     } catch (e) {
-      console.error('capi failed', (e && e.message) || e);
+      capi = String((e && e.message) || e);
+      console.error('capi failed', capi);
     }
   }
+
+  if (req.headers['x-diag'] === '1') return res.status(200).json({ ...verdict, capi });
 
   return res.status(200).json(verdict);
 }
