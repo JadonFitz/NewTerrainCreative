@@ -131,6 +131,31 @@
     return ctx;
   }
 
+  // ── first-party event, posted to our own endpoint ────────────────────
+  // The browser never talks to Supabase. /api/track holds the key.
+  var NAME_MAP = {
+    ViewContent: 'view_content', PageView: 'landing_view',
+    VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90'
+  };
+
+  function store(eventName, eventId, data) {
+    var name = NAME_MAP[eventName];
+    if (!name) return;
+    var body = JSON.stringify({
+      event_id: eventId, event_name: name,
+      session_id: sessionId(), page_url: w.location.href,
+      metadata: data || undefined
+    });
+    try {
+      // keepalive so an event fired during navigation still lands
+      fetch('/api/track', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: body, keepalive: true
+      }).catch(function () {});
+    } catch (e) {}
+    log('stored', name, eventId);
+  }
+
   // ── the one tracking call application code uses ──────────────────────
   // Browser side only. Server-authoritative events (Lead, Purchase) are
   // fired by the backend, not here.
@@ -156,6 +181,8 @@
     } else {
       log('fbq unavailable, skipped', eventName);
     }
+
+    store(eventName, eventId, payload);
     return eventId;
   }
 

@@ -1,0 +1,93 @@
+/* ══════════════════════════════════════════════════════════════════════
+   Supabase · server-side REST client
+   ──────────────────────────────────────────────────────────────────────
+   Underscore prefix keeps Vercel from routing this as an endpoint.
+
+   Talks to PostgREST over plain fetch rather than @supabase/supabase-js,
+   so this project stays buildless with no package.json and no bundler,
+   matching how SendGrid and Meta are already called.
+
+   NEVER import this into browser code. It reads the service role key,
+   which bypasses row level security.
+
+   Env:
+     SUPABASE_URL                https://<ref>.supabase.co
+     SUPABASE_SERVICE_ROLE_KEY   server-side secret
+   ══════════════════════════════════════════════════════════════════════ */
+
+const URL_BASE = process.env.SUPABASE_URL;
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+export const configured = Boolean(URL_BASE && SERVICE_KEY);
+
+function headers(extra = {}) {
+  return {
+    apikey: SERVICE_KEY,
+    Authorization: `Bearer ${SERVICE_KEY}`,
+    'Content-Type': 'application/json',
+    ...extra
+  };
+}
+
+/** Strip undefined so PostgREST uses column defaults instead of nulling them. */
+function clean(row) {
+  const out = {};
+  for (const [k, v] of Object.entries(row)) {
+    if (v !== undefined && v !== '') out[k] = v;
+  }
+  return out;
+}
+
+/**
+ * Insert one row.
+ *
+ * @param {string} table
+ * @param {object} row
+ * @param {object} [opts]
+ * @param {boolean} [opts.returning]  resolve with the inserted row
+ * @param {boolean} [opts.ignoreConflict]  treat a unique violation as success,
+ *        which is how funnel_events stays idempotent on retried beacons
+ * @returns {Promise<object|null>}
+ */
+export async function insert(table, row, opts = {}) {
+  if (!configured) throw new Error('supabase not configured');
+
+  const prefer = [];
+  if (opts.returning) prefer.push('return=representation');
+  else prefer.push('return=minimal');
+  if (opts.ignoreConflict) prefer.push('resolution=ignore-duplicates');
+
+  const res = await fetch(`${URL_BASE}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: headers({ Prefer: prefer.join(',') }),
+    body: JSON.stringify(clean(row))
+  });
+
+  if (res.status === 409 && opts.ignoreConflict) return null;
+
+  if (!res.ok) {
+    // PostgREST errors describe the query, not the customer. Safe to surface,
+    // and the key is never echoed back in the body.
+    throw new Error(`supabase ${res.status} ${await res.text()}`);
+  }
+
+  if (!opts.returning) return null;
+  const body = await res.json().catch(() => null);
+  return Array.isArray(body) ? body[0] || null : body;
+}
+
+/** Attach previously anonymous events to a lead once they identify themselves. */
+export async function linkSessionToLead(sessionId, leadId) {
+  if (!configured || !sessionId || !leadId) return 0;
+
+  const res = await fetch(
+    `${URL_BASE}/rest/v1/funnel_events?session_id=eq.${encodeURIComponent(sessionId)}&lead_id=is.null`,
+    {
+      method: 'PATCH',
+      headers: headers({ Prefer: 'return=minimal' }),
+      body: JSON.stringify({ lead_id: leadId })
+    }
+  );
+  if (!res.ok) throw new Error(`supabase link ${res.status} ${await res.text()}`);
+  return 1;
+}

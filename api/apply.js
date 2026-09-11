@@ -5,6 +5,7 @@
 // APPLY_FROM must be a sender you have verified with whichever provider.
 
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
+import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
 
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
@@ -131,6 +132,52 @@ export default async function handler(req, res) {
 
   const verdict = decide(d);
 
+  // ── 1 · durable record first ────────────────────────────────────────
+  // Supabase is the source of truth. If it is down we still email, so an
+  // outage costs a database row rather than a client.
+  let leadId = null;
+  if (dbReady) {
+    try {
+      const row = await insert('leads', {
+        name: d.name, email: d.email, phone: d.phone, business: d.business,
+        sell: d.sell, spend: d.spend, who_runs: d.who_runs, budget: d.budget,
+        infra: d.infra, la: d.la, capacity: d.capacity, goal: d.goal,
+        sms_consent: d.sms_consent === 'yes' || d.sms_consent === true,
+        status: verdict.qualified ? 'qualified' : 'declined',
+        decline_reason: verdict.qualified ? undefined : verdict.reason,
+        session_id: d.session_id,
+        utm_source: d.utm_source, utm_medium: d.utm_medium,
+        utm_campaign: d.utm_campaign, utm_content: d.utm_content,
+        utm_term: d.utm_term, fbclid: d.fbclid, fbp: d.fbp, fbc: d.fbc,
+        landing_page: d.landing_page, referrer: d.referrer,
+        lead_event_id: d.event_id
+      }, { returning: true });
+      leadId = row && row.id;
+      console.log('lead stored', leadId ? 'ok' : 'no id returned');
+    } catch (e) {
+      console.error('lead store failed, continuing', (e && e.message) || e);
+    }
+
+    // Attach the anonymous journey to the person it turned out to be.
+    if (leadId && d.session_id) {
+      try { await linkSessionToLead(d.session_id, leadId); }
+      catch (e) { console.error('session link failed', (e && e.message) || e); }
+    }
+
+    // Record the conversion in our own funnel alongside Meta's copy.
+    if (verdict.qualified && d.event_id) {
+      try {
+        await insert('funnel_events', {
+          event_id: d.event_id, event_name: 'lead',
+          session_id: d.session_id, lead_id: leadId,
+          page_url: d.page, metadata: { campaign: d.utm_campaign, ad: d.utm_content }
+        }, { ignoreConflict: true });
+      } catch (e) { console.error('lead event failed', (e && e.message) || e); }
+    }
+  } else {
+    console.warn('supabase not configured, lead not persisted');
+  }
+
   // Notify, but never let a mail failure cost us the applicant.
   // Works with Twilio SendGrid or Resend, whichever key is present.
   const subject = `${verdict.qualified ? 'QUALIFIED' : 'declined'} · ${String(d.business).slice(0, 60)}`;
@@ -157,7 +204,7 @@ export default async function handler(req, res) {
           phone: d.phone,
           firstName,
           lastName: rest.join(' ') || undefined,
-          externalId: d.session_id || d.email,
+          externalId: leadId || d.session_id || d.email,
           ip,
           userAgent,
           fbp: d.fbp,
