@@ -15,8 +15,26 @@
      SUPABASE_SERVICE_ROLE_KEY   server-side secret
    ══════════════════════════════════════════════════════════════════════ */
 
-const URL_BASE = process.env.SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+/**
+ * Resolve a Supabase variable regardless of prefix.
+ *
+ * The Vercel marketplace integration namespaces everything by resource name,
+ * so SUPABASE_URL arrives as e.g. sbdata_SUPABASE_URL. Matching on the
+ * suffix means re-provisioning under a different name keeps working.
+ *
+ * NEXT_PUBLIC_ prefixed variables are skipped deliberately: those carry the
+ * client-safe anon key, and privileged writes need the service role.
+ */
+function resolve(suffix) {
+  if (process.env[suffix]) return process.env[suffix];
+  const key = Object.keys(process.env).find(
+    (k) => k.endsWith(`_${suffix}`) && !k.startsWith('NEXT_PUBLIC_')
+  );
+  return key ? process.env[key] : undefined;
+}
+
+const URL_BASE = resolve('SUPABASE_URL');
+const SERVICE_KEY = resolve('SUPABASE_SERVICE_ROLE_KEY');
 
 export const configured = Boolean(URL_BASE && SERVICE_KEY);
 
