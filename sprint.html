@@ -25,6 +25,7 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
 
 <!--
   ════════════════════════════════════════════════════════════════
@@ -1723,5 +1724,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   });
 </script>
 
+
+<script>
+  // Funnel: this is an acquisition landing page, so it counts as ViewContent.
+  // PageView already fired from the base pixel in the head.
+  (function () {
+    if (!window.ntc) return;
+    ntc.track('ViewContent', { content_name: document.title });
+    // Attach VSL milestones to the video once it exists in the slot.
+    var v = document.querySelector('#video video');
+    if (v) ntc.watchVideo(v);
+  })();
+</script>
 </body>
 </html>

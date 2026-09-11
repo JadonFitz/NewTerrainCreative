@@ -21,6 +21,7 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
 
 <!--
   ════════════════════════════════════════════════════════════════
@@ -369,6 +370,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     data.utm = window.location.search || '';
     data.referrer = document.referrer || '';
     data.event_id = newEventId();
+    // Attribution captured on first touch, plus Meta's browser ids, so the
+    // server can match this conversion back to the ad that produced it.
+    if (window.ntc) {
+      var ctx = ntc.context();
+      Object.keys(ctx).forEach(function (k) { if (!(k in data)) data[k] = ctx[k]; });
+    }
 
     // the two hard gates, mirrored server side
     var qualified = data.budget === 'Yes' && data.la === 'Yes';
