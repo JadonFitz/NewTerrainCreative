@@ -89,7 +89,12 @@ alter table public.leads         enable row level security;
 alter table public.funnel_events enable row level security;
 
 -- ── attribution rollup, for reading the funnel by campaign ────────────
-create or replace view public.funnel_by_campaign as
+-- security_invoker makes the view run as the CALLER, so it inherits the row
+-- level security on leads rather than bypassing it with the owner's rights.
+-- Without this a view over an RLS-protected table is a hole straight through
+-- the lock, reachable by the anon role through the public API.
+create or replace view public.funnel_by_campaign
+with (security_invoker = on) as
 select
   coalesce(l.utm_campaign, '(none)')                          as campaign,
   coalesce(l.utm_content, '(none)')                           as ad,
@@ -104,3 +109,8 @@ select
 from public.leads l
 group by 1, 2
 order by leads desc;
+
+-- Belt and braces: the reporting view is for us, through the service role.
+revoke all on public.funnel_by_campaign from anon, authenticated;
+revoke all on public.leads               from anon, authenticated;
+revoke all on public.funnel_events       from anon, authenticated;
