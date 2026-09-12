@@ -137,6 +137,7 @@
     ViewContent: 'view_content', PageView: 'landing_view',
     VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90',
     // First party only. See trackInternal below: this never reaches Meta.
+    InitialFitCompleted: 'initial_fit_completed',
     SalesDeckView: 'sales_deck_view'
   };
 

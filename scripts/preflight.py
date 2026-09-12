@@ -102,7 +102,6 @@ ok(last) if r.returncode == 0 else bad(r.stdout.strip() + r.stderr.strip())
 # ── 3 · configuration ─────────────────────────────────────────────────
 # Names only. This file must never print or compare a value.
 REQUIRED = {
-    'APPLY_STEP_SECRET': 'signs the two-step application handoff (>=32 bytes)',
     'SUPABASE_URL': 'database, suffix-matched so a prefix is fine',
     'SUPABASE_SERVICE_ROLE_KEY': 'database, server only',
     'SENDGRID_API_KEY': 'application and enquiry email',
@@ -122,20 +121,9 @@ def resolve(name):
 
 for name, why in REQUIRED.items():
     if resolve(name):
-        if name == 'APPLY_STEP_SECRET':
-            raw = os.environ.get(name, '')
-            if len(raw.encode()) < 32:
-                bad(f'{name} is set but under 32 bytes. apply.js will refuse to sign.')
-                continue
         ok(f'{name} present')
     else:
         warn(f'{name} absent here · {why}')
-
-if not resolve('APPLY_STEP_SECRET'):
-    print('      Without it the application still works, but step two inserts')
-    print('      a second row instead of patching step one. Generate with')
-    print('      `openssl rand -hex 32`. See docs/ENVIRONMENT.md.')
-
 
 # ── 4 · routes ────────────────────────────────────────────────────────
 head('4 · Internal links')

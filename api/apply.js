@@ -13,16 +13,16 @@
    after they have already submitted, and nobody should have to read it
    before we know we can help them.
 
-   Step one completing is NOT a conversion. It writes
-   initial_fit_completed to our own funnel table and fires nothing to
-   Meta. Only step two fires SubmitApplication. Counting step one as a
-   lead would inflate every number downstream and teach the ad account to
-   optimise for people who never finished.
+   Step one completing is NOT a conversion. The browser records an
+   anonymous initial_fit_completed event in our own funnel table and
+   sends no contact details. Only step two persists an applicant and
+   fires SubmitApplication. Counting step one as a lead would inflate
+   every number downstream and teach the ad account to optimise for
+   people who never finished.
    ══════════════════════════════════════════════════════════════════════ */
 
-import { createHmac, timingSafeEqual } from 'node:crypto';
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
-import { insert, update, linkSessionToLead, configured as dbReady } from './_supabase.js';
+import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
 
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
@@ -76,62 +76,6 @@ const LABELS = {
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-/* ── step-two handoff token ────────────────────────────────────────────
-   Step two patches the row step one created, so the row id travels
-   through the browser. Signing it means a returned id is the only id
-   that can be patched: an arbitrary uuid typed into a console does not
-   verify, and the client never sees the signing key.
-
-   APPLY_STEP_SECRET is REQUIRED and dedicated. It must be at least 32
-   random bytes. See docs/ENVIRONMENT.md.
-
-   Fails closed. With no usable secret we issue no token at all, rather
-   than signing with something guessable: a predictable secret is worse
-   than no token, because it looks like authentication while letting
-   anyone patch any row. Applications are still captured with no token,
-   because step two re-sends everything and inserts instead of patching.
-
-   Deliberately NOT falling back to the Supabase service role key. That
-   key is a database credential; spreading it into a second purpose means
-   rotating it breaks two things and widens what one leak costs.
-   ──────────────────────────────────────────────────────────────────── */
-const MIN_SECRET_BYTES = 32;
-
-const STEP_SECRET = (function () {
-  const v = process.env.APPLY_STEP_SECRET;
-  if (!v) {
-    console.error(
-      'CONFIG ERROR · APPLY_STEP_SECRET is not set. Step two will fall back ' +
-      'to inserting a second row instead of patching step one, and no signed ' +
-      'handoff token will be issued. Generate one with ' +
-      '`openssl rand -hex 32` and add it to the Vercel environment.');
-    return null;
-  }
-  if (Buffer.byteLength(v, 'utf8') < MIN_SECRET_BYTES) {
-    console.error(
-      `CONFIG ERROR · APPLY_STEP_SECRET is only ${Buffer.byteLength(v, 'utf8')} ` +
-      `bytes. At least ${MIN_SECRET_BYTES} random bytes are required. Refusing ` +
-      'to sign handoff tokens with it.');
-    return null;
-  }
-  return v;
-})();
-
-export const stepSecretConfigured = Boolean(STEP_SECRET);
-
-function sign(id) {
-  if (!STEP_SECRET) return null;
-  return createHmac('sha256', STEP_SECRET).update(String(id)).digest('hex');
-}
-
-function verify(id, token) {
-  if (!STEP_SECRET || !id || !token) return false;
-  const expected = sign(id);
-  const a = Buffer.from(expected, 'utf8');
-  const b = Buffer.from(String(token), 'utf8');
-  return a.length === b.length && timingSafeEqual(a, b);
-}
 
 function decide(d) {
   if (d.budget !== 'Yes') {
@@ -243,101 +187,45 @@ function stepOneRow(d) {
   };
 }
 
+function validateStepOne(d) {
+  const missing = STEP_ONE.filter((k) => !d[k] || !String(d[k]).trim());
+  if (missing.length) return { error: 'Missing fields', missing };
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(d.email))) {
+    return { error: 'Invalid email' };
+  }
+  return null;
+}
+
 /* ══════════════════════════════════════════════════════════════════════
-   STEP ONE · fit
+   STEP ONE · fit check only
+
+   The normal browser flow performs this check locally and records an
+   anonymous event through /api/track. Keeping this endpoint response is
+   useful for non-browser clients, but it deliberately performs no write,
+   email or Meta call. Personal data is not a lead until the application
+   is complete.
    ══════════════════════════════════════════════════════════════════════ */
 async function handleStepOne(req, res, d) {
-  const missing = STEP_ONE.filter((k) => !d[k] || !String(d[k]).trim());
-  if (missing.length) return res.status(400).json({ error: 'Missing fields', missing });
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(d.email))) {
-    return res.status(400).json({ error: 'Invalid email' });
-  }
-
+  const invalid = validateStepOne(d);
+  if (invalid) return res.status(400).json(invalid);
   const verdict = decide(d);
-  const now = new Date().toISOString();
-
-  let leadId = null;
-  let stored = false;
-  if (dbReady) {
-    try {
-      const row = await insert('leads', {
-        ...stepOneRow(d),
-        status: verdict.qualified ? 'prequalified' : 'declined',
-        prequalified_at: verdict.qualified ? now : undefined,
-        decline_reason: verdict.qualified ? undefined : verdict.reason,
-        lead_event_id: d.event_id
-      }, { returning: true });
-      leadId = row && row.id;
-      stored = Boolean(leadId);
-      if (!stored) console.error('apply step 1: insert returned no id');
-    } catch (e) {
-      // Loud on purpose. The email fallback below keeps the applicant, but
-      // a silent database outage must not look like a healthy form.
-      console.error('APPLY STEP 1 DB WRITE FAILED', (e && e.message) || e);
-    }
-    if (leadId && d.session_id) {
-      try { await linkSessionToLead(d.session_id, leadId); }
-      catch (e) { console.error('session link failed', (e && e.message) || e); }
-    }
-    // Measurable, deliberately not a conversion, and never sent to Meta.
-    if (verdict.qualified && d.event_id) {
-      try {
-        await insert('funnel_events', {
-          event_id: `${d.event_id}-fit`, event_name: 'initial_fit_completed',
-          session_id: d.session_id, lead_id: leadId,
-          page_url: d.page, funnel: 'founding_three',
-          metadata: {
-            campaign: d.utm_campaign, ad: d.utm_content,
-            industry: normaliseIndustry(d.industry)
-          }
-        }, { ignoreConflict: true });
-      } catch (e) { console.error('initial_fit_completed failed', (e && e.message) || e); }
-    }
-  } else {
-    console.warn('supabase not configured, step 1 not persisted');
-  }
-
-  // A decline ends here, so it is the only chance to tell anyone about it.
-  // A prequalified applicant is emailed too: if they never finish step two
-  // we still know they exist and can follow up by hand.
-  try {
-    await notify(
-      verdict.qualified
-        ? `step 1 · ${String(d.business).slice(0, 60)}`
-        : `declined · ${String(d.business).slice(0, 60)}`,
-      emailBody(d, verdict, 'prequalified'),
-      String(d.email)
-    );
-  } catch (e) {
-    console.error('notify failed', (e && e.message) || e);
-  }
-
-  if (!verdict.qualified) {
-    return res.status(200).json({ qualified: false, reason: verdict.reason });
-  }
-  // No signed token means step two inserts rather than patches. Correct,
-  // and better than handing out something forgeable.
-  const token = leadId ? sign(leadId) : null;
-  return res.status(200).json({
-    qualified: true,
-    step: 1,
-    lead_id: token ? leadId : undefined,
-    token: token || undefined,
-    stored
-  });
+  return res.status(200).json({ ...verdict, step: 1 });
 }
 
 /* ══════════════════════════════════════════════════════════════════════
    STEP TWO · commitment. The conversion.
    ══════════════════════════════════════════════════════════════════════ */
 async function handleStepTwo(req, res, d) {
+  const invalid = validateStepOne(d);
+  if (invalid) return res.status(400).json(invalid);
+
   const missing = STEP_TWO.filter((k) => !d[k] || !String(d[k]).trim());
   if (!d.terms_acknowledged) missing.push('terms_acknowledged');
   if (!d.data_agreement) missing.push('data_agreement');
   if (missing.length) return res.status(400).json({ error: 'Missing fields', missing });
 
-  // Step one is re-sent so an applicant is never lost to a database blip
-  // between the two steps. It is also the only path when Supabase is down.
+  // Step one is re-sent from browser memory. The server receives and stores
+  // personal data only now, once the application is complete.
   const one = decide(d);
   if (!one.qualified) return res.status(200).json({ qualified: false, reason: one.reason });
 
@@ -362,31 +250,17 @@ async function handleStepTwo(req, res, d) {
   };
 
   let leadId = null;
+  let stored = false;
   if (dbReady) {
-    const signed = verify(d.lead_id, d.token);
-    if (d.lead_id && !signed) console.warn('apply step 2: bad token, treating as a new row');
-
-    if (signed) {
-      try {
-        await update('leads', d.lead_id, patch);
-        leadId = d.lead_id;
-      } catch (e) {
-        console.error('APPLY STEP 2 DB UPDATE FAILED', (e && e.message) || e);
-      }
-    }
-    // No verified row to patch, either because step one never stored or
-    // the token did not check out. Write a complete row instead of losing
-    // the application.
-    if (!leadId) {
-      try {
-        const row = await insert('leads', {
-          ...stepOneRow(d), ...patch, prequalified_at: now
-        }, { returning: true });
-        leadId = row && row.id;
-        if (!leadId) console.error('apply step 2: insert returned no id');
-      } catch (e) {
-        console.error('APPLY STEP 2 DB WRITE FAILED', (e && e.message) || e);
-      }
+    try {
+      const row = await insert('leads', {
+        ...stepOneRow(d), ...patch, prequalified_at: now
+      }, { returning: true });
+      leadId = row && row.id;
+      stored = Boolean(leadId);
+      if (!leadId) console.error('apply step 2: insert returned no id');
+    } catch (e) {
+      console.error('APPLY STEP 2 DB WRITE FAILED', (e && e.message) || e);
     }
     if (leadId && d.session_id) {
       try { await linkSessionToLead(d.session_id, leadId); }
@@ -409,11 +283,21 @@ async function handleStepTwo(req, res, d) {
     console.warn('supabase not configured, application not persisted');
   }
 
+  let notified = false;
   try {
-    await notify(`QUALIFIED · ${String(d.business).slice(0, 60)}`,
-                 emailBody(d, { qualified: true }, 'complete'), String(d.email));
+    const provider = await notify(`QUALIFIED · ${String(d.business).slice(0, 60)}`,
+                                  emailBody(d, { qualified: true }, 'complete'), String(d.email));
+    notified = provider !== 'none';
   } catch (e) {
     console.error('notify failed', (e && e.message) || e);
+  }
+
+  // Do not show a success screen or train Meta on a conversion if both
+  // capture paths failed. The browser will leave the form intact for retry.
+  if (!stored && !notified) {
+    return res.status(503).json({
+      error: 'We could not save the application. Please try again or email business@newterraincreative.com.'
+    });
   }
 
   // The conversion, matching the browser SubmitApplication on event_id.
@@ -444,7 +328,12 @@ async function handleStepTwo(req, res, d) {
     }
   }
 
-  return res.status(200).json({ qualified: true, step: 2, bookingUrl: BOOKING_URL });
+  return res.status(200).json({
+    qualified: true,
+    step: 2,
+    bookingUrl: BOOKING_URL,
+    captured: { stored, notified }
+  });
 }
 
 export default async function handler(req, res) {

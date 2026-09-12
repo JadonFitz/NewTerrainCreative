@@ -30,10 +30,9 @@ from public.leads l
 where l.created_at > now() - interval '2 hours'
 order by l.created_at;
 
--- ── B · THE KEY TEST · did step two patch, or insert a second row? ────
--- One founding applicant must appear as exactly ONE row carrying both
--- timestamps. Two rows for one email means the handoff token failed and
--- step two inserted instead of patching.
+-- ── B · THE KEY TEST · one completed form, one lead row ──────────────
+-- Step one stores no personal data. A founding applicant appears only
+-- after step two, as exactly one complete row carrying both timestamps.
 select
   left(md5(l.email), 8)                          as who,
   count(*)                                       as rows_for_this_person,
@@ -43,11 +42,11 @@ select
     when count(*) = 1
      and bool_and(l.prequalified_at is not null)
      and bool_and(l.submitted_at is not null)
-      then 'PASS · one row, patched in place'
+      then 'PASS · one completed application, one row'
     when count(*) > 1
-      then 'FAIL · ' || count(*) || ' rows, step two inserted instead of patching'
+      then 'FAIL · ' || count(*) || ' rows for one completed application'
     when bool_and(l.submitted_at is null)
-      then 'step one only, step two not completed'
+      then 'FAIL · incomplete application was persisted'
     else 'PASS · one row'
   end                                            as verdict
 from public.leads l

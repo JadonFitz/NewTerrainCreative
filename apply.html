@@ -728,8 +728,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   var one = document.getElementById('apply');
   var btn = document.getElementById('submit');
   var err = document.getElementById('err');
-  var carried = null;   // step one answers, re-sent with step two
-  var handoff = {};     // signed row id, so step two patches rather than duplicates
+  var carried = null;   // kept in this page only, submitted once with step two
 
   one.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -743,31 +742,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }
 
     var data = context(Object.fromEntries(new FormData(one).entries()));
-    data.step = 1;
     carried = data;
 
     // the two hard gates, mirrored server side
     var passes = data.budget === 'Yes' && data.la === 'Yes';
+    if (!passes) {
+      decline(null, data.budget);
+      return;
+    }
 
-    btn.disabled = true;
-    btn.textContent = 'One moment…';
-
-    post(data).then(function (res) {
-      if (res.qualified) {
-        handoff = { lead_id: res.lead_id, token: res.token };
-        show('state-step2');
-      } else {
-        decline(res.reason, data.budget);
-      }
-    }).catch(function () {
-      // Never lose an applicant to a backend hiccup. Step two re-sends
-      // everything, so a failed step one costs a row, not a person.
-      if (passes) { handoff = {}; show('state-step2'); }
-      else { decline(null, data.budget); }
-    }).then(function () {
-      btn.disabled = false;
-      btn.textContent = 'Continue';
-    });
+    // This is useful funnel progress, not a lead. Store only the anonymous
+    // session and non-contact context; the personal answers remain in this
+    // tab until the complete application is submitted.
+    if (window.ntc && typeof ntc.trackInternal === 'function') {
+      ntc.trackInternal('InitialFitCompleted', {
+        funnel: 'founding_three',
+        industry: data.industry,
+        campaign: data.utm_campaign || ''
+      });
+    }
+    show('state-step2');
   });
 
   /* ── STEP TWO · the conversion ────────────────────────────────────── */
@@ -791,7 +785,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return;
     }
 
-    var data = Object.assign({}, carried || {}, handoff,
+    var data = Object.assign({}, carried || {},
                              Object.fromEntries(new FormData(two).entries()));
     data.step = 2;
     data.publicity_optin = document.getElementById('publicity').checked;
@@ -810,9 +804,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         decline(res.reason, data.budget);
       }
     }).catch(function () {
-      // They completed the application. A backend hiccup is our problem.
-      fireConversion(data.event_id);
-      show('state-yes');
+      err2.textContent = 'We could not send this yet. Your answers are still here—please try again, or email business@newterraincreative.com.';
+      err2.hidden = false;
     }).then(function () {
       btn2.disabled = false;
       btn2.textContent = 'Send the application';

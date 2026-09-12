@@ -11,7 +11,6 @@ it should ever contain.
 
 | Variable | Used by | Notes |
 |---|---|---|
-| `APPLY_STEP_SECRET` | `api/apply.js` | **New.** Signs the step-one → step-two handoff token. At least 32 random bytes. Generate with `openssl rand -hex 32`. Dedicated: do not reuse another credential. |
 | `SUPABASE_URL` | `api/_supabase.js` | Provided by the Vercel Supabase integration, possibly prefixed (`sbdata_SUPABASE_URL`). The resolver matches on suffix. |
 | `SUPABASE_SERVICE_ROLE_KEY` | `api/_supabase.js` | Server only. Bypasses row level security. Never expose to a browser and never use it as a signing key. |
 | `SENDGRID_API_KEY` | `api/apply.js`, `api/strategy-call.js` | Mail Send permission only. |
@@ -29,34 +28,8 @@ it should ever contain.
 | `BOOKING_URL` | the Google Calendar booking link |
 | `RESEND_API_KEY` | unset. Fallback if SendGrid is absent. |
 
-## About `APPLY_STEP_SECRET`
-
-The two-step application hands a row id through the browser between step
-one and step two. It is signed so that the only id which can be patched is
-one we issued.
-
-The code **fails closed**. With the variable missing or shorter than 32
-bytes it logs `CONFIG ERROR · APPLY_STEP_SECRET ...`, issues no token, and
-step two inserts a complete row instead of patching. Applications are
-still captured. The cost is a duplicate row per applicant, not a lost one.
-
-It deliberately does **not** fall back to `SUPABASE_SERVICE_ROLE_KEY`.
-That is a database credential; giving it a second job means rotating it
-breaks two things and one leak costs more.
-
-To add it:
-
-```
-openssl rand -hex 32          # generate, copy the output
-vercel env add APPLY_STEP_SECRET production
-vercel env add APPLY_STEP_SECRET preview
-vercel env add APPLY_STEP_SECRET development
-```
-
-Paste the value at the prompt. Do not put it on the command line, where
-it lands in shell history.
-
-Then confirm it is registered, which prints names and never values:
+Confirm the required variables are registered, which prints names and
+never values:
 
 ```
 vercel env ls
