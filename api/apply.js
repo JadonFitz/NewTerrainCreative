@@ -28,22 +28,45 @@ const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
 const BOOKING_URL = process.env.BOOKING_URL || 'https://calendar.app.google/qardoZkWtaBsq2RG9';
 
-// Step one: is this the right offer for them.
-const STEP_ONE = ['name', 'email', 'phone', 'business', 'sell', 'spend',
-                  'who_runs', 'budget', 'infra', 'la', 'capacity', 'goal'];
+// Step one: is this the right offer for them, and who are we talking to.
+const STEP_ONE = ['name', 'email', 'phone', 'role', 'authority',
+                  'business', 'website', 'industry', 'sell',
+                  'spend', 'who_runs', 'budget', 'infra',
+                  'la', 'service_area', 'budget_90d', 'capacity', 'goal'];
 
-// Step two: are they actually able to do it.
-const STEP_TWO = ['continuation_capacity', 'production_window', 'fit_rationale'];
+// Step two: are they actually able to do it, and can we measure it.
+const STEP_TWO = ['customer_value', 'lead_sources', 'lead_owner', 'lead_response',
+                  'continuation_capacity', 'production_window', 'fit_rationale'];
+
+// Industry drives the vertical comparison the whole ad experiment rests
+// on, so an unrecognised value is recorded as given rather than silently
+// coerced. Kept in sync with assets/offer.js industries by hand: a server
+// module cannot import a browser IIFE without a build step.
+const INDUSTRIES = ['Health and wellness', 'Law firm', 'Dental practice',
+                    'Construction or contracting'];
+const normaliseIndustry = (v) => {
+  const t = String(v || '').trim();
+  return INDUSTRIES.includes(t) ? t : (t ? 'Other' : undefined);
+};
 
 const LABELS = {
-  name: 'Name', email: 'Email', phone: 'Phone', business: 'Business',
+  name: 'Name', email: 'Email', phone: 'Phone',
+  role: 'Their role', authority: 'Decision authority',
+  business: 'Business', website: 'Website', industry: 'Industry',
   sell: 'What they sell', spend: 'Current ad spend', who_runs: 'Who runs the ads',
   budget: 'Can commit $1,500 month one', infra: 'Landing page + tracking',
-  la: 'In Los Angeles', capacity: 'Customer capacity per month',
+  la: 'In Los Angeles', service_area: 'Service area',
+  budget_90d: '90-day marketing budget',
+  capacity: 'Customer capacity per month',
   goal: 'What they want fixed',
+  customer_value: 'Value of one customer',
+  lead_sources: 'Current lead sources',
+  lead_owner: 'Who answers enquiries',
+  lead_response: 'Lead response time',
   continuation_capacity: 'Could continue at $3,500/mo if it works',
   production_window: 'Production availability',
   fit_rationale: 'Why them',
+  data_agreement: 'Agreed to share lead, appointment and sale data',
   publicity_optin: 'Opted in to being named publicly',
   sms_consent: 'SMS consent',
   utm_source: 'Source', utm_medium: 'Medium', utm_campaign: 'Campaign',
@@ -59,20 +82,54 @@ const esc = (s) => String(s == null ? '' : s)
    through the browser. Signing it means a returned id is the only id
    that can be patched: an arbitrary uuid typed into a console does not
    verify, and the client never sees the signing key.
+
+   APPLY_STEP_SECRET is REQUIRED and dedicated. It must be at least 32
+   random bytes. See docs/ENVIRONMENT.md.
+
+   Fails closed. With no usable secret we issue no token at all, rather
+   than signing with something guessable: a predictable secret is worse
+   than no token, because it looks like authentication while letting
+   anyone patch any row. Applications are still captured with no token,
+   because step two re-sends everything and inserts instead of patching.
+
+   Deliberately NOT falling back to the Supabase service role key. That
+   key is a database credential; spreading it into a second purpose means
+   rotating it breaks two things and widens what one leak costs.
    ──────────────────────────────────────────────────────────────────── */
-function secret() {
-  return process.env.APPLY_STEP_SECRET
-      || process.env.SUPABASE_SERVICE_ROLE_KEY
-      || Object.keys(process.env).find((k) => k.endsWith('_SUPABASE_SERVICE_ROLE_KEY'))
-      || 'unset';
-}
+const MIN_SECRET_BYTES = 32;
+
+const STEP_SECRET = (function () {
+  const v = process.env.APPLY_STEP_SECRET;
+  if (!v) {
+    console.error(
+      'CONFIG ERROR · APPLY_STEP_SECRET is not set. Step two will fall back ' +
+      'to inserting a second row instead of patching step one, and no signed ' +
+      'handoff token will be issued. Generate one with ' +
+      '`openssl rand -hex 32` and add it to the Vercel environment.');
+    return null;
+  }
+  if (Buffer.byteLength(v, 'utf8') < MIN_SECRET_BYTES) {
+    console.error(
+      `CONFIG ERROR · APPLY_STEP_SECRET is only ${Buffer.byteLength(v, 'utf8')} ` +
+      `bytes. At least ${MIN_SECRET_BYTES} random bytes are required. Refusing ` +
+      'to sign handoff tokens with it.');
+    return null;
+  }
+  return v;
+})();
+
+export const stepSecretConfigured = Boolean(STEP_SECRET);
+
 function sign(id) {
-  return createHmac('sha256', secret()).update(String(id)).digest('hex').slice(0, 32);
+  if (!STEP_SECRET) return null;
+  return createHmac('sha256', STEP_SECRET).update(String(id)).digest('hex');
 }
+
 function verify(id, token) {
-  if (!id || !token) return false;
-  const a = Buffer.from(sign(id));
-  const b = Buffer.from(String(token));
+  if (!STEP_SECRET || !id || !token) return false;
+  const expected = sign(id);
+  const a = Buffer.from(expected, 'utf8');
+  const b = Buffer.from(String(token), 'utf8');
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
@@ -93,7 +150,8 @@ function decide(d) {
 }
 
 function emailBody(d, verdict, stage) {
-  const order = [...STEP_ONE, ...STEP_TWO, 'publicity_optin', 'sms_consent',
+  const order = [...STEP_ONE, ...STEP_TWO,
+                 'data_agreement', 'publicity_optin', 'sms_consent',
                  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
                  'utm_term', 'fbclid', 'landing_page', 'referrer', 'utm'];
 
@@ -169,9 +227,13 @@ async function notify(subject, html, replyTo) {
 function stepOneRow(d) {
   return {
     form_type: 'founding_application',
-    name: d.name, email: d.email, phone: d.phone, business: d.business,
+    name: d.name, email: d.email, phone: d.phone,
+    role: d.role, authority: d.authority,
+    business: d.business, website: d.website,
+    industry: normaliseIndustry(d.industry),
     sell: d.sell, spend: d.spend, who_runs: d.who_runs, budget: d.budget,
-    infra: d.infra, la: d.la, capacity: d.capacity, goal: d.goal,
+    infra: d.infra, la: d.la, service_area: d.service_area,
+    budget_90d: d.budget_90d, capacity: d.capacity, goal: d.goal,
     sms_consent: d.sms_consent === 'yes' || d.sms_consent === true,
     session_id: d.session_id,
     utm_source: d.utm_source, utm_medium: d.utm_medium,
@@ -224,7 +286,10 @@ async function handleStepOne(req, res, d) {
           event_id: `${d.event_id}-fit`, event_name: 'initial_fit_completed',
           session_id: d.session_id, lead_id: leadId,
           page_url: d.page, funnel: 'founding_three',
-          metadata: { campaign: d.utm_campaign, ad: d.utm_content }
+          metadata: {
+            campaign: d.utm_campaign, ad: d.utm_content,
+            industry: normaliseIndustry(d.industry)
+          }
         }, { ignoreConflict: true });
       } catch (e) { console.error('initial_fit_completed failed', (e && e.message) || e); }
     }
@@ -250,11 +315,14 @@ async function handleStepOne(req, res, d) {
   if (!verdict.qualified) {
     return res.status(200).json({ qualified: false, reason: verdict.reason });
   }
+  // No signed token means step two inserts rather than patches. Correct,
+  // and better than handing out something forgeable.
+  const token = leadId ? sign(leadId) : null;
   return res.status(200).json({
     qualified: true,
     step: 1,
-    lead_id: leadId || undefined,
-    token: leadId ? sign(leadId) : undefined,
+    lead_id: token ? leadId : undefined,
+    token: token || undefined,
     stored
   });
 }
@@ -265,6 +333,7 @@ async function handleStepOne(req, res, d) {
 async function handleStepTwo(req, res, d) {
   const missing = STEP_TWO.filter((k) => !d[k] || !String(d[k]).trim());
   if (!d.terms_acknowledged) missing.push('terms_acknowledged');
+  if (!d.data_agreement) missing.push('data_agreement');
   if (missing.length) return res.status(400).json({ error: 'Missing fields', missing });
 
   // Step one is re-sent so an applicant is never lost to a database blip
@@ -277,6 +346,14 @@ async function handleStepTwo(req, res, d) {
     status: 'qualified',
     submitted_at: now,
     terms_acknowledged_at: now,
+    // Timestamped rather than a boolean: for the waived month this is the
+    // clause that makes the arrangement measurable, so when they agreed
+    // matters as much as that they did.
+    data_agreement_at: now,
+    customer_value: d.customer_value,
+    lead_sources: d.lead_sources,
+    lead_owner: d.lead_owner,
+    lead_response: d.lead_response,
     continuation_capacity: d.continuation_capacity,
     production_window: d.production_window,
     fit_rationale: d.fit_rationale,
@@ -321,7 +398,10 @@ async function handleStepTwo(req, res, d) {
           event_id: d.event_id, event_name: 'submit_application',
           session_id: d.session_id, lead_id: leadId,
           page_url: d.page, funnel: 'founding_three',
-          metadata: { campaign: d.utm_campaign, ad: d.utm_content }
+          metadata: {
+            campaign: d.utm_campaign, ad: d.utm_content,
+            industry: normaliseIndustry(d.industry)
+          }
         }, { ignoreConflict: true });
       } catch (e) { console.error('submit_application event failed', (e && e.message) || e); }
     }
@@ -356,7 +436,7 @@ async function handleStepTwo(req, res, d) {
           offer: 'founding_three',
           form_type: 'founding_application',
           content_name: 'Founding Three application',
-          content_category: d.spend || undefined
+          content_category: normaliseIndustry(d.industry) || undefined
         }
       }));
     } catch (e) {

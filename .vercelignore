@@ -1,0 +1,8 @@
+# The repo root IS the deployed directory, so anything not excluded here
+# is publicly reachable. Working documents are version controlled but must
+# not ship.
+docs/
+scripts/
+supabase/
+README.md
+cursorrules

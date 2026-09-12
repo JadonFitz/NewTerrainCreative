@@ -62,6 +62,34 @@
       geography: 'Los Angeles'
     },
 
+    // ── The 90-Day Production Promise ─────────────────────────────────
+    // Public terms only. Full conditions, and the questions still open on
+    // them, are in docs/terms/90-day-production-promise.md, which is NOT
+    // attorney-approved and must not be published as-is.
+    //
+    // This replaces the withdrawn total-views guarantee. Do not reinstate
+    // that in any form.
+    productionPromise: {
+      days: 90,
+      // A promise about our work, never about the client's revenue.
+      remedy: 'one standard production cycle matching the contracted monthly allocation',
+      remedyIncludesRevisions: 1,
+      isServiceCredit: true,      // never a cash refund
+      stacksWithFoundingWaiver: false,
+      benchmarkChosenBeforeLaunch: true,
+      eligibleBenchmarks: [
+        'Qualified cost per lead',
+        'Qualified-lead rate',
+        'Landing page conversion rate',
+        'Click-through rate',
+        'Another mutually agreed measurable indicator'
+      ],
+      // Explicitly not a default benchmark. This is the term that made the
+      // old guarantee meaningless.
+      totalViewsEligibleByDefault: false,
+      attorneyApproved: false
+    },
+
     // ── Paid retainer ─────────────────────────────────────────────────
     // No rate table here on purpose. /grow sells the relationship and
     // gives one capacity signal so a prospect can self-select; exact
@@ -87,7 +115,10 @@
       'Dental practice',
       'Construction or contracting'
     ],
-    otherIndustryLabel: 'Other (non-priority)',
+    // What an applicant sees. "Non-priority" is how we talk internally
+    // and there is no reason to say it to someone's face; the server
+    // normalises anything outside the four to 'Other' for reporting.
+    otherIndustryLabel: 'Something else',
 
     // ── Qualification bands ───────────────────────────────────────────
     // Boundaries for the "what do you spend on ads today" question. These
@@ -100,6 +131,15 @@
     // the mid-four-figure starting point and an applicant can self-select
     // without us publishing a rate card.
     budgetBands: [2500, 5000, 10000],
+
+    // Founding Three asks for a 90-DAY total, not a monthly figure, so it
+    // needs its own bands. Do not conflate the two: budgetBands above is
+    // monthly and belongs to the strategy call.
+    //
+    // Anchored on the real floor. $1,500 a month of media across three
+    // months is $4,500, so a band under that is someone telling us the
+    // month-one requirement will be a struggle even if they ticked yes.
+    founding90DayBudgetBands: [4500, 10000, 25000],
 
     // ── Things we do not say ──────────────────────────────────────────
     // Kept here so the constraint is visible next to the numbers.

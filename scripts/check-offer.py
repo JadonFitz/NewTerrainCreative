@@ -32,7 +32,7 @@ if m_charged and m_given:
         declared.add(monthly * (given - charged))
 
 # Survey band boundaries: the applicant's spend, not our price
-for key in ('adSpendBands', 'budgetBands'):
+for key in ('adSpendBands', 'budgetBands', 'founding90DayBudgetBands'):
     bands = re.search(key + r':\s*\[([^\]]+)\]', offer)
     if bands:
         declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
@@ -69,8 +69,11 @@ for f in sorted(root.glob('*.html')):
     if f.name.startswith('755b'):
         continue
     text = f.read_text(encoding='utf-8')
-    # Drop form option values: those are the client's spend bands, not ours
+    # Drop form option values and input placeholders. Both describe the
+    # applicant's own money (their spend band, what a customer is worth to
+    # them), never a price we charge, so they are not ours to declare.
     text = re.sub(r'value="\$[^"]*"', '', text)
+    text = re.sub(r'placeholder="[^"]*"', '', text)
     found = set(re.findall(r'\$(\d{1,3}(?:,\d{3})+)', text))
     bad = sorted(found - allowed)
     if bad:

@@ -28,6 +28,19 @@ alter table public.leads add column if not exists service_area      text;
 alter table public.leads add column if not exists lead_sources      text;
 alter table public.leads add column if not exists website           text;
 
+-- ── who we are actually talking to ────────────────────────────────────
+-- role is the job title they type. authority is what they can decide.
+-- They are not the same answer and an owner who still needs a partner to
+-- sign is the case that matters.
+alter table public.leads add column if not exists role            text;
+alter table public.leads add column if not exists lead_owner      text;
+alter table public.leads add column if not exists budget_90d      text;
+
+-- Consent to hand over lead, appointment and closed-sale data. This is
+-- what makes the waived month measurable, so it is recorded with a
+-- timestamp rather than a boolean: we need to know when they agreed.
+alter table public.leads add column if not exists data_agreement_at timestamptz;
+
 -- ── Founding Three, two step application ──────────────────────────────
 -- Step one completion is a prequalification, NOT a lead and NOT a
 -- conversion. Recorded separately so abandonment is measurable without
@@ -79,6 +92,30 @@ from public.leads l
 group by 1, 2, 3
 order by leads desc;
 
+-- ── the four advertising verticals, side by side ──────────────────────
+-- The reason industry is a required field rather than a nice-to-have.
+-- Splits by funnel as well, because a founding application and a paid
+-- retainer enquiry from the same vertical are not the same signal.
+create or replace view public.funnel_by_industry
+with (security_invoker = on) as
+select
+  coalesce(l.industry, '(not given)')                         as industry,
+  l.form_type                                                 as funnel,
+  count(*)                                                    as leads,
+  count(*) filter (where l.status = 'prequalified')           as step_one_only,
+  count(*) filter (where l.status = 'qualified')              as qualified,
+  count(*) filter (where l.status = 'declined')               as declined,
+  round(
+    100.0 * count(*) filter (where l.status = 'qualified')
+    / nullif(count(*), 0), 1
+  )                                                           as qualified_pct,
+  min(l.created_at)                                           as first_lead,
+  max(l.created_at)                                           as last_lead
+from public.leads l
+group by 1, 2
+order by leads desc;
+
+revoke all on public.funnel_by_industry  from anon, authenticated;
 revoke all on public.funnel_by_campaign from anon, authenticated;
 revoke all on public.leads               from anon, authenticated;
 revoke all on public.funnel_events       from anon, authenticated;

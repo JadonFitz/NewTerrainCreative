@@ -250,8 +250,35 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
 
       <div class="q">
-        <label for="business">Business name and website</label>
-        <input type="text" id="business" name="business" placeholder="Acme Law · acmelaw.com" required>
+        <label for="business">Business name</label>
+        <input type="text" id="business" name="business" placeholder="Acme Dental" required>
+      </div>
+
+      <div class="q">
+        <label for="website">Business website</label>
+        <p class="hint">We look at it before we reply. If you don't have one, say so here and that is useful too.</p>
+        <input type="text" id="website" name="website" placeholder="acmedental.com" required>
+      </div>
+
+      <div class="q">
+        <label for="role">Your role</label>
+        <input type="text" id="role" name="role" placeholder="Owner, practice manager, marketing lead" required>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Who decides whether this goes ahead?</span>
+        <p class="hint">No wrong answer. It changes who we need on the call, not whether we take you seriously.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="authority" value="I decide" required> I decide on my own</label>
+          <label class="opt"><input type="radio" name="authority" value="I decide with a partner"> I decide, with a partner or co-owner</label>
+          <label class="opt"><input type="radio" name="authority" value="I recommend"> I would recommend it, someone else signs off</label>
+          <label class="opt"><input type="radio" name="authority" value="Researching"> I'm gathering information for someone else</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">What kind of business is it?</span>
+        <div class="opts" id="industry-opts"></div>
       </div>
 
       <div class="q">
@@ -304,6 +331,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           <label class="opt"><input type="radio" name="la" value="Yes" required> Yes</label>
           <label class="opt"><input type="radio" name="la" value="No"> No</label>
         </div>
+      </div>
+
+      <div class="q">
+        <label for="service_area">Where do your customers actually come from?</label>
+        <p class="hint">The neighbourhoods, cities or radius you genuinely serve. "Los Angeles" is a targeting setting that wastes money; Sherman Oaks and thirty minutes around it is a campaign.</p>
+        <input type="text" id="service_area" name="service_area" placeholder="Sherman Oaks, Studio City, Encino · about 20 minutes out" required>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Across the next 90 days, what could you put behind marketing in total?</span>
+        <p class="hint">Media plus any fees, everything in. A range is fine, and this is not a quote. It tells us whether month one is a one-off for you or the start of something.</p>
+        <div class="opts" id="budget90-opts"></div>
       </div>
 
       <div class="q">
@@ -361,6 +400,41 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
 
       <div class="q">
+        <label for="customer_value">What is one customer worth to you?</label>
+        <p class="hint">A patient, a case, a project, a member. Roughly what they are worth over the time they stay with you, not the price of one visit. This is the number that decides whether paid media works arithmetically, so a guess beats a blank.</p>
+        <input type="text" id="customer_value" name="customer_value" placeholder="About $4,000 over two years" required>
+      </div>
+
+      <div class="q">
+        <label for="lead_sources">Where do new customers come from today?</label>
+        <p class="hint">Referrals, walk-ins, Google, an old campaign, one good partner. In rough order.</p>
+        <textarea id="lead_sources" name="lead_sources" required></textarea>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Who answers when a new enquiry comes in?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="lead_owner" value="Me" required> Me</label>
+          <label class="opt"><input type="radio" name="lead_owner" value="Front desk or reception"> The front desk or reception</label>
+          <label class="opt"><input type="radio" name="lead_owner" value="Dedicated person or team"> Someone whose job it is</label>
+          <label class="opt"><input type="radio" name="lead_owner" value="Answering service"> An answering service</label>
+          <label class="opt"><input type="radio" name="lead_owner" value="Nobody consistently"> Honestly, nobody consistently</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">How fast do they usually get a reply?</span>
+        <p class="hint">We ask because it is the single thing most likely to decide whether month one looks like a success. Be honest. We can work with slow; we cannot work with a number we made up.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="lead_response" value="Within minutes" required> Within minutes</label>
+          <label class="opt"><input type="radio" name="lead_response" value="Within the hour"> Within the hour</label>
+          <label class="opt"><input type="radio" name="lead_response" value="Same day"> Same day</label>
+          <label class="opt"><input type="radio" name="lead_response" value="Next business day"> Next business day</label>
+          <label class="opt"><input type="radio" name="lead_response" value="Inconsistent"> It varies, and sometimes not at all</label>
+        </div>
+      </div>
+
+      <div class="q">
         <label for="fit_rationale">Why should one of the three be you?</label>
         <p class="hint">There are three places. This is the answer we actually weigh.</p>
         <textarea id="fit_rationale" name="fit_rationale" required></textarea>
@@ -376,6 +450,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           giving New Terrain access to the campaign data and telling them honestly how it went are
           conditions of the waiver; applying does not guarantee a place; and no particular result is
           promised.
+        </div>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="data-ok" name="data_agreement" value="yes" required>
+        <div class="consent-body">
+          <b>I'll share what actually happened downstream</b>
+          Leads, booked appointments and closed sales, for the campaign we run, for the measurement
+          period. Roughly and by hand is fine. This is the only way either of us finds out whether
+          the month worked: ad platform numbers stop at the form and tell you nothing about whether
+          the phone got answered or the work got won. Required, because a month we cannot measure is
+          a month we both wasted.
         </div>
       </div>
 
@@ -457,6 +543,55 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       document.getElementById(s).classList.toggle('on', s === id);
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── step one option lists ──────────────────────────────────────────
+     Industry and the 90-day band come from assets/offer.js so the four
+     verticals we advertise against are defined in exactly one place. If
+     the list changes, the form, the reporting and the copy change with
+     it instead of drifting apart.
+     ────────────────────────────────────────────────────────────────── */
+  function renderOptions() {
+    var ind = document.getElementById('industry-opts');
+    if (ind && OFFER && OFFER.industries) {
+      var list = OFFER.industries.concat([OFFER.otherIndustryLabel || 'Other']);
+      ind.innerHTML = list.map(function (name, i) {
+        return '<label class="opt"><input type="radio" name="industry" value="' +
+               name.replace(/"/g, '&quot;') + '"' + (i === 0 ? ' required' : '') +
+               '> ' + name + '</label>';
+      }).join('');
+    }
+
+    var band = document.getElementById('budget90-opts');
+    var b = (OFFER || {}).founding90DayBudgetBands;
+    if (band && b && b.length === 3) {
+      var opts = [
+        'Under ' + money(b[0]),
+        money(b[0]) + ' to ' + money(b[1]),
+        money(b[1]) + ' to ' + money(b[2]),
+        money(b[2]) + ' or more',
+        'I genuinely do not know yet'
+      ];
+      band.innerHTML = opts.map(function (label, i) {
+        return '<label class="opt"><input type="radio" name="budget_90d" value="' +
+               label + '"' + (i === 0 ? ' required' : '') + '> ' + label + '</label>';
+      }).join('');
+    }
+
+    // Without offer.js the radios above never render, and a required
+    // radio that does not exist blocks nothing. Say so rather than let
+    // step one submit with two questions silently missing.
+    if (!ind || !ind.children.length || !band || !band.children.length) {
+      var e = document.getElementById('err');
+      if (e) {
+        e.textContent = 'Part of this form failed to load. Please reload the page, ' +
+          'or email business@newterraincreative.com and we will take it from there.';
+        e.hidden = false;
+      }
+      var b1 = document.getElementById('submit');
+      if (b1) b1.disabled = true;
+      console.error('apply: step one option lists failed to render');
+    }
   }
 
   /* ── the terms panel ────────────────────────────────────────────────
@@ -645,9 +780,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     err2.hidden = true;
 
     if (!two.checkValidity()) {
-      err2.textContent = document.getElementById('ack').checked
-        ? 'A few answers are still missing.'
-        : 'Please confirm you have read the terms above.';
+      err2.textContent =
+        !document.getElementById('ack').checked
+          ? 'Please confirm you have read the terms above.'
+          : !document.getElementById('data-ok').checked
+            ? 'We need your agreement to share what happens to the leads. Without it there is no way to tell whether the month worked.'
+            : 'A few answers are still missing.';
       err2.hidden = false;
       two.reportValidity();
       return;
@@ -681,6 +819,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     });
   });
 
+  renderOptions();
   renderTerms();
 })();
 </script>
