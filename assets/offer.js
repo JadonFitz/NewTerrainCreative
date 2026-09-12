@@ -6,8 +6,9 @@
 
    PUBLIC TERMS ONLY. Everything here ships to the browser and is
    inspectable whether or not it is rendered, so only figures we are
-   willing to publish belong in this file. Exact retainer rates live
-   server side in api/_rates.js.
+   willing to publish belong in this file. High-level retainer rates are
+   published only in the unlisted /growth-guide and mirrored server side
+   in api/_rates.js.
 
    If a number appears in page copy it must match this file. Run
    `scripts/check-offer.py` to verify; it greps every page and fails on a
@@ -109,13 +110,63 @@
     },
 
     // ── Paid retainer ─────────────────────────────────────────────────
-    // No rate table here on purpose. /grow sells the relationship and
-    // gives one capacity signal so a prospect can self-select; exact
-    // scope and fee are quoted after qualification. Rates: api/_rates.js
+    // /grow still publishes only the capacity signal below. The tier
+    // summaries render on the unlisted /growth-guide, which is sent by
+    // hand after qualification. These deliverable counts are the approved
+    // package baselines; a proposal confirms fit and any custom scope.
     retainer: {
       publicCapacitySignal: 'mid four figures monthly',
-      minimumTermMonths: 3
+      minimumTermMonths: 3,
+      publicGuideTiers: [
+        {
+          name: 'The Anchor', monthly: 3500, from: false,
+          label: 'Production partner',
+          scope: 'Consistency is the whole game: one focused media day a month, with the feed, posting and creative read handled.',
+          includes: [
+            'One half-day media day each month',
+            '16 deliverables: 12 short-form + 4 scripted hero pieces',
+            '3–4 directed setups, with hero pieces finished with b-roll, sound design and color',
+            'Posting and scheduling across your channels',
+            'Monthly analytics and creative direction',
+            'Meta ad management available as a $1,500 monthly add-on',
+            'Community management available as a $750 monthly add-on'
+          ],
+          productionPromiseEligible: false
+        },
+        {
+          name: 'Growth Partner', monthly: 6500, from: false,
+          label: 'Production + campaign system',
+          scope: 'The conversion tier: brand content and dedicated ad creative, with production and paid media under one roof.',
+          includes: [
+            '4 half-day or 2 full-day shoots each month',
+            '30 deliverables across brand content and ad creative',
+            'Dedicated ad concepts and hook variations—not repurposed brand cuts',
+            'Event, product and brand-identity coverage within the included shoot days',
+            'Posting and scheduling across your channels',
+            'Meta campaign setup and weekly management',
+            'Monthly analytics and creative direction'
+          ],
+          productionPromiseEligible: true
+        },
+        {
+          name: 'Brand Builder', monthly: 15000, from: false,
+          label: 'Flagship partnership',
+          scope: 'The engine at full volume: longform, short-form and dedicated ad creative in one monthly production system.',
+          includes: [
+            'Up to 4 full production days each month',
+            '55 deliverables: 10 longform + 30 short-form + 15 ads',
+            'Everything in Growth Partner, including Meta management',
+            'Podcasts, YouTube content and founder interviews',
+            'Monthly analytics and creative direction'
+          ],
+          productionPromiseEligible: true
+        }
+      ]
     },
+
+    // Optional services attached to the package structure above.
+    campaignManagementAddOn: 1500,
+    communityManagementAddOn: 750,
 
     // ── One-time products ─────────────────────────────────────────────
     products: {

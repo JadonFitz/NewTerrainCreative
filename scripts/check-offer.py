@@ -37,12 +37,10 @@ for key in ('adSpendBands', 'budgetBands', 'founding90DayBudgetBands'):
     if bands:
         declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
 
-# ── the one figure that lives in two files ────────────────────────────
-# The Founding Three continuation is a published term (application step
-# two renders it) and an internal quoting figure (api/_rates.js). Both
-# copies must agree or an applicant reads one number and gets quoted
-# another.
-mirror_fail = None
+# ── figures that live in both public and server-side files ────────────
+# Published prices are canonical in offer.js. _rates.js mirrors them for
+# server-side quoting; both copies must agree.
+mirror_fail = []
 rates_path = root / 'api' / '_rates.js'
 if rates_path.exists():
     rates = rates_path.read_text(encoding='utf-8')
@@ -50,7 +48,22 @@ if rates_path.exists():
     blk = re.search(r'FOUNDING_CONTINUATION\s*=\s*\{(.*?)\}', rates, re.S)
     srv = re.search(r'monthly:\s*(\d+)', blk.group(1)) if blk else None
     if pub and srv and pub.group(1) != srv.group(1):
-        mirror_fail = (pub.group(1), srv.group(1))
+        mirror_fail.append(
+            f'continuation mismatch: offer.js says ${pub.group(1)}, '
+            f'api/_rates.js says ${srv.group(1)}')
+
+    pub_tiers = re.search(r'publicGuideTiers:\s*\[(.*?)\]\s*\n\s*\}', offer, re.S)
+    srv_tiers = re.search(r'tiers:\s*\[(.*?)\]\s*,\s*\n\s*\n', rates, re.S)
+    public_pairs = dict(re.findall(
+        r"name:\s*'([^']+)'\s*,\s*monthly:\s*(\d+)",
+        pub_tiers.group(1) if pub_tiers else ''))
+    server_pairs = dict(re.findall(
+        r"name:\s*'([^']+)'\s*,\s*monthly:\s*(\d+)",
+        srv_tiers.group(1) if srv_tiers else ''))
+    if public_pairs != server_pairs:
+        mirror_fail.append(
+            f'retainer tier mismatch: offer.js has {public_pairs}; '
+            f'api/_rates.js has {server_pairs}')
 
 fmt = lambda n: f'{n:,}'
 allowed = {fmt(n) for n in declared}
@@ -60,8 +73,8 @@ print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.repl
 print()
 
 if mirror_fail:
-    print(f'  ✗ continuation mismatch: offer.js says ${mirror_fail[0]}, '
-          f'api/_rates.js says ${mirror_fail[1]}')
+    for problem in mirror_fail:
+        print(f'  ✗ {problem}')
     print()
 
 fail = []
@@ -84,13 +97,12 @@ for f in sorted(root.glob('*.html')):
 
 print()
 if mirror_fail:
-    print('FAIL · the Founding Three continuation disagrees between the')
-    print('       published term and the internal rate card.')
+    print('FAIL · published prices disagree with the internal rate card.')
     sys.exit(1)
 if fail:
     print('FAIL · a page names a figure assets/offer.js does not declare.')
     print('       Either the page publishes something it should not, or the')
-    print('       canonical file needs updating. Internal retainer rates now')
-    print('       live in api/_rates.js and must not appear on a public page.')
+    print('       canonical public offer file needs updating. Only prices')
+    print('       intentionally declared there may appear on a rendered page.')
     sys.exit(1)
 print('PASS · every figure on every page traces back to assets/offer.js')
