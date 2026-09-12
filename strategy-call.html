@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Strategy Call · New Terrain Creative</title>
+<meta name="description" content="Tell us what you sell and what you are trying to grow. Thirty minutes, and we will tell you what we would do, what it would cost, and whether it is worth doing.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --black:#0A0A0A; --raised:#101010; --sunk:#070707;
+    --gold:#C8A96E; --gold-dim:#8A7647;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#6B6560;
+    --line:#1e1e1e; --bad:#B4655A;
+    --display:'Cormorant Garamond',Georgia,serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  body {
+    background:var(--black); color:var(--soft);
+    font-family:var(--body); font-weight:300; font-size:14px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .bar {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:26px 6vw; border-bottom:1px solid var(--line);
+  }
+  .wordmark { font-size:11px; letter-spacing:.34em; text-transform:uppercase; color:var(--parchment); text-decoration:none; }
+  .wordmark span { color:var(--gold); }
+  .bar-link { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .3s; }
+  .bar-link:hover { color:var(--gold); }
+
+  .wrap { max-width:680px; margin:0 auto; padding:68px 24px 110px; }
+
+  .eyebrow { font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+  h1 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(38px,7vw,58px); line-height:1.05;
+    color:var(--parchment); margin-bottom:20px; text-wrap:balance;
+  }
+  h1 em { font-style:italic; color:var(--gold); }
+  .lede { font-size:14.5px; line-height:1.9; color:var(--soft); max-width:54ch; }
+  .lede b { color:var(--parchment); font-weight:400; }
+
+  form { margin-top:52px; display:flex; flex-direction:column; gap:36px; }
+  .q { display:flex; flex-direction:column; gap:12px; }
+  .q > label, .q .qlabel { font-size:13.5px; color:var(--parchment); font-weight:400; line-height:1.6; }
+  .q .hint { font-size:12px; color:var(--muted); line-height:1.7; }
+
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    background:var(--raised); border:1px solid var(--line); color:var(--parchment);
+    font-family:var(--body); font-size:14px; font-weight:300;
+    padding:13px 15px; width:100%; transition:border-color .25s;
+  }
+  textarea { resize:vertical; min-height:88px; line-height:1.7; }
+  input:focus, textarea:focus { outline:none; border-color:var(--gold); }
+  input::placeholder, textarea::placeholder { color:#4a4540; }
+  input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color:var(--bad); }
+
+  .opts { display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); }
+  .opt {
+    background:var(--black); padding:13px 16px; display:flex; align-items:flex-start; gap:12px;
+    cursor:pointer; transition:background .2s; font-size:13px; color:var(--soft);
+  }
+  .opt:hover { background:var(--raised); }
+  .opt input { accent-color:var(--gold); margin-top:3px; flex-shrink:0; }
+  .opt:has(input:checked) { background:var(--raised); color:var(--parchment); }
+
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+  .btn {
+    appearance:none; cursor:pointer; background:transparent;
+    border:1px solid var(--gold); color:var(--gold);
+    font-family:var(--body); font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; padding:17px 34px;
+    transition:background .3s, color .3s; align-self:flex-start;
+  }
+  .btn:hover { background:var(--gold); color:var(--black); }
+  .btn:disabled { opacity:.45; cursor:not-allowed; }
+  .btn:disabled:hover { background:transparent; color:var(--gold); }
+
+  .fine { font-size:11.5px; font-style:italic; color:var(--muted); line-height:1.8; }
+  .err { color:var(--bad); font-size:12.5px; }
+
+  .state { display:none; }
+  .state.on { display:block; }
+  .state h2 {
+    font-family:var(--display); font-weight:300; font-size:clamp(30px,5vw,44px);
+    line-height:1.1; color:var(--parchment); margin-bottom:20px;
+  }
+  .state h2 em { font-style:italic; color:var(--gold); }
+  .state p { font-size:14px; line-height:1.9; color:var(--soft); max-width:52ch; margin-bottom:18px; }
+  .state .btn { margin-top:14px; text-decoration:none; display:inline-block; }
+
+  footer {
+    border-top:1px solid var(--line); padding:26px 6vw;
+    display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  footer a { color:var(--muted); text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+
+  @media (max-width:620px) { .wrap { padding:48px 20px 80px; } .bar { padding:20px; } }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="wordmark" href="/grow">New Terrain <span>Creative</span></a>
+  <a class="bar-link" href="mailto:business@newterraincreative.com">Contact</a>
+</div>
+
+<div class="wrap">
+
+  <!-- ── FORM ── -->
+  <div class="state on" id="state-form">
+    <div class="eyebrow">Strategy call</div>
+    <h1>Tell us what you're <em>trying to grow.</em></h1>
+    <p class="lede">Thirty minutes. We will tell you what we would actually do, roughly what it would cost, and whether we think it is worth doing. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.</p>
+
+    <form id="sc" novalidate>
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="company_website_confirm" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="q">
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+      </div>
+
+      <div class="q">
+        <label for="email">Business email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+      </div>
+
+      <div class="q">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+      </div>
+
+      <div class="q">
+        <label for="business">Business name and website</label>
+        <input type="text" id="business" name="business" placeholder="Acme Dental · acmedental.com" required>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">What kind of business is it?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="industry" value="Health and wellness" required> Health and wellness</label>
+          <label class="opt"><input type="radio" name="industry" value="Law firm"> Law firm</label>
+          <label class="opt"><input type="radio" name="industry" value="Dental practice"> Dental practice</label>
+          <label class="opt"><input type="radio" name="industry" value="Construction or contracting"> Construction or contracting</label>
+          <label class="opt"><input type="radio" name="industry" value="Other"> Something else</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">Can you sign off on this yourself?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="authority" value="Sole decision maker" required> Yes, it is my call</label>
+          <label class="opt"><input type="radio" name="authority" value="Shared decision"> I decide with one other person</label>
+          <label class="opt"><input type="radio" name="authority" value="Needs approval"> It needs approval from someone else</label>
+          <label class="opt"><input type="radio" name="authority" value="Researching"> I am gathering information for someone else</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label for="offer">What is the main thing you sell, and who buys it?</label>
+        <textarea id="offer" name="offer" required></textarea>
+      </div>
+
+      <div class="q">
+        <label for="value">Roughly what is a customer worth to you?</label>
+        <p class="hint">First purchase, or over the relationship. A rough figure is more useful than a blank.</p>
+        <input type="text" id="value" name="value" required>
+      </div>
+
+      <div class="q">
+        <label for="marketing">How are you getting customers today?</label>
+        <textarea id="marketing" name="marketing" required></textarea>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">What are you spending on advertising a month right now?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="ad_spend" value="Nothing yet" required> Nothing yet</label>
+          <label class="opt"><input type="radio" name="ad_spend" value="Under $1,500"> Under $1,500</label>
+          <label class="opt"><input type="radio" name="ad_spend" value="$1,500-5,000"> $1,500 to $5,000</label>
+          <label class="opt"><input type="radio" name="ad_spend" value="$5,000+"> $5,000 or more</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">What can you invest monthly in production and campaign work, separate from ad spend?</span>
+        <p class="hint">Production Media partnerships typically begin in the mid-four figures monthly. Asking now saves us both a call if the numbers are a long way apart.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="budget_band" value="Under $2,500" required> Under $2,500 a month</label>
+          <label class="opt"><input type="radio" name="budget_band" value="$2,500-5,000"> $2,500 to $5,000 a month</label>
+          <label class="opt"><input type="radio" name="budget_band" value="$5,000-10,000"> $5,000 to $10,000 a month</label>
+          <label class="opt"><input type="radio" name="budget_band" value="$10,000+"> $10,000 a month or more</label>
+          <label class="opt"><input type="radio" name="budget_band" value="Not sure yet"> Not sure yet</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">When would you want to start?</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="start" value="Immediately" required> As soon as possible</label>
+          <label class="opt"><input type="radio" name="start" value="1-3 months"> In the next one to three months</label>
+          <label class="opt"><input type="radio" name="start" value="Later this year"> Later this year</label>
+          <label class="opt"><input type="radio" name="start" value="Just researching"> Just researching for now</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label for="objective">What would make the next ninety days a success?</label>
+        <textarea id="objective" name="objective" required></textarea>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">How quickly can your team respond to a new enquiry?</span>
+        <p class="hint">Campaigns work as well as the follow-up behind them, so this genuinely changes what we would recommend.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="response" value="Within an hour" required> Within an hour, during business hours</label>
+          <label class="opt"><input type="radio" name="response" value="Same day"> Same day</label>
+          <label class="opt"><input type="radio" name="response" value="Within a few days"> Within a few days</label>
+          <label class="opt"><input type="radio" name="response" value="Honestly inconsistent"> Honestly, it is inconsistent</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <button class="btn" type="submit" id="submit">Request the call</button>
+        <p class="err" id="err" hidden></p>
+        <p class="fine">We read every one. Expect a reply within one business day with times, or an honest note explaining why we do not think we are the right fit.</p>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── RECEIVED ── -->
+  <div class="state" id="state-done">
+    <div class="eyebrow">Received</div>
+    <h1>We'll be in touch <em>within a day.</em></h1>
+    <p>Thanks. A real person reads these, and you will get either a few times to choose from or a straight note explaining why we are not the right fit.</p>
+    <p>If you want to move faster, reply to the confirmation email with your availability and we will work around it.</p>
+    <p>In the meantime, the work speaks for itself better than we can.</p>
+    <a class="btn" href="/grow">Back to the work</a>
+  </div>
+
+</div>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="/privacy">Privacy</a>
+  <span>Los Angeles, CA · Tampa, FL</span>
+</footer>
+
+<script>
+(function () {
+  var form = document.getElementById('sc');
+  var btn = document.getElementById('submit');
+  var err = document.getElementById('err');
+
+  function show(id) {
+    ['state-form', 'state-done'].forEach(function (s) {
+      document.getElementById(s).classList.toggle('on', s === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.hidden = true;
+
+    if (!form.checkValidity()) {
+      err.textContent = 'A few answers are still missing.';
+      err.hidden = false;
+      form.reportValidity();
+      return;
+    }
+
+    var data = Object.fromEntries(new FormData(form).entries());
+    data.form_type = 'strategy_call';
+    data.event_id = 'sc-' + (window.ntc ? ntc.uuid() : Date.now());
+    if (window.ntc) {
+      var ctx = ntc.context();
+      Object.keys(ctx).forEach(function (k) { if (!(k in data)) data[k] = ctx[k]; });
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    fetch('/api/strategy-call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
+    }).then(function () {
+      // Distinct from the Founding Three Lead so the two funnels stay separate.
+      if (typeof fbq === 'function') {
+        fbq('track', 'Schedule', { content_name: 'Strategy call request' },
+            { eventID: data.event_id });
+      }
+      show('state-done');
+    }).catch(function () {
+      err.textContent = 'Something went wrong sending that. Email business@newterraincreative.com and we will pick it up from there.';
+      err.hidden = false;
+      btn.disabled = false;
+      btn.textContent = 'Request the call';
+    });
+  });
+})();
+</script>
+</body>
+</html>
