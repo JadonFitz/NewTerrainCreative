@@ -11,6 +11,7 @@ Five checks, all local, none of which touch the network:
   3. Config   · required environment variables, by NAME only
   4. Routes   · every internal href resolves to a real page
   5. Deploy   · nothing private is missing from .vercelignore
+  6. Handler  · scripts/test-apply.mjs, both application steps end to end
 
 Exit status is non-zero if any check fails, so this is safe to gate on.
 
@@ -204,6 +205,18 @@ for u in UNLISTED:
                if f.stem != u and f'href="/{u}"' in f.read_text(encoding='utf-8')]
     bad(f'/{u} is linked from ' + ', '.join(linkers)) if linkers \
         else ok(f'/{u} is not linked from any public page')
+
+
+# ── 6 · the handler itself ────────────────────────────────────────────
+head('6 · Application handler')
+r = subprocess.run(['node', str(ROOT / 'scripts' / 'test-apply.mjs')],
+                   capture_output=True, text=True)
+if r.returncode == 0:
+    passed = r.stdout.count('\u2713')
+    ok(f'both steps end to end · {passed} checks passed')
+else:
+    fails = [l.strip() for l in r.stdout.splitlines() if '\u2717' in l]
+    bad('test-apply.mjs failed\n      ' + '\n      '.join(fails))
 
 
 # ── verdict ───────────────────────────────────────────────────────────
