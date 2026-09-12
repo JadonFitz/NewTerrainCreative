@@ -316,10 +316,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }).then(function (r) {
       return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
     }).then(function () {
-      // Distinct from the Founding Three Lead so the two funnels stay separate.
+      // Lead, not Schedule. Schedule fires only when an appointment is
+      // genuinely confirmed by the scheduler, not when a form is sent.
+      // The offer and form_type params are what the two funnels are
+      // separated on in Meta.
       if (typeof fbq === 'function') {
-        fbq('track', 'Schedule', { content_name: 'Strategy call request' },
-            { eventID: data.event_id });
+        fbq('track', 'Lead', {
+          offer: 'paid_retainer',
+          form_type: 'strategy_call',
+          content_name: 'Strategy call request'
+        }, { eventID: data.event_id });
       }
       show('state-done');
     }).catch(function () {

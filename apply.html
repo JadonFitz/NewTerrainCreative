@@ -347,8 +347,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
 
   function fireConversions(eventId) {
-    // Meta — a qualified applicant only, never a page view or a decline
-    if (typeof fbq === 'function') { fbq('track', 'Lead', {}, { eventID: eventId }); }
+    // SubmitApplication, not Lead: the paid retainer funnel owns Lead, and
+    // the two must never blur. Qualified applicants only, never a page view
+    // and never a decline.
+    if (typeof fbq === 'function') {
+      fbq('track', 'SubmitApplication', {
+        offer: 'founding_three',
+        form_type: 'founding_application'
+      }, { eventID: eventId });
+    }
     // Google Ads (YouTube) — uncomment once the AW- id and label are real
     // if (typeof gtag === 'function') {
     //   gtag('event', 'conversion', { send_to: 'AW-XXXXXXXXXX/LABEL' });

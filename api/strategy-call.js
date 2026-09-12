@@ -142,11 +142,12 @@ export default async function handler(req, res) {
     if (d.event_id) {
       try {
         await insert('funnel_events', {
-          event_id: d.event_id, event_name: 'schedule',
+          event_id: d.event_id, event_name: 'lead',
           session_id: d.session_id, lead_id: leadId, page_url: d.page,
-          metadata: { campaign: d.utm_campaign, ad: d.utm_content, funnel: 'retainer' }
+          funnel: 'paid_retainer',
+          metadata: { campaign: d.utm_campaign, ad: d.utm_content }
         }, { ignoreConflict: true });
-      } catch (e) { console.error('schedule event failed', (e && e.message) || e); }
+      } catch (e) { console.error('lead event failed', (e && e.message) || e); }
     }
   }
 
@@ -158,13 +159,13 @@ export default async function handler(req, res) {
     console.error('notify failed', (e && e.message) || e);
   }
 
-  // ── 3 · Meta, server side, deduplicated against the browser Schedule ──
+  // ── 3 · Meta, server side, deduplicated against the browser Lead ──
   if (d.event_id) {
     try {
       const { ip, userAgent } = requestIdentity(req);
       const [firstName, ...rest] = String(d.name || '').trim().split(/\s+/);
-      console.log('capi Schedule', await sendMetaConversion({
-        eventName: 'Schedule',
+      console.log('capi Lead', await sendMetaConversion({
+        eventName: 'Lead',
         eventId: String(d.event_id),
         eventSourceUrl: d.page || 'https://www.newterraincreative.com/strategy-call',
         userData: buildUserData({
@@ -173,10 +174,15 @@ export default async function handler(req, res) {
           externalId: leadId || d.session_id || d.email,
           ip, userAgent, fbp: d.fbp, fbc: d.fbc
         }),
-        customData: { content_name: 'Strategy call request', content_category: d.industry }
+        customData: {
+          offer: 'paid_retainer',
+          form_type: 'strategy_call',
+          content_name: 'Strategy call request',
+          content_category: d.industry
+        }
       }));
     } catch (e) {
-      console.error('capi Schedule failed', (e && e.message) || e);
+      console.error('capi Lead failed', (e && e.message) || e);
     }
   }
 

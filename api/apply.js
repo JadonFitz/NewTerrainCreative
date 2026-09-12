@@ -168,11 +168,12 @@ export default async function handler(req, res) {
     if (verdict.qualified && d.event_id) {
       try {
         await insert('funnel_events', {
-          event_id: d.event_id, event_name: 'lead',
+          event_id: d.event_id, event_name: 'submit_application',
           session_id: d.session_id, lead_id: leadId,
-          page_url: d.page, metadata: { campaign: d.utm_campaign, ad: d.utm_content }
+          page_url: d.page, funnel: 'founding_three',
+          metadata: { campaign: d.utm_campaign, ad: d.utm_content }
         }, { ignoreConflict: true });
-      } catch (e) { console.error('lead event failed', (e && e.message) || e); }
+      } catch (e) { console.error('submit_application event failed', (e && e.message) || e); }
     }
   } else {
     console.warn('supabase not configured, lead not persisted');
@@ -196,7 +197,7 @@ export default async function handler(req, res) {
       const { ip, userAgent } = requestIdentity(req);
       const [firstName, ...rest] = String(d.name || '').trim().split(/\s+/);
       const status = await sendMetaConversion({
-        eventName: 'Lead',
+        eventName: 'SubmitApplication',
         eventId: String(d.event_id),
         eventSourceUrl: d.page || 'https://www.newterraincreative.com/apply',
         userData: buildUserData({
@@ -211,13 +212,15 @@ export default async function handler(req, res) {
           fbc: d.fbc
         }),
         customData: {
+          offer: 'founding_three',
+          form_type: 'founding_application',
           content_name: 'Founding Three application',
           content_category: d.spend || undefined
         }
       });
-      console.log('capi Lead', status);
+      console.log('capi SubmitApplication', status);
     } catch (e) {
-      console.error('capi Lead failed', (e && e.message) || e);
+      console.error('capi SubmitApplication failed', (e && e.message) || e);
     }
   }
 

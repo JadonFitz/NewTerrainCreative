@@ -18,9 +18,10 @@ const ALLOWED = new Set([
   'landing_view',
   'view_content',
   'vsl_25', 'vsl_50', 'vsl_75', 'vsl_90',
-  'lead',        // written server side by /api/apply, allowed here for parity
-  'schedule',    // not yet wired
-  'purchase'     // not yet wired, will be server authoritative
+  'lead',                 // paid retainer enquiry, server written
+  'submit_application',   // Founding Three, server written
+  'schedule',             // ONLY a confirmed appointment, not a form send
+  'purchase'              // not yet wired, will be server authoritative
 ]);
 
 const MAX = {

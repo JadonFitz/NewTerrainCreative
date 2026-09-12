@@ -1771,12 +1771,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // CTA click events. Fires only once the pixels above are uncommented and wired.
+  // CTA clicks. trackCustom, NOT a standard event: nobody has submitted
+  // anything yet. Lead belongs to a completed strategy call request and
+  // SubmitApplication to a completed Founding Three application. Firing
+  // either from a click would make both funnels unreadable.
   document.querySelectorAll('[data-cta]').forEach(el => {
     el.addEventListener('click', () => {
       const where = el.getAttribute('data-cta');
-      if (window.fbq) fbq('track', 'Lead', { content_name: 'ad-sprint', position: where });
-      if (window.gtag) gtag('event', 'cta_click', { cta_position: where, offer: 'ad-sprint' });
+      if (window.fbq) fbq('trackCustom', 'CTAClick', { offer: 'founding_three', position: where });
+      if (window.gtag) gtag('event', 'cta_click', { cta_position: where, offer: 'founding_three' });
     });
   });
 </script>
