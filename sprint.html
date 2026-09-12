@@ -845,12 +845,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <p class="hero-micro reveal">One time, fixed price, no retainer. If nothing we make outperforms your current content, your next shoot day is free.</p>
 </section>
 
-<!-- VSL SLOT -->
+<!-- VIDEO -->
 <section id="video">
   <div class="video-frame reveal">
     <!--
       ════════════════════════════════════════════════════════════
-      VSL GOES HERE. Delete the .video-ph div below and drop in:
+      VIDEO GOES HERE. Delete the .video-ph div below and drop in:
 
         <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0"
                 title="New Terrain Creative · Ad Sprint"
@@ -864,7 +864,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     -->
     <div class="video-ph">
       <div class="video-ph-mark">NTC</div>
-      <div class="video-ph-note">VSL slot &middot; standard cut<br>Drop the embed here</div>
+      <div class="video-ph-note">Watch how the Sprint works</div>
     </div>
   </div>
 </section>
@@ -1731,7 +1731,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   (function () {
     if (!window.ntc) return;
     ntc.track('ViewContent', { content_name: document.title });
-    // Attach VSL milestones to the video once it exists in the slot.
+    // Attach playback milestones once the video exists in the slot.
     var v = document.querySelector('#video video');
     if (v) ntc.watchVideo(v);
   })();

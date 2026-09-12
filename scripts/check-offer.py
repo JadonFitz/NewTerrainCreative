@@ -19,11 +19,17 @@ declared = {int(m) for m in re.findall(
     r'(?:monthly|price|Fee|Total|Monthly|AdSpend|AddOn|After)\s*:\s*(\d+)', offer)}
 
 # Derived: prepay annual and savings for each tier
-charged = int(re.search(r'prepayMonthsCharged:\s*(\d+)', offer).group(1))
-given   = int(re.search(r'prepayMonthsGiven:\s*(\d+)', offer).group(1))
-for monthly in [int(m) for m in re.findall(r'monthly:\s*(\d+)', offer)]:
-    declared.add(monthly * charged)              # annual
-    declared.add(monthly * (given - charged))    # saved
+# Prepay derivations, only if the public file still declares the rule.
+# Retainer rates moved to api/_rates.js when /grow stopped publishing a
+# package table, so their absence here is expected and a page still
+# showing them is a genuine finding rather than a checker bug.
+m_charged = re.search(r'prepayMonthsCharged:\s*(\d+)', offer)
+m_given   = re.search(r'prepayMonthsGiven:\s*(\d+)', offer)
+if m_charged and m_given:
+    charged, given = int(m_charged.group(1)), int(m_given.group(1))
+    for monthly in [int(x) for x in re.findall(r'monthly:\s*(\d+)', offer)]:
+        declared.add(monthly * charged)
+        declared.add(monthly * (given - charged))
 
 # Survey band boundaries: the applicant's spend, not our price
 bands = re.search(r'adSpendBands:\s*\[([^\]]+)\]', offer)
@@ -54,7 +60,9 @@ for f in sorted(root.glob('*.html')):
 
 print()
 if fail:
-    print('FAIL · a page names a price the canonical file does not.')
-    print('       Either the page is wrong, or assets/offer.js needs updating.')
+    print('FAIL · a page names a figure assets/offer.js does not declare.')
+    print('       Either the page publishes something it should not, or the')
+    print('       canonical file needs updating. Internal retainer rates now')
+    print('       live in api/_rates.js and must not appear on a public page.')
     sys.exit(1)
 print('PASS · every figure on every page traces back to assets/offer.js')

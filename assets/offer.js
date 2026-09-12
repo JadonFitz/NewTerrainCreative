@@ -4,6 +4,11 @@
    SINGLE SOURCE OF TRUTH for every price, scope bound and qualification
    threshold on the site.
 
+   PUBLIC TERMS ONLY. Everything here ships to the browser and is
+   inspectable whether or not it is rendered, so only figures we are
+   willing to publish belong in this file. Exact retainer rates live
+   server side in api/_rates.js.
+
    If a number appears in page copy it must match this file. Run
    `scripts/check-offer.py` to verify; it greps every page and fails on a
    figure that is not declared here.
@@ -38,31 +43,23 @@
         'Organic posting or community management',
         'Work outside the agreed 30-day scope'
       ],
-      // Optional continuation. NOT contractually required.
-      continuationMonthly: 3500,
-      continuationMonths: 2,
-      continuationTotal: 7000,
+      // Optional continuation. NOT contractually required, and NOT priced
+      // on the landing page. The figure is disclosed at step two of the
+      // application, before submission, and lives in api/_rates.js.
       continuationRequired: false,
+      continuationDisclosedAt: 'application step 2',
       // Client-funded, paid directly to the ad platform, never to us.
       minMonthlyAdSpend: 1500,
-      geography: 'Los Angeles',
-      standardMonthlyAfter: 6500
+      geography: 'Los Angeles'
     },
 
     // ── Paid retainer ─────────────────────────────────────────────────
+    // No rate table here on purpose. /grow sells the relationship and
+    // gives one capacity signal so a prospect can self-select; exact
+    // scope and fee are quoted after qualification. Rates: api/_rates.js
     retainer: {
-      tiers: [
-        { name: 'The Anchor',      monthly: 3500,  note: 'Production only. Ad management is a separate add-on at this tier.' },
-        { name: 'Growth Partner',  monthly: 6500,  note: 'Production and campaign management under one roof.' },
-        { name: 'Brand Builder',   monthly: 15000, note: 'Flagship. Includes longform.' }
-      ],
-      adManagementAddOn: 1500,
-      minimumTermMonths: 3,
-      // Prepay: twelve months for the price of ten. The annual and saved
-      // figures on /grow are derived from the monthly rate, not typed by
-      // hand, so the consistency check can verify them arithmetically.
-      prepayMonthsCharged: 10,
-      prepayMonthsGiven: 12
+      publicCapacitySignal: 'mid four figures monthly',
+      minimumTermMonths: 3
     },
 
     // ── One-time products ─────────────────────────────────────────────
