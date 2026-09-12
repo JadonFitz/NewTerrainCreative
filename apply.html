@@ -21,6 +21,7 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/offer.js"></script>
 <script src="/assets/track.js"></script>
 
 <!--
@@ -130,6 +131,38 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .consent-body { font-size: 12px; line-height: 1.75; color: var(--muted); }
   .consent-body b { display: block; color: var(--parchment); font-weight: 400; font-size: 13px; margin-bottom: 5px; }
 
+  /* step indicator */
+  .steps { display:flex; gap:10px; align-items:center; margin-bottom:18px; }
+  .step-dot {
+    font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--muted); display:flex; align-items:center; gap:7px;
+  }
+  .step-dot::before {
+    content:''; width:6px; height:6px; border:1px solid var(--muted);
+    border-radius:50%; display:block;
+  }
+  .step-dot.now { color:var(--gold); }
+  .step-dot.now::before { background:var(--gold); border-color:var(--gold); }
+  .step-dot.done::before { background:var(--muted); }
+  .step-rule { flex:1; height:1px; background:var(--line); }
+
+  /* the terms panel: what step two exists to show */
+  .terms { border:1px solid var(--line); margin-top:8px; }
+  .term { padding:19px 21px; border-bottom:1px solid var(--line); }
+  .term:last-child { border-bottom:0; }
+  .term h3 {
+    font-family:var(--body); font-size:12.5px; font-weight:500; color:var(--parchment);
+    margin-bottom:9px; letter-spacing:.01em;
+  }
+  .term p { font-size:12.5px; line-height:1.8; color:var(--muted); }
+  .term p + p { margin-top:8px; }
+  .term b { color:var(--parchment); font-weight:400; }
+  .term ul { list-style:none; margin-top:9px; display:flex; flex-direction:column; gap:6px; }
+  .term li { font-size:12.5px; line-height:1.7; color:var(--muted); padding-left:15px; position:relative; }
+  .term li::before { content:'·'; position:absolute; left:3px; color:var(--gold); }
+  .term li.no::before { content:'×'; color:var(--muted); font-size:10px; top:1px; }
+  .term.flag { background:var(--raised, #101010); }
+
   /* honeypot */
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
@@ -188,8 +221,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <!-- ── FORM ── -->
   <div class="state on" id="state-form">
     <div class="eyebrow">The Founding Three</div>
+    <div class="steps">
+      <span class="step-dot now">1 · Fit</span>
+      <span class="step-rule"></span>
+      <span class="step-dot">2 · Terms</span>
+    </div>
     <h1>Tell us about <em>your business.</em></h1>
-    <p class="lede">This is an application, not a contact form. It takes about two minutes. If we don't think the Growth Engine fits what you're doing, <b>we'll tell you</b> rather than book a call to find out on the phone.</p>
+    <p class="lede">This is an application, not a contact form. First we work out whether this is even the right thing for you. If it isn't, <b>we'll tell you here</b> rather than book a call to find out on the phone. If it is, the next page shows you exactly what the first month is and what it costs after that, before you send anything.</p>
 
     <form id="apply" novalidate>
       <div class="hp" aria-hidden="true">
@@ -278,6 +316,80 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <textarea id="goal" name="goal" required></textarea>
       </div>
 
+      <div class="q">
+        <button class="btn" type="submit" id="submit">Continue</button>
+        <p class="err" id="err" hidden></p>
+        <p class="fine">Nothing is submitted yet. The next page is the terms, and you can still walk away from it.</p>
+      </div>
+    </form>
+  </div>
+
+
+  <!-- ── STEP TWO · the terms, then the commitment ── -->
+  <div class="state" id="state-step2">
+    <div class="eyebrow">The Founding Three</div>
+    <div class="steps">
+      <span class="step-dot done">1 · Fit</span>
+      <span class="step-rule"></span>
+      <span class="step-dot now">2 · Terms</span>
+    </div>
+    <h1>Here's how the <em>first month works.</em></h1>
+    <p class="lede">On what you've told us, this looks workable. So before you send anything, here is the whole arrangement. <b>Nothing below is a surprise we spring on you later</b>, and there is nothing else behind it.</p>
+
+    <div class="terms" id="terms"></div>
+
+    <form id="apply2" novalidate>
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="company_website_confirm" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="q">
+        <span class="qlabel">If month one produces something worth continuing, could you fund <span id="cont-q">the continuation</span>?</span>
+        <p class="hint">An honest answer costs you nothing. Saying no does not disqualify you: month one stands on its own and we would rather know now than find out in week four.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="continuation_capacity" value="Yes" required> Yes, that is within reach</label>
+          <label class="opt"><input type="radio" name="continuation_capacity" value="Need to see the numbers"> Probably, but I would need to see month one's numbers first</label>
+          <label class="opt"><input type="radio" name="continuation_capacity" value="No, month one only"> No. I am interested in month one only</label>
+          <label class="opt"><input type="radio" name="continuation_capacity" value="Unsure"> I genuinely don't know yet</label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label for="production_window">When could you give us a production day?</label>
+        <p class="hint">Half a day to a full day on your premises, with whoever is on camera available. Rough is fine.</p>
+        <input type="text" id="production_window" name="production_window" placeholder="Weekday mornings, or the first two weeks of next month" required>
+      </div>
+
+      <div class="q">
+        <label for="fit_rationale">Why should one of the three be you?</label>
+        <p class="hint">There are three places. This is the answer we actually weigh.</p>
+        <textarea id="fit_rationale" name="fit_rationale" required></textarea>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="ack" name="terms_acknowledged" value="yes" required>
+        <div class="consent-body">
+          <b>I've read the terms above and they're clear</b>
+          Specifically: our service fee is waived for the scope listed above and nothing beyond it;
+          I fund my own advertising spend, at least <span class="ack-spend">$1,500</span>, paid directly to the ad platform on my own
+          payment method; continuing after month one is optional and priced at <span class="ack-cont">$3,500</span> a month;
+          giving New Terrain access to the campaign data and telling them honestly how it went are
+          conditions of the waiver; applying does not guarantee a place; and no particular result is
+          promised.
+        </div>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="publicity" name="publicity_optin" value="yes">
+        <div class="consent-body">
+          <b>You may name my business publicly (optional)</b>
+          Separate from everything above and never a condition of acceptance. This lets us use your
+          name, logo and the work itself in a case study. Anonymised results we may publish either
+          way. If we do publish, we will say the first month's service fee was waived. You can
+          withdraw this at any time by emailing us, and you approve anything before it goes out.
+        </div>
+      </div>
+
       <div class="consent">
         <input type="checkbox" id="sms" name="sms_consent" value="yes">
         <div class="consent-body">
@@ -290,9 +402,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
 
       <div class="q">
-        <button class="btn" type="submit" id="submit">Send the application</button>
-        <p class="err" id="err" hidden></p>
-        <p class="fine">We read every one. If it is a fit you will get a booking link straight away. If it is not, we will say so and tell you why.</p>
+        <button class="btn" type="submit" id="submit2">Send the application</button>
+        <p class="err" id="err2" hidden></p>
+        <p class="fine">We read every one. If it is a fit you will get a booking link straight away.</p>
       </div>
     </form>
   </div>
@@ -327,16 +439,99 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
 <script>
 (function () {
-  var form = document.getElementById('apply');
-  var btn = document.getElementById('submit');
-  var err = document.getElementById('err');
-  var CAL = 'https://calendar.app.google/qardoZkWtaBsq2RG9';
+  'use strict';
 
+  // assets/offer.js publishes NTC_OFFER. Read it once, and do not paper
+  // over its absence: the terms panel below is what an applicant ticks a
+  // box to acknowledge, so rendering it from silent fallbacks would mean
+  // showing someone an agreement with the scope missing from it.
+  var OFFER = window.NTC_OFFER;
+  var O = (OFFER || {}).founding || {};
+  var money = function (n) {
+    return OFFER && OFFER.fmt ? OFFER.fmt(n) : '$' + Number(n).toLocaleString('en-US');
+  };
+
+  var STATES = ['state-form', 'state-step2', 'state-yes', 'state-no'];
   function show(id) {
-    ['state-form', 'state-yes', 'state-no'].forEach(function (s) {
+    STATES.forEach(function (s) {
       document.getElementById(s).classList.toggle('on', s === id);
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── the terms panel ────────────────────────────────────────────────
+     Rendered from assets/offer.js rather than typed into the markup, so
+     the scope an applicant acknowledges is the same scope the rest of
+     the site publishes. scripts/check-offer.py enforces the figures.
+     ────────────────────────────────────────────────────────────────── */
+  function renderTerms() {
+    var el = document.getElementById('terms');
+    if (!el) return;
+
+    // Better a visible failure than a silently incomplete agreement.
+    if (!O.monthOneScope || !O.monthOneScope.length || !O.continuationMonthly) {
+      el.innerHTML =
+        '<div class="term"><h3>We cannot show you the terms right now</h3>' +
+        '<p>Something on our end failed to load, and we are not going to ask you ' +
+        'to agree to terms we cannot display. Reload the page, or email ' +
+        '<b>business@newterraincreative.com</b> and we will send them to you directly.</p></div>';
+      var f2 = document.getElementById('apply2');
+      if (f2) f2.setAttribute('hidden', 'hidden');
+      console.error('apply: NTC_OFFER missing or incomplete, step two blocked');
+      return;
+    }
+
+    var scope = (O.monthOneScope || []).map(function (x) {
+      return '<li>' + x + '</li>';
+    }).join('');
+    var excl = (O.monthOneExcludes || []).map(function (x) {
+      return '<li class="no">' + x + '</li>';
+    }).join('');
+
+    var spend = money(O.minMonthlyAdSpend || 1500);
+    var cont  = money(O.continuationMonthly || 3500);
+    var total = money(O.continuationTotal || 7000);
+    var months = O.continuationMonths || 2;
+
+    el.innerHTML =
+      '<div class="term">' +
+        '<h3>Month one costs you no service fee</h3>' +
+        '<p>We waive our fee for one month, across this and nothing else:</p>' +
+        '<ul>' + scope + '</ul>' +
+      '</div>' +
+
+      '<div class="term">' +
+        '<h3>What the waived month does not include</h3>' +
+        '<p>Not because we are being difficult. A month with no edges is a month that never ends, and we would end up serving you worse than the people paying us.</p>' +
+        '<ul>' + excl + '</ul>' +
+      '</div>' +
+
+      '<div class="term">' +
+        '<h3>You fund your own advertising spend</h3>' +
+        '<p>At least <b>' + spend + '</b> across the month, billed by Meta to <b>your</b> payment method on <b>your</b> ad account. That money never passes through us and we never touch it. Without it there is no campaign to learn anything from, which is why it is the one hard requirement.</p>' +
+      '</div>' +
+
+      '<div class="term flag">' +
+        '<h3>Months two and three are optional, at ' + cont + ' a month</h3>' +
+        '<p>This is the number we are not going to spring on you after you sign something. If month one works and you want to keep going, continuing costs <b>' + cont + ' a month for ' + months + ' months</b>, so <b>' + total + '</b>. Your advertising spend is on top of that and still yours.</p>' +
+        '<p>You are <b>not</b> committing to it by applying, and there is no clause anywhere that turns month one into it automatically. Month one ends and you decide.</p>' +
+      '</div>' +
+
+      '<div class="term">' +
+        '<h3>What we need back from you</h3>' +
+        '<p>Access to the campaign data, and an honest account of how it went. Both are conditions of the waiver. Honest means honest: if it did not work, we want that on record, and we would rather hear it than a compliment.</p>' +
+        '<p>Being named publicly is a separate opt-in below. It is optional, and it has no bearing on whether you are accepted.</p>' +
+      '</div>' +
+
+      '<div class="term">' +
+        '<h3>What we are not promising</h3>' +
+        '<p>Applying does not guarantee you a place. There are ' + (O.slots || 3) + '. We are not promising a number of leads, a cost per lead, or a return, and anyone who does promise you that on a first campaign is guessing.</p>' +
+      '</div>';
+
+    var q = document.getElementById('cont-q');
+    if (q) q.textContent = cont + ' a month';
+    Array.prototype.forEach.call(document.querySelectorAll('.ack-spend'), function (n) { n.textContent = spend; });
+    Array.prototype.forEach.call(document.querySelectorAll('.ack-cont'),  function (n) { n.textContent = cont; });
   }
 
   // One id shared by the browser pixel and the server-side Conversions API,
@@ -346,10 +541,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     catch (e) { return 'e' + Date.now() + Math.random().toString(36).slice(2, 10); }
   }
 
-  function fireConversions(eventId) {
-    // SubmitApplication, not Lead: the paid retainer funnel owns Lead, and
-    // the two must never blur. Qualified applicants only, never a page view
-    // and never a decline.
+  function fireConversion(eventId) {
+    // SubmitApplication, not Lead: the paid retainer funnel owns Lead and
+    // the two must never blur. Fires on a completed step TWO only. Step
+    // one passing is not a conversion, and a decline never is.
     if (typeof fbq === 'function') {
       fbq('track', 'SubmitApplication', {
         offer: 'founding_three',
@@ -362,66 +557,131 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     // }
   }
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    err.hidden = true;
-
-    if (!form.checkValidity()) {
-      err.textContent = 'A few answers are still missing.';
-      err.hidden = false;
-      form.reportValidity();
-      return;
-    }
-
-    var data = Object.fromEntries(new FormData(form).entries());
+  function context(data) {
     data.utm = window.location.search || '';
     data.referrer = document.referrer || '';
-    data.event_id = newEventId();
     // Attribution captured on first touch, plus Meta's browser ids, so the
     // server can match this conversion back to the ad that produced it.
     if (window.ntc) {
       var ctx = ntc.context();
       Object.keys(ctx).forEach(function (k) { if (!(k in data)) data[k] = ctx[k]; });
     }
+    return data;
+  }
 
-    // the two hard gates, mirrored server side
-    var qualified = data.budget === 'Yes' && data.la === 'Yes';
-
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-
-    fetch('/api/apply', {
+  function post(payload) {
+    return fetch('/api/apply', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(payload)
     }).then(function (r) {
       return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
-    }).then(function (res) {
+    });
+  }
+
+  function decline(reason, budget) {
+    document.getElementById('no-reason').textContent = reason || (
+      budget !== 'Yes'
+        ? 'The founding programme needs ' + money(O.minMonthlyAdSpend || 1500) +
+          ' in month-one ad spend to produce anything either of us can learn from, and you told us that is not workable right now.'
+        : 'For these three we are shooting on location in Los Angeles and not travelling.'
+    );
+    show('state-no');
+  }
+
+  /* ── STEP ONE ─────────────────────────────────────────────────────── */
+  var one = document.getElementById('apply');
+  var btn = document.getElementById('submit');
+  var err = document.getElementById('err');
+  var carried = null;   // step one answers, re-sent with step two
+  var handoff = {};     // signed row id, so step two patches rather than duplicates
+
+  one.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.hidden = true;
+
+    if (!one.checkValidity()) {
+      err.textContent = 'A few answers are still missing.';
+      err.hidden = false;
+      one.reportValidity();
+      return;
+    }
+
+    var data = context(Object.fromEntries(new FormData(one).entries()));
+    data.step = 1;
+    carried = data;
+
+    // the two hard gates, mirrored server side
+    var passes = data.budget === 'Yes' && data.la === 'Yes';
+
+    btn.disabled = true;
+    btn.textContent = 'One moment…';
+
+    post(data).then(function (res) {
       if (res.qualified) {
-        if (res.bookingUrl) document.getElementById('book-link').href = res.bookingUrl;
-        fireConversions(data.event_id);
-        show('state-yes');
+        handoff = { lead_id: res.lead_id, token: res.token };
+        show('state-step2');
       } else {
-        document.getElementById('no-reason').textContent = res.reason ||
-          'Based on what you told us, this is not the right moment for the founding programme.';
-        show('state-no');
+        decline(res.reason, data.budget);
       }
     }).catch(function () {
-      // never lose the applicant to a backend hiccup
-      if (qualified) {
-        fireConversions(data.event_id);
-        show('state-yes');
-      } else {
-        document.getElementById('no-reason').textContent =
-          data.budget !== 'Yes'
-            ? 'The founding programme needs $1,500 in month-one ad spend to produce anything either of us can learn from, and you told us that is not workable right now.'
-            : 'For these three we are shooting on location in Los Angeles and not travelling.';
-        show('state-no');
-      }
+      // Never lose an applicant to a backend hiccup. Step two re-sends
+      // everything, so a failed step one costs a row, not a person.
+      if (passes) { handoff = {}; show('state-step2'); }
+      else { decline(null, data.budget); }
+    }).then(function () {
       btn.disabled = false;
-      btn.textContent = 'Send the application';
+      btn.textContent = 'Continue';
     });
   });
+
+  /* ── STEP TWO · the conversion ────────────────────────────────────── */
+  var two = document.getElementById('apply2');
+  var btn2 = document.getElementById('submit2');
+  var err2 = document.getElementById('err2');
+
+  two.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err2.hidden = true;
+
+    if (!two.checkValidity()) {
+      err2.textContent = document.getElementById('ack').checked
+        ? 'A few answers are still missing.'
+        : 'Please confirm you have read the terms above.';
+      err2.hidden = false;
+      two.reportValidity();
+      return;
+    }
+
+    var data = Object.assign({}, carried || {}, handoff,
+                             Object.fromEntries(new FormData(two).entries()));
+    data.step = 2;
+    data.publicity_optin = document.getElementById('publicity').checked;
+    data.event_id = newEventId();
+    context(data);
+
+    btn2.disabled = true;
+    btn2.textContent = 'Sending…';
+
+    post(data).then(function (res) {
+      if (res.qualified) {
+        if (res.bookingUrl) document.getElementById('book-link').href = res.bookingUrl;
+        fireConversion(data.event_id);
+        show('state-yes');
+      } else {
+        decline(res.reason, data.budget);
+      }
+    }).catch(function () {
+      // They completed the application. A backend hiccup is our problem.
+      fireConversion(data.event_id);
+      show('state-yes');
+    }).then(function () {
+      btn2.disabled = false;
+      btn2.textContent = 'Send the application';
+    });
+  });
+
+  renderTerms();
 })();
 </script>
 </body>

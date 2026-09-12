@@ -94,6 +94,34 @@ export async function insert(table, row, opts = {}) {
   return Array.isArray(body) ? body[0] || null : body;
 }
 
+/**
+ * Patch one row by primary key.
+ *
+ * Used by the two-step application: step one inserts the prequalified row,
+ * step two fills in the commitment answers on that same row rather than
+ * creating a second lead for one person.
+ *
+ * @returns {Promise<object|null>} the updated row when opts.returning
+ */
+export async function update(table, id, patchRow, opts = {}) {
+  if (!configured) throw new Error('supabase not configured');
+
+  const res = await fetch(
+    `${URL_BASE}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`,
+    {
+      method: 'PATCH',
+      headers: headers({
+        Prefer: opts.returning ? 'return=representation' : 'return=minimal'
+      }),
+      body: JSON.stringify(clean(patchRow))
+    }
+  );
+  if (!res.ok) throw new Error(`supabase update ${res.status} ${await res.text()}`);
+  if (!opts.returning) return null;
+  const body = await res.json().catch(() => null);
+  return Array.isArray(body) ? body[0] || null : body;
+}
+
 /** Attach previously anonymous events to a lead once they identify themselves. */
 export async function linkSessionToLead(sessionId, leadId) {
   if (!configured || !sessionId || !leadId) return 0;

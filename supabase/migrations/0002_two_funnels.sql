@@ -44,6 +44,15 @@ alter table public.leads add column if not exists fit_rationale         text;
 alter table public.leads add column if not exists terms_acknowledged_at timestamptz;
 alter table public.leads add column if not exists publicity_optin       boolean not null default false;
 
+-- ── 'prequalified' is a real state, so the constraint has to allow it ─
+-- Someone who passed step one but never finished step two is neither a
+-- qualified lead nor a declined one, and counting them as either would
+-- misreport the funnel.
+alter table public.leads drop constraint if exists leads_status_check;
+alter table public.leads
+  add constraint leads_status_check
+  check (status in ('new', 'prequalified', 'qualified', 'declined'));
+
 -- ── funnel_events: which funnel an anonymous event belongs to ─────────
 alter table public.funnel_events add column if not exists funnel text;
 create index if not exists funnel_events_funnel_idx on public.funnel_events (funnel);
@@ -58,6 +67,7 @@ select
   coalesce(l.utm_campaign, '(none)')                          as campaign,
   coalesce(l.utm_content, '(none)')                           as ad,
   count(*)                                                    as leads,
+  count(*) filter (where l.status = 'prequalified')           as step_one_only,
   count(*) filter (where l.status = 'qualified')              as qualified,
   round(
     100.0 * count(*) filter (where l.status = 'qualified')

@@ -37,12 +37,32 @@ for key in ('adSpendBands', 'budgetBands'):
     if bands:
         declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
 
+# ── the one figure that lives in two files ────────────────────────────
+# The Founding Three continuation is a published term (application step
+# two renders it) and an internal quoting figure (api/_rates.js). Both
+# copies must agree or an applicant reads one number and gets quoted
+# another.
+mirror_fail = None
+rates_path = root / 'api' / '_rates.js'
+if rates_path.exists():
+    rates = rates_path.read_text(encoding='utf-8')
+    pub = re.search(r'continuationMonthly:\s*(\d+)', offer)
+    blk = re.search(r'FOUNDING_CONTINUATION\s*=\s*\{(.*?)\}', rates, re.S)
+    srv = re.search(r'monthly:\s*(\d+)', blk.group(1)) if blk else None
+    if pub and srv and pub.group(1) != srv.group(1):
+        mirror_fail = (pub.group(1), srv.group(1))
+
 fmt = lambda n: f'{n:,}'
 allowed = {fmt(n) for n in declared}
 
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
 print()
+
+if mirror_fail:
+    print(f'  ✗ continuation mismatch: offer.js says ${mirror_fail[0]}, '
+          f'api/_rates.js says ${mirror_fail[1]}')
+    print()
 
 fail = []
 for f in sorted(root.glob('*.html')):
@@ -60,6 +80,10 @@ for f in sorted(root.glob('*.html')):
         print(f'  ✓ {f.name}')
 
 print()
+if mirror_fail:
+    print('FAIL · the Founding Three continuation disagrees between the')
+    print('       published term and the internal rate card.')
+    sys.exit(1)
 if fail:
     print('FAIL · a page names a figure assets/offer.js does not declare.')
     print('       Either the page publishes something it should not, or the')

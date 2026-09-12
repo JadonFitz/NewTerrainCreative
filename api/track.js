@@ -18,6 +18,9 @@ const ALLOWED = new Set([
   'landing_view',
   'view_content',
   'vsl_25', 'vsl_50', 'vsl_75', 'vsl_90',
+  'initial_fit_completed', // step one of the application. NOT a conversion:
+                           // it exists so step one to step two abandonment
+                           // is measurable without inflating lead counts.
   'lead',                 // paid retainer enquiry, server written
   'submit_application',   // Founding Three, server written
   'schedule',             // ONLY a confirmed appointment, not a form send

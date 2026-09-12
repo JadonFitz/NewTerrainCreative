@@ -44,10 +44,19 @@
         'Work outside the agreed 30-day scope'
       ],
       // Optional continuation. NOT contractually required, and NOT priced
-      // on the landing page. The figure is disclosed at step two of the
-      // application, before submission, and lives in api/_rates.js.
+      // on the landing page. Disclosed at step two of the application,
+      // before anyone submits, which is the whole reason the application
+      // has two steps.
+      //
+      // The figure lives here rather than in api/_rates.js because step
+      // two renders it: it is a published term now, not an internal rate.
+      // api/_rates.js mirrors it for server-side quoting and
+      // scripts/check-offer.py fails if the two ever disagree.
       continuationRequired: false,
       continuationDisclosedAt: 'application step 2',
+      continuationMonthly: 3500,
+      continuationMonths: 2,
+      continuationTotal: 7000,
       // Client-funded, paid directly to the ad platform, never to us.
       minMonthlyAdSpend: 1500,
       geography: 'Los Angeles'

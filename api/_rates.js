@@ -35,6 +35,10 @@ export const RETAINER = {
 
 // Founding Three continuation. Disclosed to an applicant at step two of
 // the application, before they submit. Never on the landing page.
+//
+// MIRRORS assets/offer.js founding.continuationMonthly, which is the
+// source of truth now that step two renders the figure. Change both, or
+// scripts/check-offer.py will fail.
 export const FOUNDING_CONTINUATION = {
   monthly: 3500,
   months: 2,
