@@ -86,6 +86,12 @@
     // so the form and the consistency check agree on them.
     adSpendBands: [1500, 5000],
 
+    // Boundaries for "what can you invest monthly in production and
+    // campaign work" on the strategy call form. Set so the bands straddle
+    // the mid-four-figure starting point and an applicant can self-select
+    // without us publishing a rate card.
+    budgetBands: [2500, 5000, 10000],
+
     // ── Things we do not say ──────────────────────────────────────────
     // Kept here so the constraint is visible next to the numbers.
     neverClaim: [

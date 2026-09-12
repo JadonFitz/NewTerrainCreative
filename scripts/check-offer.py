@@ -32,9 +32,10 @@ if m_charged and m_given:
         declared.add(monthly * (given - charged))
 
 # Survey band boundaries: the applicant's spend, not our price
-bands = re.search(r'adSpendBands:\s*\[([^\]]+)\]', offer)
-if bands:
-    declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
+for key in ('adSpendBands', 'budgetBands'):
+    bands = re.search(key + r':\s*\[([^\]]+)\]', offer)
+    if bands:
+        declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
 
 fmt = lambda n: f'{n:,}'
 allowed = {fmt(n) for n in declared}
