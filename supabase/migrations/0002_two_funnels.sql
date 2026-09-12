@@ -77,7 +77,28 @@ alter table public.leads add column if not exists publicity_optin       boolean 
 -- Someone who passed step one but never finished step two is neither a
 -- qualified lead nor a declined one, and counting them as either would
 -- misreport the funnel.
-alter table public.leads drop constraint if exists leads_status_check;
+-- Dropping by assumed name is not safe enough. Postgres auto-names an
+-- inline column check 'leads_status_check', so it almost certainly is
+-- that, but if it is not, the drop no-ops, the add creates a SECOND
+-- constraint, and the old three-value one keeps rejecting
+-- 'prequalified'. The migration would report success and every step-one
+-- write would then fail. So: find every check constraint on leads that
+-- actually constrains status, whatever it is called, and drop them all.
+do $$
+declare c record;
+begin
+  for c in
+    select conname
+    from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and contype = 'c'
+      and pg_get_constraintdef(oid) ilike '%status%'
+  loop
+    execute format('alter table public.leads drop constraint %I', c.conname);
+    raise notice 'dropped status constraint: %', c.conname;
+  end loop;
+end $$;
+
 alter table public.leads
   add constraint leads_status_check
   check (status in ('new', 'prequalified', 'qualified', 'declined'));

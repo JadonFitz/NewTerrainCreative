@@ -50,8 +50,23 @@ select
   coalesce(max(pg_get_constraintdef(oid)), 'constraint not found'), ''
 from pg_constraint
 where conrelid = 'public.leads'::regclass
-  and conname = 'leads_status_check'
+  and contype = 'c'
+  and pg_get_constraintdef(oid) ilike '%status%'
   and pg_get_constraintdef(oid) like '%prequalified%'
+
+union all
+
+-- ── 3b · and there must be exactly ONE of them ────────────────────────
+-- A leftover constraint from an earlier definition would still reject
+-- 'prequalified' while check 3 above happily reported PASS.
+select
+  '3b · exactly one status constraint',
+  case when count(*) = 1 then 'PASS' else 'FAIL' end,
+  count(*) || ' check constraint(s) mention status', ''
+from pg_constraint
+where conrelid = 'public.leads'::regclass
+  and contype = 'c'
+  and pg_get_constraintdef(oid) ilike '%status%'
 
 union all
 
