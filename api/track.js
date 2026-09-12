@@ -23,6 +23,9 @@ const ALLOWED = new Set([
                            // is measurable without inflating lead counts.
   'lead',                 // paid retainer enquiry, server written
   'submit_application',   // Founding Three, server written
+  'sales_deck_view',      // /growth-guide opened. First party only: it is
+                          // deliberately outside the paid funnel and is
+                          // never sent to Meta.
   'schedule',             // ONLY a confirmed appointment, not a form send
   'purchase'              // not yet wired, will be server authoritative
 ]);

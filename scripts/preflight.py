@@ -186,6 +186,25 @@ for md in ROOT.glob('*.md'):
     if md.name != 'README.md':
         warn(f'{md.name} sits in the deployed root')
 
+# Unlisted pages must stay unlisted. There is no sitemap today; this fires
+# the moment someone adds one and forgets.
+UNLISTED = ['growth-guide']
+sitemap = ROOT / 'sitemap.xml'
+if sitemap.exists():
+    body = sitemap.read_text(encoding='utf-8')
+    leaked = [u for u in UNLISTED if u in body]
+    bad('sitemap.xml lists unlisted page(s): ' + ', '.join(leaked)) if leaked \
+        else ok('sitemap.xml excludes every unlisted page')
+else:
+    ok('no sitemap.xml · nothing can leak an unlisted page yet')
+
+# An unlisted page must not be linked from a public one, or it is listed.
+for u in UNLISTED:
+    linkers = [f.name for f in ROOT.glob('*.html')
+               if f.stem != u and f'href="/{u}"' in f.read_text(encoding='utf-8')]
+    bad(f'/{u} is linked from ' + ', '.join(linkers)) if linkers \
+        else ok(f'/{u} is not linked from any public page')
+
 
 # ── verdict ───────────────────────────────────────────────────────────
 print()

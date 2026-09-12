@@ -135,7 +135,9 @@
   // The browser never talks to Supabase. /api/track holds the key.
   var NAME_MAP = {
     ViewContent: 'view_content', PageView: 'landing_view',
-    VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90'
+    VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90',
+    // First party only. See trackInternal below: this never reaches Meta.
+    SalesDeckView: 'sales_deck_view'
   };
 
   function store(eventName, eventId, data) {
@@ -186,6 +188,30 @@
     return eventId;
   }
 
+  /* ── first-party only ──────────────────────────────────────────────
+     Records an event in our own funnel table and sends NOTHING to Meta.
+
+     For things that are real signals to us but must not touch the ad
+     account: /growth-guide being opened is the case this exists for. It
+     is a sales leave-behind, deliberately outside the paid funnel, and
+     feeding it to the pixel would teach the ad account to chase people
+     who were already in a sales conversation.
+     ─────────────────────────────────────────────────────────────────── */
+  var firedInternal = {};
+
+  function trackInternal(eventName, data, opts) {
+    opts = opts || {};
+    if (!NAME_MAP[eventName]) { log('unknown internal event', eventName); return null; }
+    if (opts.once !== false && firedInternal[eventName]) {
+      log('skipped duplicate internal', eventName);
+      return null;
+    }
+    firedInternal[eventName] = true;
+    var eventId = opts.eventId || (NAME_MAP[eventName] + '-' + uuid());
+    store(eventName, eventId, data || {});
+    return eventId;
+  }
+
   // ── VSL milestones ───────────────────────────────────────────────────
   // Attach to a <video>. Fires VSL25/50/75/90 once each per page view.
   // Deliberately does not send every timeupdate to Meta.
@@ -215,6 +241,7 @@
 
   w.ntc = {
     track: track,
+    trackInternal: trackInternal,
     context: context,
     attribution: attribution,
     sessionId: sessionId,
