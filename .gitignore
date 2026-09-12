@@ -20,8 +20,10 @@ Thumbs.db
 .vercel/
 .vercel
 
-# Internal working docs (repo root is the deployed directory)
-scripts/
+# Internal working docs (repo root is the deployed directory).
+# Excluded by pattern rather than whole-directory, because git will not
+# descend into an ignored directory and a negation inside one never applies.
+scripts/*.md
 
 # Reference recordings — large, and not ours to publish
 assets/Screen Recording*.mov

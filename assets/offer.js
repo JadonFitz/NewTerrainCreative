@@ -1,0 +1,110 @@
+/* ══════════════════════════════════════════════════════════════════════
+   New Terrain Creative · canonical offer terms
+   ──────────────────────────────────────────────────────────────────────
+   SINGLE SOURCE OF TRUTH for every price, scope bound and qualification
+   threshold on the site.
+
+   If a number appears in page copy it must match this file. Run
+   `scripts/check-offer.py` to verify; it greps every page and fails on a
+   figure that is not declared here.
+
+   Loaded by the forms so labels and validation cannot drift from the copy.
+   Read by humans before editing any page that mentions money.
+   ══════════════════════════════════════════════════════════════════════ */
+(function (w) {
+  'use strict';
+
+  var OFFER = {
+
+    // ── Founding Three ────────────────────────────────────────────────
+    founding: {
+      slots: 3,
+      // Month one: our service fee is waived. The client still funds media.
+      monthOneServiceFee: 0,
+      // What the waived month actually covers. Bounded on purpose: the
+      // brief forbids anything that reads as unlimited.
+      monthOneScope: [
+        'One offer and strategy session',
+        'One production day on location',
+        'One batch of campaign creative, cut, captioned and graded',
+        'One revision round on that batch',
+        'Campaign build and launch on Meta',
+        'Campaign management for the remainder of the first 30 days',
+        'One written performance report at the end of the month'
+      ],
+      monthOneExcludes: [
+        'Additional production days',
+        'Unlimited revisions or re-edits',
+        'Organic posting or community management',
+        'Work outside the agreed 30-day scope'
+      ],
+      // Optional continuation. NOT contractually required.
+      continuationMonthly: 3500,
+      continuationMonths: 2,
+      continuationTotal: 7000,
+      continuationRequired: false,
+      // Client-funded, paid directly to the ad platform, never to us.
+      minMonthlyAdSpend: 1500,
+      geography: 'Los Angeles',
+      standardMonthlyAfter: 6500
+    },
+
+    // ── Paid retainer ─────────────────────────────────────────────────
+    retainer: {
+      tiers: [
+        { name: 'The Anchor',      monthly: 3500,  note: 'Production only. Ad management is a separate add-on at this tier.' },
+        { name: 'Growth Partner',  monthly: 6500,  note: 'Production and campaign management under one roof.' },
+        { name: 'Brand Builder',   monthly: 15000, note: 'Flagship. Includes longform.' }
+      ],
+      adManagementAddOn: 1500,
+      minimumTermMonths: 3,
+      // Prepay: twelve months for the price of ten. The annual and saved
+      // figures on /grow are derived from the monthly rate, not typed by
+      // hand, so the consistency check can verify them arithmetically.
+      prepayMonthsCharged: 10,
+      prepayMonthsGiven: 12
+    },
+
+    // ── One-time products ─────────────────────────────────────────────
+    products: {
+      adSprintEight:   { name: 'The Eight',   price: 2500, creatives: 8 },
+      adSprintFifteen: { name: 'The Fifteen', price: 4500, creatives: 15 },
+      leadFoundation:  { name: 'Lead Foundation', price: 2500 }
+    },
+
+    // ── Priority industries ───────────────────────────────────────────
+    // Used to build the application's industry field. "Other" is accepted
+    // but flagged as non-priority rather than hidden.
+    industries: [
+      'Health and wellness',
+      'Law firm',
+      'Dental practice',
+      'Construction or contracting'
+    ],
+    otherIndustryLabel: 'Other (non-priority)',
+
+    // ── Qualification bands ───────────────────────────────────────────
+    // Boundaries for the "what do you spend on ads today" question. These
+    // describe the applicant's spend, not our pricing, but they live here
+    // so the form and the consistency check agree on them.
+    adSpendBands: [1500, 5000],
+
+    // ── Things we do not say ──────────────────────────────────────────
+    // Kept here so the constraint is visible next to the numbers.
+    neverClaim: [
+      'guaranteed leads, revenue or ROAS',
+      'a Founding Partner is a paying retainer client',
+      'months two and three are required',
+      'the free month is unlimited',
+      'results, testimonials or logos we do not have'
+    ]
+  };
+
+  // Convenience formatters so page copy and form labels agree.
+  OFFER.fmt = function (n) {
+    return '$' + Number(n).toLocaleString('en-US');
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = OFFER;
+  if (w) w.NTC_OFFER = OFFER;
+})(typeof window !== 'undefined' ? window : null);
