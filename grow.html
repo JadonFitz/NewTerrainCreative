@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Growth · New Terrain Creative. Content that gets you leads.</title>
-<meta name="description" content="We make the ads and we run the media. One team, one roof, judged on what it brings back. Retainers from $3,500/mo. Meta + Apple Maps managed.">
+<meta name="description" content="We make the ads and we run the media. One team, one roof, judged on what it brings back. Production Media partnerships typically begin in the mid-four figures monthly. Meta + Apple Maps managed.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="New Terrain Creative · Social Growth">
 <meta property="og:description" content="Content that gets you leads, not just likes. Creative and paid media under one roof.">
@@ -380,6 +380,49 @@
   .alt-price { font-family: var(--display); font-size: 22px; color: var(--gold); white-space: nowrap; text-align: right; }
 
   .alt-price small { font-family: var(--body); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 4px; }
+
+  /* ── INVESTMENT BAND ── replaces the old tier cards ── */
+  .invest-band {
+    margin-top: 46px; border: 1px solid var(--gold-dim, #8A7647);
+    background: #101010; padding: 32px 34px;
+    display: grid; grid-template-columns: minmax(0,300px) 1fr; gap: 34px; align-items: start;
+  }
+  .invest-label {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .invest-figure {
+    font-family: var(--display); font-size: clamp(26px,3.4vw,36px);
+    font-weight: 300; line-height: 1.1; color: var(--gold);
+  }
+  .invest-note { font-size: 13.5px; line-height: 1.85; color: #A09890; margin: 0; }
+
+  .invest-fit {
+    margin-top: 1px; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line); border: 1px solid var(--line);
+  }
+  .invest-fit-col { background: var(--black); padding: 28px 30px 30px; }
+  .invest-fit-col h3 {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px; font-weight: 400;
+  }
+  .invest-fit-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .invest-fit-col li { display: flex; gap: 12px; font-size: 13px; line-height: 1.7; color: #A09890; }
+  .invest-fit-col li::before {
+    content: ''; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0; margin-top: 9px;
+  }
+
+  .invest-cta { margin-top: 46px; text-align: center; }
+  .invest-cta-note {
+    margin: 18px auto 0; max-width: 52ch; font-size: 12.5px;
+    font-style: italic; line-height: 1.8; color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .invest-band { grid-template-columns: 1fr; gap: 22px; padding: 26px 22px; }
+    .invest-fit { grid-template-columns: 1fr; }
+  }
 
   /* ── GUARANTEES ── */
   #promise { border-top: 1px solid var(--line); }
@@ -892,7 +935,7 @@
   <div class="header-links">
     <a class="header-side" href="/sprint">Ad Sprint</a>
     <a class="header-side" href="index.html">The Cinema Side</a>
-    <a class="header-cta" href="book.html" target="_blank" rel="noopener">Book a Call</a>
+    <a class="header-cta" data-cta="header" href="/strategy-call">Strategy Call</a>
   </div>
 </header>
 
@@ -902,7 +945,7 @@
   <h1 class="title reveal">Less noise.<br>More <em>leads.</em></h1>
   <p class="hero-sub reveal">Most agencies hand you content and wish you luck, or run ads on stock footage that looks like everyone else's. We make the creative and we run the media. One team, one roof, judged on one number: what it brings back.</p>
   <div class="hero-ctas reveal">
-    <a class="btn btn--gold" href="book.html" target="_blank" rel="noopener">Book a Call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
     <a class="btn btn--ghost" href="#pricing">See Pricing</a>
   </div>
   <a class="hero-mail reveal" href="mailto:business@newterraincreative.com">Prefer email? business@newterraincreative.com</a>
@@ -1377,99 +1420,49 @@
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- INVESTMENT -->
 <section id="pricing">
-  <div class="eyebrow reveal">Pricing</div>
-  <h2 class="title reveal">Pick your rung.</h2>
-  <p class="lede reveal">Three retainers, one system. Start where you are; every tier is built to graduate into the next as the numbers grow.</p>
+  <div class="eyebrow reveal">What it takes</div>
+  <h2 class="title reveal">Scoped to the business,<br>not to a <em>menu.</em></h2>
+  <p class="lede reveal">Production volume, how much campaign management you need, and how fast you want to move all change what this costs. So rather than sell you a tier and work backwards, we scope it after we understand what you sell and what you are trying to grow.</p>
 
-  <div class="price-cards">
-    <div class="price-card reveal">
-      <div class="chip chip--ghost">Limited Slots</div>
-      <div class="price-name">The Anchor</div>
-      <p class="price-for">Consistency is the whole game. One shoot day a month, and your feed never goes quiet again.</p>
-      <div class="price-amount">$3,500<small> /mo</small></div>
-      <ul class="price-list">
-        <li>One half-day media day every month: 3&ndash;4 setups, shot and directed by the founder of the studio</li>
-        <li>16 deliverables a month: four a week, every week</li>
-        <li>12 short-form pieces cut from that day: talking-head clips and cutdowns, captioned</li>
-        <li>Plus 4 hero pieces: written to a script rather than pulled from a take, built with b-roll and cutaways, scored, sound-designed and graded. Nearer a short film than a clip</li>
-        <li>Brand content built to earn trust rather than chase a trend cycle</li>
-        <li>Posting &amp; scheduling across your channels</li>
-        <li>Monthly analytics &amp; creative direction: what landed, what we shoot next, read from your own channel data rather than guessed</li>
-        <li>Ad management is an add-on at this tier: $1,500/mo flat, included from Growth Partner up</li>
-      </ul>
-      <div class="price-cta"><a class="btn btn--ghost" href="book.html" target="_blank" rel="noopener">Start Here</a></div>
-      <p class="price-note">Capped so every feed gets real attention. Three-month minimum. Community management +$750/mo.</p>
+  <div class="invest-band reveal">
+    <div>
+      <div class="invest-label">Typical starting point</div>
+      <div class="invest-figure">Mid four figures monthly</div>
     </div>
+    <p class="invest-note">Most Production Media partnerships begin there and scale with production volume. Engagements run a three month minimum, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
+  </div>
 
-    <div class="price-card price-card--featured reveal">
-      <div class="chip">Content + Conversion</div>
-      <div class="price-name">Growth Partner</div>
-      <p class="price-for">The conversion tier: we make the cinema and we run the media, so your best-looking ads are the ones spending your budget.</p>
-      <div class="price-amount">$6,500<small> /mo</small></div>
-      <ul class="price-list">
-        <li>4 half-day or 2 full-day shoots per month, scheduled to fit your calendar: enough production for both streams</li>
-        <li>Everything in The Anchor: your media day, your brand content, cut and posted</li>
-        <li>Plus dedicated ad creative: hook variations and testing concepts shot separately from your brand content, not repurposed from it</li>
-        <li>30 deliverables a month across both streams: creative ads, short-form edits, cutdowns &amp; talking-head clips, every platform</li>
-        <li>Event coverage, product shoots &amp; brand identity content built into your shoot days: single-session coverage fits a shoot day, full summits are scoped per project</li>
-        <li>Ad management included: Meta + Apple Maps, optimized weekly against real revenue</li>
-        <li>Monthly analytics &amp; creative direction: what's working, what's next</li>
-        <li>Somewhere for the leads to land: if you don't have a page, a form and tracking, Lead Foundation comes first</li>
+  <div class="invest-fit reveal">
+    <div class="invest-fit-col">
+      <h3>This fits</h3>
+      <ul>
+        <li>Established health and wellness, legal, dental, and construction or contracting businesses</li>
+        <li>A real service, already selling, with capacity to take on more customers</li>
+        <li>Someone who answers a lead the day it arrives</li>
+        <li>Willingness to fund advertising alongside the production</li>
       </ul>
-      <div class="price-cta"><a class="btn btn--gold" href="book.html" target="_blank" rel="noopener">Book a Call</a></div>
-      <p class="price-note">Brand content earns trust. Ad creative earns clicks. Most agencies make one and pretend it's both. For longform (podcasts, YouTube, interviews), step up to Brand Builder. If paid isn't beating your organic baseline by month three, month four's ad management is on us.</p>
     </div>
-
-    <div class="price-card reveal">
-      <div class="chip chip--ghost">Flagship</div>
-      <div class="price-name">Brand Builder</div>
-      <p class="price-for">The engine at full volume: 55 deliverables every month, and the only tier with longform.</p>
-      <div class="price-amount">$15,000<small> /mo</small></div>
-      <ul class="price-list">
-        <li>10 longform videos a month: podcast episodes, YouTube content, founder interviews</li>
-        <li>30 short-form pieces: talking-head clips and cutdowns</li>
-        <li>Plus a monthly Ad Sprint XL: 15 ready-to-run ad creatives, shot as ad creative rather than repurposed from the brand content</li>
-        <li>Up to 4 full production days a month, as needed</li>
-        <li>Creative ads, event coverage, product shoots &amp; brand identity content, all built into your production days: single-session coverage fits a production day, full summits are scoped per project</li>
-        <li>Everything in Growth Partner included, paid media and all: your own footage between production days is another source for the same monthly 55</li>
-        <li>Monthly analytics &amp; creative direction</li>
+    <div class="invest-fit-col">
+      <h3>This does not</h3>
+      <ul>
+        <li>A one-off video with no campaign behind it</li>
+        <li>Organic posting alone, with nothing behind the creative</li>
+        <li>Anyone who needs a guaranteed number of leads. We do not sell those</li>
+        <li>Businesses without the capacity to serve more customers yet</li>
       </ul>
-      <div class="price-cta"><a class="btn btn--ghost" href="book.html" target="_blank" rel="noopener">Book a Call</a></div>
-      <p class="price-note">55 deliverables, every month, with ad management included. If total views across the channels we manage aren't up by month three, month four's production is on us.</p>
     </div>
   </div>
 
-  <p class="prepay-note reveal">Ad management is an add-on for existing retainer clients only: $1,500/mo flat, Meta + Apple Maps. Included from Growth Partner up.</p>
-
-  <div class="alt-rows">
-    <a class="alt-row alt-row--link alt-row--detail reveal" href="book.html" target="_blank" rel="noopener">
-      <div><span class="alt-tag">Nowhere to send them?</span><div class="alt-name">Lead Foundation</div></div>
-      <div>
-        <p class="alt-body">Paid media needs somewhere to land, and a campaign nobody can measure is a campaign nobody can improve. If you don't have a page, or a way to trace what came back, we build it <em>before</em> we spend a dollar of your budget.</p>
-        <ul class="price-list">
-          <li>One conversion-focused landing page, built to the same visual standard as the content</li>
-          <li>Lead capture form that delivers wherever your team already works</li>
-          <li>Meta Pixel, Conversions API, GA4 and a UTM convention, so every lead traces back to the piece that made it</li>
-          <li>You own every account. We get admin access.</li>
-        </ul>
-        <p class="prepay-note">Two weeks. Credited in full against six months prepaid at Growth Partner or above. We do not run your follow-up: leads land where your team already works, and the selling stays yours.</p>
-      </div>
-      <div class="alt-price">$2,500<small>one-time &middot; let's talk &rarr;</small></div>
-    </a>
-    <a class="alt-row alt-row--link reveal" href="/sprint">
-      <div><span class="alt-tag">Not ready for a retainer?</span><div class="alt-name">Ad Sprint</div></div>
-      <p class="alt-body">One shoot day, a full testing arsenal of ready-to-run ads in under two weeks. 8 creatives at $2,500, or 15 at $4,500. If nothing outperforms your current content, your next shoot day is free.</p>
-      <div class="alt-price">From $2,500<small>see the details &rarr;</small></div>
-    </a>
-    <div class="alt-row reveal">
-      <div><span class="alt-tag">Running an event?</span><div class="alt-name">Event &amp; Summit Coverage</div></div>
-      <p class="alt-body">Conferences, summits, launches, multi-day productions. Crewed to the room, cut for the recap and for a year of short-form after it. Scoped to the event rather than counted against a retainer.</p>
-      <div class="alt-price">Per project<small>let's talk</small></div>
-    </div>
+  <div class="invest-cta reveal">
+    <a class="btn btn--gold" data-cta="strategy" href="/strategy-call">Request a strategy call</a>
+    <p class="invest-cta-note">Thirty minutes. We will tell you what we would actually do, what it would cost, and whether we think it is worth doing. If it is not a fit we will say so on the call rather than send a proposal.</p>
   </div>
-  <p class="prepay-note reveal">Because we post, channel analytics come with every tier. Where paid is running, admin access to the ad account is part of the engagement: we do not report on numbers we cannot see. Tiers with ad management assume a working lead path: a page, a form and tracking we can see. Where that does not exist yet, Lead Foundation is the first engagement. Ad spend is separate and always yours: on any tier with ad management, you pay Meta and Apple directly and we never mark up or hold your budget. Music from our licensed libraries is included; licensing a specific commercial track is rare for social and quoted separately if you want one. Prices exclude ad spend, paid media placements, talent and travel outside Los Angeles or Tampa.</p>
+
+  <p class="prepay-note reveal">Advertising spend is separate and always yours: you pay the platforms directly and we never mark up or hold your budget. Where paid is running, admin access to the ad account is part of the engagement, because we do not report on numbers we cannot see. Campaign work assumes a working lead path: a page, a form and tracking. Where that does not exist yet, building it is the first piece of work. Music from our licensed libraries is included; licensing a specific commercial track is quoted separately. Fees exclude ad spend, paid placements, talent, and travel outside Los Angeles or Tampa.</p>
+
+  <p class="prepay-note reveal" style="margin-top:14px">Also available, separately from a retainer: <a href="/sprint" style="color:var(--gold)">the Ad Sprint</a> as a one-time production, and event or summit coverage scoped per project. <a href="mailto:business@newterraincreative.com" style="color:var(--gold)">Ask us</a> and we will send detailed rates.</p>
 </section>
 
 <!-- GUARANTEES -->
@@ -1493,19 +1486,7 @@
 
   <p class="prepay-note reveal">Performance guarantees require tracking in place from day one. We cannot promise a number we were never able to measure.</p>
 
-  <div class="prepay-scroll reveal">
-    <table class="prepay-table">
-      <thead>
-        <tr><th>Prepay &amp; Save</th><th>Monthly</th><th>12 Months Upfront</th><th>You Save</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>The Anchor</td><td>$3,500/mo</td><td>$35,000</td><td>$7,000</td></tr>
-        <tr><td>Growth Partner</td><td>$6,500/mo</td><td>$65,000</td><td>$13,000</td></tr>
-        <tr><td>Brand Builder</td><td>$15,000/mo</td><td>$150,000</td><td>$30,000</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="prepay-note reveal">Six months upfront = one month free.</p>
+  <p class="prepay-note reveal">Prepaying six or twelve months up front earns a discount. We will put the exact figures in writing once the scope is settled.</p>
 </section>
 
 <!-- PROOF -->
@@ -1538,7 +1519,7 @@
   <h2 class="title reveal">Let's fill<br>your <em>pipeline.</em></h2>
   <p class="lede reveal">One call. We'll look at what you're running now, tell you honestly which rung fits, and map the first ninety days.</p>
   <div class="close-ctas reveal">
-    <a class="btn btn--gold" href="book.html" target="_blank" rel="noopener">Book a Call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
   </div>
   <a class="close-mail reveal" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
 </section>
