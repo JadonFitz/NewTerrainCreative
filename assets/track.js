@@ -131,10 +131,30 @@
     return ctx;
   }
 
+  function funnelName() {
+    var p = w.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+    if (p === '/founding' || p === '/apply') return 'founding_three';
+    if (p === '/grow' || p === '/strategy-call') return 'paid_retainer';
+    if (p === '/sprint' || p === '/book' || p === '/booked') return 'ad_sprint';
+    if (p === '/growth-guide') return 'sales_enablement';
+    return 'organic_site';
+  }
+
+  function measurementMetadata(data) {
+    var out = {};
+    var a = attribution();
+    UTM_KEYS.forEach(function (k) { if (a[k]) out[k] = a[k]; });
+    if (a.fbclid) out.fbclid = a.fbclid;
+    if (a.landing_page) out.landing_page = a.landing_page;
+    Object.keys(data || {}).forEach(function (k) { out[k] = data[k]; });
+    return out;
+  }
+
   // ── first-party event, posted to our own endpoint ────────────────────
   // The browser never talks to Supabase. /api/track holds the key.
   var NAME_MAP = {
     ViewContent: 'view_content', PageView: 'landing_view',
+    CTAClick: 'cta_click',
     VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90',
     // First party only. See trackInternal below: this never reaches Meta.
     InitialFitCompleted: 'initial_fit_completed',
@@ -147,7 +167,8 @@
     var body = JSON.stringify({
       event_id: eventId, event_name: name,
       session_id: sessionId(), page_url: w.location.href,
-      metadata: data || undefined
+      funnel: funnelName(),
+      metadata: measurementMetadata(data)
     });
     try {
       // keepalive so an event fired during navigation still lands
@@ -175,10 +196,10 @@
 
     if (typeof w.fbq === 'function') {
       try {
-        w.fbq('track', eventName, payload, { eventID: eventId });
+        var custom = eventName === 'CTAClick' || /^VSL\d+$/.test(eventName);
+        w.fbq(custom ? 'trackCustom' : 'track', eventName, payload, { eventID: eventId });
         log('fbq', eventName, eventId, payload);
       } catch (e) {
-        // Custom events are not standard events; fall back to trackCustom.
         try { w.fbq('trackCustom', eventName, payload, { eventID: eventId }); } catch (e2) {}
       }
     } else {
@@ -247,6 +268,7 @@
     attribution: attribution,
     sessionId: sessionId,
     metaIds: metaIds,
+    funnelName: funnelName,
     watchVideo: watchVideo,
     uuid: uuid
   };

@@ -62,9 +62,9 @@ const check = (label, cond, detail = '') => {
 
 const STEP_ONE = {
   step: 1,
-  name: 'Dana Reyes', email: 'dana@acmedental.com', phone: '3105550143',
+  name: 'Test Applicant', email: 'applicant@example.invalid', phone: '1555010100',
   role: 'Owner', authority: 'I decide',
-  business: 'Acme Dental', website: 'acmedental.com',
+  business: 'Example Test Dental', website: 'example.invalid',
   industry: 'Dental practice', sell: 'Implants and cosmetic dentistry.',
   spend: '$1,500-5,000/mo', who_runs: 'Agency/freelancer',
   budget: 'Yes', infra: 'Partial', la: 'Yes',
@@ -122,7 +122,7 @@ check('offer + form_type are on the event',
 check('content_category is the industry', capi?.custom_data?.content_category === 'Dental practice');
 check('event_id is shared with the browser', capi?.event_id === 'evt-complete', capi?.event_id);
 check('email is hashed and never plaintext',
-  /^[a-f0-9]{64}$/.test(capi?.user_data?.em?.[0] || '') && JSON.stringify(capi).indexOf('dana@acmedental.com') === -1);
+  /^[a-f0-9]{64}$/.test(capi?.user_data?.em?.[0] || '') && JSON.stringify(capi).indexOf('applicant@example.invalid') === -1);
 
 console.log('\n\x1b[1mUNTRUSTED HANDOFF FIELDS · ignored\x1b[0m');
 n = calls.length;

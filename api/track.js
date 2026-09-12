@@ -17,6 +17,7 @@ import { insert, configured } from './_supabase.js';
 const ALLOWED = new Set([
   'landing_view',
   'view_content',
+  'cta_click',
   'vsl_25', 'vsl_50', 'vsl_75', 'vsl_90',
   'initial_fit_completed', // step one of the application. NOT a conversion:
                            // it exists so step one to step two abandonment
@@ -28,6 +29,11 @@ const ALLOWED = new Set([
                           // never sent to Meta.
   'schedule',             // ONLY a confirmed appointment, not a form send
   'purchase'              // not yet wired, will be server authoritative
+]);
+
+const ALLOWED_FUNNELS = new Set([
+  'founding_three', 'paid_retainer', 'ad_sprint',
+  'sales_enablement', 'organic_site'
 ]);
 
 const MAX = {
@@ -72,6 +78,8 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, ignored: 'unknown event' });
   }
 
+  const funnel = trim(d.funnel, 60);
+
   if (!configured) {
     console.warn('track: supabase not configured, event dropped', eventName);
     return res.status(200).json({ ok: true, stored: false });
@@ -83,6 +91,7 @@ export default async function handler(req, res) {
       event_name: eventName,
       session_id: trim(d.session_id, MAX.session_id),
       page_url: trim(d.page_url, MAX.page_url),
+      funnel: ALLOWED_FUNNELS.has(funnel) ? funnel : undefined,
       metadata: safeMetadata(d.metadata)
     }, { ignoreConflict: true });
 

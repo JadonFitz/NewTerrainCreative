@@ -1778,7 +1778,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   document.querySelectorAll('[data-cta]').forEach(el => {
     el.addEventListener('click', () => {
       const where = el.getAttribute('data-cta');
-      if (window.fbq) fbq('trackCustom', 'CTAClick', { offer: 'founding_three', position: where });
+      if (window.ntc) ntc.track('CTAClick', { offer: 'founding_three', position: where }, { once: false });
       if (window.gtag) gtag('event', 'cta_click', { cta_position: where, offer: 'founding_three' });
     });
   });
@@ -1790,7 +1790,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   // PageView already fired from the base pixel in the head.
   (function () {
     if (!window.ntc) return;
-    ntc.track('ViewContent', { content_name: document.title });
+    ntc.track('ViewContent', { content_name: document.title, offer: 'founding_three' });
     // Attach playback milestones once the video exists in the slot.
     var v = document.querySelector('#video video');
     if (v) ntc.watchVideo(v);

@@ -11,7 +11,7 @@ Five checks, all local, none of which touch the network:
   3. Config   · required environment variables, by NAME only
   4. Routes   · every internal href resolves to a real page
   5. Deploy   · nothing private is missing from .vercelignore
-  6. Handler  · scripts/test-apply.mjs, both application steps end to end
+  6. Handlers · both acquisition forms end to end
 
 Exit status is non-zero if any check fails, so this is safe to gate on.
 
@@ -196,15 +196,21 @@ for u in UNLISTED:
 
 
 # ── 6 · the handler itself ────────────────────────────────────────────
-head('6 · Application handler')
-r = subprocess.run(['node', str(ROOT / 'scripts' / 'test-apply.mjs')],
-                   capture_output=True, text=True)
-if r.returncode == 0:
-    passed = r.stdout.count('\u2713')
-    ok(f'both steps end to end · {passed} checks passed')
-else:
-    fails = [l.strip() for l in r.stdout.splitlines() if '\u2717' in l]
-    bad('test-apply.mjs failed\n      ' + '\n      '.join(fails))
+head('6 · Acquisition handlers')
+for test, label in (
+    ('test-apply.mjs', 'Founding application'),
+    ('test-strategy-call.mjs', 'paid-retainer inquiry'),
+    ('test-tracking.mjs', 'browser attribution'),
+    ('test-track-api.mjs', 'first-party event ingestion'),
+):
+    r = subprocess.run(['node', str(ROOT / 'scripts' / test)],
+                       capture_output=True, text=True)
+    if r.returncode == 0:
+        passed = r.stdout.count('\u2713')
+        ok(f'{label} · {passed} checks passed')
+    else:
+        fails = [l.strip() for l in r.stdout.splitlines() if '\u2717' in l]
+        bad(f'{test} failed\n      ' + '\n      '.join(fails))
 
 
 # ── verdict ───────────────────────────────────────────────────────────

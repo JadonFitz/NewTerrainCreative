@@ -112,6 +112,7 @@ export default async function handler(req, res) {
 
   // ── 1 · durable record ────────────────────────────────────────────────
   let leadId = null;
+  let stored = false;
   if (dbReady) {
     try {
       const row = await insert('leads', {
@@ -131,6 +132,7 @@ export default async function handler(req, res) {
         lead_event_id: d.event_id
       }, { returning: true });
       leadId = row && row.id;
+      stored = Boolean(leadId);
     } catch (e) {
       console.error('strategy call store failed, continuing', (e && e.message) || e);
     }
@@ -139,7 +141,7 @@ export default async function handler(req, res) {
         console.error('session link failed', (e && e.message) || e);
       }
     }
-    if (d.event_id) {
+    if (leadId && d.event_id) {
       try {
         await insert('funnel_events', {
           event_id: d.event_id, event_name: 'lead',
@@ -152,11 +154,19 @@ export default async function handler(req, res) {
   }
 
   // ── 2 · notify ────────────────────────────────────────────────────────
+  let notified = false;
   try {
-    await notify(`Strategy call · ${String(d.business).slice(0, 60)}`,
-                 emailBody(d, flags), String(d.email));
+    const provider = await notify(`Strategy call · ${String(d.business).slice(0, 60)}`,
+                                  emailBody(d, flags), String(d.email));
+    notified = provider !== 'none';
   } catch (e) {
     console.error('notify failed', (e && e.message) || e);
+  }
+
+  if (!stored && !notified) {
+    return res.status(503).json({
+      error: 'We could not save the request. Please try again or email business@newterraincreative.com.'
+    });
   }
 
   // ── 3 · Meta, server side, deduplicated against the browser Lead ──
@@ -186,5 +196,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, captured: { stored, notified } });
 }
