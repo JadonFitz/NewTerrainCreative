@@ -7,6 +7,22 @@
 -- Adds a discriminator so Founding Three applications and paid retainer
 -- enquiries never blur in reporting, plus the fields the strategy call
 -- form collects that the application does not.
+--
+-- ── BACKWARD COMPATIBLE with the code currently in production ─────────
+-- Deliberately additive. The production branch keeps working unchanged
+-- after this runs, so it is safe to apply before the new code ships:
+--
+--   * every new column is nullable, or has a default (form_type,
+--     publicity_optin), so existing INSERTs that never mention them
+--     still succeed
+--   * no column is renamed, retyped or dropped
+--   * the status constraint is WIDENED, from three values to four.
+--     'new', 'qualified' and 'declined' all still pass
+--   * only reporting views change, and no application code reads a view
+--   * the revokes remove grants from anon and authenticated. Every
+--     server path uses the service role, which is unaffected
+--
+-- Safe to re-run.
 -- ══════════════════════════════════════════════════════════════════════
 
 -- ── which funnel produced this lead ───────────────────────────────────
@@ -73,7 +89,18 @@ create index if not exists funnel_events_funnel_idx on public.funnel_events (fun
 -- ── reporting, split by funnel ────────────────────────────────────────
 -- security_invoker so the view inherits row level security rather than
 -- reading through it with the owner's rights.
-create or replace view public.funnel_by_campaign
+--
+-- DROP first, not CREATE OR REPLACE. Postgres will only let REPLACE append
+-- columns to the end of a view: it cannot rename one or insert one in the
+-- middle. 0001's first column is `campaign` and this one's is `funnel`, so
+-- REPLACE fails with `cannot change name of view column "campaign" to
+-- "funnel"` and takes the rest of the migration down with it.
+--
+-- Dropping costs nothing. A view holds no data, and no application code
+-- reads it; it exists for us to query by hand.
+drop view if exists public.funnel_by_campaign;
+
+create view public.funnel_by_campaign
 with (security_invoker = on) as
 select
   l.form_type                                                 as funnel,
@@ -96,7 +123,9 @@ order by leads desc;
 -- The reason industry is a required field rather than a nice-to-have.
 -- Splits by funnel as well, because a founding application and a paid
 -- retainer enquiry from the same vertical are not the same signal.
-create or replace view public.funnel_by_industry
+drop view if exists public.funnel_by_industry;
+
+create view public.funnel_by_industry
 with (security_invoker = on) as
 select
   coalesce(l.industry, '(not given)')                         as industry,

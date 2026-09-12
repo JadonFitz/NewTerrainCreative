@@ -87,6 +87,24 @@
       // Explicitly not a default benchmark. This is the term that made the
       // old guarantee meaningless.
       totalViewsEligibleByDefault: false,
+
+      // WHERE IT APPLIES. Growth Partner and Brand Builder only.
+      //
+      // Not Anchor, and not Anchor plus the campaign-management add-on.
+      // The promise requires that we managed the campaign AND could change
+      // the creative in response to it. Anchor is production only, so
+      // every claim would fail on the management condition automatically;
+      // the add-on gives us management of a fixed batch with no iteration
+      // budget, so the lever the remedy assumes is missing. A promise
+      // offered where it can never pay out is worse than no promise.
+      //
+      // /grow does not publish package names, so it states the same rule
+      // as "engagements where we manage the campaign". /growth-guide names
+      // the packages because it publishes them.
+      eligiblePackages: ['Growth Partner', 'Brand Builder'],
+      ineligiblePackages: ['The Anchor', 'The Anchor plus campaign management'],
+      requiresManagedCampaign: true,
+
       attorneyApproved: false
     },
 

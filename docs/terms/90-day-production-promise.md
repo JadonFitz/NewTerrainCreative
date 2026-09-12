@@ -68,6 +68,31 @@ documented baseline, measured at the documented source, over the complete
 measurement period. The parties should record what magnitude, if any, is
 required. *[Open: see section 8.]*
 
+## 3A · Which engagements the promise attaches to
+
+**DECIDED 12 September 2026.** This was open question 6 and is now settled.
+
+3A.1 The promise applies to **Growth Partner** and **Brand Builder** only.
+
+3A.2 It does **not** apply to **The Anchor**, with or without the
+campaign-management add-on.
+
+3A.3 The reason is clause 4.6. The promise requires that New Terrain
+managed the campaign throughout the measurement period. Anchor is
+production only, so every claim would fail 4.6 automatically. Anchor plus
+the add-on gives us management of a fixed batch of creative with no
+iteration shoot and no variant budget, so the lever the remedy assumes,
+changing the creative in response to the data, is not in scope either.
+
+3A.4 A promise offered where it can never pay out is worse than offering
+none: it is a claim we would be relying on a technicality to defeat.
+Counsel should treat 3A.2 as a term to state plainly in the Anchor
+agreement, not merely omit.
+
+3A.5 The eligibility is encoded in `assets/offer.js` under
+`productionPromise.eligiblePackages`, and in `api/_rates.js` per tier as
+`productionPromiseEligible`.
+
 ## 4 · Client conditions
 
 The promise is available only where all of the following held for the
@@ -139,9 +164,6 @@ signed. A headline on a web page is not the term; it is a pointer to it.
    word needs a definition in the scope or it becomes the argument.
 5. **Claim window.** No deadline for a client to invoke the promise.
    Suggest a fixed number of days after the 90-day period ends.
-6. **Which packages.** Whether the promise attaches to all three retainer
-   packages or only where campaign management is included. It arguably
-   cannot apply to Anchor as production-only, since we would not be
-   managing the campaign, and clause 4.6 then defeats every claim
-   automatically. That would be a promise made in a place it can never
-   pay out, which is worse than not offering it there.
+6. ~~**Which packages.**~~ **Resolved, see section 3A.** Growth Partner
+   and Brand Builder only. Counsel should confirm that stating the
+   exclusion in the Anchor agreement is preferable to silence.

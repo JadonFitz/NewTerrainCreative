@@ -111,23 +111,32 @@ nobody sells.
 Promise attaches at Growth Partner and above. That is a real liability we
 are taking, and it is priced.
 
-### Consequence: where the promise can and cannot attach
+### Where the promise attaches · DECIDED
+
+Growth Partner and Brand Builder only. Approved 12 September 2026 and now
+stated in section 3A of the terms draft, in `assets/offer.js`, on `/grow`
+and on `/growth-guide`.
 
 The promise requires that we managed the campaign throughout the
-measurement period (condition 4.6 in the terms draft). This resolves an
-open question in that document:
+measurement period (condition 4.6 in the terms draft):
 
 - **Anchor** · we do not manage the campaign, so every claim would fail on
   4.6 automatically. Offering it there would be a promise made in a place
   it can never pay out, which is worse than not offering it.
 - **Anchor plus the management add-on** · we do manage, but we cannot
   change the creative, so the main lever the remedy assumes is missing.
-  Proposed: **does not apply**, stated plainly rather than left ambiguous.
+  **Does not apply**, and is stated plainly in the agreement rather than
+  left to be discovered.
 - **Growth Partner and Brand Builder** · applies.
 
-This must be explicit in the sales guide. A prospect comparing $5,000
-against $6,500 needs to know the promise is one of the things the extra
-$1,500 buys.
+This is explicit in the sales guide. A prospect comparing $5,000 against
+$6,500 needs to know the promise is one of the things the extra $1,500
+buys.
+
+`/grow` states the same rule without naming packages, since that page
+deliberately publishes no package structure: there it reads as "applies to
+engagements where we manage the campaign, not to production-only work."
+Same rule, no rate card leaked.
 
 ---
 
