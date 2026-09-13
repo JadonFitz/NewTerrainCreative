@@ -1,17 +1,77 @@
 # Production Media · package scopes
 
-> ## PROPOSED · NOT APPROVED
+> ## APPROVED AND PUBLISHED · 12 September 2026
 >
-> Prices are provisionally agreed at three levels. **These scopes are not.**
-> `/growth-guide` renders an empty panel where the rate table goes and says
-> so, and `api/_rates.js` carries `approved: false`. Nothing here is
-> client-facing until it is signed off.
+> These three packages are approved and live on `/growth-guide`, which
+> renders them at runtime from `assets/offer.js`
+> `retainer.publicGuideTiers`. **That file is the source of truth.**
+> `api/_rates.js` mirrors it for internal quoting and carries
+> `approved: true`.
 >
-> Drafted 12 September 2026.
+> The scopes below were drafted as a proposal on 12 September and were
+> **superseded** by what actually shipped. Section 1 now records the
+> published scopes verbatim. The reasoning sections that follow are kept
+> because the arguments still hold, but where an old deliverable count
+> contradicts section 1, section 1 wins.
+>
+> Still withheld from the client guide: "prepay 10 months, receive 12".
+> Approving the packages did not approve that.
 
-Every package excludes advertising spend. It is paid by the client,
-directly to the platform, on the client's own account and payment method.
-Never marked up, never held by us.
+---
+
+## 1 · What is published, verbatim
+
+Rendered on `/growth-guide`. Every package excludes advertising spend,
+which is paid by the client directly to the platform on their own account.
+Three-month minimum on all three. The written proposal confirms the
+package, production calendar, revision limits and any custom work.
+
+### The Anchor · $3,500 monthly · *Production partner*
+
+Consistency is the whole game: one focused media day a month, with the
+feed, posting and creative read handled.
+
+- One half-day media day each month
+- 16 deliverables: 12 short-form + 4 scripted hero pieces
+- 3-4 directed setups, with hero pieces finished with b-roll, sound design and color
+- Posting and scheduling across your channels
+- Monthly analytics and creative direction
+- Meta ad management available as a $1,500 monthly add-on
+- Community management available as a $750 monthly add-on
+- **90-Day Production Promise · does not apply**, with or without the ad management add-on
+
+### Growth Partner · $6,500 monthly · *Production + campaign system*
+
+The conversion tier: brand content and dedicated ad creative, with
+production and paid media under one roof.
+
+- 4 half-day or 2 full-day shoots each month
+- 30 deliverables across brand content and ad creative
+- Dedicated ad concepts and hook variations, not repurposed brand cuts
+- Event, product and brand-identity coverage within the included shoot days
+- Posting and scheduling across your channels
+- Meta campaign setup and weekly management
+- Monthly analytics and creative direction
+- **90-Day Production Promise · applies**
+
+### Brand Builder · $15,000 monthly · *Flagship partnership*
+
+The engine at full volume: longform, short-form and dedicated ad creative
+in one monthly production system.
+
+- Up to 4 full production days each month
+- 55 deliverables: 10 longform + 30 short-form + 15 ads
+- Everything in Growth Partner, including Meta management
+- Podcasts, YouTube content and founder interviews
+- Monthly analytics and creative direction
+- **90-Day Production Promise · applies**
+
+---
+
+## 2 · Superseded proposal, kept for the reasoning
+
+Everything below this line was the 12 September proposal. The deliverable
+counts in it did not ship. Read it for the arguments, not the numbers.
 
 ---
 
@@ -84,6 +144,13 @@ The question is sharper than it looks, because Anchor plus the $1,500
 management add-on is **$5,000**, only $1,500 under Growth Partner. If those
 two bought the same thing, the tier would be a pricing artifact. They do
 not, and the difference is deliberate.
+
+**0 · Production volume, which is the part that shipped.** Anchor is one
+half-day media day and 16 deliverables. Growth Partner is two full days'
+worth and 30, and the ad creative is built as ad creative rather than
+recut from brand footage. Anchor plus the $1,500 add-on reaches $5,000 and
+still buys one half-day and 16 deliverables. That is the gap, and it is
+volume and intent rather than a pricing accident.
 
 **1 · The add-on manages a fixed batch. Growth Partner manages a system.**
 At $5,000 we run campaigns using the creative that month's shoot produced.

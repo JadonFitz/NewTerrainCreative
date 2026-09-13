@@ -5,13 +5,20 @@
    nothing here is bundled into a page, so these figures never reach a
    browser.
 
-   Retainer rates moved here when /grow stopped publishing a package
-   table. Anything shipped in assets/offer.js is publicly inspectable
-   whether or not it is rendered, so exact rates do not belong there.
+   ── WHERE THE PUBLISHED TRUTH LIVES ─────────────────────────────────
+   assets/offer.js `retainer.publicGuideTiers` is now the source of
+   truth for package names, prices, scope lines and deliverables. It is
+   what /growth-guide renders, so it is what a client sees.
 
-   Public capacity signal on /grow is "mid four figures monthly" and
-   nothing more precise. Exact scope and fee are quoted after
-   qualification.
+   This file is the INTERNAL companion: the figures we quote from and the
+   commercial rules behind them (add-on pricing, minimum term, prepay,
+   what the promise attaches to). It must AGREE with offer.js and never
+   compete with it. If the two disagree, offer.js is right, because
+   offer.js is the one a client has read.
+
+   Public capacity signal on /grow is still "mid four figures monthly"
+   and nothing more precise. /grow deliberately publishes no package
+   structure; /growth-guide does, and is sent by hand.
 
    NOTE: à-la-carte property and event rates are a separate product line
    and are deliberately not represented here. Do not merge them into the
@@ -19,41 +26,66 @@
    ══════════════════════════════════════════════════════════════════════ */
 
 export const RETAINER = {
-  // PROVISIONAL. Prices agreed at three levels; the full scopes are in
-  // docs/pricing/package-scopes.md and are NOT yet approved. Do not
-  // publish a figure until the scope behind it is signed off.
-  approved: false,
+  // APPROVED and published. /growth-guide renders these three packages
+  // from assets/offer.js retainer.publicGuideTiers. Prices and
+  // deliverables below mirror what is published; change offer.js first,
+  // then mirror it here.
+  approved: true,
+  approvedOn: '2026-09-12',
+  publishedAt: '/growth-guide',
+  publishedSource: 'assets/offer.js · retainer.publicGuideTiers',
+
   tiers: [
     {
       name: 'The Anchor', monthly: 3500, from: false,
-      scope: 'Production only. We make the creative; the campaign is yours to run.',
+      label: 'Production partner',
+      scope: 'One focused media day a month, with the feed, posting and creative read handled. Production only: we do not run the campaign at this tier unless the ad management add-on is taken.',
+      mediaDaysPerMonth: 0.5,
+      deliverables: 16,          // 12 short-form + 4 scripted hero
+      includesPosting: true,
+      includesCampaignManagement: false,
       productionPromiseEligible: false
     },
     {
       name: 'Growth Partner', monthly: 6500, from: false,
-      scope: 'Production plus campaign strategy and management, with creative that changes in response to results.',
+      label: 'Production + campaign system',
+      scope: 'Brand content and dedicated ad creative, with production and paid media under one roof. Ad concepts are built as ads, not repurposed brand cuts.',
+      mediaDaysPerMonth: 2,      // 4 half-days or 2 full days
+      deliverables: 30,
+      includesPosting: true,
+      includesCampaignManagement: true,
       productionPromiseEligible: true
     },
     {
-      name: 'Brand Builder', monthly: 15000, from: true,
-      scope: 'Flagship. Custom engagement, includes longform.',
+      name: 'Brand Builder', monthly: 15000, from: false,
+      label: 'Flagship partnership',
+      scope: 'Longform, short-form and dedicated ad creative in one monthly production system. Everything in Growth Partner, plus podcasts, YouTube and founder interviews.',
+      mediaDaysPerMonth: 4,
+      deliverables: 55,          // 10 longform + 30 short-form + 15 ads
+      includesPosting: true,
+      includesCampaignManagement: true,
       productionPromiseEligible: true
     }
   ],
 
-  // Bolts campaign management onto Anchor. Anchor + this is $5,000, which
-  // is $1,500 under Growth Partner, and the difference has to be real
-  // scope rather than a pricing accident. It buys management of a FIXED
-  // batch of creative: no iteration shoot, no variant cuts, no funnel
-  // work, and no 90-Day Production Promise. See docs/pricing.
+  // Published on The Anchor card. Bolting management onto Anchor reaches
+  // $5,000, which is $1,500 under Growth Partner, and the gap is real
+  // scope rather than a pricing accident: Anchor runs one half-day media
+  // day and 16 deliverables against Growth Partner's two days and 30,
+  // with ad creative built as ad creative. The add-on does NOT carry the
+  // 90-Day Production Promise, because it buys management of a fixed
+  // batch with no iteration budget.
   campaignManagementAddOn: 1500,
   addOnProductionPromiseEligible: false,
 
+  // Also published on The Anchor card.
+  communityManagementAddOn: 750,
+
   minimumTermMonths: 3,
 
-  // Twelve months for the price of ten. WITHHELD from the sales guide by
-  // decision of 12 Sep 2026: it is not to appear in any client-facing
-  // table until the core packages are approved. Internal only.
+  // Twelve months for the price of ten. Still WITHHELD from the client
+  // guide: the packages are approved, this incentive is not, and it does
+  // not appear on /growth-guide. Internal only until that changes.
   prepayMonthsCharged: 10,
   prepayMonthsGiven: 12,
   prepayPublishable: false,
