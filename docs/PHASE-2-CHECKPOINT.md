@@ -66,13 +66,30 @@ What is unproven is only that the *browser* half carries the same
 
 These gate spending money on ads. They do not gate development.
 
-**1 · Live browser/server deduplication.** Submit `/strategy-call` and
-`/apply` in a browser against a Preview deployment, then confirm in Meta
-Events Manager → Test Events that `Lead` and `SubmitApplication` each
-appear once showing both Browser and Server. The wiring is already
-verified in code: the page mints one `event_id`, passes it to `fbq` as
-`eventID` and posts it to the server, which sends it as `event_id`. Meta
-deduplicates on event name plus that id.
+**1 · Live browser/server deduplication.** Partially observed on 14
+September, and narrower than it was.
+
+A real browser submission of `/strategy-call` stored
+`lead_event_id = sc-79cda4b6-4382-46d7-b788-a1c0ebd475e3`. The `sc-`
+prefix is minted only at `strategy-call.html:303`:
+
+```js
+data.event_id = 'sc-' + (window.ntc ? ntc.uuid() : Date.now());
+```
+
+so a genuine browser session generated one id, handed it to `fbq` as
+`eventID`, and posted the same value to the server, which sent it to Meta
+as `event_id`. Shared-id behaviour across browser and server is therefore
+observed, not merely inferred from code.
+
+What remains unconfirmed is only Meta's side: that Events Manager
+collapses the pair into a single event. That is a claim about Meta's
+deduplication, not about this application.
+
+To close it: submit `/strategy-call` and `/apply` in a browser against a
+Preview deployment and confirm in Events Manager → Test Events that
+`Lead` and `SubmitApplication` each appear once showing both Browser and
+Server as sources.
 
 **2 · Native VSL milestones.** `ntc.watchVideo` is attached to
 `#video video` on `/founding`, `/grow` and `/sprint` and fires 25/50/75/90
@@ -91,8 +108,10 @@ analytics.
   authenticated endpoint can receive a booking confirmation, match it to a
   lead, stamp `scheduled_at` and fire the event server-side with a
   server-minted id. Until then `/api/track` answers 403.
-- **Test rows.** Test submissions live in the production `leads` table,
-  because Preview and Production share one Supabase project. Cleanup is in
-  `supabase/qa-0003-verify-and-cleanup.sql` section 8 and must be run by
-  hand: `vercel env pull` returns every encrypted value as an empty
-  string, so no automated path to the database exists from a workstation.
+- **Test rows.** Cleared 14 September. Both test leads
+  (`46820fa9-…`, `cfb7b921-…`) and the QA event sessions
+  (`qa-1789359804`, `forge-live`, `capi-1789359804`) were deleted by exact
+  id. Future cleanup must be run by hand for the same reason it was this
+  time: `vercel env pull` returns every encrypted value as an empty
+  string, so no automated path to the database exists from a workstation,
+  and Preview and Production share one Supabase project.
