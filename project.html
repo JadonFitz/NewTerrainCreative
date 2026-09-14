@@ -283,6 +283,48 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       console.error('project: option lists failed to render');
     }
   }
+
+  /* ── Ad Sprint arrivals ───────────────────────────────────────────
+     /sprint routes here with ?offer=ad-sprint because a Sprint is a
+     one-time project, and the retainer form's questions about monthly ad
+     spend and lead response have no sensible answer for one.
+
+     Only the framing changes. Same fields, same validation, same
+     endpoint, same conversion event: the offer identifier is what keeps
+     the two reportable apart, not a separate form.
+     ─────────────────────────────────────────────────────────────── */
+  (function () {
+    var q = new URLSearchParams(window.location.search);
+    if (q.get('offer') !== 'ad-sprint') return;
+
+    var eyebrow = document.querySelector('.eyebrow');
+    if (eyebrow) eyebrow.textContent = 'Ad Sprint';
+
+    var h1 = document.querySelector('h1');
+    if (h1) h1.innerHTML = 'Let\u2019s plan <em>your shoot day.</em>';
+
+    var lede = document.querySelector('.lede');
+    if (lede) {
+      lede.innerHTML = 'One day on location, a full set of ready-to-run ads, ' +
+        'start to finish in under 14 days. A few questions so the day is ' +
+        'planned before anyone picks up a camera, and <b>so we can tell you ' +
+        'quickly whether a Sprint is the right thing for you.</b>';
+    }
+
+    // Preselect the type. The radio exists because offer.js lists it.
+    var t = document.querySelector('input[name="project_type"][value="Ad Sprint"]');
+    if (t) t.checked = true;
+
+    // Carry the package the visitor clicked, as a starting note they can
+    // edit. Never submitted on their behalf beyond what they can see.
+    var pkg = q.get('pkg');
+    var LABEL = { eight: 'The Eight', fifteen: 'The Fifteen' };
+    var scope = document.getElementById('project_scope');
+    if (scope && !scope.value && LABEL[pkg]) {
+      scope.value = 'Interested in ' + LABEL[pkg] + '. ';
+    }
+  })();
+
   renderOptions();
 
   var form = document.getElementById('pj');
@@ -309,6 +351,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
     var data = Object.fromEntries(new FormData(form).entries());
     data.form_type = 'project_enquiry';
+      // A paid landing page sends ?offer=<slug>. Forward it so the
+      // conversion is attributed to the page that produced it. The server
+      // allowlists the value; this is only transport.
+      var offerSlug = new URLSearchParams(window.location.search).get('offer');
+      if (offerSlug) data.offer_id = offerSlug;
+      // Resolve through the same allowlist the server uses, so the browser
+      // and server copies of this conversion carry the same offer. A slug
+      // we do not recognise falls back to this page's own default rather
+      // than inventing an offer name in the reporting.
+      var PAID = (window.NTC_OFFER || {}).paidOffers || {};
+      var offerId = PAID[String(offerSlug || '').toLowerCase()] || 'signature_work';
+
     data.event_id = 'pj-' + (window.ntc ? ntc.uuid() : Date.now());
     if (window.ntc) {
       var ctx = ntc.context();
@@ -331,7 +385,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       // separated on in Meta.
       if (typeof fbq === 'function') {
         fbq('track', 'Lead', {
-          offer: 'signature_work',
+          offer: offerId,
           form_type: 'project_enquiry',
           content_name: 'Signature Work enquiry'
         }, { eventID: data.event_id });

@@ -216,12 +216,35 @@
     // $10,000 film are not the same conversation.
     projectBudgetBands: [10000, 25000, 50000],
     projectTypes: [
+      // First, because /sprint routes here and an Ad Sprint is the most
+      // common single thing this form is asked for.
+      'Ad Sprint',
       'Commercial',
       'Documentary or brand film',
       'Podcast build-out',
       'Event or summit coverage',
       'Something else'
     ],
+
+    /* ── paid landing pages · offer identifiers ─────────────────────
+       Maps the ?offer= slug a CTA carries into the canonical id used on
+       the Meta conversion and in funnel_events.metadata.
+
+       An allowlist, not a passthrough. The value reaches Meta custom
+       data and our own event store, so an arbitrary query string must
+       never become an offer name: that would let anyone invent
+       conversions in the reporting. Anything unrecognised falls back to
+       the page's own default.
+
+       Deliberately NOT stored as a new column on leads. First-touch
+       landing_page already separates these funnels for ad traffic and is
+       persisted by both handlers, so the identifier only needs to ride
+       on the event. No schema change.
+       ─────────────────────────────────────────────────────────────── */
+    paidOffers: {
+      'production-media': 'production_media',
+      'ad-sprint':        'ad_sprint'
+    },
 
     // ── Things we do not say ──────────────────────────────────────────
     // Kept here so the constraint is visible next to the numbers.

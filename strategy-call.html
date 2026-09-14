@@ -21,6 +21,7 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/offer.js"></script>
 <script src="/assets/track.js"></script>
 
 <style>
@@ -300,6 +301,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
     var data = Object.fromEntries(new FormData(form).entries());
     data.form_type = 'strategy_call';
+      // A paid landing page sends ?offer=<slug>. Forward it so the
+      // conversion is attributed to the page that produced it. The server
+      // allowlists the value; this is only transport.
+      var offerSlug = new URLSearchParams(window.location.search).get('offer');
+      if (offerSlug) data.offer_id = offerSlug;
+      // Resolve through the same allowlist the server uses, so the browser
+      // and server copies of this conversion carry the same offer. A slug
+      // we do not recognise falls back to this page's own default rather
+      // than inventing an offer name in the reporting.
+      var PAID = (window.NTC_OFFER || {}).paidOffers || {};
+      var offerId = PAID[String(offerSlug || '').toLowerCase()] || 'paid_retainer';
+
     data.event_id = 'sc-' + (window.ntc ? ntc.uuid() : Date.now());
     if (window.ntc) {
       var ctx = ntc.context();
@@ -322,7 +335,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       // separated on in Meta.
       if (typeof fbq === 'function') {
         fbq('track', 'Lead', {
-          offer: 'paid_retainer',
+          offer: offerId,
           form_type: 'strategy_call',
           content_name: 'Strategy call request'
         }, { eventID: data.event_id });

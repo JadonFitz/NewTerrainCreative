@@ -66,6 +66,27 @@ if rates_path.exists():
             f'retainer tier mismatch: offer.js has {public_pairs}; '
             f'api/_rates.js has {server_pairs}')
 
+# ── the paid-offer allowlist also lives in two files ──────────────────
+# assets/offer.js ships to the browser; api/_offer.js runs on the server
+# and cannot import it without a build step. A slug resolving one way in
+# the browser and another on the server would put two different offer
+# names on the two halves of one conversion, and Meta would stop
+# deduplicating it as a single event.
+offer_path = root / 'api' / '_offer.js'
+if offer_path.exists():
+    def _map(text, key):
+        # offer.js writes `paidOffers: {`, _offer.js writes `PAID_OFFERS = {`.
+        # Accept either separator or this silently finds nothing and the
+        # whole check passes by doing no work.
+        m = re.search(key + r'\s*[:=]\s*\{(.*?)\}', text, re.S)
+        return dict(re.findall(r"'([a-z-]+)'\s*:\s*'([a-z_]+)'", m.group(1))) if m else None
+    pub_off = _map(offer, 'paidOffers')
+    srv_off = _map(offer_path.read_text(encoding='utf-8'), 'PAID_OFFERS')
+    if pub_off is not None and srv_off is not None and pub_off != srv_off:
+        mirror_fail.append(
+            f'paid-offer allowlist mismatch: offer.js has {pub_off}; '
+            f'api/_offer.js has {srv_off}')
+
 fmt = lambda n: f'{n:,}'
 allowed = {fmt(n) for n in declared}
 

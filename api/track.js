@@ -46,6 +46,13 @@ const RESERVED = new Set(['schedule']);
 
 const ALLOWED_FUNNELS = new Set([
   'founding_three', 'paid_retainer', 'ad_sprint',
+  // Paid landing pages. production_media is /production-media traffic,
+  // separated from paid_retainer (which is /grow) so the ad-driven page
+  // is reportable on its own while both sell the same retainer.
+  'production_media',
+  // Written server side by /api/project. Listed here too so a browser
+  // event fired from /project is not silently rejected.
+  'signature_work',
   'sales_enablement', 'organic_site'
 ]);
 

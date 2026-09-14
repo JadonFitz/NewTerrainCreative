@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Production Media · New Terrain Creative</title>
+<meta name="description" content="We make the campaign creative and run the media. One team for established service businesses in Los Angeles and Tampa.">
+
+<!-- Paid-traffic landing page. Not indexed, not in navigation, not in any
+     sitemap. /grow remains the indexable services and credibility page. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" type="image/png" href="assets/favicon.png">
+
+<!-- LCP: the hero image is the largest element. Preload it at the size the
+     layout actually requests so it is in flight before CSS resolves. -->
+<link rel="preload" as="image" href="assets/lp/hero-production-media.webp"
+      imagesrcset="assets/lp/hero-production-media-320.webp 320w, assets/lp/hero-production-media.webp 540w"
+      imagesizes="(max-width: 700px) 100vw, 420px" fetchpriority="high">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/offer.js"></script>
+<script src="/assets/track.js"></script>
+
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --black:#0A0A0A; --raised:#111010; --sunk:#070707;
+    --gold:#C8A96E; --gold-dim:#8A7647;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#6B6560;
+    --line:#1e1e1e;
+    --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --pad: clamp(20px, 6vw, 64px);
+  }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    background:var(--black); color:var(--soft);
+    font-family:var(--body); font-weight:300;
+    font-size:15px; line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img { max-width:100%; height:auto; display:block; }
+
+  a { color:var(--gold); }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+
+  .wrap { max-width:1080px; margin:0 auto; padding-left:var(--pad); padding-right:var(--pad); }
+
+  /* ── bar: wordmark only. No navigation competing with the CTA. ── */
+  .bar { border-bottom:1px solid var(--line); }
+  .bar .wrap { display:flex; justify-content:space-between; align-items:center; gap:16px; padding-top:20px; padding-bottom:20px; flex-wrap:wrap; }
+  .wordmark { font-size:11px; letter-spacing:.34em; text-transform:uppercase; color:var(--parchment); text-decoration:none; }
+  .wordmark span { color:var(--gold); }
+  .bar-note { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+
+  /* ── hero ── */
+  .hero .wrap {
+    display:grid; grid-template-columns:1.15fr .85fr; gap:clamp(28px,5vw,64px);
+    align-items:center; padding-top:clamp(44px,7vw,86px); padding-bottom:clamp(40px,6vw,72px);
+  }
+  .eyebrow { font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+  h1 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(38px,6.2vw,68px); line-height:1.02;
+    color:var(--parchment); margin-bottom:20px; text-wrap:balance;
+    letter-spacing:-.01em;
+  }
+  h1 em { font-style:italic; color:var(--gold); }
+  .sub { font-size:clamp(15px,1.6vw,17.5px); line-height:1.72; max-width:46ch; color:var(--soft); }
+  .sub b { color:var(--parchment); font-weight:400; }
+
+  .hero-media { position:relative; }
+  .hero-media img { width:100%; border:1px solid var(--line); }
+  .hero-cap { font-size:11px; color:var(--muted); margin-top:10px; line-height:1.6; }
+
+  /* ── proof: one compact signal above the fold ── */
+  .signal {
+    margin-top:26px; padding:14px 18px; border-left:2px solid var(--gold-dim);
+    background:var(--raised); font-size:13px; line-height:1.7; color:var(--soft);
+    max-width:52ch;
+  }
+  .signal b { color:var(--parchment); font-weight:400; }
+  .signal span { display:block; color:var(--muted); font-size:11.5px; margin-top:5px; }
+
+  /* ── CTA ── */
+  .cta-block { margin-top:30px; }
+  .btn {
+    display:inline-block; text-decoration:none; cursor:pointer;
+    background:var(--gold); color:#0A0A0A; border:1px solid var(--gold);
+    font-family:var(--body); font-size:12px; font-weight:500;
+    letter-spacing:.18em; text-transform:uppercase;
+    padding:18px 34px; transition:background .25s, color .25s;
+  }
+  .btn:hover, .btn:focus-visible { background:transparent; color:var(--gold); }
+  .cta-note { font-size:12.5px; color:var(--muted); margin-top:13px; line-height:1.7; max-width:44ch; }
+
+  /* ── sections ── */
+  section { border-top:1px solid var(--line); }
+  section > .wrap { padding-top:clamp(44px,6vw,78px); padding-bottom:clamp(44px,6vw,78px); }
+  h2 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(26px,3.6vw,42px); line-height:1.14;
+    color:var(--parchment); margin-bottom:26px; text-wrap:balance;
+  }
+  h2 em { font-style:italic; color:var(--gold); }
+  h3 { font-family:var(--body); font-size:13px; font-weight:500; color:var(--parchment); margin-bottom:9px; }
+  p { max-width:64ch; }
+  p + p { margin-top:13px; }
+  p b { color:var(--parchment); font-weight:400; }
+
+  .cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:26px; }
+  .cols p { font-size:13.5px; color:var(--muted); }
+
+  ul { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  li { font-size:14px; line-height:1.65; padding-left:18px; position:relative; }
+  li::before { content:''; position:absolute; left:0; top:10px; width:6px; height:1px; background:var(--gold); }
+  li.no { color:var(--muted); }
+  li.no::before { background:var(--muted); }
+
+  .split { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:30px; }
+  .split h3 { margin-bottom:13px; }
+
+  /* ── steps ── */
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:26px; counter-reset:s; }
+  .step { counter-increment:s; }
+  .step::before {
+    content:counter(s,decimal-leading-zero);
+    font-family:var(--body); font-size:10px; letter-spacing:.14em;
+    color:var(--gold-dim); display:block; margin-bottom:11px;
+  }
+
+  /* ── objections ── */
+  .qa { border-top:1px solid var(--line); padding:22px 0; }
+  .qa:first-of-type { border-top:0; padding-top:0; }
+  .qa h3 { font-size:14.5px; margin-bottom:8px; }
+  .qa p { font-size:13.5px; color:var(--muted); }
+
+  /* ── work strip ── */
+  .work { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; }
+  .work figure { border:1px solid var(--line); background:var(--sunk); }
+  .work img { width:100%; aspect-ratio:9/16; object-fit:cover; }
+  .work figcaption { padding:11px 13px; font-size:11.5px; color:var(--muted); line-height:1.6; }
+  .work b { display:block; color:var(--parchment); font-weight:400; font-size:12.5px; margin-bottom:3px; }
+
+  /* ── terms ── */
+  .terms { border:1px solid var(--gold-dim); padding:clamp(22px,3vw,32px); }
+  .terms h3 { font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:15px; }
+  .terms p { font-size:13px; color:var(--muted); max-width:68ch; }
+  .terms .headline { font-family:var(--display); font-size:clamp(19px,2.4vw,25px); line-height:1.35; color:var(--parchment); margin-bottom:16px; max-width:44ch; }
+
+  /* ── final ── */
+  .final { text-align:center; }
+  .final .wrap > * { margin-left:auto; margin-right:auto; }
+  .final p { max-width:52ch; }
+
+  footer { border-top:1px solid var(--line); }
+  footer .wrap {
+    padding-top:24px; padding-bottom:24px;
+    display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  footer a { color:var(--muted); text-decoration:none; }
+  footer a:hover, footer a:focus-visible { color:var(--gold); }
+
+  @media (max-width:760px) {
+    .hero .wrap { grid-template-columns:1fr; }
+    .hero-media { order:-1; max-width:300px; }
+  }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <span class="wordmark">New Terrain <span>Creative</span></span>
+    <span class="bar-note">Los Angeles · Tampa</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 1 · HERO ────────────────────────────────────────────────── -->
+  <section class="hero" style="border-top:0">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow" id="v-eyebrow">Production Media</p>
+        <h1 id="v-headline">The ads for your business should be <em>made for your business.</em></h1>
+        <p class="sub" id="v-sub">We shoot the creative and run the campaign, under one roof, for established service businesses. <b>One team accountable for the whole thing</b> instead of a video company, a media buyer, and nobody joining them up.</p>
+
+        <div class="signal">
+          <b>Work we have made has passed 100,000 followers and 338,000 reach on a single launch.</b>
+          <span>Those are organic figures from client brand work, not paid-campaign results. Campaign performance is reported per engagement against a benchmark agreed with you.</span>
+        </div>
+
+        <div class="cta-block">
+          <a class="btn" data-cta="hero" href="/strategy-call?offer=production-media">Request a 30-Minute Strategy Call</a>
+          <p class="cta-note">A short form about your business first, then a call. We will tell you what we would do, roughly what it costs, and whether it is worth doing.</p>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <!-- ── HERO SLOT · placeholder until the VSL exists ──────────────
+             This is a still because the video does not exist yet, and a
+             <video> pointing at a missing file is worse than no video.
+
+             When the VSL is cut: replace this <img> with the player,
+             extract its poster from the same edit, and keep the preload
+             in <head> pointing at that poster. The 9.1 MB hero-reel.mp4
+             must never load above the fold; it is narrative film work and
+             does not match this page's promise in any case.
+
+             Current still: a frame from a real campaign shoot on location.
+             LCP element. Explicit dimensions reserve the box so nothing
+             shifts when it decodes.
+             ────────────────────────────────────────────────────────── -->
+        <img src="assets/lp/hero-production-media.webp"
+             srcset="assets/lp/hero-production-media-320.webp 320w, assets/lp/hero-production-media.webp 540w"
+             sizes="(max-width: 700px) 100vw, 420px"
+             width="540" height="960" fetchpriority="high" decoding="async"
+             alt="A lighting setup and crew filming an advertisement on location inside a client's office.">
+        <p class="hero-cap">On location, at a client's office. The creative is shot for the campaign it will run in.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2 · WHAT YOU RECEIVE ────────────────────────────────────── -->
+  <section>
+    <div class="wrap">
+      <h2>What you're actually <em>buying.</em></h2>
+      <div class="cols">
+        <div>
+          <h3>Production days at your business</h3>
+          <p>We come to you. Directed setups with your people on camera, shot for the placements the campaign will use.</p>
+        </div>
+        <div>
+          <h3>Campaign creative, not repurposed clips</h3>
+          <p>Ads built as ads, with hook variations, rather than a brand film cut down and hoped over.</p>
+        </div>
+        <div>
+          <h3>The campaign, run by us</h3>
+          <p>Build, launch and ongoing management on Meta, with the creative changing in response to what the numbers show.</p>
+        </div>
+        <div>
+          <h3>A monthly read you can act on</h3>
+          <p>What ran, what it cost, what it produced, and what we are changing next month. In writing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3 · HOW IT WORKS ────────────────────────────────────────── -->
+  <section>
+    <div class="wrap">
+      <h2>How the engagement <em>works.</em></h2>
+      <div class="steps">
+        <div class="step">
+          <h3>The call</h3>
+          <p>Thirty minutes on what you sell, what a customer is worth, and what you have already tried. If we are not the right studio, you hear that on the call.</p>
+        </div>
+        <div class="step">
+          <h3>Scope and benchmark</h3>
+          <p>We agree the production volume, the fee, and the one performance benchmark the work will be measured against, before anything is shot.</p>
+        </div>
+        <div class="step">
+          <h3>Shoot, launch, adjust</h3>
+          <p>Production, campaign build, then a monthly cycle of new creative against what is working. Three-month minimum, because two months cannot tell either of us anything.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4 · FIT ─────────────────────────────────────────────────── -->
+  <section>
+    <div class="wrap">
+      <h2>Who this is <em>for.</em></h2>
+      <div class="split">
+        <div>
+          <h3>This fits</h3>
+          <ul id="v-fit">
+            <li>Established legal, dental, health and wellness, or construction and contracting businesses</li>
+            <li>A service already selling, with capacity to take on more customers</li>
+            <li>Someone who answers an enquiry the day it arrives</li>
+            <li>Willingness to fund advertising alongside the production</li>
+          </ul>
+        </div>
+        <div>
+          <h3>This does not</h3>
+          <ul>
+            <li class="no">A one-off video with no campaign behind it</li>
+            <li class="no">Anyone who needs a guaranteed number of leads. We do not sell those</li>
+            <li class="no">Businesses without the capacity to serve more customers yet</li>
+            <li class="no">Restaurants and cafés, where the margin rarely survives paid acquisition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5 · OBJECTIONS ──────────────────────────────────────────── -->
+  <section>
+    <div class="wrap">
+      <h2>The questions <em>everyone asks.</em></h2>
+
+      <div class="qa">
+        <h3>What does it cost?</h3>
+        <p>Engagements generally begin in the mid four figures monthly, scaled to production volume and how much of the campaign we run. Your advertising spend is separate, paid by you directly to the platform on your own account, and never marked up or held by us. Exact scope and fee are quoted after the call, once we know what we would actually be doing.</p>
+      </div>
+
+      <div class="qa">
+        <h3>We already make content.</h3>
+        <p>Good. The question is whether it has a job. Posting means an algorithm decides who sees it. Creative built around a clear offer, with money behind whatever wins, is a different instrument. Often the same footage, doing different work.</p>
+      </div>
+
+      <div class="qa">
+        <h3>Why a three-month minimum?</h3>
+        <p>Month one is production and launch. Month two is the first honest read. Month three is acting on it. Two months is a shoot and a shrug, and we would rather turn the work down than sell you a quarter that cannot answer its own question.</p>
+      </div>
+
+      <div class="qa">
+        <h3>Can you guarantee results?</h3>
+        <p>No, and nobody honest can on a first campaign. We are not promising revenue, a number of leads, a cost per lead, or a return. What we promise is below, and it is a promise about our work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6 · SELECTED WORK ───────────────────────────────────────── -->
+  <section>
+    <div class="wrap">
+      <h2>Selected <em>work.</em></h2>
+      <p style="margin-bottom:24px;font-size:13.5px;color:var(--muted)">Brand and organic work for clients. Shown for craft and range; these are not paid-campaign performance figures.</p>
+      <div class="work">
+        <figure>
+          <img src="assets/reel/poster-aldertalk-summit-speech.jpg" loading="lazy" decoding="async" width="540" height="960" alt="An attorney speaking on stage at a summit, filmed by New Terrain Creative.">
+          <figcaption><b>AlderTalk · summit</b>Longform and short-form built around an attorney's own voice.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/reel/poster-aldertalk-podcast.jpg" loading="lazy" decoding="async" width="540" height="960" alt="A podcast recording setup with two people at microphones.">
+          <figcaption><b>AlderTalk · podcast</b>An episode engine, built to produce short-form as a by-product.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/reel/poster-ewg-tracy-mccubbin.jpg" loading="lazy" decoding="async" width="540" height="960" alt="A speaker filmed in conversation for a client's content series.">
+          <figcaption><b>EWG · interview series</b>Expert interviews cut for social distribution.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/reel/poster-bts-ads.jpg" loading="lazy" decoding="async" width="540" height="960" alt="Behind the scenes of an advertisement shoot on location.">
+          <figcaption><b>Behind the scenes</b>A campaign shoot on location at a client's office.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7 · TERMS AND THE PROMISE ───────────────────────────────── -->
+  <section>
+    <div class="wrap">
+      <div class="terms">
+        <h3>The 90-Day Production Promise</h3>
+        <p class="headline">If, after 90 consecutive days, the campaign has not improved the primary performance benchmark we agree upon during onboarding, the next standard production cycle is on us.</p>
+        <p>One benchmark, chosen with you and written into the scope before launch, with its baseline and measurement source recorded at the same time. It has to be measurable: qualified cost per lead, qualified-lead rate, landing-page conversion rate, click-through rate, or another measure we both agree on. Total views does not qualify by default.</p>
+        <p><b>It applies only to engagements where we manage both the campaign and the creative.</b> On production-only work we are not in a position to move the benchmark, so promising to would not be something we could honour. Which you are in is settled when we scope the work, before anything is signed.</p>
+        <p>It also requires that the agreed ad spend was maintained, tracking stayed operational, the campaign ran the full period, and the offer and targeting were not changed underneath the measurement. The remedy is one standard production cycle matching your contracted monthly allocation, up to a value named in the agreement, with one revision round. It excludes ad spend, management fees, talent, travel, locations, permits and third-party costs. It is a service credit, not a refund, and it cannot be combined with a waived first month.</p>
+        <p><b>This is a promise about our work, not about your revenue.</b> No guarantee of revenue, leads, cost per lead, or advertising performance is offered. Full terms are provided before anything is signed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8 · FINAL CTA ───────────────────────────────────────────── -->
+  <section class="final">
+    <div class="wrap">
+      <h2>Thirty minutes, and a <em>straight answer.</em></h2>
+      <p>A few questions about your business first, so the call is useful rather than spent catching up. If we are not the right people for this, you will hear it on the call instead of in a proposal a week later.</p>
+      <div class="cta-block">
+        <a class="btn" data-cta="final" href="/strategy-call?offer=production-media">Request a 30-Minute Strategy Call</a>
+        <p class="cta-note" style="margin-left:auto;margin-right:auto">Engagements generally begin in the mid four figures monthly. Advertising spend is separate and paid by you.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>New Terrain Creative © 2026</span>
+    <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── variant layer ───────────────────────────────────────────────
+     The default copy above is static HTML, so the headline is the LCP
+     candidate and paints without waiting on JavaScript. A variant only
+     OVERRIDES it, which means adding one never slows the default page.
+
+     To add a message-matched variant, add an entry here and point the ad
+     at /production-media?v=<key>. Do not fork the page.
+
+     Industry variants must not invent industry-specific proof: the proof
+     blocks stay as they are unless there is verified work for that
+     industry to show.
+     ─────────────────────────────────────────────────────────────── */
+  var VARIANTS = {
+    // 'legal': {
+    //   eyebrow:  'Production Media for law firms',
+    //   headline: '...',
+    //   sub:      '...',
+    //   fit:      ['...', '...']
+    // },
+  };
+
+  var key = new URLSearchParams(window.location.search).get('v');
+  var v = key && Object.prototype.hasOwnProperty.call(VARIANTS, key) ? VARIANTS[key] : null;
+  if (v) {
+    var set = function (id, html) {
+      var el = document.getElementById(id);
+      if (el && html) el.innerHTML = html;
+    };
+    set('v-eyebrow', v.eyebrow);
+    set('v-headline', v.headline);
+    set('v-sub', v.sub);
+    if (v.fit && v.fit.length) {
+      var ul = document.getElementById('v-fit');
+      if (ul) ul.innerHTML = v.fit.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+    }
+  }
+
+  /* ── tracking ─────────────────────────────────────────────────────
+     offer: production_media separates this ad-driven page from /grow's
+     paid_retainer, while both sell the same engagement. The CTA carries
+     ?offer=production-media so the conversion on /strategy-call inherits
+     the same identifier; first-touch attribution carries the UTMs and
+     landing page independently.
+     ─────────────────────────────────────────────────────────────── */
+  if (!window.ntc) return;
+
+  var OFFER_ID = 'production_media';
+
+  ntc.track('ViewContent', {
+    content_name: document.title,
+    offer: OFFER_ID,
+    variant: key || 'default'
+  });
+
+  document.querySelectorAll('[data-cta]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      ntc.track('CTAClick', {
+        offer: OFFER_ID,
+        position: el.getAttribute('data-cta'),
+        variant: key || 'default'
+      }, { once: false });
+    });
+  });
+})();
+</script>
+</body>
+</html>

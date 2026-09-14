@@ -23,6 +23,7 @@
    ══════════════════════════════════════════════════════════════════════ */
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
+import { resolveOffer } from './_offer.js';
 
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
@@ -114,6 +115,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid email' });
   }
 
+  // Signature Work by default. /sprint sends ?offer=ad-sprint, because an
+  // Ad Sprint is also a one-time project and asking it monthly-retainer
+  // questions would be the same mismatch /project was built to avoid.
+  // form_type stays project_enquiry either way: the DB constraint permits
+  // three values and the two are told apart by this identifier plus the
+  // first-touch landing_page, so no schema change is needed.
+  const offerId = resolveOffer(d.offer_id, 'signature_work');
+
   const flags = triage(d);
   let leadId = null;
   let stored = false;
@@ -154,9 +163,9 @@ export default async function handler(req, res) {
         await insert('funnel_events', {
           event_id: d.event_id, event_name: 'lead',
           session_id: d.session_id, lead_id: leadId, page_url: d.page,
-          funnel: 'signature_work',
+          funnel: offerId,
           metadata: { campaign: d.utm_campaign, ad: d.utm_content,
-                      project_type: d.project_type }
+                      offer: offerId, project_type: d.project_type }
         }, { ignoreConflict: true });
       } catch (e) { console.error('lead event failed', (e && e.message) || e); }
     }
@@ -190,7 +199,7 @@ export default async function handler(req, res) {
           ip, userAgent, fbp: d.fbp, fbc: d.fbc
         }),
         customData: {
-          offer: 'signature_work',
+          offer: offerId,
           form_type: 'project_enquiry',
           content_name: 'Signature Work enquiry',
           content_category: d.project_type

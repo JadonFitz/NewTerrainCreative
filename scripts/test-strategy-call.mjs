@@ -138,6 +138,49 @@ made = since(n);
 check('total capture failure returns 503', res.statusCode === 503 && Boolean(res.payload.error));
 check('total capture failure never fires Meta', hit(made, 'facebook.com').length === 0);
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   OFFER PROPAGATION · a paid landing page must stay reportable
+   ──────────────────────────────────────────────────────────────────────
+   /production-media sends ?offer=production-media, which the form forwards as offer_id. The
+   conversion must carry the resolved identifier, and an unrecognised or
+   hostile value must fall back to this form's default rather than
+   inventing an offer name in the reporting.
+   ══════════════════════════════════════════════════════════════════════ */
+// The outage section above leaves failSupabase/failEmail set, and they are
+// sticky in this suite rather than one-shot. Clear them or every check
+// below fails against a simulated outage rather than against the code.
+failSupabase = false;
+failEmail = false;
+
+console.log('\n\x1b[1mOFFER PROPAGATION\x1b[0m');
+
+async function offerOf(offer_id) {
+  const n = calls.length;
+  await post({ ...VALID, offer_id, event_id: 'off-' + String(offer_id) });
+  const made = calls.slice(n);
+  const capi = made.filter(c => c.url.includes('facebook.com'))[0]?.body?.data?.[0];
+  const ev = made.filter(c => c.url.includes('/funnel_events') && c.method === 'POST')[0]?.body;
+  return { meta: capi?.custom_data?.offer, funnel: ev?.funnel, metaOffer: ev?.metadata?.offer };
+}
+
+let r2 = await offerOf('production-media');
+check('slug resolves on the Meta event', r2.meta === 'production_media', r2.meta);
+check('funnel tag matches', r2.funnel === 'production_media', r2.funnel);
+check('metadata carries the offer', r2.metaOffer === 'production_media', r2.metaOffer);
+
+r2 = await offerOf(undefined);
+check('no slug falls back to the default', r2.meta === 'paid_retainer', r2.meta);
+
+r2 = await offerOf('not-a-real-offer');
+check('unknown slug falls back, never passes through', r2.meta === 'paid_retainer', r2.meta);
+
+r2 = await offerOf('<script>alert(1)</script>');
+check('hostile slug cannot become an offer name', r2.meta === 'paid_retainer', r2.meta);
+
+r2 = await offerOf('AD-SPRINT');
+check('resolution is case-insensitive', ['ad_sprint', 'paid_retainer'].includes(r2.meta), r2.meta);
+
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · paid-retainer event semantics and capture integrity hold'
   : `\x1b[31mFAIL\x1b[0m · ${failures} check(s) failed`}`);

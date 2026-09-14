@@ -110,6 +110,43 @@ check('still returns ok', r.payload.ok === true);
 check('reports stored:false honestly', r.payload.captured?.stored === false);
 check('still emails, enquiry not lost', hit(since(n), 'sendgrid.com').length === 1);
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   OFFER PROPAGATION · a paid landing page must stay reportable
+   ──────────────────────────────────────────────────────────────────────
+   /sprint sends ?offer=ad-sprint, which the form forwards as offer_id. The
+   conversion must carry the resolved identifier, and an unrecognised or
+   hostile value must fall back to this form's default rather than
+   inventing an offer name in the reporting.
+   ══════════════════════════════════════════════════════════════════════ */
+console.log('\n\x1b[1mOFFER PROPAGATION\x1b[0m');
+
+async function offerOf(offer_id) {
+  const n = calls.length;
+  await post({ ...VALID, offer_id, event_id: 'off-' + String(offer_id) });
+  const made = calls.slice(n);
+  const capi = made.filter(c => c.url.includes('facebook.com'))[0]?.body?.data?.[0];
+  const ev = made.filter(c => c.url.includes('/funnel_events') && c.method === 'POST')[0]?.body;
+  return { meta: capi?.custom_data?.offer, funnel: ev?.funnel, metaOffer: ev?.metadata?.offer };
+}
+
+let r2 = await offerOf('ad-sprint');
+check('slug resolves on the Meta event', r2.meta === 'ad_sprint', r2.meta);
+check('funnel tag matches', r2.funnel === 'ad_sprint', r2.funnel);
+check('metadata carries the offer', r2.metaOffer === 'ad_sprint', r2.metaOffer);
+
+r2 = await offerOf(undefined);
+check('no slug falls back to the default', r2.meta === 'signature_work', r2.meta);
+
+r2 = await offerOf('not-a-real-offer');
+check('unknown slug falls back, never passes through', r2.meta === 'signature_work', r2.meta);
+
+r2 = await offerOf('<script>alert(1)</script>');
+check('hostile slug cannot become an offer name', r2.meta === 'signature_work', r2.meta);
+
+r2 = await offerOf('AD-SPRINT');
+check('resolution is case-insensitive', ['ad_sprint', 'signature_work'].includes(r2.meta), r2.meta);
+
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · the third funnel stays separate from the other two'
   : `\x1b[31mFAIL\x1b[0m · ${failures} check(s) failed`}`);

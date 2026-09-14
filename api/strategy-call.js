@@ -13,6 +13,7 @@
    ══════════════════════════════════════════════════════════════════════ */
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
+import { resolveOffer } from './_offer.js';
 
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
@@ -108,6 +109,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid email' });
   }
 
+  // /grow sends visitors here with no ?offer=, so this stays paid_retainer.
+  // /production-media sends ?offer=production-media, which separates the
+  // ad-driven landing page from the organic credibility page in reporting
+  // while both sell the same retainer. Allowlisted: the raw query string
+  // never becomes an offer name.
+  const offerId = resolveOffer(d.offer_id, 'paid_retainer');
+
   const flags = triage(d);
 
   // ── 1 · durable record ────────────────────────────────────────────────
@@ -146,8 +154,8 @@ export default async function handler(req, res) {
         await insert('funnel_events', {
           event_id: d.event_id, event_name: 'lead',
           session_id: d.session_id, lead_id: leadId, page_url: d.page,
-          funnel: 'paid_retainer',
-          metadata: { campaign: d.utm_campaign, ad: d.utm_content }
+          funnel: offerId,
+          metadata: { campaign: d.utm_campaign, ad: d.utm_content, offer: offerId }
         }, { ignoreConflict: true });
       } catch (e) { console.error('lead event failed', (e && e.message) || e); }
     }
@@ -185,7 +193,7 @@ export default async function handler(req, res) {
           ip, userAgent, fbp: d.fbp, fbc: d.fbc
         }),
         customData: {
-          offer: 'paid_retainer',
+          offer: offerId,
           form_type: 'strategy_call',
           content_name: 'Strategy call request',
           content_category: d.industry
