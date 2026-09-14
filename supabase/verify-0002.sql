@@ -7,6 +7,12 @@
 --
 -- Every row must report PASS. Anything else means 0002 did not fully
 -- apply, and the forms will keep falling back to email.
+--
+-- NOTE: this is a union-all chain. Supabase's SQL editor wraps queries to
+-- apply its own row limit, and that wrapper can break such a chain with a
+-- syntax error pointing at whichever SELECT follows. If that happens,
+-- switch the editor to "No limit" and re-run. verify-0004.sql uses scalar
+-- subqueries instead, which do not hit this.
 -- ══════════════════════════════════════════════════════════════════════
 
 -- ── 1 · columns ───────────────────────────────────────────────────────
