@@ -75,3 +75,26 @@ where created_at > now() - interval '30 minutes';
 -- confirm: must return 0
 -- select count(*) as remaining_qa_rows
 -- from public.funnel_events where session_id = 'qa-1789280223';
+
+-- ══════════════════════════════════════════════════════════════════════
+-- 6 · SECOND QA RUN · Schedule-reservation verification (13 Sep)
+--
+-- Verifying the fix against the live preview posted three requests. Two
+-- were refused and wrote nothing; one legitimate cta_click was stored so
+-- that a refusal could be distinguished from a broken endpoint.
+--
+-- Session marker: 'forge-live'
+-- ══════════════════════════════════════════════════════════════════════
+
+-- Inspect: expect exactly ONE row, event_name = 'cta_click'.
+-- A row named 'schedule' here means the reservation failed.
+select id, event_name, event_id, created_at
+from public.funnel_events
+where session_id = 'forge-live'
+order by created_at;
+
+-- Cleanup. Uncomment after reading the above.
+-- delete from public.funnel_events where session_id = 'forge-live';
+
+-- Confirm: must return 0.
+-- select count(*) from public.funnel_events where session_id = 'forge-live';
