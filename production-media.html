@@ -185,7 +185,22 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   @media (max-width:760px) {
     .hero .wrap { grid-template-columns:1fr; }
-    .hero-media { order:-1; max-width:300px; }
+
+    /* The image must NOT come first here. At 390px a 9:16 still fills the
+       whole screen and pushes the headline and the CTA below the fold,
+       which is the one thing this page cannot afford. Headline, proof and
+       CTA first; the image supports underneath, capped so it cannot take
+       over again on a tall phone. */
+    .hero-media { max-width:260px; }
+    .hero-media img { max-height:46vh; width:auto; }
+  }
+
+  @media (max-width:430px) {
+    /* The wordmark plus the city line is wider than a small phone at this
+       tracking, and was running off the right edge. */
+    .wordmark { letter-spacing:.22em; }
+    .bar-note { display:none; }
+    .btn { width:100%; text-align:center; padding:17px 18px; letter-spacing:.14em; }
   }
   @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
 </style>

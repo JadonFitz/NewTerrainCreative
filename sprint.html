@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ad Sprint · New Terrain Creative. Ads that don't look like ads.</title>
-<meta name="description" content="One day on location. A full set of ready-to-run ads, whole project turned around in under 14 days, shot to look real instead of staged. If nothing outperforms your current content, your next shoot day is free.">
+<meta name="description" content="One day on location. A full set of ready-to-run ads, whole project turned around in under 14 days, shot to look real instead of staged. One time, fixed price, no retainer.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="Ad Sprint · New Terrain Creative">
@@ -175,14 +175,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   /* ── OLD WAY / NEW WAY ── */
   #contrast { border-top: 1px solid var(--line); }
   .contrast-grid {
-    margin-top: 60px;
+    margin-top: 34px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
   }
-  .contrast-col { background: var(--black); padding: 44px 38px; }
+  .contrast-col { background: var(--black); padding: 30px 28px; }
   .contrast-col--new { background: #0f0d09; }
   .contrast-head {
     font-size: 10px;
@@ -342,9 +342,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .proof-rows { margin-top: 60px; display: flex; flex-direction: column; }
   .proof-row {
     display: grid;
-    grid-template-columns: 210px 1fr;
-    gap: 40px;
-    padding: 34px 0;
+    grid-template-columns: 180px 1fr;
+    gap: 30px;
+    padding: 22px 0;
     border-top: 1px solid var(--line);
     align-items: start;
   }
@@ -357,11 +357,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   /* ── OBJECTIONS ── */
   #answers { border-top: 1px solid var(--line); }
-  .qa-list { margin-top: 56px; border-top: 1px solid var(--line); }
-  .qa {
-    border-bottom: 1px solid var(--line);
-    padding: 30px 0;
-  }
+  .qa-list { margin-top: 34px; }
   .qa-q {
     font-family: var(--display);
     font-size: 21px;
@@ -370,11 +366,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     margin-bottom: 14px;
   }
   .qa-a { font-size: 13px; line-height: 1.9; color: var(--muted); max-width: 780px; }
+  details.qa { border-top: 1px solid var(--line); padding: 0; }
+  details.qa:last-of-type { border-bottom: 1px solid var(--line); }
+  details.qa > summary {
+    list-style: none; cursor: pointer; padding: 20px 34px 20px 0;
+    margin-bottom: 0; position: relative;
+  }
+  details.qa > summary::-webkit-details-marker { display: none; }
+  details.qa > summary::after {
+    content: '+'; position: absolute; right: 4px; top: 50%;
+    transform: translateY(-50%); color: var(--gold);
+    font-family: var(--body); font-size: 17px; font-weight: 300;
+  }
+  details.qa[open] > summary::after { content: '\2013'; }
+  details.qa > .qa-a { padding-bottom: 22px; }
+  details.qa > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
   /* ── GUARANTEE ── */
   #promise { border-top: 1px solid var(--line); }
   .promise-box {
-    margin-top: 50px;
+    margin-top: 30px;
     border: 1px solid rgba(200,169,110,0.32);
     background: #0f0d09;
     padding: 54px 48px;
@@ -813,7 +824,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <h1 class="title reveal">Your ads look like <em>ads.</em></h1>
   <p class="hero-sub reveal">One day on location with you. A full set of ready-to-run ads, start to finish in under 14 days, shot to look like a real person instead of a commercial. Then you find out which ones bring in leads.</p>
   <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/project?offer=ad-sprint">Plan My Ad Sprint</a></div>
-  <p class="hero-micro reveal">One time, fixed price, no retainer. If nothing we make outperforms your current content, your next shoot day is free.</p>
+  <p class="hero-micro reveal">One time, fixed price, no retainer. You own the footage and every cut. No result is guaranteed.</p>
 </section>
 
 <!-- OLD WAY / NEW WAY -->
@@ -1233,41 +1244,30 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <h2 class="title reveal">What you are<br>probably <em>thinking.</em></h2>
 
   <div class="qa-list">
-    <div class="qa reveal">
-      <div class="qa-q">I already have someone making my content.</div>
+    <details class="qa reveal">
+      <summary class="qa-q">I already have someone making my content.</summary>
       <p class="qa-a">Then you are most of the way there, and this is a different job. Content keeps an audience warm. Ads have to stop a stranger and sell them something, which is a separate craft with separate rules. Most content people were never asked to do it, and it is not a knock on them that it shows.</p>
-    </div>
-    <div class="qa reveal">
-      <div class="qa-q">Two weeks sounds fast.</div>
+    </details>
+    <details class="qa reveal">
+      <summary class="qa-q">Two weeks sounds fast.</summary>
       <p class="qa-a">It is fast because the planning happens before anyone picks up a camera, and because there is no crew to schedule around. By the shoot day the hooks are written and the shot list is locked, so the day is execution instead of discovery. Most shops quote three weeks or more for the same thing. The speed comes out of the process, not out of the work.</p>
-    </div>
-    <div class="qa reveal">
-      <div class="qa-q">What if none of them work?</div>
-      <p class="qa-a">Then your next shoot day is free. We are betting another full day of our time that at least one of these beats what you are running now, and that is a bet we would rather make than argue about.</p>
-    </div>
-    <div class="qa reveal">
-      <div class="qa-q">Do I have to be on camera?</div>
+    </details>
+    <details class="qa reveal">
+      <summary class="qa-q">What if none of them work?</summary>
+      <p class="qa-a">Then you have found that out for a fixed price, on a defined set of creatives, and you keep the footage and every cut. We are not going to promise you a winner on a first set, because nobody honest can. What you get either way is a straight read on what the numbers said and what we would change, and you are not locked into anything.</p>
+    </details>
+    <details class="qa reveal">
+      <summary class="qa-q">Do I have to be on camera?</summary>
       <p class="qa-a">No. Plenty of the strongest performers are product-led, customer-led, or built from footage with no founder in frame at all. If you do want to be the face, one person with a camera is about as painless as it gets, and it is a large part of why these come out sounding natural. The Angle Call is where we decide which version you are actually doing.</p>
-    </div>
-    <div class="qa reveal">
-      <div class="qa-q">I am not in Los Angeles or Tampa.</div>
+    </details>
+    <details class="qa reveal">
+      <summary class="qa-q">I am not in Los Angeles or Tampa.</summary>
       <p class="qa-a">We work with clients worldwide. Travel outside Los Angeles or Tampa gets quoted on top, and we will tell you what it costs on the call before you commit to anything. For some businesses the better answer is a hybrid: we direct remotely and cut from footage shot on your end.</p>
-    </div>
-    <div class="qa reveal">
-      <div class="qa-q">Will you run the ads too?</div>
+    </details>
+    <details class="qa reveal">
+      <summary class="qa-q">Will you run the ads too?</summary>
       <p class="qa-a">Not inside the Sprint. This gets you the creative and the plan to test it. If you would rather hand off the whole thing, we run Meta as a monthly engagement, and most people make that call after they have seen what the first set does.</p>
-    </div>
-  </div>
-</section>
-
-<!-- GUARANTEE -->
-<section id="promise">
-  <div class="eyebrow reveal">Skin in the Game</div>
-  <h2 class="title reveal">We bet on our<br>own <em>work.</em></h2>
-
-  <div class="promise-box reveal">
-    <p class="promise-head">If nothing we make outperforms your current content, your next shoot day is free.</p>
-    <p class="promise-body">Not a partial refund and not a credit toward something else. Another full day on location and another full set of cuts, at no cost, until we get you a creative that beats your baseline. We can offer that because we would rather carry the risk than spend the call talking you out of it.</p>
+    </details>
   </div>
 </section>
 
