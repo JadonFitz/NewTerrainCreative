@@ -51,7 +51,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     --black: #0A0A0A;
     --gold: #C8A96E;
     --parchment: #F5F0E8;
-    --muted: #6B6560;
+    --muted: #8B847D;
     --line: #1e1e1e;
     --display: 'Cormorant Garamond', Georgia, serif;
     --body: 'Inter', -apple-system, sans-serif;
@@ -67,7 +67,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     -webkit-font-smoothing: antialiased;
   }
 
-  section { padding: 100px 6vw; max-width: 1180px; margin: 0 auto; }
+  section { padding: 64px 6vw; max-width: 1180px; margin: 0 auto; }
 
   .eyebrow {
     font-size: 10px;
@@ -171,35 +171,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
 
 /* ── VIDEO SLOT ── */
-  #video { padding-top: 20px; padding-bottom: 90px; }
-  .video-frame {
-    max-width: 900px;
-    margin: 0 auto;
-    aspect-ratio: 16 / 9;
-    border: 1px solid var(--line);
-    background: #0d0d0d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
-  .video-ph { text-align: center; padding: 30px; }
-  .video-ph-mark {
-    font-family: var(--display);
-    font-size: 40px;
-    font-style: italic;
-    color: var(--gold);
-    opacity: 0.45;
-  }
-  .video-ph-note {
-    margin-top: 16px;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    line-height: 1.9;
-  }
 
   /* ── OLD WAY / NEW WAY ── */
   #contrast { border-top: 1px solid var(--line); }
@@ -845,30 +816,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <p class="hero-micro reveal">One time, fixed price, no retainer. If nothing we make outperforms your current content, your next shoot day is free.</p>
 </section>
 
-<!-- VIDEO -->
-<section id="video">
-  <div class="video-frame reveal">
-    <!--
-      ════════════════════════════════════════════════════════════
-      VIDEO GOES HERE. Delete the .video-ph div below and drop in:
-
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0"
-                title="New Terrain Creative · Ad Sprint"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-
-      or a self-hosted cut:
-
-        <video src="assets/vsl-sprint.mp4" poster="assets/vsl-poster.jpg" controls playsinline></video>
-      ════════════════════════════════════════════════════════════
-    -->
-    <div class="video-ph">
-      <div class="video-ph-mark">NTC</div>
-      <div class="video-ph-note">Watch how the Sprint works</div>
-    </div>
-  </div>
-</section>
-
 <!-- OLD WAY / NEW WAY -->
 <section id="contrast">
   <div class="eyebrow reveal">Why Most Ads Die</div>
@@ -992,26 +939,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         </div>
       </article>
 
-      <!-- Off Rip · Feature Film &middot; Love Story -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip" data-src="assets/reel/off-rip-love-story.mp4">
-        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-love-story.jpg">
-          <source src="assets/reel/loop-off-rip-love-story.mp4" type="video/mp4">
-        </video>
-        <div class="reel-gloss"></div>
-        <div class="reel-shine"></div>
-        <div class="reel-veil"></div>
-        <div class="reel-scrim"></div>
-        <div class="reel-body">
-          <div class="reel-tag">Feature Film &middot; Love Story</div>
-          <h3 class="reel-name">Off Rip</h3>
-          <div class="reel-figure">137K organic views<small>800K streaming minutes on the film</small></div>
-          <div class="reel-more">
-            <p class="reel-note">A vertical cut from the feature, posted organically and left to do its own work. The same footage carried the film from a festival win onto both major storefronts.</p>
-            <span class="reel-play">Play &#8599;</span>
-          </div>
-        </div>
-      </article>
-
       <!-- Ping Pong Crash · Ad Sprint &middot; Personal Injury -->
       <article class="reel-card" tabindex="0" role="button" aria-label="Play Ping Pong Crash" data-src="assets/reel/ping-pong-crash.mp4">
         <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-ping-pong-crash.jpg">
@@ -1072,26 +999,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         </div>
       </article>
 
-      <!-- Off Script · Video Podcast &middot; Jack Tenney -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Script" data-src="assets/reel/off-script-jack-tenney.mp4">
-        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-script-jack-tenney.jpg">
-          <source src="assets/reel/loop-off-script-jack-tenney.mp4" type="video/mp4">
-        </video>
-        <div class="reel-gloss"></div>
-        <div class="reel-shine"></div>
-        <div class="reel-veil"></div>
-        <div class="reel-scrim"></div>
-        <div class="reel-body">
-          <div class="reel-tag">Video Podcast &middot; Jack Tenney</div>
-          <h3 class="reel-name">Off Script</h3>
-          <div class="reel-figure">5.5M subscribers in the chair<small>NTC Original &middot; shot and cut in-house</small></div>
-          <div class="reel-more">
-            <p class="reel-note">Our own show. The short-form format we build for clients, run on ourselves first so there is somewhere to point when we pitch it.</p>
-            <span class="reel-play">Play &#8599;</span>
-          </div>
-        </div>
-      </article>
-
       <!-- The Shoot Day · Behind the Ad Sprint -->
       <article class="reel-card reel-card--noplay" aria-label="The Shoot Day">
         <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-bts-ads.jpg">
@@ -1111,49 +1018,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         </div>
       </article>
 
-      <!-- Kids Need Space · Event Film &middot; Empowered with Gina -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Kids Need Space" data-src="assets/reel/kids-need-space.mp4">
-        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-kids-need-space.jpg">
-          <source src="assets/reel/loop-kids-need-space.mp4" type="video/mp4">
-        </video>
-        <div class="reel-gloss"></div>
-        <div class="reel-shine"></div>
-        <div class="reel-veil"></div>
-        <div class="reel-scrim"></div>
-        <div class="reel-body">
-          <div class="reel-tag">Event Film &middot; Empowered with Gina</div>
-          <h3 class="reel-name">Kids Need Space</h3>
-          <div class="reel-figure">The room and the mission<small>Gina guest speaking</small></div>
-          <div class="reel-more">
-            <p class="reel-note">A Kids Need Space event with Empowered with Gina, Gina guest speaking. Her talk is cut against launch and orbit footage so the idea lands as hard in the edit as it did in the room.</p>
-            <span class="reel-play">Play &#8599;</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Off Rip · Feature Film &middot; Drama -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip"
-               data-src="assets/reel/off-rip-drama.mp4"
-               data-likes="3400" data-comments="82"
-               data-ig="https://www.instagram.com/reel/DbJqeimyNjQ/">
-        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-drama.jpg">
-          <source src="assets/reel/loop-off-rip-drama.mp4" type="video/mp4">
-        </video>
-        <div class="reel-gloss"></div>
-        <div class="reel-shine"></div>
-        <div class="reel-veil"></div>
-        <div class="reel-scrim"></div>
-        <div class="reel-body">
-          <div class="reel-tag">Feature Film &middot; Drama</div>
-          <h3 class="reel-name">Off Rip</h3>
-          <div class="reel-figure">800K streaming minutes<small>Grand Jury Award &middot; Gasparilla</small></div>
-          <div class="reel-more">
-            <p class="reel-note">Cut for the feed rather than for a trailer. The scene has to work cold, with no setup and nothing to click into first.</p>
-            <span class="reel-play">Play &#8599;</span>
-          </div>
-        </div>
-      </article>
-
       <!-- AlderTalk · Video Podcast &middot; Mike Alder -->
       <article class="reel-card" tabindex="0" role="button" aria-label="Play AlderTalk" data-src="assets/reel/aldertalk-podcast.mp4">
         <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-aldertalk-podcast.jpg">
@@ -1169,26 +1033,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           <div class="reel-figure">Cut for the feed, captioned in-house<small>One session, a run of shorts</small></div>
           <div class="reel-more">
             <p class="reel-note">The podcast cut down to the moments that travel. Shot, edited and captioned under one roof, so the episode and the clips come out of the same pass.</p>
-            <span class="reel-play">Play &#8599;</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Off Script · Video Podcast &middot; Meghan -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Script" data-src="assets/reel/off-script-meghan.mp4">
-        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-script-meghan.jpg">
-          <source src="assets/reel/loop-off-script-meghan.mp4" type="video/mp4">
-        </video>
-        <div class="reel-gloss"></div>
-        <div class="reel-shine"></div>
-        <div class="reel-veil"></div>
-        <div class="reel-scrim"></div>
-        <div class="reel-body">
-          <div class="reel-tag">Video Podcast &middot; Meghan</div>
-          <h3 class="reel-name">Off Script</h3>
-          <div class="reel-figure">Full production, end to end<small>NTC Original &middot; booking to final cut</small></div>
-          <div class="reel-more">
-            <p class="reel-note">Booked, shot, cut, captioned, and cut down to shorts by the same person. The episode and the clips come out of one pass, not two.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1254,28 +1098,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         </div>
       </article>
 
-      <!-- Hey Leo · Instagram Reel &middot; Off Rip Promo -->
-      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hey Leo"
-               data-src="assets/reel/hey-leo.mp4"
-               data-ig="https://www.instagram.com/reel/DbwsW7jhyr_/">
-        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-hey-leo.jpg">
-          <source src="assets/reel/loop-hey-leo.mp4" type="video/mp4">
-        </video>
-        <div class="reel-gloss"></div>
-        <div class="reel-shine"></div>
-        <div class="reel-veil"></div>
-        <div class="reel-scrim"></div>
-        <div class="reel-body">
-          <div class="reel-tag">Instagram Reel &middot; Off Rip Promo</div>
-          <h3 class="reel-name">Hey Leo</h3>
-          <div class="reel-figure">Shot to match the scene<small>Instagram promo for the film</small></div>
-          <div class="reel-more">
-            <p class="reel-note">An Instagram reel promoting the film, played as a bit. The tarmac scene from Inception sets it up, and the new footage was written, shot and graded to match closely enough that the joke lands.</p>
-            <span class="reel-play">Play &#8599;</span>
-          </div>
-        </div>
-      </article>
-
     </div>
   </div>
 
@@ -1322,8 +1144,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <div class="deliver-step reveal">
       <span class="deliver-num">IV</span>
       <div class="deliver-when">By day 14</div>
-      <div class="deliver-title">Running</div>
-      <p class="deliver-body">Files in your hands with a one-page testing plan: what to run first, what to spend, what to watch, and when to call a winner. Your first ads can be live the same day. Run them yourself or have us run them.</p>
+      <div class="deliver-title">Yours to run</div>
+      <p class="deliver-body">Files in your hands with a one-page testing plan: what to run first, what to spend, what to watch, and when to call a winner. Your first ads can be live the same day. Run them yourself, or engage us separately to run them. Campaign management is not part of the Sprint.</p>
     </div>
   </div>
 </section>
@@ -1485,8 +1307,21 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   for (let i = 1; i < SETS; i++) {
     originals.forEach((c) => {
       const clone = c.cloneNode(true);
+      // aria-hidden alone is not enough. It hides the clone from a screen
+      // reader but leaves it in the tab order, so a keyboard user tabs
+      // through two invisible copies of every card and hears nothing.
+      // Strip focusability and labelling from the clone AND its contents,
+      // and mark it inert where the browser supports it.
       clone.setAttribute('aria-hidden', 'true');
       clone.removeAttribute('tabindex');
+      clone.removeAttribute('role');
+      clone.removeAttribute('aria-label');
+      clone.querySelectorAll('[tabindex], a, button, video').forEach((n) => {
+        n.setAttribute('tabindex', '-1');
+        n.removeAttribute('role');
+        n.removeAttribute('aria-label');
+      });
+      if ('inert' in clone) clone.inert = true;
       track.appendChild(clone);
     });
   }

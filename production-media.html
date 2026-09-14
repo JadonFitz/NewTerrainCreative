@@ -41,8 +41,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   :root {
     --black:#0A0A0A; --raised:#111010; --sunk:#070707;
-    --gold:#C8A96E; --gold-dim:#8A7647;
-    --parchment:#F5F0E8; --soft:#A09890; --muted:#6B6560;
+    --gold:#C8A96E; --gold-dim:#A08A57;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D;
     --line:#1e1e1e;
     --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
     --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -97,7 +97,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     max-width:52ch;
   }
   .signal b { color:var(--parchment); font-weight:400; }
-  .signal span { display:block; color:var(--muted); font-size:11.5px; margin-top:5px; }
+  .signal span { display:block; color:var(--muted); font-size:11.5px; margin-top:9px; line-height:1.65; }
+  .signal-list { display:flex; flex-direction:column; gap:5px; }
+  .signal-list li { font-size:13.5px; padding-left:0; line-height:1.5; }
+  .signal-list li::before { content:none; }
+  .signal-list b { font-family:var(--display); font-size:20px; color:var(--gold); font-weight:400; margin-right:7px; }
 
   /* ── CTA ── */
   .cta-block { margin-top:30px; }
@@ -206,8 +210,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <p class="sub" id="v-sub">We shoot the creative and run the campaign, under one roof, for established service businesses. <b>One team accountable for the whole thing</b> instead of a video company, a media buyer, and nobody joining them up.</p>
 
         <div class="signal">
-          <b>Work we have made has passed 100,000 followers and 338,000 reach on a single launch.</b>
-          <span>Those are organic figures from client brand work, not paid-campaign results. Campaign performance is reported per engagement against a benchmark agreed with you.</span>
+          <ul class="signal-list">
+            <li><b>101K+</b> combined following built across client brands</li>
+            <li><b>338K</b> organic reach in nine days on a film launch</li>
+          </ul>
+          <span>Both figures are organic. Neither is paid-campaign performance, and neither is a projection of what advertising would do for you. Campaign results are reported per engagement, against a benchmark agreed with you before launch.</span>
         </div>
 
         <div class="cta-block">
@@ -235,8 +242,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
              srcset="assets/lp/hero-production-media-320.webp 320w, assets/lp/hero-production-media.webp 540w"
              sizes="(max-width: 700px) 100vw, 420px"
              width="540" height="960" fetchpriority="high" decoding="async"
-             alt="A lighting setup and crew filming an advertisement on location inside a client's office.">
-        <p class="hero-cap">On location, at a client's office. The creative is shot for the campaign it will run in.</p>
+             alt="A still from a finished advertisement: an attorney speaking to camera in his office, with a burned-in caption.">
+        <p class="hero-cap">A finished ad, shot on location at the client's firm and cut for the placement it runs in.</p>
       </div>
     </div>
   </section>
