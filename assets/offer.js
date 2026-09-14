@@ -175,6 +175,45 @@
       leadFoundation:  { name: 'Lead Foundation', price: 2500 }
     },
 
+    /* ── Ad Sprint · what reduces the buyer's risk ───────────────────
+       NOT a guarantee, a refund, or a remedy. These are properties the
+       engagement already has, written down so the page can only state
+       what is true.
+
+       Recorded 14 Sep 2026 on instruction. Client asset ownership was
+       not previously encoded anywhere; /growth-guide already states the
+       same principle for the ad account, pixel and data.
+
+       The withdrawn "next shoot day is free" guarantee must not return
+       in any form. See neverClaim below.
+       ─────────────────────────────────────────────────────────────── */
+    adSprintTerms: {
+      fixedScope: true,          // 8 or 15 creatives, agreed before the shoot
+      fixedPrice: true,          // the price does not move with the day
+      noRetainer: true,          // nothing rolls into a monthly commitment
+      clientOwnsAssets: true,    // footage and every cut
+      campaignManagementIncluded: false,
+      resultGuaranteed: false
+    },
+
+    /* ── Founding Three · what reduces the applicant's risk ──────────
+       The waived fee and the optional continuation ARE the risk
+       reversal. Nothing is added on top: no free production promise, no
+       performance guarantee, no refund, no open-ended remedy.
+
+       continuationPricePublicOnFoundingPage is false on purpose.
+       continuationDisclosedAt above is 'application step 2', so the
+       figure must not appear on /founding.
+       ─────────────────────────────────────────────────────────────── */
+    foundingRiskReversal: {
+      serviceFeeWaivedMonthOne: true,
+      continuationOptional: true,
+      continuationPricePublicOnFoundingPage: false,
+      clientFundsOwnAdSpend: true,
+      acceptanceGuaranteed: false,
+      resultGuaranteed: false
+    },
+
     // ── Priority industries ───────────────────────────────────────────
     // Used to build the application's industry field. "Other" is accepted
     // but flagged as non-priority rather than hidden.
@@ -253,7 +292,11 @@
       'a Founding Partner is a paying retainer client',
       'months two and three are required',
       'the free month is unlimited',
-      'results, testimonials or logos we do not have'
+      'results, testimonials or logos we do not have',
+      // Withdrawn 13 Sep 2026. It was unbounded, its benchmark was
+      // undefined, and it stacked on the Founding waived month. It must
+      // not come back in any wording.
+      'a free shoot day if the creative does not beat your baseline'
     ]
   };
 

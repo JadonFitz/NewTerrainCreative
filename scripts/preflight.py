@@ -210,6 +210,17 @@ for u in UNLISTED:
         else ok(f'/{u} is not linked from any public page')
 
 
+# ── 5b · published claims must trace to canonical terms ───────────────
+head('5b · Risk-reversal claims')
+r = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'check-claims.py')],
+                   capture_output=True, text=True)
+if r.returncode == 0:
+    ok(f"{r.stdout.count(chr(10)+'  ' + chr(10003))} claims trace to assets/offer.js")
+else:
+    bad('check-claims.py failed\n      ' +
+        '\n      '.join(l.strip() for l in r.stdout.splitlines() if l.strip().startswith('✗')))
+
+
 # ── 6 · the handler itself ────────────────────────────────────────────
 head('6 · Acquisition handlers')
 for test, label in (
