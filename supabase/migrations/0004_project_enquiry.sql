@@ -53,29 +53,19 @@ alter table public.leads
 alter table public.leads add column if not exists project_type  text;
 alter table public.leads add column if not exists project_scope text;
 
--- ── reporting ─────────────────────────────────────────────────────────
--- DROP then CREATE, not CREATE OR REPLACE: Postgres will only let REPLACE
--- append columns to the end of a view, never insert one. A view holds no
--- data and no application code reads one, so dropping costs nothing.
-drop view if exists public.funnel_by_industry;
-
-create view public.funnel_by_industry
-with (security_invoker = on) as
-select
-  coalesce(l.industry, '(not given)')                         as industry,
-  l.form_type                                                 as funnel,
-  count(*)                                                    as leads,
-  count(*) filter (where l.status = 'prequalified')           as step_one_only,
-  count(*) filter (where l.status = 'qualified')              as qualified,
-  count(*) filter (where l.status = 'declined')               as declined,
-  round(
-    100.0 * count(*) filter (where l.status = 'qualified')
-    / nullif(count(*), 0), 1
-  )                                                           as qualified_pct,
-  min(l.created_at)                                           as first_lead,
-  max(l.created_at)                                           as last_lead
-from public.leads l
-group by 1, 2
-order by leads desc;
-
-revoke all on public.funnel_by_industry from anon, authenticated;
+-- ── reporting · NOTHING TO DO ─────────────────────────────────────────
+-- funnel_by_industry already selects l.form_type as `funnel`, so
+-- project_enquiry rows appear in it the moment they exist. 0002's
+-- definition and the one originally written here were byte for byte
+-- identical, which made the drop-and-create a no-op. Removed rather than
+-- left in place: re-running it would drop a live view to rebuild it
+-- unchanged, which is risk for no benefit.
+--
+-- The revoke from anon and authenticated is likewise already applied by
+-- 0002 and still in force.
+--
+-- APPLIED 14 Sep 2026. The do-block form of the constraint swap failed to
+-- paste cleanly into the Supabase SQL editor, so it was applied as four
+-- short statements instead. If re-running this file from scratch, prefer
+-- the same approach: add the columns, read the constraint name from
+-- pg_constraint, then drop and add it by that name.
