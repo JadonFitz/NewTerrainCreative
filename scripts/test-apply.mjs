@@ -104,7 +104,13 @@ const leadRow = leadInserts[0]?.body;
 check('inserts exactly one lead', leadInserts.length === 1, `${leadInserts.length} inserts`);
 check('never patches a browser-supplied row id', patches(made, '/leads').length === 0);
 check("status is 'qualified'", leadRow?.status === 'qualified', leadRow?.status);
-check('all lifecycle timestamps are set', Boolean(leadRow?.prequalified_at && leadRow?.submitted_at && leadRow?.terms_acknowledged_at));
+check('submission timestamps are set', Boolean(leadRow?.submitted_at && leadRow?.terms_acknowledged_at));
+// Step one is stateless: it never reaches the server as a write, so the
+// server cannot know when it was passed. Stamping prequalified_at here
+// would duplicate submitted_at and make the step-one-to-step-two gap read
+// as zero in every report. The timing lives in the initial_fit_completed
+// funnel event, joined on session_id.
+check('prequalified_at is NOT faked at insert', !leadRow?.prequalified_at, leadRow?.prequalified_at || 'absent');
 check('data agreement is timestamped', Boolean(leadRow?.data_agreement_at));
 check('all step-one fields persist on completion',
   ['website', 'role', 'authority', 'industry', 'service_area', 'budget_90d'].every((k) => leadRow?.[k]));

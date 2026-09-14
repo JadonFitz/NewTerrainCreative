@@ -30,30 +30,48 @@ from public.leads l
 where l.created_at > now() - interval '2 hours'
 order by l.created_at;
 
--- ── B · THE KEY TEST · one completed form, one lead row ──────────────
--- Step one stores no personal data. A founding applicant appears only
--- after step two, as exactly one complete row carrying both timestamps.
+-- ── B · THE KEY TEST · one completed application, one row ────────────
+-- Step one is stateless: it stores no lead and no PII, so an applicant
+-- appears only once step two completes, as exactly one row. More than one
+-- row for one person means step two inserted twice.
+--
+-- prequalified_at is expected to be NULL. The server never sees step one
+-- as a write, so it cannot know when step one was passed; the timing
+-- lives in the initial_fit_completed event, joined below on session_id.
 select
-  left(md5(l.email), 8)                          as who,
-  count(*)                                       as rows_for_this_person,
-  count(*) filter (where l.prequalified_at is not null) as with_prequalified,
+  left(md5(l.email), 8)                                 as who,
+  count(*)                                              as rows_for_this_person,
   count(*) filter (where l.submitted_at is not null)    as with_submitted,
+  count(*) filter (where l.prequalified_at is not null) as wrongly_prequalified,
   case
-    when count(*) = 1
-     and bool_and(l.prequalified_at is not null)
-     and bool_and(l.submitted_at is not null)
-      then 'PASS · one completed application, one row'
     when count(*) > 1
       then 'FAIL · ' || count(*) || ' rows for one completed application'
-    when bool_and(l.submitted_at is null)
-      then 'FAIL · incomplete application was persisted'
-    else 'PASS · one row'
-  end                                            as verdict
+    when bool_or(l.prequalified_at is not null)
+      then 'FAIL · prequalified_at was stamped; step one is stateless'
+    when bool_and(l.submitted_at is not null)
+      then 'PASS · one completed application, one row'
+    else 'FAIL · row exists without submitted_at'
+  end                                                   as verdict
 from public.leads l
 where l.form_type = 'founding_application'
   and l.created_at > now() - interval '2 hours'
 group by 1
 order by 1;
+
+-- ── B2 · step one to step two duration, the honest way ───────────────
+-- The gap comes from the analytics event, not from a column on the lead.
+select
+  left(md5(l.email), 8)                                  as who,
+  fe.created_at                                          as passed_step_one,
+  l.submitted_at                                         as completed_step_two,
+  l.submitted_at - fe.created_at                         as took
+from public.leads l
+join public.funnel_events fe
+  on fe.session_id = l.session_id
+ and fe.event_name = 'initial_fit_completed'
+where l.form_type = 'founding_application'
+  and l.created_at > now() - interval '2 hours'
+order by l.submitted_at;
 
 -- ── C · one paid-retainer row per strategy call ───────────────────────
 select

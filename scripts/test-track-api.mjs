@@ -67,6 +67,55 @@ check('unknown event is ignored', res.payload.ignored === 'unknown event' && cal
 res = await request('GET');
 check('GET is rejected', res.statusCode === 405);
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   REGRESSION · a public request must never create a Schedule event
+   ──────────────────────────────────────────────────────────────────────
+   /api/track is public and unauthenticated. A Schedule event is supposed
+   to mean an appointment was genuinely confirmed, so if this endpoint
+   accepts one, the event means nothing: anybody could POST a conversion.
+
+   'schedule' was in the allowlist and WAS accepted. This test exists so
+   it cannot come back without someone deleting the test on purpose.
+   ══════════════════════════════════════════════════════════════════════ */
+console.log('\n\x1b[1mSCHEDULE IS RESERVED\x1b[0m');
+
+for (const name of ['schedule', 'Schedule', ' schedule ']) {
+  n = calls.length;
+  res = await request('POST', {
+    event_id: `forge-${name.trim()}`, event_name: name, session_id: 's-forge'
+  });
+  const wrote = calls.slice(n).some((c) => /funnel_events/.test(c.url));
+  const label = JSON.stringify(name);
+  if (name === 'schedule') {
+    check(`${label} is refused with 403`, res.statusCode === 403, `got ${res.statusCode}`);
+    check(`${label} says why`, res.payload?.error === 'reserved event', res.payload?.error);
+  } else {
+    // Casing and padding variants are not the reserved name, so they fall
+    // through to the unknown-event path. Either way they must not store.
+    check(`${label} is not stored`, res.statusCode === 200 && res.payload?.ignored === 'unknown event',
+          `${res.statusCode} ${JSON.stringify(res.payload)}`);
+  }
+  check(`${label} writes NOTHING to the database`, !wrote);
+}
+
+// The allowlist itself must not contain it.
+const trackSource = await (await import('node:fs/promises')).readFile(
+  new URL('../api/track.js', import.meta.url), 'utf8');
+// Slice only the Set literal itself. Slicing as far as RESERVED would
+// swallow the comment explaining why schedule was removed, and the test
+// would then fail on its own documentation.
+const allowStart = trackSource.indexOf('ALLOWED = new Set');
+const allowBlock = trackSource.slice(allowStart, trackSource.indexOf(']);', allowStart));
+check('schedule is absent from the ALLOWED set', !/'schedule'/.test(allowBlock));
+check('schedule is named in the RESERVED set', /RESERVED = new Set\(\['schedule'\]\)/.test(trackSource));
+
+// And no browser code may map an event onto it.
+const browserSource = await (await import('node:fs/promises')).readFile(
+  new URL('../assets/track.js', import.meta.url), 'utf8');
+check('no browser NAME_MAP entry produces schedule',
+  !/:\s*'schedule'/.test(browserSource));
+
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · first-party ingestion remains bounded and PII-free'
   : `\x1b[31mFAIL\x1b[0m · ${failures} check(s) failed`}`);

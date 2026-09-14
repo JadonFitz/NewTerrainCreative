@@ -253,8 +253,15 @@ async function handleStepTwo(req, res, d) {
   let stored = false;
   if (dbReady) {
     try {
+      // prequalified_at is deliberately NOT set. Step one is stateless and
+      // never reaches the server as a write, so we do not know when it was
+      // passed; stamping it here would only duplicate submitted_at and make
+      // the gap between the two look like zero in every report. The real
+      // timing lives in the initial_fit_completed funnel event, which
+      // carries the same session_id: join on that for step one to step two
+      // duration.
       const row = await insert('leads', {
-        ...stepOneRow(d), ...patch, prequalified_at: now
+        ...stepOneRow(d), ...patch
       }, { returning: true });
       leadId = row && row.id;
       stored = Boolean(leadId);

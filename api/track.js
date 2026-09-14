@@ -27,9 +27,22 @@ const ALLOWED = new Set([
   'sales_deck_view',      // /growth-guide opened. First party only: it is
                           // deliberately outside the paid funnel and is
                           // never sent to Meta.
-  'schedule',             // ONLY a confirmed appointment, not a form send
   'purchase'              // not yet wired, will be server authoritative
 ]);
+
+/* ── deliberately NOT postable here ────────────────────────────────────
+   'schedule' used to sit in the list above. It was removed because this
+   endpoint is public and unauthenticated: anything it accepts, anyone can
+   send. A Schedule event is supposed to mean an appointment was genuinely
+   confirmed, and an event anyone can forge cannot mean that.
+
+   It will come back only when a booking-confirmation integration can
+   write it server side, authenticated, from the scheduler's own webhook.
+   Until then a request naming it is refused explicitly rather than
+   silently ignored, so a premature attempt to wire it up fails loudly in
+   testing instead of quietly producing fake conversions.
+   ─────────────────────────────────────────────────────────────────── */
+const RESERVED = new Set(['schedule']);
 
 const ALLOWED_FUNNELS = new Set([
   'founding_three', 'paid_retainer', 'ad_sprint',
@@ -74,6 +87,19 @@ export default async function handler(req, res) {
   if (!d || typeof d !== 'object') return res.status(200).json({ ok: true });
 
   const eventName = trim(d.event_name, MAX.event_name);
+
+  // Refused, not ignored. A caller trying to post a reserved event is
+  // either a mistake worth surfacing or an attempt worth refusing, and
+  // neither should look like success.
+  if (eventName && RESERVED.has(eventName)) {
+    console.warn('track: refused reserved event', eventName);
+    return res.status(403).json({
+      ok: false,
+      error: 'reserved event',
+      detail: `${eventName} is written server side only, from an authenticated booking confirmation.`
+    });
+  }
+
   if (!eventName || !ALLOWED.has(eventName)) {
     return res.status(200).json({ ok: true, ignored: 'unknown event' });
   }

@@ -9,7 +9,7 @@
 | `initial_fit_completed` | Founding Step 1 passed | First party only |
 | `submit_application` | Founding Step 2 captured | First party + Meta `SubmitApplication` |
 | `lead` | Paid-retainer inquiry captured | First party + Meta `Lead` |
-| `schedule` | An appointment was actually confirmed | Reserved; never fire from a form submission |
+| `schedule` | An appointment was actually confirmed | **Reserved and refused.** `/api/track` returns 403. Server-side only, from an authenticated booking confirmation |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
 
