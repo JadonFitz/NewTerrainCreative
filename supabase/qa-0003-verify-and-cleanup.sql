@@ -98,3 +98,106 @@ order by created_at;
 
 -- Confirm: must return 0.
 -- select count(*) from public.funnel_events where session_id = 'forge-live';
+
+-- ══════════════════════════════════════════════════════════════════════
+-- 7 · CAPI DEDUPLICATION VERIFICATION  (run BEFORE any cleanup)
+--
+-- Matches what the database stored against what Meta Test Events shows.
+-- Meta's "Event ID" column is exactly lead_event_id below: the browser
+-- pixel and the server CAPI call both send it, which is what lets Meta
+-- collapse the pair into one event.
+--
+-- PII-safe: no address, name, phone or business is returned.
+-- ══════════════════════════════════════════════════════════════════════
+
+-- ── 7a · every test lead, with the id Meta should be showing ─────────
+-- Copy the event_id_for_meta values and compare them to the Event ID in
+-- Events Manager → Test Events. They must match character for character.
+select
+  l.id                                   as lead_id,       -- for the DELETE
+  l.lead_event_id                        as event_id_for_meta,
+  l.form_type,
+  l.status,
+  l.industry,
+  l.utm_campaign,
+  case
+    when l.email like '%@ntc-test.invalid' then 'test address'
+    else 'REAL ADDRESS · delete this one too'
+  end                                    as address_kind,
+  l.created_at
+from public.leads l
+where l.created_at > now() - interval '4 hours'
+order by l.created_at;
+
+-- ── 7b · expected event name per funnel ─────────────────────────────
+-- strategy_call must produce Lead. founding_application must produce
+-- SubmitApplication. Neither may produce Schedule.
+select
+  l.form_type,
+  case l.form_type
+    when 'strategy_call'          then 'Lead'
+    when 'founding_application'   then 'SubmitApplication'
+  end                                    as meta_event_expected,
+  l.lead_event_id                        as event_id_for_meta,
+  count(fe.id)                           as first_party_events_linked
+from public.leads l
+left join public.funnel_events fe on fe.lead_id = l.id
+where l.created_at > now() - interval '4 hours'
+group by l.form_type, l.lead_event_id
+order by l.form_type;
+
+-- ── 7c · the server's own copy of the event ─────────────────────────
+-- One row per conversion. The event_id here must equal lead_event_id
+-- above; that equality is the deduplication contract.
+select
+  fe.event_name,
+  fe.funnel,
+  fe.event_id,
+  (fe.event_id = l.lead_event_id)        as matches_lead,
+  fe.metadata ->> 'industry'             as industry,
+  fe.created_at
+from public.funnel_events fe
+join public.leads l on l.id = fe.lead_id
+where fe.created_at > now() - interval '4 hours'
+order by fe.created_at;
+
+-- ── 7d · no duplicate conversions ───────────────────────────────────
+select
+  event_name,
+  count(*)                               as rows,
+  count(distinct event_id)               as distinct_ids,
+  case when count(*) = count(distinct event_id)
+       then 'PASS · no duplicate event_id'
+       else 'FAIL · a conversion was stored twice' end as verdict
+from public.funnel_events
+where created_at > now() - interval '4 hours'
+  and event_name in ('lead', 'submit_application')
+group by event_name;
+
+-- ── 7e · Schedule must not exist at all ─────────────────────────────
+select
+  case when count(*) = 0
+       then 'PASS · no schedule event exists'
+       else 'FAIL · ' || count(*) || ' schedule row(s) — the reservation leaked' end
+    as verdict
+from public.funnel_events
+where event_name = 'schedule';
+
+-- ══════════════════════════════════════════════════════════════════════
+-- 8 · FINAL CLEANUP · paste the exact lead_id values from 7a
+--
+-- Delete EVERY row 7a returned, not a fixed count: the number depends on
+-- how many test submissions were made. Events first, so nothing orphans.
+-- ══════════════════════════════════════════════════════════════════════
+
+-- delete from public.funnel_events
+--  where lead_id in ('<id-1>', '<id-2>', '<id-3>');
+
+-- delete from public.leads
+--  where id in ('<id-1>', '<id-2>', '<id-3>');
+
+-- Confirm: both must return 0.
+-- select count(*) from public.leads
+--  where created_at > now() - interval '4 hours';
+-- select count(*) from public.funnel_events
+--  where created_at > now() - interval '4 hours' and lead_id is not null;
