@@ -175,6 +175,21 @@ for md in ROOT.glob('*.md'):
     if md.name != 'README.md':
         warn(f'{md.name} sits in the deployed root')
 
+# ── the calendar must sit behind qualification ────────────────────────
+# Every booking is meant to come from a completed form. A page linking
+# straight to the scheduler is a hole: no lead row, no attribution, no
+# conversion event, and a call with someone we know nothing about.
+# apply.html is the one exception, and it is a success state shown only
+# after a full application.
+CALENDAR = 'calendar.app.google'
+MAY_LINK_CALENDAR = {'apply.html'}
+leaks = [f.name for f in ROOT.glob('*.html')
+         if f.name not in MAY_LINK_CALENDAR
+         and CALENDAR in f.read_text(encoding='utf-8')]
+bad('page(s) link straight to the scheduler, bypassing qualification: '
+    + ', '.join(leaks)) if leaks \
+    else ok('the scheduler is reachable only after a completed form')
+
 # Unlisted pages must stay unlisted. There is no sitemap today; this fires
 # the moment someone adds one and forgets.
 UNLISTED = ['growth-guide']
@@ -200,6 +215,7 @@ head('6 · Acquisition handlers')
 for test, label in (
     ('test-apply.mjs', 'Founding application'),
     ('test-strategy-call.mjs', 'paid-retainer inquiry'),
+    ('test-project.mjs', 'Signature Work enquiry'),
     ('test-tracking.mjs', 'browser attribution'),
     ('test-track-api.mjs', 'first-party event ingestion'),
 ):

@@ -8,7 +8,8 @@
 | `cta_click` | Landing-page CTA clicked | First party + Meta custom `CTAClick` |
 | `initial_fit_completed` | Founding Step 1 passed | First party only |
 | `submit_application` | Founding Step 2 captured | First party + Meta `SubmitApplication` |
-| `lead` | Paid-retainer inquiry captured | First party + Meta `Lead` |
+| `lead` | Paid-retainer inquiry captured (`/strategy-call`) | First party + Meta `Lead`, `offer: paid_retainer` |
+| `lead` | Signature Work enquiry captured (`/project`) | First party + Meta `Lead`, `offer: signature_work` |
 | `schedule` | An appointment was actually confirmed | **Reserved and refused.** `/api/track` returns 403. Server-side only, from an authenticated booking confirmation |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
@@ -69,3 +70,28 @@ reconstruct those figures. The `funnel_performance` view then calculates:
   events. YouTube or Vimeo embeds require provider-specific player API wiring;
   the current watcher is intentionally for native `<video>` elements.
 - Connect the scheduler or its webhook before implementing `Schedule`.
+
+
+## The three acquisition funnels
+
+| Funnel | Page | `form_type` | Meta event | `offer` |
+|---|---|---|---|---|
+| Founding Three | `/apply` | `founding_application` | `SubmitApplication` | `founding_three` |
+| Paid retainer | `/strategy-call` | `strategy_call` | `Lead` | `paid_retainer` |
+| Signature Work | `/project` | `project_enquiry` | `Lead` | `signature_work` |
+
+Two of them fire `Lead`, so they are separated on the `offer` and
+`form_type` parameters rather than the event name. Build custom
+conversions on those parameters, not on `Lead` alone, or the retainer and
+project funnels will optimise as one audience.
+
+`funnel_events.funnel` carries `paid_retainer`, `founding_three` or
+`signature_work` for the same reason on the first-party side.
+
+## No booking without qualification
+
+Every call now starts with a completed form. `/book` forwards to
+`/strategy-call` rather than the scheduler, and the only page allowed to
+link the scheduler directly is `apply.html`, as a success state shown
+after a full application. `scripts/preflight.py` fails the build if any
+other page links it.

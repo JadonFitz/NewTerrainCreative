@@ -210,6 +210,19 @@
     // month-one requirement will be a struggle even if they ticked yes.
     founding90DayBudgetBands: [4500, 10000, 25000],
 
+    // Signature Work is project priced, not monthly, so its bands are
+    // whole-project totals and sit an order of magnitude away from the
+    // retainer's. Do not reuse budgetBands here: a $10,000 month and a
+    // $10,000 film are not the same conversation.
+    projectBudgetBands: [10000, 25000, 50000],
+    projectTypes: [
+      'Commercial',
+      'Documentary or brand film',
+      'Podcast build-out',
+      'Event or summit coverage',
+      'Something else'
+    ],
+
     // ── Things we do not say ──────────────────────────────────────────
     // Kept here so the constraint is visible next to the numbers.
     neverClaim: [
