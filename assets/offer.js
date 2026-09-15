@@ -53,6 +53,22 @@
       // two renders it: it is a published term now, not an internal rate.
       // api/_rates.js mirrors it for server-side quoting and
       // scripts/check-offer.py fails if the two ever disagree.
+      /* ── application window ─────────────────────────────────────
+         A REAL deadline, not a rolling countdown. The page renders this
+         date and hides the callout entirely once it has passed, so a
+         lapsed date can never sit on the page pretending to be live.
+
+         To extend or reopen the round, change this ONE line. Do not
+         make it relative to the visitor's clock: a "7 days" that resets
+         per visitor is the fake-urgency pattern, and it costs more
+         trust than it buys.
+
+         Set to the end of September 2026. Visitors arriving later in
+         the window correctly see less time remaining, which is how a
+         real deadline behaves.
+         ─────────────────────────────────────────────────────────── */
+      applicationsCloseAt: '2026-09-30T23:59:59-07:00',
+
       continuationRequired: false,
       continuationDisclosedAt: 'application step 2',
       continuationMonthly: 3500,
