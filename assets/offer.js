@@ -224,6 +224,26 @@
     foundingRiskReversal: {
       serviceFeeWaivedMonthOne: true,
       continuationOptional: true,
+
+      /* What the waived month is traded FOR. All three are conditions,
+         not opt-ins. Changed 18 Sep 2026: the testimonial was previously
+         optional and the two surfaces disagreed about it.
+
+         Two guards that must never be removed:
+           1. We may require a testimonial. We may NOT require a
+              favourable one. "Honest" is doing legal work here, not
+              stylistic work.
+           2. Wherever a testimonial or case study is published, the
+              waived fee is disclosed alongside it. A testimonial given
+              in exchange for free services is a material connection and
+              has to be stated. */
+      requiresDataAccess: true,
+      requiresHonestFeedback: true,
+      requiresPublishableTestimonial: true,
+      requiresCaseStudyRights: true,
+      testimonialMustBeFavourable: false,
+      publicationDisclosesWaivedFee: true,
+      clientApprovesWordingBeforePublication: true,
       continuationPricePublicOnFoundingPage: false,
       clientFundsOwnAdSpend: true,
       acceptanceGuaranteed: false,

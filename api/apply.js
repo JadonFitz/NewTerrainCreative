@@ -222,6 +222,10 @@ async function handleStepTwo(req, res, d) {
   const missing = STEP_TWO.filter((k) => !d[k] || !String(d[k]).trim());
   if (!d.terms_acknowledged) missing.push('terms_acknowledged');
   if (!d.data_agreement) missing.push('data_agreement');
+  // The testimonial and case study rights are what the waived month is
+  // traded for, so this is a condition and the server enforces it rather
+  // than trusting the browser's `required` attribute.
+  if (!d.publicity_optin) missing.push('publicity_optin');
   if (missing.length) return res.status(400).json({ error: 'Missing fields', missing });
 
   // Step one is re-sent from browser memory. The server receives and stores

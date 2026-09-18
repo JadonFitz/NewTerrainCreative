@@ -152,6 +152,13 @@ res = await post({ ...STEP_ONE, industry: undefined });
 check('step one rejects a missing industry', res.statusCode === 400 && res.payload.missing?.includes('industry'));
 res = await post({ ...STEP_ONE, ...STEP_TWO, data_agreement: undefined });
 check('step two rejects a missing data agreement', res.statusCode === 400 && res.payload.missing?.includes('data_agreement'));
+// The testimonial and case study rights are what the waived month is
+// traded for, so the SERVER enforces them. A browser `required` attribute
+// is a convenience, not a condition.
+res = await post({ ...STEP_ONE, ...STEP_TWO, publicity_optin: undefined });
+check('step two rejects a missing testimonial agreement',
+  res.statusCode === 400 && res.payload.missing?.includes('publicity_optin'),
+  JSON.stringify(res.payload.missing));
 res = await post({ ...STEP_ONE, ...STEP_TWO, terms_acknowledged: undefined });
 check('step two rejects unacknowledged terms', res.statusCode === 400 && res.payload.missing?.includes('terms_acknowledged'));
 res = await post({ ...STEP_ONE, ...STEP_TWO, email: 'not-an-email' });

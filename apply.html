@@ -447,8 +447,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           Specifically: our service fee is waived for the scope listed above and nothing beyond it;
           I fund my own advertising spend, at least <span class="ack-spend">$1,500</span>, paid directly to the ad platform on my own
           payment method; continuing after month one is optional and priced at <span class="ack-cont">$3,500</span> a month;
-          giving New Terrain access to the campaign data and telling them honestly how it went are
-          conditions of the waiver; applying does not guarantee a place; and no particular result is
+          giving New Terrain access to the campaign data, telling them honestly how it went, and
+          providing a testimonial they may publish are all conditions of the waiver rather than
+          favours; applying does not guarantee a place; and no particular result is
           promised.
         </div>
       </div>
@@ -466,13 +467,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
 
       <div class="consent">
-        <input type="checkbox" id="publicity" name="publicity_optin" value="yes">
+        <input type="checkbox" id="publicity" name="publicity_optin" value="yes" required>
         <div class="consent-body">
-          <b>You may name my business publicly (optional)</b>
-          Separate from everything above and never a condition of acceptance. This lets us use your
-          name, logo and the work itself in a case study. Anonymised results we may publish either
-          way. If we do publish, we will say the first month's service fee was waived. You can
-          withdraw this at any time by emailing us, and you approve anything before it goes out.
+          <b>I understand the testimonial and case study are part of the trade</b>
+          A testimonial, and the right to publish the work with your name and logo, are what the
+          waived month is exchanged for. <b>We are not asking you to say it went well if it did
+          not</b> — an honest critical testimonial satisfies this completely, and we would rather
+          have that than a compliment. You approve the exact wording and the final cut before
+          anything goes out, and wherever we publish it we say plainly that the first month's
+          service fee was waived.
         </div>
       </div>
 
@@ -779,7 +782,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           ? 'Please confirm you have read the terms above.'
           : !document.getElementById('data-ok').checked
             ? 'We need your agreement to share what happens to the leads. Without it there is no way to tell whether the month worked.'
-            : 'A few answers are still missing.';
+            : !document.getElementById('publicity').checked
+              ? 'The testimonial and case study rights are what the waived month is traded for, so we do need this one. An honest critical testimonial counts.'
+              : 'A few answers are still missing.';
       err2.hidden = false;
       two.reportValidity();
       return;
