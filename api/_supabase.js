@@ -122,6 +122,60 @@ export async function update(table, id, patchRow, opts = {}) {
   return Array.isArray(body) ? body[0] || null : body;
 }
 
+/**
+ * Read rows with a raw PostgREST query string.
+ *
+ * @param {string} table
+ * @param {string} query  e.g. `email=eq.x%40y.com&order=created_at.desc&limit=1`
+ * @returns {Promise<object[]>} always an array, empty when nothing matched
+ */
+export async function select(table, query = '') {
+  if (!configured) throw new Error('supabase not configured');
+
+  const url = `${URL_BASE}/rest/v1/${table}${query ? `?${query}` : ''}`;
+  const res = await fetch(url, { method: 'GET', headers: headers() });
+  if (!res.ok) throw new Error(`supabase select ${res.status} ${await res.text()}`);
+  const body = await res.json().catch(() => null);
+  return Array.isArray(body) ? body : body ? [body] : [];
+}
+
+/**
+ * Insert a row that must exist at most once, and report whether THIS call
+ * is the one that created it.
+ *
+ * `insert(..., { ignoreConflict: true })` cannot answer that: it resolves
+ * to null both when the row was written and when it collided, which is
+ * exactly right for a retried analytics beacon and exactly wrong here. A
+ * booking may only produce one Schedule conversion, so the caller has to
+ * know which of two concurrent syncs won.
+ *
+ * The unique constraint in Postgres is what decides, not a prior read.
+ * Checking for existence first and inserting second is a race: two cron
+ * invocations overlapping would both see nothing and both send Meta a
+ * conversion for the same appointment.
+ *
+ * @returns {Promise<{inserted: boolean, row: object|null}>}
+ *          inserted false means someone else already recorded it.
+ */
+export async function insertIfNew(table, row) {
+  if (!configured) throw new Error('supabase not configured');
+
+  const res = await fetch(`${URL_BASE}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: headers({ Prefer: 'return=representation' }),
+    body: JSON.stringify(clean(row))
+  });
+
+  // 409 is the unique violation. Expected on a re-run, and not an error.
+  if (res.status === 409) return { inserted: false, row: null };
+
+  if (!res.ok) throw new Error(`supabase insertIfNew ${res.status} ${await res.text()}`);
+
+  const body = await res.json().catch(() => null);
+  const created = Array.isArray(body) ? body[0] || null : body;
+  return { inserted: Boolean(created), row: created };
+}
+
 /** Attach previously anonymous events to a lead once they identify themselves. */
 export async function linkSessionToLead(sessionId, leadId) {
   if (!configured || !sessionId || !leadId) return 0;

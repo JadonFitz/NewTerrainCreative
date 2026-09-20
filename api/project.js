@@ -24,9 +24,10 @@
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
 import { resolveOffer } from './_offer.js';
-
-const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
-const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
+import {
+  sendInternalLeadNotification, sendLeadConfirmationEmail,
+  BOOKING_URL, BRING_PROJECT
+} from './_messaging.js';
 
 const REQUIRED = ['name', 'email', 'business', 'project_type',
                   'project_scope', 'start', 'budget_band', 'authority'];
@@ -75,27 +76,6 @@ function emailBody(d, flags) {
     ${banner}
     <table style="border-collapse:collapse;width:100%">${rows}</table>
   </div>`;
-}
-
-async function notify(subject, html, replyTo) {
-  const sg = process.env.SENDGRID_API_KEY;
-  if (sg) {
-    const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(FROM);
-    const from = m ? { name: m[1], email: m[2] } : { email: FROM.trim() };
-    const r = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${sg}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: TO }] }],
-        from, reply_to: { email: replyTo }, subject,
-        content: [{ type: 'text/html', value: html }]
-      })
-    });
-    if (!r.ok) throw new Error(`sendgrid ${r.status} ${await r.text()}`);
-    return 'sendgrid';
-  }
-  console.warn('no SENDGRID_API_KEY — project enquiry not emailed');
-  return 'none';
 }
 
 export default async function handler(req, res) {
@@ -173,14 +153,22 @@ export default async function handler(req, res) {
     console.warn('supabase not configured, project enquiry not persisted');
   }
 
-  // ── 2 · notify ────────────────────────────────────────────────────────
-  let notified = false;
-  try {
-    await notify(`Project · ${String(d.business).slice(0, 60)}`,
-                 emailBody(d, flags), String(d.email));
-    notified = true;
-  } catch (e) {
-    console.error('notify failed', (e && e.message) || e);
+  // ── 2 · notify New Terrain Creative ──────────────────────────────────
+  // This used to set notified = true unconditionally after the await, so
+  // an absent SENDGRID_API_KEY reported as a successful notification and
+  // could have satisfied the capture check below on its own. The shared
+  // module reports what actually happened.
+  const internal = await sendInternalLeadNotification({
+    subject: `Project · ${String(d.business).slice(0, 60)}`,
+    html: emailBody(d, flags),
+    replyTo: String(d.email)
+  });
+  const notified = internal.sent;
+
+  if (!stored && !notified) {
+    return res.status(503).json({
+      error: 'We could not save the enquiry. Please try again or email business@newterraincreative.com.'
+    });
   }
 
   // ── 3 · Meta, deduplicated against the browser copy on event_id ───────
@@ -210,5 +198,43 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, captured: { stored, notified } });
+  // ── 4 · confirm to the prospect ──────────────────────────────────────
+  // A clean-fit enquiry gets the calendar immediately. A flagged one
+  // does not: "budget below a typical project" or "no timeline yet"
+  // means the next conversation is about scope, and handing over a
+  // booking link would skip it.
+  //
+  // Deliberately called a PROJECT CALL, never a strategy call. Signature
+  // Work is a commercial, documentary or brand film, and framing it as
+  // the retainer conversation is the same mismatch this whole endpoint
+  // exists to avoid. The scheduler behind the link is shared; the
+  // language around it is not.
+  const cleanFit = flags.length === 0;
+
+  const confirmation = await sendLeadConfirmationEmail({
+    email: String(d.email),
+    name: d.name,
+    subject: cleanFit
+      ? 'Your New Terrain Creative project call'
+      : 'We have got your project enquiry',
+    lede: cleanFit
+      ? 'Thanks, we have got the details of what you want to make. The next step is a '
+        + 'short project call about scope, timing and what the finished piece has to do. '
+        + 'Pick a time that suits you.'
+      : 'Thanks, we have got the details of what you want to make. A real person reads '
+        + 'every one of these. We will come back to you within one business day, either '
+        + 'with some times or with a straight note about whether we are the right studio '
+        + 'for it.',
+    bookingUrl: cleanFit ? BOOKING_URL : undefined,
+    bring: BRING_PROJECT,
+    ctaLabel: 'Book the project call'
+  });
+
+  return res.status(200).json({
+    ok: true,
+    // Only present on a clean fit. The browser shows the CTA when it is
+    // there and the "we will be in touch" copy when it is not.
+    bookingUrl: cleanFit ? BOOKING_URL : undefined,
+    captured: { stored, notified, confirmed: confirmation.sent }
+  });
 }

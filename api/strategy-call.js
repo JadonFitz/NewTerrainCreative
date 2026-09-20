@@ -14,9 +14,9 @@
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
 import { resolveOffer } from './_offer.js';
-
-const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
-const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
+import {
+  sendInternalLeadNotification, sendLeadConfirmationEmail, BOOKING_URL
+} from './_messaging.js';
 
 const REQUIRED = ['name', 'email', 'phone', 'business', 'industry', 'authority',
                   'offer', 'value', 'marketing', 'ad_spend', 'budget_band',
@@ -69,27 +69,6 @@ function emailBody(d, flags) {
     ${banner}
     <table style="border-collapse:collapse;width:100%">${rows}</table>
   </div>`;
-}
-
-async function notify(subject, html, replyTo) {
-  const sg = process.env.SENDGRID_API_KEY;
-  if (sg) {
-    const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(FROM);
-    const from = m ? { name: m[1], email: m[2] } : { email: FROM.trim() };
-    const r = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${sg}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: TO }] }],
-        from, reply_to: { email: replyTo }, subject,
-        content: [{ type: 'text/html', value: html }]
-      })
-    });
-    if (!r.ok) throw new Error(`sendgrid ${r.status} ${await r.text()}`);
-    return 'sendgrid';
-  }
-  console.warn('no SENDGRID_API_KEY — strategy call request not emailed');
-  return 'none';
 }
 
 export default async function handler(req, res) {
@@ -161,15 +140,14 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── 2 · notify ────────────────────────────────────────────────────────
-  let notified = false;
-  try {
-    const provider = await notify(`Strategy call · ${String(d.business).slice(0, 60)}`,
-                                  emailBody(d, flags), String(d.email));
-    notified = provider !== 'none';
-  } catch (e) {
-    console.error('notify failed', (e && e.message) || e);
-  }
+  // ── 2 · notify New Terrain Creative ──────────────────────────────────
+  // reply_to is the applicant, so replying in the inbox answers them.
+  const internal = await sendInternalLeadNotification({
+    subject: `Strategy call · ${String(d.business).slice(0, 60)}`,
+    html: emailBody(d, flags),
+    replyTo: String(d.email)
+  });
+  const notified = internal.sent;
 
   if (!stored && !notified) {
     return res.status(503).json({
@@ -204,5 +182,27 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, captured: { stored, notified } });
+  // ── 4 · confirm to the prospect, and hand them the calendar ──────────
+  // Runs after capture and after Meta on purpose. The lead is already
+  // durable by this point, so a SendGrid outage costs us an email and
+  // nothing else. It must never cost us the lead, so the result is
+  // logged and reported rather than thrown.
+  //
+  // No qualification gate here. /strategy-call has no hard gates: a low
+  // budget band is recorded as a triage flag for whoever takes the call,
+  // not a rejection, so everyone who submits gets the booking link.
+  const confirmation = await sendLeadConfirmationEmail({
+    email: String(d.email),
+    name: d.name,
+    subject: 'Your New Terrain Creative strategy call',
+    lede: 'Thanks for the detail, we have got your request. Rather than trade emails '
+        + 'about times, here is the calendar. Pick whatever suits and it is booked.',
+    bookingUrl: BOOKING_URL
+  });
+
+  return res.status(200).json({
+    ok: true,
+    bookingUrl: BOOKING_URL,
+    captured: { stored, notified, confirmed: confirmation.sent }
+  });
 }

@@ -13,8 +13,14 @@ it should ever contain.
 |---|---|---|
 | `SUPABASE_URL` | `api/_supabase.js` | Provided by the Vercel Supabase integration, possibly prefixed (`sbdata_SUPABASE_URL`). The resolver matches on suffix. |
 | `SUPABASE_SERVICE_ROLE_KEY` | `api/_supabase.js` | Server only. Bypasses row level security. Never expose to a browser and never use it as a signing key. |
-| `SENDGRID_API_KEY` | `api/apply.js`, `api/strategy-call.js` | Mail Send permission only. |
+| `SENDGRID_API_KEY` | `api/_messaging.js` | Mail Send permission only. Sends both the internal notification and the prospect confirmation. |
 | `META_CAPI_TOKEN` | `api/_meta.js` | Conversions API access token. |
+| `CRON_SECRET` | `api/sync-bookings.js` | Generate with `openssl rand -hex 32`. Vercel Cron sends it as `Authorization: Bearer`. **Without it the endpoint refuses to run**, which is deliberate: it would otherwise be a public endpoint that writes conversions. |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | `api/_google.js` | The whole downloaded service-account key file, pasted as-is. Read-only Calendar access. |
+| `GOOGLE_CALENDAR_ID` | `api/_google.js` | The calendar shared with the service account at "See all event details". |
+
+`GOOGLE_SERVICE_ACCOUNT_EMAIL` + `GOOGLE_PRIVATE_KEY` are accepted as an
+alternative to the JSON form.
 
 ## Optional, with defaults in code
 
@@ -25,8 +31,24 @@ it should ever contain.
 | `META_TEST_EVENT_CODE` | unset. Set only while testing, never in production. |
 | `APPLY_TO` | `business@newterraincreative.com` |
 | `APPLY_FROM` | `New Terrain Creative <applications@newterraincreative.com>` |
+| `REPLY_TO` | falls back to `APPLY_TO`. Reply-to on the prospect confirmation. |
 | `BOOKING_URL` | the Google Calendar booking link |
+| `BOOKING_SYNC_LOOKBACK_DAYS` | `7` |
+| `REMINDERS_ENABLED` | unset. Phase 2 hooks only. |
 | `RESEND_API_KEY` | unset. Fallback if SendGrid is absent. |
+
+## Dormant · SMS stays off until all three exist
+
+| Variable | Notes |
+|---|---|
+| `TWILIO_ACCOUNT_SID` | All three required together. Partial configuration leaves SMS dormant rather than half-working, and `preflight.py` warns about it. |
+| `TWILIO_AUTH_TOKEN` | |
+| `TWILIO_PHONE_NUMBER` | |
+
+Configuration is only one of two gates. A lead is texted only if
+`sms_consent` is exactly `true`, which today only the Founding
+application can set. See `docs/FUNNEL-AUTOMATION.md` for the A2P 10DLC
+steps that must be completed before these are added.
 
 Confirm the required variables are registered, which prints names and
 never values:

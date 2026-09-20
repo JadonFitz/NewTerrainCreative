@@ -3,6 +3,9 @@
   "outputDirectory": ".",
   "framework": null,
   "cleanUrls": true,
+  "crons": [
+    { "path": "/api/sync-bookings", "schedule": "*/5 * * * *" }
+  ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

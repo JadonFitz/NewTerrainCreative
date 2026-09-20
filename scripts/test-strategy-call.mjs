@@ -56,6 +56,13 @@ const post = async (body) => {
 const since = (n) => calls.slice(n);
 const hit = (list, frag) => list.filter((c) => c.url.includes(frag));
 const inserts = (list, frag) => hit(list, frag).filter((c) => c.method === 'POST');
+
+/* Internal notification and prospect confirmation are told apart by
+   recipient, not by counting. */
+const INTERNAL_INBOX = 'business@newterraincreative.com';
+const recipient = (c) => c.body?.personalizations?.[0]?.to?.[0]?.email;
+const mailTo = (list, addr) => hit(list, 'sendgrid.com').filter((c) => recipient(c) === addr);
+const mailBody = (c) => JSON.stringify(c?.body?.content || []);
 let failures = 0;
 function check(label, cond, detail = '') {
   console.log(`  ${cond ? '\x1b[32m✓\x1b[0m' : '\x1b[31m✗\x1b[0m'} ${label}${detail ? ` · ${detail}` : ''}`);
@@ -91,7 +98,36 @@ check('stores one internal lead event', internal?.event_name === 'lead');
 check('internal event belongs to paid_retainer', internal?.funnel === 'paid_retainer');
 check('links the anonymous session to the lead',
   hit(made, '/funnel_events').some((c) => c.method === 'PATCH'));
-check('sends one notification', hit(made, 'sendgrid.com').length === 1);
+check('sends exactly one internal notification', mailTo(made, INTERNAL_INBOX).length === 1);
+check('internal notification replies to the enquirer',
+  mailTo(made, INTERNAL_INBOX)[0]?.body?.reply_to?.email === VALID.email);
+
+/* ── immediate booking · the point of this change ───────────────────── */
+console.log('\n\x1b[1mIMMEDIATE BOOKING\x1b[0m');
+check('response returns a booking url', Boolean(res.payload.bookingUrl), res.payload.bookingUrl);
+check('booking url is the Google scheduler',
+  String(res.payload.bookingUrl).includes('calendar.app.google'));
+const confirm = mailTo(made, VALID.email);
+check('sends exactly one confirmation to the prospect', confirm.length === 1, `${confirm.length} sent`);
+check('response reports the confirmation honestly', res.payload.captured?.confirmed === true);
+check('confirmation subject names the strategy call',
+  /strategy call/i.test(confirm[0]?.body?.subject || ''), confirm[0]?.body?.subject);
+check('confirmation greets them by first name', mailBody(confirm[0]).includes('Hi Test'));
+check('confirmation carries the same booking link',
+  mailBody(confirm[0]).includes('calendar.app.google'));
+check('confirmation lists what to bring',
+  /spending|worth to you|already tried/i.test(mailBody(confirm[0])));
+check('confirmation replies to New Terrain Creative',
+  confirm[0]?.body?.reply_to?.email === INTERNAL_INBOX, confirm[0]?.body?.reply_to?.email);
+check('confirmation ships a plain-text alternative',
+  (confirm[0]?.body?.content || []).some((p) => p.type === 'text/plain' && p.value.includes('calendar.app.google')));
+
+/* A booking link is not a booking. Nothing on this path may emit
+   Schedule: only /api/sync-bookings does, from a verified appointment. */
+check('exposing the calendar fires no Schedule conversion',
+  hit(made, 'facebook.com').every((c) => c.body?.data?.[0]?.event_name !== 'Schedule'));
+
+console.log('\n\x1b[1mCONVERSION\x1b[0m');
 const capi = hit(made, 'facebook.com')[0]?.body?.data?.[0];
 check('fires Lead', capi?.event_name === 'Lead', capi?.event_name);
 check('never fires Schedule', capi?.event_name !== 'Schedule');
@@ -180,6 +216,32 @@ check('hostile slug cannot become an offer name', r2.meta === 'paid_retainer', r
 
 r2 = await offerOf('AD-SPRINT');
 check('resolution is case-insensitive', ['ad_sprint', 'paid_retainer'].includes(r2.meta), r2.meta);
+
+/* ══════════════════════════════════════════════════════════════════════
+   THE PAGE · the booking link must arrive at runtime, not in the source
+   ──────────────────────────────────────────────────────────────────────
+   scripts/preflight.py fails the build if the scheduler URL appears in
+   any page but apply.html. That guard is the reason the calendar sits
+   behind a completed form, so this implementation had to satisfy it
+   rather than have it relaxed. Asserted here too, next to the feature,
+   so the reason survives someone reading only this file.
+   ══════════════════════════════════════════════════════════════════════ */
+console.log('\n\x1b[1mPAGE SOURCE\x1b[0m');
+const { readFileSync } = await import('node:fs');
+const page = readFileSync(new URL('../strategy-call.html', import.meta.url), 'utf8');
+
+check('no hardcoded scheduler URL in strategy-call.html',
+  !page.includes('calendar.app.google'));
+check('the booking anchor exists with no href to hardcode',
+  /id="book-link"/.test(page) && !/id="book-link"[^>]*href=/.test(page));
+check('the href is assigned from the API response',
+  /getElementById\('book-link'\)\.href\s*=\s*url/.test(page));
+check('a visible booking button remains in the success state',
+  /id="done-booking"/.test(page) && /id="book-link"/.test(page));
+check('there is a fallback state when no link comes back',
+  /id="done-nolink"/.test(page));
+check('the page no longer promises an email it does not send',
+  !/reply to the confirmation email/i.test(page));
 
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · paid-retainer event semantics and capture integrity hold'

@@ -54,6 +54,15 @@ const hit = (list, frag) => list.filter((c) => c.url.includes(frag));
 const inserts = (list, frag) => hit(list, frag).filter((c) => c.method === 'POST');
 const patches = (list, frag) => hit(list, frag).filter((c) => c.method === 'PATCH');
 
+/* Two different emails now leave this handler. They are told apart by
+   recipient, not by counting: the internal notification goes to the
+   business inbox, the confirmation goes to the applicant. Asserting on
+   the count alone would pass if both went to the wrong place. */
+const INTERNAL_INBOX = 'business@newterraincreative.com';
+const recipient = (c) => c.body?.personalizations?.[0]?.to?.[0]?.email;
+const mailTo = (list, addr) => hit(list, 'sendgrid.com').filter((c) => recipient(c) === addr);
+const mailBody = (c) => JSON.stringify(c?.body?.content || []);
+
 let failures = 0;
 const check = (label, cond, detail = '') => {
   console.log(`  ${cond ? '\x1b[32m✓\x1b[0m' : '\x1b[31m✗\x1b[0m'} ${label}${detail ? ' · ' + detail : ''}`);
@@ -120,7 +129,28 @@ check('publicity opt-in is separate', leadRow?.publicity_optin === true);
 const funnelEvent = inserts(made, '/funnel_events')[0]?.body;
 check('stores submit_application internally', funnelEvent?.event_name === 'submit_application', funnelEvent?.event_name);
 check('links prior anonymous session events after submission', patches(made, '/funnel_events').length === 1);
-check('sends one notification email', hit(made, 'sendgrid.com').length === 1);
+check('sends exactly one internal notification', mailTo(made, INTERNAL_INBOX).length === 1);
+check('internal notification replies to the applicant',
+  mailTo(made, INTERNAL_INBOX)[0]?.body?.reply_to?.email === 'applicant@example.invalid');
+
+/* ── the applicant's own confirmation ───────────────────────────────── */
+const confirm = mailTo(made, 'applicant@example.invalid');
+check('sends exactly one confirmation to the applicant', confirm.length === 1, `${confirm.length} sent`);
+check('response reports the confirmation honestly', res.payload.captured?.confirmed === true);
+check('confirmation subject names the call',
+  /strategy call/i.test(confirm[0]?.body?.subject || ''), confirm[0]?.body?.subject);
+check('confirmation greets them by first name', mailBody(confirm[0]).includes('Hi Test'));
+check('confirmation carries the booking link',
+  mailBody(confirm[0]).includes('calendar.app.google'));
+check('confirmation says what to bring',
+  /what a customer is worth|worth to you/i.test(mailBody(confirm[0])));
+check('confirmation replies to New Terrain Creative, not the applicant',
+  confirm[0]?.body?.reply_to?.email === INTERNAL_INBOX, confirm[0]?.body?.reply_to?.email);
+check('confirmation ships a plain-text alternative',
+  (confirm[0]?.body?.content || []).some((p) => p.type === 'text/plain' && p.value.length > 40));
+check('confirmation does not invent new offer terms',
+  !/guarantee|refund|free month/i.test(mailBody(confirm[0])));
+
 const capi = hit(made, 'facebook.com')[0]?.body?.data?.[0];
 check('fires SubmitApplication, not Lead', capi?.event_name === 'SubmitApplication', capi?.event_name);
 check('offer + form_type are on the event',
@@ -137,15 +167,45 @@ made = since(n);
 check('still inserts exactly one new lead', inserts(made, '/leads').length === 1);
 check('cannot patch an existing lead', patches(made, '/leads').length === 0);
 
-console.log('\n\x1b[1mDECLINES · no personal data retained\x1b[0m');
+console.log('\n\x1b[1mDECLINES · no personal data retained, no booking offered\x1b[0m');
 n = calls.length;
 res = await post({ ...STEP_ONE, budget: 'No' });
 check('budget decline returns a reason', res.payload.qualified === false && Boolean(res.payload.reason));
 check('budget decline causes no outbound calls', since(n).length === 0);
+check('budget decline never exposes a booking url', !res.payload.bookingUrl);
 n = calls.length;
 res = await post({ ...STEP_ONE, la: 'No' });
 check('geography decline returns a reason', res.payload.qualified === false && Boolean(res.payload.reason));
 check('geography decline causes no outbound calls', since(n).length === 0);
+check('geography decline never exposes a booking url', !res.payload.bookingUrl);
+
+/* A decline at step TWO takes the same path: the gates are re-evaluated
+   server side from the resubmitted step-one answers, so a browser that
+   lied about passing step one still gets nothing. */
+n = calls.length;
+res = await post({ ...STEP_ONE, ...STEP_TWO, event_id: 'evt-declined-2', budget: 'No' });
+made = since(n);
+check('step two decline still returns a reason', res.payload.qualified === false);
+check('step two decline never exposes a booking url', !res.payload.bookingUrl);
+check('step two decline emails the applicant nothing',
+  mailTo(made, 'applicant@example.invalid').length === 0);
+check('step two decline stores nothing', inserts(made, '/leads').length === 0);
+check('step two decline fires no conversion', hit(made, 'facebook.com').length === 0);
+
+console.log('\n\x1b[1mSMS CONSENT · captured, never acted on here\x1b[0m');
+n = calls.length;
+res = await post({ ...STEP_ONE, ...STEP_TWO, event_id: 'evt-sms-yes', sms_consent: 'yes' });
+made = since(n);
+check('sms consent is stored as a boolean true',
+  inserts(made, '/leads')[0]?.body?.sms_consent === true);
+check('consent alone sends no text at submission time',
+  hit(made, 'twilio.com').length === 0);
+n = calls.length;
+res = await post({ ...STEP_ONE, ...STEP_TWO, event_id: 'evt-sms-no' });
+made = since(n);
+check('absent consent is stored as false, not omitted',
+  inserts(made, '/leads')[0]?.body?.sms_consent === false);
+check('no consent means no Twilio call', hit(made, 'twilio.com').length === 0);
 
 console.log('\n\x1b[1mVALIDATION\x1b[0m');
 res = await post({ ...STEP_ONE, industry: undefined });

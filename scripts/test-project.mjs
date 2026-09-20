@@ -63,6 +63,38 @@ check('authority persists', row?.authority === 'I do');
 check('attribution persists', row?.utm_campaign === 'sig-01');
 check('clean enquiry stored as qualified', row?.status === 'qualified', row?.status);
 
+/* ══════════════════════════════════════════════════════════════════════
+   CLEAN FIT · books immediately, and calls it a PROJECT call
+   ──────────────────────────────────────────────────────────────────────
+   Signature Work is a commercial, documentary or brand film. Framing it
+   as the retainer's "strategy call" is the mismatch this endpoint was
+   built to avoid, so the wording is asserted, not just the link.
+   ══════════════════════════════════════════════════════════════════════ */
+console.log('\n\x1b[1mCLEAN FIT · immediate project call\x1b[0m');
+const INTERNAL_INBOX = 'business@newterraincreative.com';
+const recipient = (c) => c.body?.personalizations?.[0]?.to?.[0]?.email;
+const mailTo = (list, addr) => hit(list, 'sendgrid.com').filter((c) => recipient(c) === addr);
+const mailBody = (c) => JSON.stringify(c?.body?.content || []);
+
+check('clean fit returns a booking url', Boolean(r.payload.bookingUrl), r.payload.bookingUrl);
+check('sends exactly one internal notification', mailTo(made, INTERNAL_INBOX).length === 1);
+const confirm = mailTo(made, VALID.email);
+check('sends exactly one confirmation to the enquirer', confirm.length === 1, `${confirm.length} sent`);
+check('response reports the confirmation honestly', r.payload.captured?.confirmed === true);
+check('confirmation calls it a PROJECT call',
+  /project call/i.test(confirm[0]?.body?.subject || ''), confirm[0]?.body?.subject);
+check('confirmation never calls it a strategy call',
+  !/strategy call/i.test(confirm[0]?.body?.subject + mailBody(confirm[0])));
+check('CTA is the project call, not "pick a time"',
+  /Book the project call/i.test(mailBody(confirm[0])));
+check('what to bring is scope, not ad spend',
+  /finished piece|deadline|references/i.test(mailBody(confirm[0]))
+  && !/ad spend|what you are spending/i.test(mailBody(confirm[0])));
+check('confirmation carries the booking link',
+  mailBody(confirm[0]).includes('calendar.app.google'));
+check('confirmation replies to New Terrain Creative',
+  confirm[0]?.body?.reply_to?.email === INTERNAL_INBOX);
+
 console.log('\n\x1b[1mEVENTS\x1b[0m');
 const fe = inserts(made, '/funnel_events')[0]?.body;
 check("funnel event is 'lead'", fe?.event_name === 'lead', fe?.event_name);
@@ -89,6 +121,16 @@ check("stored as 'new', not declined", flagged?.status === 'new', flagged?.statu
 check('reasons recorded for the call', Boolean(flagged?.decline_reason));
 check('still fires Lead', hit(since(n), 'facebook.com').length === 1);
 
+/* A flagged enquiry is not rejected, but it does not skip the scoping
+   conversation either. No link in the response and none in the email. */
+check('flagged enquiry gets NO booking url', !r.payload.bookingUrl, r.payload.bookingUrl);
+const flaggedMail = mailTo(since(n), VALID.email);
+check('flagged enquiry still gets a receipt email', flaggedMail.length === 1);
+check('flagged receipt contains no booking link',
+  !mailBody(flaggedMail[0]).includes('calendar.app.google'));
+check('flagged receipt does not promise a call time',
+  /within one business day/i.test(mailBody(flaggedMail[0])));
+
 console.log('\n\x1b[1mVALIDATION\x1b[0m');
 for (const f of ['business', 'project_type', 'project_scope', 'start', 'budget_band', 'authority']) {
   r = await post({ ...VALID, [f]: undefined });
@@ -108,7 +150,8 @@ n = calls.length;
 r = await post(VALID);
 check('still returns ok', r.payload.ok === true);
 check('reports stored:false honestly', r.payload.captured?.stored === false);
-check('still emails, enquiry not lost', hit(since(n), 'sendgrid.com').length === 1);
+check('still notifies us, enquiry not lost', mailTo(since(n), INTERNAL_INBOX).length === 1);
+check('enquirer still gets their confirmation', mailTo(since(n), VALID.email).length === 1);
 
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -146,6 +189,23 @@ check('hostile slug cannot become an offer name', r2.meta === 'signature_work', 
 
 r2 = await offerOf('AD-SPRINT');
 check('resolution is case-insensitive', ['ad_sprint', 'signature_work'].includes(r2.meta), r2.meta);
+
+console.log('\n\x1b[1mPAGE SOURCE\x1b[0m');
+const { readFileSync } = await import('node:fs');
+const page = readFileSync(new URL('../project.html', import.meta.url), 'utf8');
+check('no hardcoded scheduler URL in project.html',
+  !page.includes('calendar.app.google'));
+check('the href is assigned from the API response',
+  /getElementById\('book-link'\)\.href\s*=\s*url/.test(page));
+check('both success shapes exist',
+  /id="done-booking"/.test(page) && /id="done-nolink"/.test(page));
+/* Visible copy only. HTML comments explain WHY this is not a strategy
+   call, so matching the raw source would fail on its own rationale. */
+const visible = page.replace(/<!--[\s\S]*?-->/g, '');
+check('the success copy says project call, not strategy call',
+  /project call/i.test(visible) && !/strategy call/i.test(visible));
+check('the page no longer promises an email it does not send',
+  !/reply to the confirmation email/i.test(page));
 
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · the third funnel stays separate from the other two'

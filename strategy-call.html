@@ -251,19 +251,35 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div class="q">
         <button class="btn" type="submit" id="submit">Request the call</button>
         <p class="err" id="err" hidden></p>
-        <p class="fine">We read every one. Expect a reply within one business day with times, or an honest note explaining why we do not think we are the right fit.</p>
+        <p class="fine">We read every one. You will get the calendar on the next screen and a confirmation by email, so you can book without waiting on us.</p>
       </div>
     </form>
   </div>
 
-  <!-- ── RECEIVED ── -->
+  <!-- ── RECEIVED ──
+       Two shapes. When the API hands back a bookingUrl the calendar is
+       shown immediately; the href is assigned at runtime and the literal
+       scheduler URL appears nowhere in this file, which is what keeps
+       scripts/preflight.py's "no booking link outside apply.html" guard
+       satisfied rather than weakened. If the API returns no link, the
+       fallback copy is shown instead, so this page never promises a
+       calendar it cannot open. -->
   <div class="state" id="state-done">
     <div class="eyebrow">Received</div>
-    <h1>We'll be in touch <em>within a day.</em></h1>
-    <p>Thanks. A real person reads these, and you will get either a few times to choose from or a straight note explaining why we are not the right fit.</p>
-    <p>If you want to move faster, reply to the confirmation email with your availability and we will work around it.</p>
-    <p>In the meantime, the work speaks for itself better than we can.</p>
-    <a class="btn" href="/grow">Back to the work</a>
+
+    <div id="done-booking" hidden>
+      <h1>Now pick a time <em>that suits you.</em></h1>
+      <p>Thanks, we have got everything. Rather than trade emails about times, the calendar is below. A confirmation with the same link is on its way to your inbox.</p>
+      <p>Bring your current numbers if you have them: what you are spending, what a customer is worth, and what you have already tried. The more concrete that is, the more useful the thirty minutes is for both of us.</p>
+      <a class="btn" id="book-link" target="_blank" rel="noopener">Pick a time</a>
+    </div>
+
+    <div id="done-nolink" hidden>
+      <h1>We'll be in touch <em>within a day.</em></h1>
+      <p>Thanks. A real person reads these, and you will get either a few times to choose from or a straight note explaining why we are not the right fit.</p>
+      <p>In the meantime, the work speaks for itself better than we can.</p>
+      <a class="btn" href="/grow">Back to the work</a>
+    </div>
   </div>
 
 </div>
@@ -328,9 +344,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       body: JSON.stringify(data)
     }).then(function (r) {
       return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
-    }).then(function () {
+    }).then(function (res) {
       // Lead, not Schedule. Schedule fires only when an appointment is
       // genuinely confirmed by the scheduler, not when a form is sent.
+      // Opening the calendar below is NOT a booking, so nothing here
+      // fires Schedule: /api/sync-bookings does, from the appointment.
       // The offer and form_type params are what the two funnels are
       // separated on in Meta.
       if (typeof fbq === 'function') {
@@ -340,6 +358,20 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           content_name: 'Strategy call request'
         }, { eventID: data.event_id });
       }
+
+      // The scheduler URL comes from the server, never from this file.
+      var url = res && res.bookingUrl;
+      var withLink = document.getElementById('done-booking');
+      var without = document.getElementById('done-nolink');
+      if (url) {
+        document.getElementById('book-link').href = url;
+        withLink.hidden = false;
+        without.hidden = true;
+      } else {
+        withLink.hidden = true;
+        without.hidden = false;
+      }
+
       show('state-done');
     }).catch(function () {
       err.textContent = 'Something went wrong sending that. Email business@newterraincreative.com and we will pick it up from there.';

@@ -214,14 +214,34 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </form>
   </div>
 
-  <!-- ── RECEIVED ── -->
+  <!-- ── RECEIVED ──
+       The server decides which of these two shows. A clean-fit enquiry
+       gets a bookingUrl back and sees the calendar; a flagged one does
+       not, because "no timeline yet" or a budget below a typical project
+       means the next conversation is about scope.
+
+       A PROJECT CALL, never a strategy call. Signature Work is a
+       commercial, documentary or brand film, and the retainer framing is
+       the mismatch this whole page exists to avoid.
+
+       The scheduler URL is assigned at runtime and appears nowhere in
+       this file, which keeps preflight's booking-link guard intact. -->
   <div class="state" id="state-done">
     <div class="eyebrow">Received</div>
-    <h1>We'll be in touch <em>within a day.</em></h1>
-    <p>Thanks. A real person reads these, and you will get either a few times to choose from or a straight note explaining why we are not the right fit.</p>
-    <p>If you want to move faster, reply to the confirmation email with your availability and we will work around it.</p>
-    <p>In the meantime, the work speaks for itself better than we can.</p>
-    <a class="btn" href="/grow">Back to the work</a>
+
+    <div id="done-booking" hidden>
+      <h1>Let's talk <em>about the work.</em></h1>
+      <p>Thanks, we have got the details. The next step is a short project call about scope, timing and what the finished piece actually has to do. A confirmation with the same link is on its way to your inbox.</p>
+      <p>Worth having to hand: what the piece needs to achieve and who has to see it, any date it has to be ready for, and references or previous work worth watching first.</p>
+      <a class="btn" id="book-link" target="_blank" rel="noopener">Book the project call</a>
+    </div>
+
+    <div id="done-nolink" hidden>
+      <h1>We'll be in touch <em>within a day.</em></h1>
+      <p>Thanks. A real person reads these, and you will get either a few times to choose from or a straight note explaining why we are not the right studio for it.</p>
+      <p>In the meantime, the work speaks for itself better than we can.</p>
+      <a class="btn" href="/grow">Back to the work</a>
+    </div>
   </div>
 
 </div>
@@ -378,11 +398,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       body: JSON.stringify(data)
     }).then(function (r) {
       return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
-    }).then(function () {
+    }).then(function (res) {
       // Lead, not Schedule. Schedule fires only when an appointment is
-      // genuinely confirmed by the scheduler, not when a form is sent.
+      // genuinely confirmed by the scheduler, not when a form is sent,
+      // and not when the calendar below is opened. /api/sync-bookings is
+      // the only thing that emits it.
       // The offer and form_type params are what the two funnels are
-      // separated on in Meta.
+      // separated on in Meta, and neither changes here.
       if (typeof fbq === 'function') {
         fbq('track', 'Lead', {
           offer: offerId,
@@ -390,6 +412,20 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           content_name: 'Signature Work enquiry'
         }, { eventID: data.event_id });
       }
+
+      // Present only for a clean-fit enquiry. The server decides.
+      var url = res && res.bookingUrl;
+      var withLink = document.getElementById('done-booking');
+      var without = document.getElementById('done-nolink');
+      if (url) {
+        document.getElementById('book-link').href = url;
+        withLink.hidden = false;
+        without.hidden = true;
+      } else {
+        withLink.hidden = true;
+        without.hidden = false;
+      }
+
       show('state-done');
     }).catch(function () {
       err.textContent = 'Something went wrong sending that. Email business@newterraincreative.com and we will pick it up from there.';

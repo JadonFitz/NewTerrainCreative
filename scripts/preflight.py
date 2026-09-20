@@ -104,8 +104,20 @@ ok(last) if r.returncode == 0 else bad(r.stdout.strip() + r.stderr.strip())
 REQUIRED = {
     'SUPABASE_URL': 'database, suffix-matched so a prefix is fine',
     'SUPABASE_SERVICE_ROLE_KEY': 'database, server only',
-    'SENDGRID_API_KEY': 'application and enquiry email',
+    'SENDGRID_API_KEY': 'internal notification and prospect confirmation',
     'META_CAPI_TOKEN': 'server-side conversions',
+    'CRON_SECRET': 'booking sync auth · without it /api/sync-bookings refuses to run',
+    'GOOGLE_SERVICE_ACCOUNT_JSON': 'booking sync · reads the booking calendar',
+    'GOOGLE_CALENDAR_ID': 'booking sync · the calendar shared with the service account',
+}
+
+# Present-but-empty is not configured. Named here so activating SMS is a
+# deliberate act: partial Twilio config leaves the path dormant rather
+# than half-working.
+DORMANT = {
+    'TWILIO_ACCOUNT_SID': 'SMS stays dormant until all three exist',
+    'TWILIO_AUTH_TOKEN': '',
+    'TWILIO_PHONE_NUMBER': '',
 }
 
 head('3 · Configuration (this shell only, not Vercel)')
@@ -124,6 +136,18 @@ for name, why in REQUIRED.items():
         ok(f'{name} present')
     else:
         warn(f'{name} absent here · {why}')
+
+# Twilio is all-or-nothing. Some-but-not-all is the dangerous state:
+# it reads as configured to a human and stays dormant to the code.
+twilio_present = [n for n in DORMANT if resolve(n)]
+if not twilio_present:
+    ok('Twilio absent · SMS is dormant, which is the intended shipping state')
+elif len(twilio_present) == len(DORMANT):
+    ok('Twilio fully configured · SMS will send to consented leads only')
+else:
+    missing = [n for n in DORMANT if n not in twilio_present]
+    warn('Twilio is PARTIALLY configured, so SMS stays dormant. Missing: '
+         + ', '.join(missing))
 
 # ── 4 · routes ────────────────────────────────────────────────────────
 head('4 · Internal links')
@@ -229,6 +253,7 @@ for test, label in (
     ('test-project.mjs', 'Signature Work enquiry'),
     ('test-tracking.mjs', 'browser attribution'),
     ('test-track-api.mjs', 'first-party event ingestion'),
+    ('test-sync-bookings.mjs', 'booking sync and Schedule integrity'),
 ):
     r = subprocess.run(['node', str(ROOT / 'scripts' / test)],
                        capture_output=True, text=True)

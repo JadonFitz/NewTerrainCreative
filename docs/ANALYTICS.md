@@ -10,7 +10,7 @@
 | `submit_application` | Founding Step 2 captured | First party + Meta `SubmitApplication` |
 | `lead` | Paid-retainer inquiry captured (`/strategy-call`) | First party + Meta `Lead`, `offer: paid_retainer` |
 | `lead` | Signature Work enquiry captured (`/project`) | First party + Meta `Lead`, `offer: signature_work` |
-| `schedule` | An appointment was actually confirmed | **Reserved and refused.** `/api/track` returns 403. Server-side only, from an authenticated booking confirmation |
+| `schedule` | An appointment was actually confirmed | **Still reserved on `/api/track`, which returns 403.** Written only by `/api/sync-bookings` after Google Calendar confirms the appointment. First party + Meta `Schedule` |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
 
@@ -69,7 +69,9 @@ reconstruct those figures. The `funnel_performance` view then calculates:
 - Add the two native VSL files and posters, then verify the four watch-depth
   events. YouTube or Vimeo embeds require provider-specific player API wiring;
   the current watcher is intentionally for native `<video>` elements.
-- Connect the scheduler or its webhook before implementing `Schedule`.
+- Book one real appointment and confirm `Schedule` arrives once, then run the
+  sync again and confirm it does not arrive twice. See the PRE-ADS LAUNCH
+  CHECKLIST in `docs/FUNNEL-AUTOMATION.md`.
 
 
 ## The three acquisition funnels
@@ -95,3 +97,21 @@ Every call now starts with a completed form. `/book` forwards to
 link the scheduler directly is `apply.html`, as a success state shown
 after a full application. `scripts/preflight.py` fails the build if any
 other page links it.
+
+`/strategy-call` and `/project` also show the calendar after submission,
+but neither contains the scheduler URL. The API returns `bookingUrl` and
+the browser assigns the `href` at runtime, so the guard above still holds
+literally: the link cannot be reached by reading the page source, only by
+completing the form. A flagged project enquiry gets no link at all.
+
+## Booking is server-verified
+
+A booking link is not a booking. Clicking it, opening the calendar, and
+submitting a form all fire nothing. `Schedule` is emitted only by
+`/api/sync-bookings`, which polls Google Calendar with a service account
+and matches the attendee email to a lead.
+
+Idempotency is enforced twice: `bookings.calendar_event_id` is UNIQUE and
+the Meta event id is the deterministic `schedule-<calendar_event_id>`.
+Re-running the sync produces no second conversion. Full detail in
+`docs/FUNNEL-AUTOMATION.md`.

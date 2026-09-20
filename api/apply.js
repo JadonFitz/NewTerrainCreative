@@ -23,10 +23,9 @@
 
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
-
-const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
-const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
-const BOOKING_URL = process.env.BOOKING_URL || 'https://calendar.app.google/qardoZkWtaBsq2RG9';
+import {
+  sendInternalLeadNotification, sendLeadConfirmationEmail, BOOKING_URL
+} from './_messaging.js';
 
 // Step one: is this the right offer for them, and who are we talking to.
 const STEP_ONE = ['name', 'email', 'phone', 'role', 'authority',
@@ -120,51 +119,6 @@ function emailBody(d, verdict, stage) {
     ${banner}
     <table style="border-collapse:collapse;width:100%">${rows}</table>
   </div>`;
-}
-
-function parseFrom(v) {
-  const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(v);
-  return m ? { name: m[1], email: m[2] } : { name: '', email: String(v).trim() };
-}
-
-async function notify(subject, html, replyTo) {
-  const from = parseFrom(FROM);
-
-  if (process.env.SENDGRID_API_KEY) {
-    const r = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: TO }] }],
-        from: from.name ? from : { email: from.email },
-        reply_to: { email: replyTo },
-        subject,
-        content: [{ type: 'text/html', value: html }]
-      })
-    });
-    // SendGrid returns 202 with an empty body on success
-    if (!r.ok) throw new Error(`sendgrid ${r.status} ${await r.text()}`);
-    return 'sendgrid';
-  }
-
-  if (process.env.RESEND_API_KEY) {
-    const r = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ from: FROM, to: [TO], reply_to: replyTo, subject, html })
-    });
-    if (!r.ok) throw new Error(`resend ${r.status} ${await r.text()}`);
-    return 'resend';
-  }
-
-  console.warn('No SENDGRID_API_KEY or RESEND_API_KEY set — application not emailed');
-  return 'none';
 }
 
 /** Everything the leads table stores from step one. */
@@ -290,14 +244,12 @@ async function handleStepTwo(req, res, d) {
     console.warn('supabase not configured, application not persisted');
   }
 
-  let notified = false;
-  try {
-    const provider = await notify(`QUALIFIED · ${String(d.business).slice(0, 60)}`,
-                                  emailBody(d, { qualified: true }, 'complete'), String(d.email));
-    notified = provider !== 'none';
-  } catch (e) {
-    console.error('notify failed', (e && e.message) || e);
-  }
+  const internal = await sendInternalLeadNotification({
+    subject: `QUALIFIED · ${String(d.business).slice(0, 60)}`,
+    html: emailBody(d, { qualified: true }, 'complete'),
+    replyTo: String(d.email)
+  });
+  const notified = internal.sent;
 
   // Do not show a success screen or train Meta on a conversion if both
   // capture paths failed. The browser will leave the form intact for retry.
@@ -335,11 +287,33 @@ async function handleStepTwo(req, res, d) {
     }
   }
 
+  // ── the applicant's own confirmation ─────────────────────────────────
+  // Only reached on a qualified step two. A declined application returns
+  // above, before any of this, and deliberately gets no email at all:
+  // nothing is stored for a decline either, because personal data does
+  // not become a lead until the application is both complete and a fit.
+  // The browser has already given them an honest reason on screen, and
+  // a follow-up email would either repeat it or soften it.
+  //
+  // Terms are restated, not changed. $1,500 month-one media and the
+  // optional $3,500 continuation are whatever apply.html showed them.
+  const confirmation = await sendLeadConfirmationEmail({
+    email: String(d.email),
+    name: d.name,
+    subject: 'Your New Terrain Creative strategy call',
+    lede: 'Your founding application is in, and from what you have told us it looks '
+        + 'like a fit. The next step is a call, so rather than make you wait on an '
+        + 'email, here is the calendar.',
+    note: 'Nothing about the arrangement changes between now and then: the first '
+        + 'month is the application you just sent, on the terms you acknowledged.',
+    bookingUrl: BOOKING_URL
+  });
+
   return res.status(200).json({
     qualified: true,
     step: 2,
     bookingUrl: BOOKING_URL,
-    captured: { stored, notified }
+    captured: { stored, notified, confirmed: confirmation.sent }
   });
 }
 
