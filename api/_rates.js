@@ -22,9 +22,10 @@
    qualify; the guide carries the full deliverable composition to close.
 
    "Mid four figures monthly" survives as publicCapacitySignal for copy
-   that still needs one figure rather than a table, such as
-   /production-media and the video scripts. It is no longer what /grow
-   says.
+   that still needs one figure rather than a table: the homepage engage
+   card, /grow's meta description and the video scripts. It is no longer
+   what the body of /grow says. /production-media was the other consumer
+   and was retired 21 Sep 2026.
 
    NOTE: à-la-carte property and event rates are a separate product line
    and are deliberately not represented here. Do not merge them into the

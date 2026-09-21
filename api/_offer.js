@@ -15,6 +15,9 @@
    ══════════════════════════════════════════════════════════════════════ */
 
 const PAID_OFFERS = {
+  // /production-media is retired and redirects to /grow. The slug stays
+  // so any ad still carrying ?offer=production-media keeps its offer
+  // identifier on the conversion instead of silently losing it.
   'production-media': 'production_media',
   'ad-sprint': 'ad_sprint'
 };

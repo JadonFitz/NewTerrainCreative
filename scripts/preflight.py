@@ -194,7 +194,7 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
 # the moment someone adds one and forgets.
 # /call-booked is reached only by an iClosed redirect after a booking, so
 # nothing on the site should link it and nothing should index it.
-UNLISTED = ['growth-guide', 'production-media', 'call-booked']
+UNLISTED = ['growth-guide', 'call-booked']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     body = sitemap.read_text(encoding='utf-8')
@@ -210,6 +210,31 @@ for u in UNLISTED:
                if f.stem != u and f'href="/{u}"' in f.read_text(encoding='utf-8')]
     bad(f'/{u} is linked from ' + ', '.join(linkers)) if linkers \
         else ok(f'/{u} is not linked from any public page')
+
+
+# Retired pages. A page we stopped publishing must be gone from the tree
+# AND have a redirect, or an old ad lands on a 404. Checking both halves
+# together is the point: either one alone is a silent failure.
+import json as _json
+_cfg = _json.loads((ROOT / 'vercel.json').read_text(encoding='utf-8'))
+_redirects = {r['source']: r['destination'] for r in _cfg.get('redirects', [])}
+RETIRED = {'/production-media': '/grow'}
+
+for src, dest in RETIRED.items():
+    stem = src.lstrip('/')
+    if (ROOT / f'{stem}.html').exists():
+        bad(f'{src} is retired but {stem}.html is still in the tree')
+    elif _redirects.get(src) != dest:
+        bad(f'{src} is gone with no redirect to {dest} in vercel.json')
+    else:
+        ok(f'{src} redirects to {dest}')
+
+# Every redirect must land somewhere that exists, or it just moves the 404.
+for src, dest in _redirects.items():
+    target = dest.split('?')[0].lstrip('/') or 'index'
+    if not (ROOT / f'{target}.html').exists():
+        bad(f'redirect {src} points at {dest}, which is not a page')
+ok(f'{len(_redirects)} redirect(s) resolve to real pages') if _redirects else None
 
 
 # ── 5b · published claims must trace to canonical terms ───────────────

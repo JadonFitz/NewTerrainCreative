@@ -247,8 +247,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
      Reached here as:
        /apply success      -> ?offer=founding-three
-       /production-media   -> ?offer=production-media
        /grow               -> no parameter
+       ?offer=production-media -> kept although /production-media is
+         retired and now redirects to /grow. A live ad may still carry
+         the parameter, and dropping it from this map would send that
+         traffic to the default calendar with its offer identifier
+         stripped, losing the attribution rather than preserving it.
      ─────────────────────────────────────────────────────────────── */
   var SCHEDULERS = {
     'founding-three': {
@@ -256,6 +260,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
       title: 'Apply to book a Founding Three call with New Terrain Creative'
     },
+    // Retired page, retained identifier. See the note above.
     'production-media': {
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
@@ -276,10 +281,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }
   };
 
-  /* /grow links here with no ?offer=. It sells the same retainer as
-     /production-media, so it books the same event rather than showing a
-     pending panel. The two are still told apart in reporting by the
-     offer identifier on the CTAClick and by first-touch landing_page. */
+  /* /grow links here with no ?offer=, and is now the only Growth sales
+     page. It books the growth event directly rather than showing a
+     pending panel. */
   var DEFAULT_SCHEDULER = {
     ready: true,
     url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
