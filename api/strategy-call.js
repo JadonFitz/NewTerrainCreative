@@ -1,208 +1,44 @@
 /* ══════════════════════════════════════════════════════════════════════
-   POST /api/strategy-call  ·  paid retainer enquiry
+   RETIRED · 21 September 2026 · superseded by iClosed
    ──────────────────────────────────────────────────────────────────────
-   Deliberately separate from /api/apply. Different funnel, different
-   qualification, different conversion event, so the two never blur in
-   reporting.
+   /strategy-call no longer posts here. That page is now an iClosed
+   scheduler inside an NTC wrapper, and iClosed owns the qualification
+   questions, availability against the connected Google Calendar, the
+   booking, confirmations, reminders, SMS, and the scheduler-stage Meta
+   events (Potential, Qualified, Disqualified, Call Booked).
 
-   No hard gates here. The Founding Three application gates on media
-   budget and geography because the offer genuinely requires both. A
-   strategy call is a conversation: the budget band question exists so an
-   applicant can self-select, and a low band is recorded rather than
-   rejected.
+   ── Why this file still exists ───────────────────────────────────────
+   It answers 410 Gone rather than running, and it is not deleted,
+   because retiring and deleting in one step removes the fallback before
+   the replacement is proven. The full previous implementation, 208 lines
+   including the SendGrid call, the triage flags and the Lead conversion,
+   is in git history at 8df65d4 and on the branch paid-landing-cro.
+
+   To roll back:  git show 8df65d4:api/strategy-call.js > api/strategy-call.js
+   then restore strategy-call.html from the same commit.
+
+   ── Delete this file when ────────────────────────────────────────────
+   The iClosed flow has run clean in production for one week. Remove it
+   together with scripts/test-strategy-call.mjs. That is the whole list.
+
+   SENDGRID_API_KEY is NOT part of this cleanup and must not be removed
+   with it. /api/apply still depends on it, and not as a nicety: it is
+   the second capture path. api/apply.js fails a submission only when
+   Supabase AND email both fail, so removing the key would make Supabase
+   a single point of failure for a record carrying the applicant's
+   contractual acknowledgements. api/project.js uses it too.
+
+   That variable becomes removable only if /api/apply is first changed to
+   stop depending on it, which is a separate decision and not scheduled.
    ══════════════════════════════════════════════════════════════════════ */
-import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
-import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js';
-import { resolveOffer } from './_offer.js';
-
-const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
-const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
-
-const REQUIRED = ['name', 'email', 'phone', 'business', 'industry', 'authority',
-                  'offer', 'value', 'marketing', 'ad_spend', 'budget_band',
-                  'start', 'objective', 'response'];
-
-const LABELS = {
-  name: 'Name', email: 'Email', phone: 'Phone', business: 'Business',
-  industry: 'Industry', authority: 'Decision authority',
-  offer: 'What they sell', value: 'Customer value',
-  marketing: 'Current marketing', ad_spend: 'Current ad spend',
-  budget_band: 'Monthly budget available', start: 'Desired start',
-  objective: '90 day objective', response: 'Lead response speed',
-  utm_source: 'Source', utm_medium: 'Medium', utm_campaign: 'Campaign',
-  utm_content: 'Ad / content', fbclid: 'Meta click id',
-  landing_page: 'Landed on', referrer: 'Referrer'
-};
-
-// Not a gate. A hint for whoever reads the email, so the call is prepared for.
-const LOW_BANDS = new Set(['Under $2,500', 'Not sure yet']);
-const SOFT_SIGNALS = new Set(['Just researching', 'Researching', 'Honestly inconsistent']);
-
-const esc = (s) => String(s == null ? '' : s)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-function triage(d) {
-  const flags = [];
-  if (LOW_BANDS.has(d.budget_band)) flags.push('budget below typical starting point');
-  if (SOFT_SIGNALS.has(d.start)) flags.push('not ready to start');
-  if (SOFT_SIGNALS.has(d.response)) flags.push('inconsistent lead follow-up');
-  if (d.authority === 'Researching') flags.push('not the decision maker');
-  if (d.industry === 'Other') flags.push('outside the four priority industries');
-  return flags;
-}
-
-function emailBody(d, flags) {
-  const rows = [...REQUIRED, 'utm_source', 'utm_medium', 'utm_campaign',
-                'utm_content', 'fbclid', 'landing_page', 'referrer']
-    .filter((k) => d[k])
-    .map((k) => `<tr>
-        <td style="padding:7px 14px 7px 0;color:#6B6560;font-size:12px;white-space:nowrap;vertical-align:top">${esc(LABELS[k] || k)}</td>
-        <td style="padding:7px 0;color:#16130F;font-size:13px">${esc(d[k]).replace(/\n/g, '<br>')}</td>
-      </tr>`).join('');
-
-  const banner = flags.length
-    ? `<p style="margin:0 0 18px;padding:11px 15px;background:#FBF6EC;border-left:3px solid #8A6A28;color:#5C4718;font-size:13px"><b>Worth reading before the call:</b> ${esc(flags.join(' · '))}</p>`
-    : '<p style="margin:0 0 18px;padding:11px 15px;background:#EEF4EF;border-left:3px solid #3F6B4F;color:#2C4A38;font-size:13px"><b>Clean fit</b> on every qualifying answer.</p>';
-
-  return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px">
-    <p style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8A6A28;margin:0 0 14px">Strategy call request</p>
-    ${banner}
-    <table style="border-collapse:collapse;width:100%">${rows}</table>
-  </div>`;
-}
-
-async function notify(subject, html, replyTo) {
-  const sg = process.env.SENDGRID_API_KEY;
-  if (sg) {
-    const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(FROM);
-    const from = m ? { name: m[1], email: m[2] } : { email: FROM.trim() };
-    const r = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${sg}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: TO }] }],
-        from, reply_to: { email: replyTo }, subject,
-        content: [{ type: 'text/html', value: html }]
-      })
-    });
-    if (!r.ok) throw new Error(`sendgrid ${r.status} ${await r.text()}`);
-    return 'sendgrid';
-  }
-  console.warn('no SENDGRID_API_KEY — strategy call request not emailed');
-  return 'none';
-}
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  // Logged rather than silent. If this fires in production something is
+  // still pointing here and we want to see it, not absorb it.
+  console.warn('strategy-call: retired endpoint called', req.method);
 
-  let d = req.body;
-  if (typeof d === 'string') { try { d = JSON.parse(d); } catch { d = null; } }
-  if (!d || typeof d !== 'object') return res.status(400).json({ error: 'Bad request' });
-  if (d.company_website_confirm) return res.status(200).json({ ok: true });
-
-  const missing = REQUIRED.filter((k) => !d[k] || !String(d[k]).trim());
-  if (missing.length) return res.status(400).json({ error: 'Missing fields', missing });
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(d.email))) {
-    return res.status(400).json({ error: 'Invalid email' });
-  }
-
-  // /grow sends visitors here with no ?offer=, so this stays paid_retainer.
-  // /production-media sends ?offer=production-media, which separates the
-  // ad-driven landing page from the organic credibility page in reporting
-  // while both sell the same retainer. Allowlisted: the raw query string
-  // never becomes an offer name.
-  const offerId = resolveOffer(d.offer_id, 'paid_retainer');
-
-  const flags = triage(d);
-
-  // ── 1 · durable record ────────────────────────────────────────────────
-  let leadId = null;
-  let stored = false;
-  if (dbReady) {
-    try {
-      const row = await insert('leads', {
-        form_type: 'strategy_call',
-        name: d.name, email: d.email, phone: d.phone, business: d.business,
-        industry: d.industry, authority: d.authority,
-        sell: d.offer, customer_value: d.value, current_marketing: d.marketing,
-        spend: d.ad_spend, budget_band: d.budget_band,
-        desired_start: d.start, goal: d.objective, lead_response: d.response,
-        status: flags.length ? 'new' : 'qualified',
-        decline_reason: flags.length ? flags.join('; ') : undefined,
-        session_id: d.session_id,
-        utm_source: d.utm_source, utm_medium: d.utm_medium,
-        utm_campaign: d.utm_campaign, utm_content: d.utm_content,
-        utm_term: d.utm_term, fbclid: d.fbclid, fbp: d.fbp, fbc: d.fbc,
-        landing_page: d.landing_page, referrer: d.referrer,
-        lead_event_id: d.event_id
-      }, { returning: true });
-      leadId = row && row.id;
-      stored = Boolean(leadId);
-    } catch (e) {
-      console.error('strategy call store failed, continuing', (e && e.message) || e);
-    }
-    if (leadId && d.session_id) {
-      try { await linkSessionToLead(d.session_id, leadId); } catch (e) {
-        console.error('session link failed', (e && e.message) || e);
-      }
-    }
-    if (leadId && d.event_id) {
-      try {
-        await insert('funnel_events', {
-          event_id: d.event_id, event_name: 'lead',
-          session_id: d.session_id, lead_id: leadId, page_url: d.page,
-          funnel: offerId,
-          metadata: { campaign: d.utm_campaign, ad: d.utm_content, offer: offerId }
-        }, { ignoreConflict: true });
-      } catch (e) { console.error('lead event failed', (e && e.message) || e); }
-    }
-  }
-
-  // ── 2 · notify ────────────────────────────────────────────────────────
-  let notified = false;
-  try {
-    const provider = await notify(`Strategy call · ${String(d.business).slice(0, 60)}`,
-                                  emailBody(d, flags), String(d.email));
-    notified = provider !== 'none';
-  } catch (e) {
-    console.error('notify failed', (e && e.message) || e);
-  }
-
-  if (!stored && !notified) {
-    return res.status(503).json({
-      error: 'We could not save the request. Please try again or email business@newterraincreative.com.'
-    });
-  }
-
-  // ── 3 · Meta, server side, deduplicated against the browser Lead ──
-  if (d.event_id) {
-    try {
-      const { ip, userAgent } = requestIdentity(req);
-      const [firstName, ...rest] = String(d.name || '').trim().split(/\s+/);
-      console.log('capi Lead', await sendMetaConversion({
-        eventName: 'Lead',
-        eventId: String(d.event_id),
-        eventSourceUrl: d.page || 'https://www.newterraincreative.com/strategy-call',
-        userData: buildUserData({
-          email: d.email, phone: d.phone, firstName,
-          lastName: rest.join(' ') || undefined,
-          externalId: leadId || d.session_id || d.email,
-          ip, userAgent, fbp: d.fbp, fbc: d.fbc
-        }),
-        customData: {
-          offer: offerId,
-          form_type: 'strategy_call',
-          content_name: 'Strategy call request',
-          content_category: d.industry
-        }
-      }));
-    } catch (e) {
-      console.error('capi Lead failed', (e && e.message) || e);
-    }
-  }
-
-  return res.status(200).json({ ok: true, captured: { stored, notified } });
+  res.setHeader('Allow', '');
+  return res.status(410).json({
+    error: 'This endpoint has been retired. Bookings are handled at /strategy-call.'
+  });
 }

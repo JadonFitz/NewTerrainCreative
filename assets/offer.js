@@ -131,6 +131,12 @@
     // hand after qualification. These deliverable counts are the approved
     // package baselines; a proposal confirms fit and any custom scope.
     retainer: {
+      /* Kept for copy that still needs a single figure rather than the
+         table: /production-media, the video scripts, a reply to "roughly
+         what does it cost". It is NO LONGER what /grow publishes.
+         Changed 21 Sep 2026: /grow now renders publicGuideTiers, the
+         same object /growth-guide reads. One definition, two depths.
+         The page qualifies, the guide closes. */
       publicCapacitySignal: 'mid four figures monthly',
       minimumTermMonths: 3,
       publicGuideTiers: [
@@ -186,6 +192,28 @@
 
     // ── One-time products ─────────────────────────────────────────────
     products: {
+      /* Sprint packages are sold on OUTPUT, not on hours. No shoot
+         duration is published for either, deliberately.
+
+         A simple Sprint is often done in about two hours; saying
+         "half-day" or "full day" would commit us to a block we do not
+         need and would read as the deliverable rather than the ads. If a
+         project genuinely needs a long directed day, that is Signature
+         Work and priced as a project.
+
+         This replaced a duration split that was briefly specified and
+         then withdrawn. Before that, index.html and sprint.html had
+         drifted apart, one saying half-day for The Eight and the other a
+         full day, because duration lived only in page copy and nothing
+         checked it. scripts/check-claims.py now fails if a duration
+         claim appears on /sprint at all.
+
+         The ladder still reads correctly without hours, because the
+         packages differ on what you walk away with:
+           $2,500  one-off,  8 creatives     The Eight
+           $3,500  monthly, 16 pieces        The Anchor
+           $4,500  one-off, 15 creatives     The Fifteen
+           $6,500  monthly, 30 pieces        Growth Partner */
       adSprintEight:   { name: 'The Eight',   price: 2500, creatives: 8 },
       adSprintFifteen: { name: 'The Fifteen', price: 4500, creatives: 15 },
       leadFoundation:  { name: 'Lead Foundation', price: 2500 }

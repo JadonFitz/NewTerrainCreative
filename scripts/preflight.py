@@ -104,7 +104,7 @@ ok(last) if r.returncode == 0 else bad(r.stdout.strip() + r.stderr.strip())
 REQUIRED = {
     'SUPABASE_URL': 'database, suffix-matched so a prefix is fine',
     'SUPABASE_SERVICE_ROLE_KEY': 'database, server only',
-    'SENDGRID_API_KEY': 'application and enquiry email',
+    'SENDGRID_API_KEY': 'the /apply second capture path, and project enquiries',
     'META_CAPI_TOKEN': 'server-side conversions',
 }
 
@@ -192,7 +192,9 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
 
 # Unlisted pages must stay unlisted. There is no sitemap today; this fires
 # the moment someone adds one and forgets.
-UNLISTED = ['growth-guide', 'production-media']
+# /call-booked is reached only by an iClosed redirect after a booking, so
+# nothing on the site should link it and nothing should index it.
+UNLISTED = ['growth-guide', 'production-media', 'call-booked']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     body = sitemap.read_text(encoding='utf-8')
@@ -225,7 +227,7 @@ else:
 head('6 · Acquisition handlers')
 for test, label in (
     ('test-apply.mjs', 'Founding application'),
-    ('test-strategy-call.mjs', 'paid-retainer inquiry'),
+    ('test-strategy-call.mjs', 'strategy-call retirement'),
     ('test-project.mjs', 'Signature Work enquiry'),
     ('test-tracking.mjs', 'browser attribution'),
     ('test-track-api.mjs', 'first-party event ingestion'),

@@ -121,150 +121,66 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   @media (max-width:620px) { .wrap { padding:48px 20px 80px; } .bar { padding:20px; } }
   @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+
+  /* ── iClosed scheduler slot ── */
+  .scheduler {
+    margin-top:40px; border:1px solid var(--line); background:var(--raised);
+    min-height:680px; position:relative; overflow:hidden;
+  }
+  .scheduler .iclosed-widget { width:100%; min-height:680px; }
+  .scheduler iframe { width:100%; min-height:680px; border:0; display:block; }
+  @media (max-width:620px) { .scheduler .iclosed-widget, .scheduler iframe { min-height:820px; } }
+  .scheduler-pending {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px; text-align:center; padding:32px;
+  }
+  .scheduler-pending .mark {
+    font-family:var(--display); font-style:italic; font-size:30px; color:var(--gold);
+  }
+  .scheduler-pending p { font-size:13.5px; line-height:1.8; color:var(--muted); max-width:38ch; }
+  .scheduler-note { margin-top:14px; font-size:12.5px; line-height:1.75; color:var(--muted); max-width:56ch; }
 </style>
 </head>
 <body>
 
 <div class="bar">
-  <a class="wordmark" href="/grow">New Terrain <span>Creative</span></a>
+  <a class="wordmark" href="/">New Terrain <span>Creative</span></a>
   <a class="bar-link" href="mailto:business@newterraincreative.com">Contact</a>
 </div>
 
 <div class="wrap">
 
-  <!-- ── FORM ── -->
-  <div class="state on" id="state-form">
-    <div class="eyebrow">Strategy call</div>
-    <h1>Tell us what you're <em>trying to grow.</em></h1>
-    <p class="lede">Thirty minutes. We will tell you what we would actually do, roughly what it would cost, and whether we think it is worth doing. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.</p>
+  <div class="eyebrow">Strategy call</div>
+  <h1>Tell us what you're <em>trying to grow.</em></h1>
+  <p class="lede">Thirty minutes. We will tell you what we would actually do, roughly what it would cost, and whether it is worth doing. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.</p>
 
-    <form id="sc" novalidate>
-      <div class="hp" aria-hidden="true">
-        <label>Leave this empty<input type="text" name="company_website_confirm" tabindex="-1" autocomplete="off"></label>
-      </div>
+  <!-- ══════════════════════════════════════════════════════════════════
+       iCLOSED SCHEDULER
+       ──────────────────────────────────────────────────────────────────
+       Option C: our page, our branding, our URL. iClosed owns the
+       questions, availability, booking, calendar sync, confirmations and
+       reminders. Nothing on this page posts to /api/strategy-call any
+       more, and no NTC Lead event fires from here.
 
-      <div class="q">
-        <label for="name">Your name</label>
-        <input type="text" id="name" name="name" autocomplete="name" required>
-      </div>
+       Every offer now has its own live iClosed event. To add another,
+       give it a SCHEDULERS entry with its own url and ready:true.
+       Nothing else on this page needs to change.
 
-      <div class="q">
-        <label for="email">Business email</label>
-        <input type="email" id="email" name="email" autocomplete="email" required>
-      </div>
-
-      <div class="q">
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="phone" autocomplete="tel" required>
-      </div>
-
-      <div class="q">
-        <label for="business">Business name and website</label>
-        <input type="text" id="business" name="business" placeholder="Acme Dental · acmedental.com" required>
-      </div>
-
-      <div class="q">
-        <span class="qlabel">What kind of business is it?</span>
-        <div class="opts">
-          <label class="opt"><input type="radio" name="industry" value="Health and wellness" required> Health and wellness</label>
-          <label class="opt"><input type="radio" name="industry" value="Law firm"> Law firm</label>
-          <label class="opt"><input type="radio" name="industry" value="Dental practice"> Dental practice</label>
-          <label class="opt"><input type="radio" name="industry" value="Construction or contracting"> Construction or contracting</label>
-          <label class="opt"><input type="radio" name="industry" value="Other"> Something else</label>
-        </div>
-      </div>
-
-      <div class="q">
-        <span class="qlabel">Can you sign off on this yourself?</span>
-        <div class="opts">
-          <label class="opt"><input type="radio" name="authority" value="Sole decision maker" required> Yes, it is my call</label>
-          <label class="opt"><input type="radio" name="authority" value="Shared decision"> I decide with one other person</label>
-          <label class="opt"><input type="radio" name="authority" value="Needs approval"> It needs approval from someone else</label>
-          <label class="opt"><input type="radio" name="authority" value="Researching"> I am gathering information for someone else</label>
-        </div>
-      </div>
-
-      <div class="q">
-        <label for="offer">What is the main thing you sell, and who buys it?</label>
-        <textarea id="offer" name="offer" required></textarea>
-      </div>
-
-      <div class="q">
-        <label for="value">Roughly what is a customer worth to you?</label>
-        <p class="hint">First purchase, or over the relationship. A rough figure is more useful than a blank.</p>
-        <input type="text" id="value" name="value" required>
-      </div>
-
-      <div class="q">
-        <label for="marketing">How are you getting customers today?</label>
-        <textarea id="marketing" name="marketing" required></textarea>
-      </div>
-
-      <div class="q">
-        <span class="qlabel">What are you spending on advertising a month right now?</span>
-        <div class="opts">
-          <label class="opt"><input type="radio" name="ad_spend" value="Nothing yet" required> Nothing yet</label>
-          <label class="opt"><input type="radio" name="ad_spend" value="Under $1,500"> Under $1,500</label>
-          <label class="opt"><input type="radio" name="ad_spend" value="$1,500-5,000"> $1,500 to $5,000</label>
-          <label class="opt"><input type="radio" name="ad_spend" value="$5,000+"> $5,000 or more</label>
-        </div>
-      </div>
-
-      <div class="q">
-        <span class="qlabel">What can you invest monthly in production and campaign work, separate from ad spend?</span>
-        <p class="hint">Production Media partnerships typically begin in the mid-four figures monthly. Asking now saves us both a call if the numbers are a long way apart.</p>
-        <div class="opts">
-          <label class="opt"><input type="radio" name="budget_band" value="Under $2,500" required> Under $2,500 a month</label>
-          <label class="opt"><input type="radio" name="budget_band" value="$2,500-5,000"> $2,500 to $5,000 a month</label>
-          <label class="opt"><input type="radio" name="budget_band" value="$5,000-10,000"> $5,000 to $10,000 a month</label>
-          <label class="opt"><input type="radio" name="budget_band" value="$10,000+"> $10,000 a month or more</label>
-          <label class="opt"><input type="radio" name="budget_band" value="Not sure yet"> Not sure yet</label>
-        </div>
-      </div>
-
-      <div class="q">
-        <span class="qlabel">When would you want to start?</span>
-        <div class="opts">
-          <label class="opt"><input type="radio" name="start" value="Immediately" required> As soon as possible</label>
-          <label class="opt"><input type="radio" name="start" value="1-3 months"> In the next one to three months</label>
-          <label class="opt"><input type="radio" name="start" value="Later this year"> Later this year</label>
-          <label class="opt"><input type="radio" name="start" value="Just researching"> Just researching for now</label>
-        </div>
-      </div>
-
-      <div class="q">
-        <label for="objective">What would make the next ninety days a success?</label>
-        <textarea id="objective" name="objective" required></textarea>
-      </div>
-
-      <div class="q">
-        <span class="qlabel">How quickly can your team respond to a new enquiry?</span>
-        <p class="hint">Campaigns work as well as the follow-up behind them, so this genuinely changes what we would recommend.</p>
-        <div class="opts">
-          <label class="opt"><input type="radio" name="response" value="Within an hour" required> Within an hour, during business hours</label>
-          <label class="opt"><input type="radio" name="response" value="Same day"> Same day</label>
-          <label class="opt"><input type="radio" name="response" value="Within a few days"> Within a few days</label>
-          <label class="opt"><input type="radio" name="response" value="Honestly inconsistent"> Honestly, it is inconsistent</label>
-        </div>
-      </div>
-
-      <div class="q">
-        <button class="btn" type="submit" id="submit">Request the call</button>
-        <p class="err" id="err" hidden></p>
-        <p class="fine">We read every one. Expect a reply within one business day with times, or an honest note explaining why we do not think we are the right fit.</p>
-      </div>
-    </form>
+       Attribution: the offer identifier and any first-touch UTM/fbclid we
+       already hold are appended to the iClosed URL as query parameters so
+       they land in iClosed's integration data. iClosed reads fbp/fbc from
+       the browser itself.
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="scheduler" id="scheduler">
+    <div class="scheduler-pending">
+      <span class="mark">New Terrain</span>
+      <p>The booking calendar for this offer is being connected. In the meantime, email
+         <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+         and we will find a time by hand, usually the same day.</p>
+    </div>
   </div>
 
-  <!-- ── RECEIVED ── -->
-  <div class="state" id="state-done">
-    <div class="eyebrow">Received</div>
-    <h1>We'll be in touch <em>within a day.</em></h1>
-    <p>Thanks. A real person reads these, and you will get either a few times to choose from or a straight note explaining why we are not the right fit.</p>
-    <p>If you want to move faster, reply to the confirmation email with your availability and we will work around it.</p>
-    <p>In the meantime, the work speaks for itself better than we can.</p>
-    <a class="btn" href="/grow">Back to the work</a>
-  </div>
+  <p class="scheduler-note">A few questions first, so the thirty minutes is useful rather than spent catching up. You will see available times as soon as you are through them.</p>
 
 </div>
 
@@ -277,76 +193,170 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
 <script>
 (function () {
-  var form = document.getElementById('sc');
-  var btn = document.getElementById('submit');
-  var err = document.getElementById('err');
+  'use strict';
 
-  function show(id) {
-    ['state-form', 'state-done'].forEach(function (s) {
-      document.getElementById(s).classList.toggle('on', s === id);
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  /* ── iClosed scheduler ────────────────────────────────────────────
+     One flag. Set url to the iClosed booking link and flip ready:true.
+
+     iClosed owns everything from here: the qualification questions,
+     availability against the connected Google Calendar, the booking
+     itself, confirmations, reminders and SMS. It also owns the
+     scheduler-stage Meta events (Potential, Qualified, Disqualified,
+     Call Booked) through its own browser + CAPI pairing on OUR pixel.
+
+     This page therefore fires NO conversion event. PageView and
+     ViewContent stay ours; Lead is gone. Firing our own Lead alongside
+     iClosed's events on the same dataset would double-count, and our
+     event_id could not deduplicate against an id iClosed mints itself.
+     ─────────────────────────────────────────────────────────────── */
+  /* One scheduler per offer. Each offer gets its OWN iClosed event, so
+     each needs its own URL and its own readiness. They go live one at a
+     time as the events are created; an offer that is not ready shows the
+     pending panel rather than borrowing another offer's calendar, which
+     would book people onto the wrong event and mis-attribute every
+     conversion iClosed fires for it.
+
+     Reached here as:
+       /apply success      -> ?offer=founding-three
+       /production-media   -> ?offer=production-media
+       /grow               -> no parameter
+     ─────────────────────────────────────────────────────────────── */
+  var SCHEDULERS = {
+    'founding-three': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
+      title: 'Apply to book a Founding Three call with New Terrain Creative'
+    },
+    'production-media': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+      title: 'Book a Growth strategy consultation with New Terrain Creative'
+    },
+    'ad-sprint': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/ad-sprint',
+      title: 'Book an Ad Sprint fit call with New Terrain Creative',
+      /* The Sprint is a one-time production buy, not a retainer, and it
+         is the one offer that arrives here cold rather than through a
+         form. The default heading asks what they are trying to grow,
+         which is the retainer question; these two lines ask the Sprint
+         question instead. Scope is confirmed on this call, payment
+         follows it, and only then is a shoot booked. */
+      eyebrow: 'Ad Sprint',
+      lede:    'Thirty minutes to confirm what we would shoot, which package fits, and what we would test first. <b>Nothing is due to book this call.</b> If the Sprint is not the right move we will say so on it.'
+    }
+  };
+
+  /* /grow links here with no ?offer=. It sells the same retainer as
+     /production-media, so it books the same event rather than showing a
+     pending panel. The two are still told apart in reporting by the
+     offer identifier on the CTAClick and by first-touch landing_page. */
+  var DEFAULT_SCHEDULER = {
+    ready: true,
+    url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+    title: 'Book a Growth strategy consultation with New Terrain Creative'
+  };
+
+  var offerSlug = (new URLSearchParams(window.location.search).get('offer') || '')
+                    .trim().toLowerCase();
+  var SCHEDULER = Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)
+    ? SCHEDULERS[offerSlug]
+    : DEFAULT_SCHEDULER;
+
+  /* Attribution passthrough. iClosed reads fbp/fbc from the browser on
+     its own; what it cannot know is which offer sent the visitor or what
+     the FIRST touch was, because that lives in our localStorage. We hand
+     both over as query parameters so they land in iClosed's integration
+     data and survive into the booking record. */
+  function schedulerUrl() {
+    if (!SCHEDULER.url) return '';
+    var u;
+    try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
+
+    /* Only a slug we recognise. An unknown ?offer= falls through to the
+       default calendar, and forwarding its text would put invented offer
+       names into iClosed's booking records and our own reporting. */
+    if (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)) {
+      u.searchParams.set('offer', offerSlug);
+    }
+
+    /* /sprint sends pkg=eight or pkg=fifteen so the call opens already
+       knowing which package they clicked. It is a hint for the call, not
+       a commitment: scope is confirmed on the call either way. */
+    var pkg = (new URLSearchParams(window.location.search).get('pkg') || '')
+                .trim().toLowerCase();
+    if (pkg === 'eight' || pkg === 'fifteen') u.searchParams.set('pkg', pkg);
+
+    if (window.ntc && ntc.attribution) {
+      var a = ntc.attribution() || {};
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid']
+        .forEach(function (k) { if (a[k]) u.searchParams.set(k, a[k]); });
+      if (a.landing_page) u.searchParams.set('landing_page', a.landing_page);
+    }
+    if (window.ntc && ntc.sessionId) u.searchParams.set('ntc_session', ntc.sessionId());
+    return u.toString();
   }
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    err.hidden = true;
+  /* Per-offer heading, where an offer sets one. Everything else keeps
+     the default retainer copy. */
+  if (SCHEDULER.eyebrow) {
+    var eb = document.querySelector('.eyebrow');
+    if (eb) eb.textContent = SCHEDULER.eyebrow;
+  }
+  if (SCHEDULER.lede) {
+    var ld = document.querySelector('.lede');
+    if (ld) ld.innerHTML = SCHEDULER.lede;
+  }
 
-    if (!form.checkValidity()) {
-      err.textContent = 'A few answers are still missing.';
-      err.hidden = false;
-      form.reportValidity();
-      return;
+  /* iClosed's own inline widget, not a hand-built iframe. It owns the
+     frame, its resize messaging and its mobile behaviour, so we do not
+     reimplement any of that.
+
+     The attribution goes into data-url rather than being left to the
+     widget: it forwards the page's own query string, but the UTMs we
+     care about are FIRST touch out of localStorage and may not be on
+     this URL at all. Putting them in data-url makes them certain.
+
+     Height comes from CSS, not the vendor's inline style, so the frame
+     can be taller on a narrow screen where the calendar wraps. */
+  var slot = document.getElementById('scheduler');
+  if (slot && SCHEDULER.ready) {
+    var href = schedulerUrl();
+    if (href) {
+      var host = document.createElement('div');
+      host.className = 'iclosed-widget';
+      host.setAttribute('data-url', href);
+      host.setAttribute('title', SCHEDULER.title);
+      slot.innerHTML = '';
+      slot.appendChild(host);
+
+      var sc = document.createElement('script');
+      sc.src = 'https://app.iclosed.io/assets/widget.js';
+      sc.async = true;
+      sc.onerror = function () {
+        // Vendor unreachable. Restore the pending panel rather than leave
+        // a tall empty box on the page someone came here to book from.
+        slot.innerHTML =
+          '<div class="scheduler-pending"><span class="mark">New Terrain</span>' +
+          '<p>The booking calendar did not load. Email ' +
+          '<a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>' +
+          ' and we will find a time by hand, usually the same day.</p></div>';
+        console.warn('strategy-call: iClosed widget failed to load');
+      };
+      document.body.appendChild(sc);
     }
+  }
 
-    var data = Object.fromEntries(new FormData(form).entries());
-    data.form_type = 'strategy_call';
-      // A paid landing page sends ?offer=<slug>. Forward it so the
-      // conversion is attributed to the page that produced it. The server
-      // allowlists the value; this is only transport.
-      var offerSlug = new URLSearchParams(window.location.search).get('offer');
-      if (offerSlug) data.offer_id = offerSlug;
-      // Resolve through the same allowlist the server uses, so the browser
-      // and server copies of this conversion carry the same offer. A slug
-      // we do not recognise falls back to this page's own default rather
-      // than inventing an offer name in the reporting.
-      var PAID = (window.NTC_OFFER || {}).paidOffers || {};
-      var offerId = PAID[String(offerSlug || '').toLowerCase()] || 'paid_retainer';
-
-    data.event_id = 'sc-' + (window.ntc ? ntc.uuid() : Date.now());
-    if (window.ntc) {
-      var ctx = ntc.context();
-      Object.keys(ctx).forEach(function (k) { if (!(k in data)) data[k] = ctx[k]; });
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-
-    fetch('/api/strategy-call', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(function (r) {
-      return r.ok ? r.json() : Promise.reject(new Error('bad status ' + r.status));
-    }).then(function () {
-      // Lead, not Schedule. Schedule fires only when an appointment is
-      // genuinely confirmed by the scheduler, not when a form is sent.
-      // The offer and form_type params are what the two funnels are
-      // separated on in Meta.
-      if (typeof fbq === 'function') {
-        fbq('track', 'Lead', {
-          offer: offerId,
-          form_type: 'strategy_call',
-          content_name: 'Strategy call request'
-        }, { eventID: data.event_id });
-      }
-      show('state-done');
-    }).catch(function () {
-      err.textContent = 'Something went wrong sending that. Email business@newterraincreative.com and we will pick it up from there.';
-      err.hidden = false;
-      btn.disabled = false;
-      btn.textContent = 'Request the call';
-    });
+  /* ── tracking · page level only ───────────────────────────────────
+     No Lead. Deliberately. See the note above.
+     ─────────────────────────────────────────────────────────────── */
+  if (!window.ntc) return;
+  ntc.track('ViewContent', {
+    content_name: document.title,
+    // The recognised slug, for the same reason the URL above carries only
+    // recognised slugs: an unknown one is noise in the dataset.
+    offer: (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug))
+             ? offerSlug : 'paid_retainer'
   });
 })();
 </script>

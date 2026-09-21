@@ -79,6 +79,25 @@ check('nothing added on top',
       'not offering a performance guarantee, a free reshoot or a refund' in SPR,
       'no further promise, refund or remedy may be offered')
 
+print('\nAd Sprint publishes no shoot duration')
+# Sprint is sold on output, not hours. A simple Sprint is often about two
+# hours, so "half-day" or "full day" commits us to a block we do not need
+# and reads as the deliverable rather than the ads.
+#
+# Duration drifted once when it WAS published: index.html said half-day for
+# The Eight while sprint.html said a full day, because it lived only in
+# copy and nothing checked it. These checks make its absence enforced
+# rather than merely intended.
+import re as _re
+DURATION = _re.compile(r'half[ -]?day|full day|one day (?:on|at)|all[ -]day', _re.I)
+for page in ('sprint.html', 'booked.html', 'project.html'):
+    text = live(page)
+    hits = sorted(set(m.group(0).lower() for m in DURATION.finditer(text)))
+    check(f'{page} states no shoot duration', not hits, ', '.join(hits))
+check('the "same day either way" line has not returned',
+      'Same day on location' not in live('sprint.html'),
+      'it implied both packages buy the same shoot')
+
 print('\nWithdrawn guarantee must appear on no page')
 BANNED = ['next shoot day is free', 'beats your baseline',
           'outperforms your current content', 'until we get you a creative']

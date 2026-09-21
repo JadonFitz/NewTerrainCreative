@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call Booked · New Terrain Creative</title>
+<meta name="description" content="Your strategy call with New Terrain Creative is confirmed.">
+
+<!-- A confirmation page reached only after booking. Nothing should find
+     it in search, and nothing links to it from the site. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     META · PageView ONLY. Read this before adding anything.
+
+     iClosed has ALREADY fired its Call Booked conversion, browser and
+     CAPI, on this same dataset, by the time this page loads. This page
+     must not fire a second one.
+
+     The pixel is here for two legitimate reasons and no others:
+       · funnel visualisation
+       · building an exclusion audience so people who already booked
+         stop seeing the ad
+
+     DO NOT create a URL-based custom conversion on /call-booked in
+     Events Manager. It would fire alongside iClosed's Call Booked and
+     double-count every booking, and no event_id would deduplicate them
+     because the two are minted independently.
+     ══════════════════════════════════════════════════════════════════ -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --black:#0A0A0A; --raised:#111010;
+    --gold:#C8A96E; --gold-dim:#A08A57;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D;
+    --line:#1e1e1e;
+    --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    background:var(--black); color:var(--soft);
+    font-family:var(--body); font-weight:300; font-size:15px; line-height:1.75;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a { color:var(--gold); }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+
+  .bar { border-bottom:1px solid var(--line); }
+  .bar-inner {
+    max-width:760px; margin:0 auto; padding:20px clamp(20px,6vw,40px);
+    display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .wordmark { font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--parchment); text-decoration:none; }
+  .wordmark span { color:var(--gold); }
+  .bar-note { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+
+  main { max-width:760px; margin:0 auto; padding:clamp(48px,8vw,90px) clamp(20px,6vw,40px) clamp(60px,9vw,110px); }
+
+  .eyebrow { font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+  h1 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(38px,6.5vw,62px); line-height:1.02;
+    color:var(--parchment); margin-bottom:18px; text-wrap:balance;
+  }
+  h1 em { font-style:italic; color:var(--gold); }
+  .lede { font-size:clamp(15px,1.6vw,17px); line-height:1.8; max-width:52ch; }
+  .lede b { color:var(--parchment); font-weight:400; }
+
+  .prep { margin-top:40px; border:1px solid var(--line); padding:clamp(22px,3vw,30px); }
+  .prep h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:16px;
+  }
+  .prep p { font-size:13.5px; color:var(--muted); margin-bottom:14px; max-width:56ch; }
+  ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  li { font-size:14.5px; line-height:1.6; padding-left:18px; position:relative; color:var(--soft); }
+  li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:1px; background:var(--gold); }
+
+  .after { margin-top:26px; font-size:14px; line-height:1.8; max-width:56ch; }
+
+  .offer-note {
+    margin-top:26px; border-left:2px solid var(--gold-dim); padding:14px 0 14px 18px;
+    font-size:13.5px; line-height:1.75; color:var(--muted); max-width:58ch;
+  }
+  .offer-note b { color:var(--parchment); font-weight:400; }
+
+
+  /* iClosed confirmation card, integrated rather than bolted on */
+  .booking { margin-top:34px; border:1px solid var(--line); padding:clamp(20px,3vw,26px); }
+  .booking h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:14px;
+  }
+  /* The vendor snippet ships an inline height. Min-height keeps the card
+     from collapsing while it loads and lets it grow on a narrow screen,
+     where the details wrap onto more lines. */
+  .call-details-widget { width:100%; min-height:340px; }
+  @media (max-width:520px) { .call-details-widget { min-height:430px; } }
+
+  .reschedule {
+    margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--muted); max-width:56ch;
+  }
+
+  footer { border-top:1px solid var(--line); }
+  footer .inner {
+    max-width:760px; margin:0 auto; padding:22px clamp(20px,6vw,40px);
+    display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  footer a { color:var(--muted); text-decoration:none; }
+  footer a:hover, footer a:focus-visible { color:var(--gold); }
+
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-inner">
+    <a class="wordmark" href="/">New Terrain <span>Creative</span></a>
+    <span class="bar-note">Los Angeles · Tampa</span>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Confirmed</p>
+  <h1>You're <em>booked.</em></h1>
+  <p class="lede">Your strategy call with New Terrain Creative is confirmed. <b>Check your inbox for the calendar invitation and the video link.</b> If it has not arrived in a few minutes, look in spam before you worry about it.</p>
+
+  <section class="prep">
+    <h2>Worth a thought before the call</h2>
+    <p>Nothing to prepare or send over. Just have a rough idea of:</p>
+    <ul>
+      <li>What you are currently doing for marketing</li>
+      <li>What a typical customer or client is worth to you</li>
+      <li>What you have already tried</li>
+      <li>The biggest growth problem you want solved</li>
+    </ul>
+  </section>
+
+  <p class="after">We will use the call to work out whether New Terrain is a fit and what the right next step looks like. <b>If we are not the right people for it, we will tell you on the call</b> rather than send a proposal afterwards.</p>
+
+  <!-- One line, chosen by the ?offer= the iClosed redirect carries. If the
+       parameter is absent or unrecognised this stays hidden and the page
+       reads correctly as the generic confirmation, so nothing depends on
+       the round trip working. -->
+  <p class="offer-note" id="offer-note" hidden></p>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       iCLOSED BOOKING CONFIRMATION · DISPLAY ONLY
+       ──────────────────────────────────────────────────────────────
+       Shows the booked time, host, and the meeting link, which this
+       page cannot know on its own.
+
+       It fires NO conversion and must not be made to. iClosed already
+       sent Call Booked, browser and CAPI, before this page loaded.
+
+       Starts hidden and is only revealed once the widget has actually
+       rendered something. A third-party script that fails to load would
+       otherwise leave a 340px hole above the reschedule line.
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="booking" id="booking" hidden aria-label="Your appointment details">
+    <h2>Your appointment</h2>
+    <!-- iClosed widget begin -->
+    <div class="call-details-widget" data-url="https://app.iclosed.io/embed"></div>
+    <!-- iClosed widget end -->
+  </section>
+
+  <p class="reschedule">Need to reschedule? Use the link in your confirmation email. Anything else, reply to that email or reach us at <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>.</p>
+</main>
+
+<footer>
+  <div class="inner">
+    <span>New Terrain Creative © 2026</span>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ONE confirmation page for every booking source. Every iClosed event
+     redirects here and varies only by ?offer=. Do not build a second
+     confirmation page per offer, and do not build one per ad: every
+     creative for the same offer uses the same iClosed event and lands
+     here.
+
+     An unrecognised or absent offer shows no line at all rather than a
+     wrong one. That is why this is a lookup and not a chain of tests.
+
+     Deliberately NOT a conversion event. iClosed already fired Call
+     Booked, browser and CAPI, on this dataset before this page loaded.
+     See the note in <head>. */
+  var NOTES = {
+    'founding-three': '<b>Founding Three applicants:</b> we will read your application and look at ' +
+                      'your business before the call, so the time goes on strategy rather than ' +
+                      'rehashing the form.',
+    'growth':         '<b>Before we talk:</b> if you know roughly what you are spending on ' +
+                      'advertising now and what a customer is worth, the thirty minutes goes a lot ' +
+                      'further. Rough numbers are fine.',
+    'sprint':         '<b>About the Ad Sprint:</b> this is a fit call, not a sales call with a ' +
+                      'deposit at the end. We will work out whether a Sprint is the right thing ' +
+                      'for you and which of the two sizes actually fits.'
+  };
+
+  /* The key here is whatever the iClosed redirect for that event is
+     configured to append, which is not necessarily the slug
+     /strategy-call forwarded on the way in. Both spellings are accepted
+     so a redirect set to either one shows the right line. */
+  var ALIAS = { 'ad-sprint': 'sprint', 'production-media': 'growth',
+                'paid_retainer': 'growth', 'founding_three': 'founding-three' };
+
+  var params = new URLSearchParams(window.location.search);
+  var offer = (params.get('offer') || '').trim().toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(ALIAS, offer)) offer = ALIAS[offer];
+  var note = document.getElementById('offer-note');
+  if (note && Object.prototype.hasOwnProperty.call(NOTES, offer)) {
+    note.innerHTML = NOTES[offer];
+    note.hidden = false;
+  }
+
+  /* ── iClosed confirmation card · display only ──────────────────────
+     Shows the booked time, host and meeting link. It fires nothing.
+
+     Three ways this can go wrong, all handled, because the failure mode
+     is a 340px empty box sitting above the reschedule line on the page
+     someone sees right after giving us their time:
+
+       1. Somebody opens /call-booked directly with no booking context.
+          iClosed forwards its event parameters on the redirect, so if
+          the only parameter present is our own `offer`, there is nothing
+          to render and the script is never even requested.
+
+       2. The vendor script fails to load, or loads and renders nothing.
+          The card stays hidden; a MutationObserver reveals it only once
+          the widget has actually put something in the div, and a timeout
+          gives up quietly.
+
+       3. It renders slowly. The observer catches it whenever it lands,
+          up to the timeout.
+
+     The generic copy above is always visible regardless, so a failure
+     here costs a detail, never the confirmation itself.
+     ─────────────────────────────────────────────────────────────── */
+  var booking = document.getElementById('booking');
+  var widget = booking && booking.querySelector('.call-details-widget');
+
+  var hasBookingContext = (function () {
+    var n = 0;
+    params.forEach(function (_, k) { if (k !== 'offer') n++; });
+    return n > 0;
+  })();
+
+  if (booking && widget && hasBookingContext) {
+    var settled = false;
+    var reveal = function () {
+      if (settled) return;
+      settled = true;
+      try { observer.disconnect(); } catch (e) {}
+      clearTimeout(timer);
+      booking.hidden = false;
+    };
+    var giveUp = function () {
+      if (settled) return;
+      settled = true;
+      try { observer.disconnect(); } catch (e) {}
+      clearTimeout(timer);
+      console.warn('call-booked: iClosed widget did not render; card left hidden');
+    };
+
+    /* The widget injects a cross-origin <iframe>, so "has children" only
+       proves the script ran, not that iClosed answered. Wait for the
+       frame's own load event before revealing; a DNS failure or a 500
+       from app.iclosed.io then leaves the card hidden rather than
+       showing an empty bordered box. We cannot read inside the frame,
+       so whatever iClosed renders in it, including its own not-found
+       state, is shown as-is. That is theirs to say, not ours to hide. */
+    var observer = new MutationObserver(function () {
+      var frame = widget.querySelector('iframe');
+      if (frame) {
+        frame.addEventListener('load', reveal, { once: true });
+        frame.addEventListener('error', giveUp, { once: true });
+        observer.disconnect();
+        return;
+      }
+      if ((widget.textContent || '').trim()) reveal();
+    });
+    observer.observe(widget, { childList: true, subtree: true, characterData: true });
+    var timer = setTimeout(giveUp, 8000);
+
+    var sc = document.createElement('script');
+    sc.src = 'https://app.iclosed.io/assets/widget.js';
+    sc.async = true;
+    sc.onerror = giveUp;
+    document.body.appendChild(sc);
+  }
+})();
+</script>
+</body>
+</html>

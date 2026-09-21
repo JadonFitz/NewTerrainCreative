@@ -397,6 +397,37 @@
   }
   .invest-note { font-size: 13.5px; line-height: 1.85; color: #A09890; margin: 0; }
 
+
+  /* ── TIER CARDS · the public qualifier, not the full menu ──
+     Deliberately short. Exact deliverable composition, add-ons and terms
+     live in /growth-guide, which is sent after a call. */
+  .tiers {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .tier { background: var(--black); padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .tier--mid { background: #0f0d09; }
+  .tier-label {
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted);
+  }
+  .tier-name {
+    font-family: var(--display); font-weight: 300; font-size: 26px;
+    line-height: 1.1; color: var(--parchment);
+  }
+  .tier-price {
+    font-family: var(--display); font-size: 30px; color: var(--gold); line-height: 1;
+  }
+  .tier-price span { font-family: var(--body); font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+  .tier-line { font-size: 13px; line-height: 1.7; color: var(--soft); }
+  .tier-line b { color: var(--parchment); font-weight: 400; }
+  .tier-meta { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font-size: 11.5px; line-height: 1.7; color: var(--muted); }
+  .tier-promise { color: var(--gold-dim); }
+  @media (max-width: 720px) { .tier { padding: 24px 20px; } }
+
   .invest-fit {
     margin-top: 1px; display: grid; grid-template-columns: 1fr 1fr;
     gap: 1px; background: var(--line); border: 1px solid var(--line);
@@ -1163,7 +1194,7 @@
           <h3 class="reel-name">Hamster Wheel</h3>
           <div class="reel-figure">Hook three &middot; Negotiating<small>Mike Alder &middot; one shoot day</small></div>
           <div class="reel-more">
-            <p class="reel-note">The negotiating angle, shot back to back with the other two. Three ready-to-run creatives out of one day on location, captioned and cut for every placement.</p>
+            <p class="reel-note">The negotiating angle, shot back to back with the other two. Three ready-to-run creatives out of one shoot, captioned and cut for every placement.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1416,17 +1447,16 @@
 </style>
 
 <section id="pricing">
-  <div class="eyebrow reveal">What it takes</div>
-  <h2 class="title reveal">Scoped to the business,<br>not to a <em>menu.</em></h2>
-  <p class="lede reveal">Production volume, how much campaign management you need, and how fast you want to move all change what this costs. So rather than sell you a tier and work backwards, we scope it after we understand what you sell and what you are trying to grow.</p>
+  <div class="eyebrow reveal">What it costs</div>
+  <h2 class="title reveal">Three ways to <em>work together.</em></h2>
+  <p class="lede reveal">Rendered from the same source the proposal is built from, so what you read here is what gets quoted. Which one fits depends on production volume and how much of the campaign we run. <b>The exact scope is confirmed in writing before anything starts.</b></p>
 
-  <div class="invest-band reveal">
-    <div>
-      <div class="invest-label">Typical starting point</div>
-      <div class="invest-figure">Mid four figures monthly</div>
-    </div>
-    <p class="invest-note">Most Production Media partnerships begin there and scale with production volume. Engagements run a three month minimum, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
-  </div>
+  <!-- Cards render from assets/offer.js retainer.publicGuideTiers, the same
+       object /growth-guide reads. One definition, two depths: this page
+       qualifies, the guide closes. Do not hard-code a figure here. -->
+  <div class="tiers reveal" id="tiers"></div>
+
+  <p class="invest-note reveal">Three month minimum on all three, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
 
   <div class="invest-fit reveal">
     <div class="invest-fit-col">
@@ -1453,7 +1483,7 @@
   <div class="promise reveal">
     <div class="promise-head">The 90-Day Production Promise</div>
     <p class="promise-claim">If we do not improve the benchmark we agree on before launch within 90 days, <em>your next standard production cycle is on us.</em></p>
-    <p class="promise-terms">Available only on qualifying engagements where we manage both the campaign and creative. Full terms are provided before signing.</p>
+    <p class="promise-terms"><b>Available on Growth Partner and Brand Builder, not on The Anchor.</b> At Anchor we make the creative and hand it to you to run, so we are not in a position to move the benchmark and could not honour a promise to. The same applies to Anchor with the ad management add-on, where we run the campaign but the creative is a fixed batch. Full terms are provided before signing.</p>
   </div>
 
   <div class="invest-cta reveal">
@@ -1758,8 +1788,64 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
 
+<script src="/assets/offer.js"></script>
 <script src="/assets/track.js"></script>
 <script>
+
+  /* ── tier cards ───────────────────────────────────────────────────
+     Built from assets/offer.js retainer.publicGuideTiers, the same object
+     /growth-guide renders. One definition, two depths: this page carries
+     a three-line summary to qualify, the guide carries the full
+     deliverable composition to close.
+
+     Summaries are keyed by tier name rather than derived from the full
+     includes list, because the public card needs three lines, not seven.
+     If a tier is added to offer.js without a summary here, the card still
+     renders with its name, price and scope, just without the short lines.
+     ─────────────────────────────────────────────────────────────── */
+  (function () {
+    var O = window.NTC_OFFER;
+    var tiers = O && O.retainer && O.retainer.publicGuideTiers;
+    var host = document.getElementById('tiers');
+    if (!host || !tiers || !tiers.length) {
+      if (host) host.remove();          // never leave an empty grid
+      return;
+    }
+
+    var SUMMARY = {
+      'The Anchor': [
+        'Content production system.',
+        '<b>16 deliverables</b> from a half-day media day each month.',
+        'Meta ad management available at +$1,500.'
+      ],
+      'Growth Partner': [
+        'Creative and acquisition under one roof.',
+        '<b>30 deliverables</b> from two production days\u2019 worth each month.',
+        'Meta campaign management included.'
+      ],
+      'Brand Builder': [
+        'Full-volume media engine.',
+        '<b>55 deliverables</b> from up to four full production days.',
+        'Longform, short-form and ads together.'
+      ]
+    };
+
+    host.innerHTML = tiers.map(function (t, i) {
+      var lines = (SUMMARY[t.name] || [t.scope]).map(function (l) {
+        return '<p class="tier-line">' + l + '</p>';
+      }).join('');
+      var promise = t.productionPromiseEligible
+        ? '<span class="tier-promise">90-Day Production Promise eligible</span>'
+        : 'Production only. The 90-Day Promise does not apply at this tier.';
+      return '<div class="tier' + (i === 1 ? ' tier--mid' : '') + '">' +
+               '<div class="tier-label">' + (t.label || '') + '</div>' +
+               '<div class="tier-name">' + t.name + '</div>' +
+               '<div class="tier-price">' + O.fmt(t.monthly) + ' <span>/ month</span></div>' +
+               lines +
+               '<div class="tier-meta">' + promise + '</div>' +
+             '</div>';
+    }).join('');
+  })();
   (function () {
     if (!window.ntc) return;
 
