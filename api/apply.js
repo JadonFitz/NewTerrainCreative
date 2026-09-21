@@ -26,6 +26,11 @@ import { insert, linkSessionToLead, configured as dbReady } from './_supabase.js
 
 const TO = process.env.APPLY_TO || 'business@newterraincreative.com';
 const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newterraincreative.com>';
+/* Where an eligible applicant books. iClosed owns scheduling now:
+   availability against the connected Google Calendar, the booking,
+   confirmations, reminders and SMS. /apply records the application and
+   its acknowledgements, then hands off. It builds no scheduling,
+   reminder, messaging or pipeline logic of its own and must not start. */
 const BOOKING_URL = process.env.BOOKING_URL || 'https://calendar.app.google/qardoZkWtaBsq2RG9';
 
 // Step one: is this the right offer for them, and who are we talking to.
@@ -290,6 +295,17 @@ async function handleStepTwo(req, res, d) {
     console.warn('supabase not configured, application not persisted');
   }
 
+  /* The one email /apply still sends: a new-application alert to us.
+     It is kept deliberately after the SendGrid teardown elsewhere, for a
+     reason that is not sentiment: it is the SECOND capture path. If
+     Supabase is down, an emailed application is still an application,
+     and the check below only fails the submission when BOTH paths fail.
+     Removing it would make Supabase a single point of failure for a
+     record that carries contractual acknowledgements.
+
+     This is not an email automation system and must not grow into one.
+     No applicant confirmation, no sequences, no reminders: iClosed sends
+     everything the applicant receives. */
   let notified = false;
   try {
     const provider = await notify(`QUALIFIED · ${String(d.business).slice(0, 60)}`,

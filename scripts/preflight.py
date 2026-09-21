@@ -225,7 +225,7 @@ else:
 head('6 · Acquisition handlers')
 for test, label in (
     ('test-apply.mjs', 'Founding application'),
-    ('test-strategy-call.mjs', 'paid-retainer inquiry'),
+    ('test-strategy-call.mjs', 'strategy-call retirement'),
     ('test-project.mjs', 'Signature Work enquiry'),
     ('test-tracking.mjs', 'browser attribution'),
     ('test-track-api.mjs', 'first-party event ingestion'),

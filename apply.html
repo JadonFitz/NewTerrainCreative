@@ -501,7 +501,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <h1>Let's put a time <em>on the calendar.</em></h1>
     <p>Thanks. From what you have told us this looks like a fit, so rather than make you wait on an email, pick a time now.</p>
     <p>Bring your current numbers if you have them: what you are spending, what a customer is worth, and what you have already tried. The more concrete that is, the more useful the call is for both of us.</p>
-    <a class="btn" id="book-link" href="https://calendar.app.google/qardoZkWtaBsq2RG9" target="_blank" rel="noopener">Pick a time</a>
+    <a class="btn" id="book-link" href="/strategy-call?offer=founding-three" rel="noopener">Pick a time</a>
   </div>
 
   <!-- ── NOT A FIT ── -->
@@ -797,7 +797,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
     post(data).then(function (res) {
       if (res.qualified) {
-        if (res.bookingUrl) document.getElementById('book-link').href = res.bookingUrl;
+        // The server still returns BOOKING_URL for rollback, but the page
+        // now sends eligible applicants to the iClosed scheduler instead.
+        // Ignore the server value unless it is already an iClosed link.
+        if (res.bookingUrl && /iclosed/i.test(res.bookingUrl)) {
+          document.getElementById('book-link').href = res.bookingUrl;
+        }
         fireConversion(data.event_id);
         show('state-yes');
       } else {
