@@ -90,7 +90,7 @@ print('\nAd Sprint publishes no shoot duration')
 # rather than merely intended.
 import re as _re
 DURATION = _re.compile(r'half[ -]?day|full day|one day (?:on|at)|all[ -]day', _re.I)
-for page in ('sprint.html', 'booked.html', 'project.html'):
+for page in ('sprint.html', 'booked.html', 'project.html', 'index.html'):
     text = live(page)
     hits = sorted(set(m.group(0).lower() for m in DURATION.finditer(text)))
     check(f'{page} states no shoot duration', not hits, ', '.join(hits))
