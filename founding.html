@@ -403,6 +403,62 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     max-width: 900px;
   }
 
+
+  /* Outlined counterpart to .btn--gold. This page only ever had the
+     filled variant, so the secondary CTA was rendering as a bare link. */
+  .btn--ghost {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim, #A08A57);
+  }
+  .btn--ghost:hover, .btn--ghost:focus-visible {
+    background: var(--gold);
+    color: #0A0A0A;
+    border-color: var(--gold);
+  }
+
+  /* ── ALTERNATIVE PATH · visually subordinate on purpose ──
+     No gold fill, no display face, smaller type than a section heading.
+     It should read as a note beside the offer, not a competing offer. */
+  #options { padding-top: 0; }
+  .alt-path {
+    border: 1px solid var(--line);
+    background: var(--raised, #101010);
+    padding: 26px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+  .alt-path-title {
+    font-family: var(--body);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--parchment);
+    margin-bottom: 9px;
+    letter-spacing: 0;
+  }
+  .alt-path-copy {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+  .alt-path-spec {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--soft);
+    margin-top: 8px;
+    max-width: 62ch;
+  }
+  .alt-path-spec b { color: var(--parchment); font-weight: 400; }
+  .alt-path-cta .btn { white-space: nowrap; }
+
+  @media (max-width: 720px) {
+    .alt-path { grid-template-columns: 1fr; gap: 18px; padding: 22px 20px; }
+    .alt-path-cta .btn { width: 100%; text-align: center; }
+  }
+
   /* ── PROOF ── */
   #proof { border-top: 1px solid var(--line); }
   .proof-rows { margin-top: 60px; display: flex; flex-direction: column; }
@@ -949,11 +1005,34 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
     <div class="found-cta">
       <a class="btn btn--gold" data-cta="founding" href="/apply">Apply for a Founding Partner Spot</a>
-      <p class="found-fine">Applying does not guarantee acceptance: we are choosing three, and we would rather take none than take the wrong ones. No campaign result is guaranteed. Our service fee is waived only for the scope described above; your advertising spend is yours throughout, and months two and three are a choice rather than a commitment. Everything below is what the Sprint costs on its own once the three are gone.</p>
+      <p class="found-fine">Applying does not guarantee acceptance: we are choosing three, and we would rather take none than take the wrong ones. No campaign result is guaranteed. Our service fee is waived only for the scope described above; your advertising spend is yours throughout, and months two and three are a choice rather than a commitment.</p>
     </div>
   </div>
 </section>
 
+
+<!-- ALTERNATIVE PATH · deliberately secondary -->
+<!-- Sits directly after the qualification terms, which is where someone
+     reads the $1,500 requirement and works out it is not them. A
+     different engagement model, not a consolation prize: the copy never
+     says cheaper, smaller or instead, and the button is a ghost so the
+     Founding CTA above it stays dominant.
+
+     data-cta="sprint-alt" rides the page's existing CTAClick handler.
+     That is not a conversion. No Lead, SubmitApplication or Call Booked
+     fires from here, and none should be added. -->
+<section id="options">
+  <div class="alt-path reveal">
+    <div class="alt-path-body">
+      <h2 class="alt-path-title">Not looking for an ongoing growth program?</h2>
+      <p class="alt-path-copy">If you are not ready to commit at least $1,500 a month to targeted paid media, but still want a focused creative advertising push, the Ad Sprint may be a better fit.</p>
+      <p class="alt-path-spec">One campaign. One production push. One clear testing plan. <b>No ongoing retainer required.</b></p>
+    </div>
+    <div class="alt-path-cta">
+      <a class="btn btn--ghost" data-cta="sprint-alt" href="/sprint">Explore the Ad Sprint</a>
+    </div>
+  </div>
+</section>
 <!-- OLD WAY / NEW WAY -->
 <section id="contrast">
   <div class="eyebrow reveal">Why Most Ads Die</div>
@@ -1289,13 +1368,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   </div>
 </section>
 
-<!-- NOT ONE OF THE THREE -->
-<section id="options">
-  <div class="eyebrow reveal">Not One of the Three</div>
-  <h2 class="title reveal">The Sprint stands <em>on its own.</em></h2>
-  <p class="lede reveal">If the slots are gone, or you would rather not have us running the media at all, you can just buy the Sprint. Same day on location, same turnaround, same work. It is the production half of what the founding partners get in month one. You pay for it, and nothing is attached to it.</p>
-  <div class="close-cta reveal"><a class="btn btn--ghost" href="/sprint">See the Sprint on its own &rarr;</a></div>
-</section>
 
 <!-- PROOF -->
 <section id="proof">
