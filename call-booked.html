@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call Booked · New Terrain Creative</title>
+<meta name="description" content="Your strategy call with New Terrain Creative is confirmed.">
+
+<!-- A confirmation page reached only after booking. Nothing should find
+     it in search, and nothing links to it from the site. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     META · PageView ONLY. Read this before adding anything.
+
+     iClosed has ALREADY fired its Call Booked conversion, browser and
+     CAPI, on this same dataset, by the time this page loads. This page
+     must not fire a second one.
+
+     The pixel is here for two legitimate reasons and no others:
+       · funnel visualisation
+       · building an exclusion audience so people who already booked
+         stop seeing the ad
+
+     DO NOT create a URL-based custom conversion on /call-booked in
+     Events Manager. It would fire alongside iClosed's Call Booked and
+     double-count every booking, and no event_id would deduplicate them
+     because the two are minted independently.
+     ══════════════════════════════════════════════════════════════════ -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --black:#0A0A0A; --raised:#111010;
+    --gold:#C8A96E; --gold-dim:#A08A57;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D;
+    --line:#1e1e1e;
+    --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    background:var(--black); color:var(--soft);
+    font-family:var(--body); font-weight:300; font-size:15px; line-height:1.75;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a { color:var(--gold); }
+  :focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+
+  .bar { border-bottom:1px solid var(--line); }
+  .bar-inner {
+    max-width:760px; margin:0 auto; padding:20px clamp(20px,6vw,40px);
+    display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .wordmark { font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--parchment); text-decoration:none; }
+  .wordmark span { color:var(--gold); }
+  .bar-note { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+
+  main { max-width:760px; margin:0 auto; padding:clamp(48px,8vw,90px) clamp(20px,6vw,40px) clamp(60px,9vw,110px); }
+
+  .eyebrow { font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+  h1 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(38px,6.5vw,62px); line-height:1.02;
+    color:var(--parchment); margin-bottom:18px; text-wrap:balance;
+  }
+  h1 em { font-style:italic; color:var(--gold); }
+  .lede { font-size:clamp(15px,1.6vw,17px); line-height:1.8; max-width:52ch; }
+  .lede b { color:var(--parchment); font-weight:400; }
+
+  .prep { margin-top:40px; border:1px solid var(--line); padding:clamp(22px,3vw,30px); }
+  .prep h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:16px;
+  }
+  .prep p { font-size:13.5px; color:var(--muted); margin-bottom:14px; max-width:56ch; }
+  ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  li { font-size:14.5px; line-height:1.6; padding-left:18px; position:relative; color:var(--soft); }
+  li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:1px; background:var(--gold); }
+
+  .after { margin-top:26px; font-size:14px; line-height:1.8; max-width:56ch; }
+
+  .founding {
+    margin-top:26px; border-left:2px solid var(--gold-dim); padding:14px 0 14px 18px;
+    font-size:13.5px; line-height:1.75; color:var(--muted); max-width:58ch;
+  }
+  .founding b { color:var(--parchment); font-weight:400; }
+
+  .reschedule {
+    margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--muted); max-width:56ch;
+  }
+
+  footer { border-top:1px solid var(--line); }
+  footer .inner {
+    max-width:760px; margin:0 auto; padding:22px clamp(20px,6vw,40px);
+    display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  footer a { color:var(--muted); text-decoration:none; }
+  footer a:hover, footer a:focus-visible { color:var(--gold); }
+
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-inner">
+    <a class="wordmark" href="/">New Terrain <span>Creative</span></a>
+    <span class="bar-note">Los Angeles · Tampa</span>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">Confirmed</p>
+  <h1>You're <em>booked.</em></h1>
+  <p class="lede">Your strategy call with New Terrain Creative is confirmed. <b>Check your inbox for the calendar invitation and the video link.</b> If it has not arrived in a few minutes, look in spam before you worry about it.</p>
+
+  <section class="prep">
+    <h2>Worth a thought before the call</h2>
+    <p>Nothing to prepare or send over. Just have a rough idea of:</p>
+    <ul>
+      <li>What you are currently doing for marketing</li>
+      <li>What a typical customer or client is worth to you</li>
+      <li>What you have already tried</li>
+      <li>The biggest growth problem you want solved</li>
+    </ul>
+  </section>
+
+  <p class="after">We will use the call to work out whether New Terrain is a fit and what the right next step looks like. <b>If we are not the right people for it, we will tell you on the call</b> rather than send a proposal afterwards.</p>
+
+  <!-- Shown only when the booking carried ?offer=founding-three. If iClosed
+       does not pass the parameter through, this stays hidden and the page
+       reads correctly as the generic confirmation. -->
+  <p class="founding" id="founding-note" hidden><b>Founding Three applicants:</b> we will read your application and look at your business before the call, so the time goes on strategy rather than rehashing the form.</p>
+
+  <p class="reschedule">Need to reschedule? Use the link in your confirmation email. Anything else, reply to that email or reach us at <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>.</p>
+</main>
+
+<footer>
+  <div class="inner">
+    <span>New Terrain Creative © 2026</span>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* One generic page for every booking source. The Founding Three line is
+     the only variation, and it appears only if the offer identifier
+     survives the round trip through iClosed.
+
+     Deliberately NOT a conversion event. iClosed already fired Call
+     Booked, browser and CAPI, on this dataset before this page loaded.
+     See the note in <head>. */
+  var offer = new URLSearchParams(window.location.search).get('offer') || '';
+  if (/founding/i.test(offer)) {
+    var note = document.getElementById('founding-note');
+    if (note) note.hidden = false;
+  }
+})();
+</script>
+</body>
+</html>

@@ -192,7 +192,9 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
 
 # Unlisted pages must stay unlisted. There is no sitemap today; this fires
 # the moment someone adds one and forgets.
-UNLISTED = ['growth-guide', 'production-media']
+# /call-booked is reached only by an iClosed redirect after a booking, so
+# nothing on the site should link it and nothing should index it.
+UNLISTED = ['growth-guide', 'production-media', 'call-booked']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     body = sitemap.read_text(encoding='utf-8')
