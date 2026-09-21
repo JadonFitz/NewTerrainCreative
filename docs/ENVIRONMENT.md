@@ -13,8 +13,16 @@ it should ever contain.
 |---|---|---|
 | `SUPABASE_URL` | `api/_supabase.js` | Provided by the Vercel Supabase integration, possibly prefixed (`sbdata_SUPABASE_URL`). The resolver matches on suffix. |
 | `SUPABASE_SERVICE_ROLE_KEY` | `api/_supabase.js` | Server only. Bypasses row level security. Never expose to a browser and never use it as a signing key. |
-| `SENDGRID_API_KEY` | `api/apply.js`, `api/strategy-call.js` | Mail Send permission only. |
+| `SENDGRID_API_KEY` | `api/apply.js`, `api/project.js` | Mail Send permission only. **Keep.** For `/apply` this is the second capture path, not a courtesy email: a submission fails only when Supabase *and* email both fail. Removing it makes Supabase a single point of failure for a record carrying contractual acknowledgements. |
 | `META_CAPI_TOKEN` | `api/_meta.js` | Conversions API access token. |
+
+## Retired
+
+| Variable | Status |
+|---|---|
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | **Resolved 21 Sep 2026.** Provisioned for the abandoned `feat/lead-booking-automation` branch, which polled Google Calendar because Appointment Schedules emit no booking webhook. iClosed made it unnecessary. The key was revoked in Google Cloud and the variable removed from Vercel. Nothing deployed ever referenced it. |
+| `CRON_SECRET` | Still set on Production and Preview. It guarded `/api/sync-bookings`, which is not deployed and exists only on `feat/lead-booking-automation`. Remove it when that branch is formally retired. |
+| `APPLY_STEP_SECRET` | Removed earlier. The two-step application became stateless, so nothing signs a handoff token any more. |
 
 ## Optional, with defaults in code
 

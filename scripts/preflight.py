@@ -104,7 +104,7 @@ ok(last) if r.returncode == 0 else bad(r.stdout.strip() + r.stderr.strip())
 REQUIRED = {
     'SUPABASE_URL': 'database, suffix-matched so a prefix is fine',
     'SUPABASE_SERVICE_ROLE_KEY': 'database, server only',
-    'SENDGRID_API_KEY': 'application and enquiry email',
+    'SENDGRID_API_KEY': 'the /apply second capture path, and project enquiries',
     'META_CAPI_TOKEN': 'server-side conversions',
 }
 

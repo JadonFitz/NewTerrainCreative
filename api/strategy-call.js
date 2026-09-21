@@ -19,9 +19,17 @@
 
    ── Delete this file when ────────────────────────────────────────────
    The iClosed flow has run clean in production for one week. Remove it
-   together with scripts/test-strategy-call.mjs, and with SENDGRID_API_KEY
-   only if /api/apply no longer needs it (today it still does: see the
-   second capture path in api/apply.js).
+   together with scripts/test-strategy-call.mjs. That is the whole list.
+
+   SENDGRID_API_KEY is NOT part of this cleanup and must not be removed
+   with it. /api/apply still depends on it, and not as a nicety: it is
+   the second capture path. api/apply.js fails a submission only when
+   Supabase AND email both fail, so removing the key would make Supabase
+   a single point of failure for a record carrying the applicant's
+   contractual acknowledgements. api/project.js uses it too.
+
+   That variable becomes removable only if /api/apply is first changed to
+   stop depending on it, which is a separate decision and not scheduled.
    ══════════════════════════════════════════════════════════════════════ */
 
 export default async function handler(req, res) {
