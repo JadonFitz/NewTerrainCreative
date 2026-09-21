@@ -227,9 +227,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       title: 'Apply to book a Founding Three call with New Terrain Creative'
     },
     'production-media': {
-      ready: false,                 // pending its own iClosed event
-      url:   '',
-      title: 'Book a strategy call with New Terrain Creative'
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+      title: 'Book a Growth strategy consultation with New Terrain Creative'
     },
     'ad-sprint': {
       ready: false,                 // pending its own iClosed event
@@ -238,10 +238,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }
   };
 
+  /* /grow links here with no ?offer=. It sells the same retainer as
+     /production-media, so it books the same event rather than showing a
+     pending panel. The two are still told apart in reporting by the
+     offer identifier on the CTAClick and by first-touch landing_page. */
   var DEFAULT_SCHEDULER = {
-    ready: false,                   // /grow arrives with no offer
-    url:   '',
-    title: 'Book a strategy call with New Terrain Creative'
+    ready: true,
+    url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+    title: 'Book a Growth strategy consultation with New Terrain Creative'
   };
 
   var offerSlug = (new URLSearchParams(window.location.search).get('offer') || '')
