@@ -127,7 +127,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     margin-top:40px; border:1px solid var(--line); background:var(--raised);
     min-height:680px; position:relative; overflow:hidden;
   }
-  .scheduler iframe { width:100%; height:100%; min-height:680px; border:0; display:block; }
+  .scheduler .iclosed-widget { width:100%; min-height:680px; }
+  .scheduler iframe { width:100%; min-height:680px; border:0; display:block; }
+  @media (max-width:620px) { .scheduler .iclosed-widget, .scheduler iframe { min-height:820px; } }
   .scheduler-pending {
     position:absolute; inset:0; display:flex; flex-direction:column;
     align-items:center; justify-content:center; gap:14px; text-align:center; padding:32px;
@@ -137,7 +139,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .scheduler-pending p { font-size:13.5px; line-height:1.8; color:var(--muted); max-width:38ch; }
   .scheduler-note { margin-top:14px; font-size:12.5px; line-height:1.75; color:var(--muted); max-width:56ch; }
-  @media (max-width:620px) { .scheduler, .scheduler iframe { min-height:760px; } }
 </style>
 </head>
 <body>
@@ -172,9 +173,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <div class="scheduler" id="scheduler">
     <div class="scheduler-pending">
       <span class="mark">New Terrain</span>
-      <p>The booking calendar is being connected. In the meantime, email
+      <p>The booking calendar for this offer is being connected. In the meantime, email
          <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
-         and we will find a time by hand.</p>
+         and we will find a time by hand, usually the same day.</p>
     </div>
   </div>
 
@@ -207,11 +208,47 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      iClosed's events on the same dataset would double-count, and our
      event_id could not deduplicate against an id iClosed mints itself.
      ─────────────────────────────────────────────────────────────── */
-  var SCHEDULER = {
-    ready: false,
-    url:   '',                      // e.g. https://app.iclosed.io/e/newterrain/strategy-call
+  /* One scheduler per offer. Each offer gets its OWN iClosed event, so
+     each needs its own URL and its own readiness. They go live one at a
+     time as the events are created; an offer that is not ready shows the
+     pending panel rather than borrowing another offer's calendar, which
+     would book people onto the wrong event and mis-attribute every
+     conversion iClosed fires for it.
+
+     Reached here as:
+       /apply success      -> ?offer=founding-three
+       /production-media   -> ?offer=production-media
+       /grow               -> no parameter
+     ─────────────────────────────────────────────────────────────── */
+  var SCHEDULERS = {
+    'founding-three': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
+      title: 'Apply to book a Founding Three call with New Terrain Creative'
+    },
+    'production-media': {
+      ready: false,                 // pending its own iClosed event
+      url:   '',
+      title: 'Book a strategy call with New Terrain Creative'
+    },
+    'ad-sprint': {
+      ready: false,                 // pending its own iClosed event
+      url:   '',
+      title: 'Book an Ad Sprint fit call with New Terrain Creative'
+    }
+  };
+
+  var DEFAULT_SCHEDULER = {
+    ready: false,                   // /grow arrives with no offer
+    url:   '',
     title: 'Book a strategy call with New Terrain Creative'
   };
+
+  var offerSlug = (new URLSearchParams(window.location.search).get('offer') || '')
+                    .trim().toLowerCase();
+  var SCHEDULER = Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)
+    ? SCHEDULERS[offerSlug]
+    : DEFAULT_SCHEDULER;
 
   /* Attribution passthrough. iClosed reads fbp/fbc from the browser on
      its own; what it cannot know is which offer sent the visitor or what
@@ -223,9 +260,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     var u;
     try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
 
-    var q = new URLSearchParams(window.location.search);
-    var offer = q.get('offer');
-    if (offer) u.searchParams.set('offer', offer);
+    if (offerSlug) u.searchParams.set('offer', offerSlug);
 
     if (window.ntc && ntc.attribution) {
       var a = ntc.attribution() || {};
@@ -237,17 +272,42 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     return u.toString();
   }
 
+  /* iClosed's own inline widget, not a hand-built iframe. It owns the
+     frame, its resize messaging and its mobile behaviour, so we do not
+     reimplement any of that.
+
+     The attribution goes into data-url rather than being left to the
+     widget: it forwards the page's own query string, but the UTMs we
+     care about are FIRST touch out of localStorage and may not be on
+     this URL at all. Putting them in data-url makes them certain.
+
+     Height comes from CSS, not the vendor's inline style, so the frame
+     can be taller on a narrow screen where the calendar wraps. */
   var slot = document.getElementById('scheduler');
   if (slot && SCHEDULER.ready) {
     var href = schedulerUrl();
     if (href) {
-      var f = document.createElement('iframe');
-      f.src = href;
-      f.title = SCHEDULER.title;
-      f.loading = 'lazy';
-      f.setAttribute('allow', 'camera; microphone; fullscreen; payment');
+      var host = document.createElement('div');
+      host.className = 'iclosed-widget';
+      host.setAttribute('data-url', href);
+      host.setAttribute('title', SCHEDULER.title);
       slot.innerHTML = '';
-      slot.appendChild(f);
+      slot.appendChild(host);
+
+      var sc = document.createElement('script');
+      sc.src = 'https://app.iclosed.io/assets/widget.js';
+      sc.async = true;
+      sc.onerror = function () {
+        // Vendor unreachable. Restore the pending panel rather than leave
+        // a tall empty box on the page someone came here to book from.
+        slot.innerHTML =
+          '<div class="scheduler-pending"><span class="mark">New Terrain</span>' +
+          '<p>The booking calendar did not load. Email ' +
+          '<a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>' +
+          ' and we will find a time by hand, usually the same day.</p></div>';
+        console.warn('strategy-call: iClosed widget failed to load');
+      };
+      document.body.appendChild(sc);
     }
   }
 

@@ -102,6 +102,19 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .offer-note b { color:var(--parchment); font-weight:400; }
 
+
+  /* iClosed confirmation card, integrated rather than bolted on */
+  .booking { margin-top:34px; border:1px solid var(--line); padding:clamp(20px,3vw,26px); }
+  .booking h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:14px;
+  }
+  /* The vendor snippet ships an inline height. Min-height keeps the card
+     from collapsing while it loads and lets it grow on a narrow screen,
+     where the details wrap onto more lines. */
+  .call-details-widget { width:100%; min-height:340px; }
+  @media (max-width:520px) { .call-details-widget { min-height:430px; } }
+
   .reschedule {
     margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
     font-size:13px; color:var(--muted); max-width:56ch;
@@ -152,6 +165,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        the round trip working. -->
   <p class="offer-note" id="offer-note" hidden></p>
 
+  <!-- ══════════════════════════════════════════════════════════════
+       iCLOSED BOOKING CONFIRMATION · DISPLAY ONLY
+       ──────────────────────────────────────────────────────────────
+       Shows the booked time, host, and the meeting link, which this
+       page cannot know on its own.
+
+       It fires NO conversion and must not be made to. iClosed already
+       sent Call Booked, browser and CAPI, before this page loaded.
+
+       Starts hidden and is only revealed once the widget has actually
+       rendered something. A third-party script that fails to load would
+       otherwise leave a 340px hole above the reschedule line.
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="booking" id="booking" hidden aria-label="Your appointment details">
+    <h2>Your appointment</h2>
+    <!-- iClosed widget begin -->
+    <div class="call-details-widget" data-url="https://app.iclosed.io/embed"></div>
+    <!-- iClosed widget end -->
+  </section>
+
   <p class="reschedule">Need to reschedule? Use the link in your confirmation email. Anything else, reply to that email or reach us at <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>.</p>
 </main>
 
@@ -191,11 +224,88 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                       'for you and which of the two sizes actually fits.'
   };
 
-  var offer = (new URLSearchParams(window.location.search).get('offer') || '').trim().toLowerCase();
+  var params = new URLSearchParams(window.location.search);
+  var offer = (params.get('offer') || '').trim().toLowerCase();
   var note = document.getElementById('offer-note');
   if (note && Object.prototype.hasOwnProperty.call(NOTES, offer)) {
     note.innerHTML = NOTES[offer];
     note.hidden = false;
+  }
+
+  /* ── iClosed confirmation card · display only ──────────────────────
+     Shows the booked time, host and meeting link. It fires nothing.
+
+     Three ways this can go wrong, all handled, because the failure mode
+     is a 340px empty box sitting above the reschedule line on the page
+     someone sees right after giving us their time:
+
+       1. Somebody opens /call-booked directly with no booking context.
+          iClosed forwards its event parameters on the redirect, so if
+          the only parameter present is our own `offer`, there is nothing
+          to render and the script is never even requested.
+
+       2. The vendor script fails to load, or loads and renders nothing.
+          The card stays hidden; a MutationObserver reveals it only once
+          the widget has actually put something in the div, and a timeout
+          gives up quietly.
+
+       3. It renders slowly. The observer catches it whenever it lands,
+          up to the timeout.
+
+     The generic copy above is always visible regardless, so a failure
+     here costs a detail, never the confirmation itself.
+     ─────────────────────────────────────────────────────────────── */
+  var booking = document.getElementById('booking');
+  var widget = booking && booking.querySelector('.call-details-widget');
+
+  var hasBookingContext = (function () {
+    var n = 0;
+    params.forEach(function (_, k) { if (k !== 'offer') n++; });
+    return n > 0;
+  })();
+
+  if (booking && widget && hasBookingContext) {
+    var settled = false;
+    var reveal = function () {
+      if (settled) return;
+      settled = true;
+      try { observer.disconnect(); } catch (e) {}
+      clearTimeout(timer);
+      booking.hidden = false;
+    };
+    var giveUp = function () {
+      if (settled) return;
+      settled = true;
+      try { observer.disconnect(); } catch (e) {}
+      clearTimeout(timer);
+      console.warn('call-booked: iClosed widget did not render; card left hidden');
+    };
+
+    /* The widget injects a cross-origin <iframe>, so "has children" only
+       proves the script ran, not that iClosed answered. Wait for the
+       frame's own load event before revealing; a DNS failure or a 500
+       from app.iclosed.io then leaves the card hidden rather than
+       showing an empty bordered box. We cannot read inside the frame,
+       so whatever iClosed renders in it, including its own not-found
+       state, is shown as-is. That is theirs to say, not ours to hide. */
+    var observer = new MutationObserver(function () {
+      var frame = widget.querySelector('iframe');
+      if (frame) {
+        frame.addEventListener('load', reveal, { once: true });
+        frame.addEventListener('error', giveUp, { once: true });
+        observer.disconnect();
+        return;
+      }
+      if ((widget.textContent || '').trim()) reveal();
+    });
+    observer.observe(widget, { childList: true, subtree: true, characterData: true });
+    var timer = setTimeout(giveUp, 8000);
+
+    var sc = document.createElement('script');
+    sc.src = 'https://app.iclosed.io/assets/widget.js';
+    sc.async = true;
+    sc.onerror = giveUp;
+    document.body.appendChild(sc);
   }
 })();
 </script>
