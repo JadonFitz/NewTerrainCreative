@@ -131,6 +131,12 @@
     // hand after qualification. These deliverable counts are the approved
     // package baselines; a proposal confirms fit and any custom scope.
     retainer: {
+      /* Kept for copy that still needs a single figure rather than the
+         table: /production-media, the video scripts, a reply to "roughly
+         what does it cost". It is NO LONGER what /grow publishes.
+         Changed 21 Sep 2026: /grow now renders publicGuideTiers, the
+         same object /growth-guide reads. One definition, two depths.
+         The page qualifies, the guide closes. */
       publicCapacitySignal: 'mid four figures monthly',
       minimumTermMonths: 3,
       publicGuideTiers: [

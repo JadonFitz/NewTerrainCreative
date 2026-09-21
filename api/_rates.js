@@ -16,9 +16,15 @@
    compete with it. If the two disagree, offer.js is right, because
    offer.js is the one a client has read.
 
-   Public capacity signal on /grow is still "mid four figures monthly"
-   and nothing more precise. /grow deliberately publishes no package
-   structure; /growth-guide does, and is sent by hand.
+   CHANGED 21 Sep 2026. /grow now PUBLISHES the three packages, rendered
+   from assets/offer.js retainer.publicGuideTiers, the same object
+   /growth-guide reads. It carries a three-line summary per tier to
+   qualify; the guide carries the full deliverable composition to close.
+
+   "Mid four figures monthly" survives as publicCapacitySignal for copy
+   that still needs one figure rather than a table, such as
+   /production-media and the video scripts. It is no longer what /grow
+   says.
 
    NOTE: à-la-carte property and event rates are a separate product line
    and are deliberately not represented here. Do not merge them into the
