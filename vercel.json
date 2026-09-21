@@ -3,6 +3,18 @@
   "outputDirectory": ".",
   "framework": null,
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/production-media",
+      "destination": "/grow",
+      "permanent": false
+    },
+    {
+      "source": "/production-media.html",
+      "destination": "/grow",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

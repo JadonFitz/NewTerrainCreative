@@ -132,8 +132,11 @@
     // package baselines; a proposal confirms fit and any custom scope.
     retainer: {
       /* Kept for copy that still needs a single figure rather than the
-         table: /production-media, the video scripts, a reply to "roughly
-         what does it cost". It is NO LONGER what /grow publishes.
+         table: the homepage engage card, /grow's meta description, the
+         video scripts, a reply to "roughly what does it cost". It is NO
+         LONGER what the body of /grow publishes.
+         /production-media used to be the main consumer; that page was
+         retired 21 Sep 2026 and redirects to /grow.
          Changed 21 Sep 2026: /grow now renders publicGuideTiers, the
          same object /growth-guide reads. One definition, two depths.
          The page qualifies, the guide closes. */
@@ -325,6 +328,8 @@
        on the event. No schema change.
        ─────────────────────────────────────────────────────────────── */
     paidOffers: {
+      // Retired page. The slug stays so a live ad still carrying it keeps
+      // its offer identifier; /production-media now redirects to /grow.
       'production-media': 'production_media',
       'ad-sprint':        'ad_sprint'
     },
