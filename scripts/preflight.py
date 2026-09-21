@@ -175,12 +175,13 @@ for md in ROOT.glob('*.md'):
     if md.name != 'README.md':
         warn(f'{md.name} sits in the deployed root')
 
-# ── the calendar must sit behind qualification ────────────────────────
-# Every booking is meant to come from a completed form. A page linking
-# straight to the scheduler is a hole: no lead row, no attribution, no
-# conversion event, and a call with someone we know nothing about.
-# apply.html is the one exception, and it is a success state shown only
-# after a full application.
+# ── no page may link a raw calendar ───────────────────────────────────
+# iClosed owns qualification now, and its events ask their own questions,
+# so a page linking to /strategy-call is fine. What is never fine is a
+# link straight to the underlying Google Calendar: that skips iClosed
+# entirely, so no questions are asked, no attribution is attached and no
+# conversion fires. This guard exists because two homepage CTAs once did
+# exactly that in production.
 CALENDAR = 'calendar.app.google'
 MAY_LINK_CALENDAR = {'apply.html'}
 leaks = [f.name for f in ROOT.glob('*.html')
@@ -188,7 +189,7 @@ leaks = [f.name for f in ROOT.glob('*.html')
          and CALENDAR in f.read_text(encoding='utf-8')]
 bad('page(s) link straight to the scheduler, bypassing qualification: '
     + ', '.join(leaks)) if leaks \
-    else ok('the scheduler is reachable only after a completed form')
+    else ok('no page links a raw calendar, bypassing iClosed')
 
 # The floating booking widget must not sit on a page that already asks
 # for something. Two ways in at once is a worse page, /strategy-call
@@ -204,6 +205,19 @@ carriers = sorted(f.stem for f in ROOT.glob('*.html')
 bad('the booking widget is on page(s) that already ask for something: '
     + ', '.join(wrong)) if wrong     else ok('the booking widget is on ' + (', '.join('/' + c for c in carriers) or 'no page')
             + ', and nothing with a form')
+
+# Parked pages. /apply still works and is deliberately unlinked: the
+# Founding Three event in iClosed now asks the same questions, and two
+# forms back to back was a place to drop out of. Linking it again is a
+# real decision, so it should fail here first. See the note in apply.html.
+PARKED = ['apply']
+for page in PARKED:
+    linkers = [f.name for f in ROOT.glob('*.html')
+               if f.stem != page
+               and (f'href="/{page}"' in f.read_text(encoding='utf-8')
+                    or f'href="{page}.html"' in f.read_text(encoding='utf-8'))]
+    bad(f'/{page} is parked but linked from ' + ', '.join(linkers)) if linkers \
+        else ok(f'/{page} is parked and unlinked')
 
 # Unlisted pages must stay unlisted. There is no sitemap today; this fires
 # the moment someone adds one and forgets.
