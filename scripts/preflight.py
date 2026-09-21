@@ -190,6 +190,21 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
     + ', '.join(leaks)) if leaks \
     else ok('the scheduler is reachable only after a completed form')
 
+# The floating booking widget must not sit on a page that already asks
+# for something. Two ways in at once is a worse page, /strategy-call
+# would load the vendor script twice, and a booking widget on top of a
+# submitted application or a confirmation is noise, not a CTA.
+LIFT = 'data-cta-widget'
+NO_LIFT = ['apply.html', 'founding.html', 'project.html', 'strategy-call.html',
+           'booked.html', 'call-booked.html', 'onboarding.html', 'book.html']
+wrong = [n for n in NO_LIFT
+         if (ROOT / n).exists() and LIFT in (ROOT / n).read_text(encoding='utf-8')]
+carriers = sorted(f.stem for f in ROOT.glob('*.html')
+                  if LIFT in f.read_text(encoding='utf-8'))
+bad('the booking widget is on page(s) that already ask for something: '
+    + ', '.join(wrong)) if wrong     else ok('the booking widget is on ' + (', '.join('/' + c for c in carriers) or 'no page')
+            + ', and nothing with a form')
+
 # Unlisted pages must stay unlisted. There is no sitemap today; this fires
 # the moment someone adds one and forgets.
 # /call-booked is reached only by an iClosed redirect after a booking, so
