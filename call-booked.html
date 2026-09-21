@@ -224,8 +224,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                       'for you and which of the two sizes actually fits.'
   };
 
+  /* The key here is whatever the iClosed redirect for that event is
+     configured to append, which is not necessarily the slug
+     /strategy-call forwarded on the way in. Both spellings are accepted
+     so a redirect set to either one shows the right line. */
+  var ALIAS = { 'ad-sprint': 'sprint', 'production-media': 'growth',
+                'paid_retainer': 'growth', 'founding_three': 'founding-three' };
+
   var params = new URLSearchParams(window.location.search);
   var offer = (params.get('offer') || '').trim().toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(ALIAS, offer)) offer = ALIAS[offer];
   var note = document.getElementById('offer-note');
   if (note && Object.prototype.hasOwnProperty.call(NOTES, offer)) {
     note.innerHTML = NOTES[offer];

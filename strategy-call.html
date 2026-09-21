@@ -162,8 +162,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        reminders. Nothing on this page posts to /api/strategy-call any
        more, and no NTC Lead event fires from here.
 
-       TO ACTIVATE · set SCHEDULER.url to the iClosed booking link and
-       flip ready:true. Nothing else on this page needs to change.
+       Every offer now has its own live iClosed event. To add another,
+       give it a SCHEDULERS entry with its own url and ready:true.
+       Nothing else on this page needs to change.
 
        Attribution: the offer identifier and any first-touch UTM/fbclid we
        already hold are appended to the iClosed URL as query parameters so
@@ -232,9 +233,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       title: 'Book a Growth strategy consultation with New Terrain Creative'
     },
     'ad-sprint': {
-      ready: false,                 // pending its own iClosed event
-      url:   '',
-      title: 'Book an Ad Sprint fit call with New Terrain Creative'
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/ad-sprint',
+      title: 'Book an Ad Sprint fit call with New Terrain Creative',
+      /* The Sprint is a one-time production buy, not a retainer, and it
+         is the one offer that arrives here cold rather than through a
+         form. The default heading asks what they are trying to grow,
+         which is the retainer question; these two lines ask the Sprint
+         question instead. Scope is confirmed on this call, payment
+         follows it, and only then is a shoot booked. */
+      eyebrow: 'Ad Sprint',
+      lede:    'Thirty minutes to confirm what we would shoot, which package fits, and what we would test first. <b>Nothing is due to book this call.</b> If the Sprint is not the right move we will say so on it.'
     }
   };
 
@@ -264,7 +273,19 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     var u;
     try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
 
-    if (offerSlug) u.searchParams.set('offer', offerSlug);
+    /* Only a slug we recognise. An unknown ?offer= falls through to the
+       default calendar, and forwarding its text would put invented offer
+       names into iClosed's booking records and our own reporting. */
+    if (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)) {
+      u.searchParams.set('offer', offerSlug);
+    }
+
+    /* /sprint sends pkg=eight or pkg=fifteen so the call opens already
+       knowing which package they clicked. It is a hint for the call, not
+       a commitment: scope is confirmed on the call either way. */
+    var pkg = (new URLSearchParams(window.location.search).get('pkg') || '')
+                .trim().toLowerCase();
+    if (pkg === 'eight' || pkg === 'fifteen') u.searchParams.set('pkg', pkg);
 
     if (window.ntc && ntc.attribution) {
       var a = ntc.attribution() || {};
@@ -274,6 +295,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }
     if (window.ntc && ntc.sessionId) u.searchParams.set('ntc_session', ntc.sessionId());
     return u.toString();
+  }
+
+  /* Per-offer heading, where an offer sets one. Everything else keeps
+     the default retainer copy. */
+  if (SCHEDULER.eyebrow) {
+    var eb = document.querySelector('.eyebrow');
+    if (eb) eb.textContent = SCHEDULER.eyebrow;
+  }
+  if (SCHEDULER.lede) {
+    var ld = document.querySelector('.lede');
+    if (ld) ld.innerHTML = SCHEDULER.lede;
   }
 
   /* iClosed's own inline widget, not a hand-built iframe. It owns the
@@ -321,7 +353,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   if (!window.ntc) return;
   ntc.track('ViewContent', {
     content_name: document.title,
-    offer: new URLSearchParams(window.location.search).get('offer') || 'paid_retainer'
+    // The recognised slug, for the same reason the URL above carries only
+    // recognised slugs: an unknown one is noise in the dataset.
+    offer: (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug))
+             ? offerSlug : 'paid_retainer'
   });
 })();
 </script>
