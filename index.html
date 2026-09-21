@@ -2110,6 +2110,22 @@
 </footer>
 
 <script>
+  // ── Booking widget · mounted only once the intro is out of the way ──
+  //    See the note above the </body> tag for why this is not a plain
+  //    script tag on this page. Idempotent: the intro has several exits
+  //    and more than one of them can run.
+  let bookingMounted = false;
+  function mountBookingWidget() {
+    if (bookingMounted) return;
+    bookingMounted = true;
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = 'https://app.iclosed.io/assets/widget.js';
+    s.setAttribute('data-cta-widget', '_H-7V8fHVTuw');
+    s.async = true;
+    document.body.appendChild(s);
+  }
+
   // ── Intro animation ──
   (() => {
     const intro = document.getElementById('intro');
@@ -2126,6 +2142,7 @@
     if (!forced && (seen || matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       intro.remove();
       document.body.classList.remove('intro-lock');
+      mountBookingWidget();
       return;
     }
 
@@ -2146,7 +2163,10 @@
         vid.volume = Math.max(0, vid.volume - 0.12);
         if (vid.volume <= 0) { vid.pause(); clearInterval(fade); }
       }, 90);
-      setTimeout(() => { clearInterval(fade); vid.pause(); intro.remove(); }, 950);
+      setTimeout(() => {
+        clearInterval(fade); vid.pause(); intro.remove();
+        mountBookingWidget();
+      }, 950);
     }
 
     function showEnd() {
@@ -2353,7 +2373,13 @@
      the scheduler inline already, and would load this script twice),
      /booked, /call-booked and /onboarding. scripts/preflight.py fails
      if it turns up on one of those.
+
+     THE TAG IS NOT HERE. The vendor renders its launcher the moment the
+     script loads, and this page opens on a full-screen film, so loading
+     it up front puts a booking bubble over the opening shot. The
+     dashboard's auto-launch delay does not help: that governs when the
+     panel opens, not when the launcher appears. mountBookingWidget()
+     below injects the script once the intro is gone.
      ══════════════════════════════════════════════════════════════════ -->
-<script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="_H-7V8fHVTuw" async></script>
 </body>
 </html>
