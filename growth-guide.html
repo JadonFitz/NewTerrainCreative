@@ -332,5 +332,28 @@
   }
 })();
 </script>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     iClosed Lift widget · floating "Book a Call" launcher
+     ──────────────────────────────────────────────────────────────────
+     Books the Growth Strategy Consultation, the same event /grow and
+     /strategy-call send people to. It is not a second funnel: iClosed
+     asks its own qualification questions and fires its own
+     scheduler-stage events on our pixel, exactly as the inline embed
+     does. Nothing here fires a Lead.
+
+     WHICH PAGES IT APPEARS ON IS NOT DECIDED BY THIS TAG. The widget
+     config in iClosed carries an include-list of URLs, and the script
+     renders nothing on a page that is not on it. Adding the tag to a
+     page is only half the job; the URL has to be added in the iClosed
+     dashboard too.
+
+     Deliberately absent from anything with an application or a form of
+     our own: /apply, /founding, /project, /strategy-call (which embeds
+     the scheduler inline already, and would load this script twice),
+     /booked, /call-booked and /onboarding. scripts/preflight.py fails
+     if it turns up on one of those.
+     ══════════════════════════════════════════════════════════════════ -->
+<script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="_H-7V8fHVTuw" async></script>
 </body>
 </html>
