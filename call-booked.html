@@ -96,11 +96,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   .after { margin-top:26px; font-size:14px; line-height:1.8; max-width:56ch; }
 
-  .founding {
+  .offer-note {
     margin-top:26px; border-left:2px solid var(--gold-dim); padding:14px 0 14px 18px;
     font-size:13.5px; line-height:1.75; color:var(--muted); max-width:58ch;
   }
-  .founding b { color:var(--parchment); font-weight:400; }
+  .offer-note b { color:var(--parchment); font-weight:400; }
 
   .reschedule {
     margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
@@ -146,10 +146,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   <p class="after">We will use the call to work out whether New Terrain is a fit and what the right next step looks like. <b>If we are not the right people for it, we will tell you on the call</b> rather than send a proposal afterwards.</p>
 
-  <!-- Shown only when the booking carried ?offer=founding-three. If iClosed
-       does not pass the parameter through, this stays hidden and the page
-       reads correctly as the generic confirmation. -->
-  <p class="founding" id="founding-note" hidden><b>Founding Three applicants:</b> we will read your application and look at your business before the call, so the time goes on strategy rather than rehashing the form.</p>
+  <!-- One line, chosen by the ?offer= the iClosed redirect carries. If the
+       parameter is absent or unrecognised this stays hidden and the page
+       reads correctly as the generic confirmation, so nothing depends on
+       the round trip working. -->
+  <p class="offer-note" id="offer-note" hidden></p>
 
   <p class="reschedule">Need to reschedule? Use the link in your confirmation email. Anything else, reply to that email or reach us at <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>.</p>
 </main>
@@ -166,17 +167,35 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 (function () {
   'use strict';
 
-  /* One generic page for every booking source. The Founding Three line is
-     the only variation, and it appears only if the offer identifier
-     survives the round trip through iClosed.
+  /* ONE confirmation page for every booking source. Every iClosed event
+     redirects here and varies only by ?offer=. Do not build a second
+     confirmation page per offer, and do not build one per ad: every
+     creative for the same offer uses the same iClosed event and lands
+     here.
+
+     An unrecognised or absent offer shows no line at all rather than a
+     wrong one. That is why this is a lookup and not a chain of tests.
 
      Deliberately NOT a conversion event. iClosed already fired Call
      Booked, browser and CAPI, on this dataset before this page loaded.
      See the note in <head>. */
-  var offer = new URLSearchParams(window.location.search).get('offer') || '';
-  if (/founding/i.test(offer)) {
-    var note = document.getElementById('founding-note');
-    if (note) note.hidden = false;
+  var NOTES = {
+    'founding-three': '<b>Founding Three applicants:</b> we will read your application and look at ' +
+                      'your business before the call, so the time goes on strategy rather than ' +
+                      'rehashing the form.',
+    'growth':         '<b>Before we talk:</b> if you know roughly what you are spending on ' +
+                      'advertising now and what a customer is worth, the thirty minutes goes a lot ' +
+                      'further. Rough numbers are fine.',
+    'sprint':         '<b>About the Ad Sprint:</b> this is a fit call, not a sales call with a ' +
+                      'deposit at the end. We will work out whether a Sprint is the right thing ' +
+                      'for you and which of the two sizes actually fits.'
+  };
+
+  var offer = (new URLSearchParams(window.location.search).get('offer') || '').trim().toLowerCase();
+  var note = document.getElementById('offer-note');
+  if (note && Object.prototype.hasOwnProperty.call(NOTES, offer)) {
+    note.innerHTML = NOTES[offer];
+    note.hidden = false;
   }
 })();
 </script>
