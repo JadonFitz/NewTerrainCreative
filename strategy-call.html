@@ -122,11 +122,40 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   @media (max-width:620px) { .wrap { padding:48px 20px 80px; } .bar { padding:20px; } }
   @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
 
-  /* ── iClosed scheduler slot ── */
+  /* ── iClosed scheduler slot ──
+     The widget switches to its two-pane layout, form beside calendar, at
+     960px of CONTAINER width and stays in a cramped single column below
+     it. Measured against the live Growth event: 632px and 700px both
+     report 955px of height, 780px and 860px report 978px, and 960px
+     drops to 680px, which is the two-pane layout appearing.
+
+     .wrap is a 680px reading column, so the slot has to break out of it
+     to clear that threshold. Only above 1060px of viewport, which is the
+     narrowest window that can give the widget 960px and still leave a
+     margin; below that it sits in the column and uses its single-column
+     layout, which is what it does today and works fine. */
   .scheduler {
     margin-top:40px; border:1px solid var(--line); background:var(--raised);
     min-height:680px; position:relative; overflow:hidden;
   }
+  @media (min-width:1060px) {
+    .scheduler {
+      width:min(1040px, calc(100vw - 80px));
+      margin-left:50%;
+      transform:translateX(-50%);
+    }
+    /* The note keeps its 56ch measure, but its left edge follows the
+       widened slot rather than hanging 180px inside it. */
+    .scheduler-note {
+      margin-left:calc((680px - min(1040px, 100vw - 80px)) / 2);
+    }
+  }
+  /* Once the vendor widget is mounted the slot stops drawing itself.
+     iClosed renders its own white card, narrower and shorter than the
+     height it reports, so our border and fill were outlining dead space
+     around it. The frame belongs to the pending panel, which is the only
+     state where this slot has anything of its own to show. */
+  .scheduler--live { border-color:transparent; background:transparent; }
   .scheduler .iclosed-widget { width:100%; min-height:680px; }
   .scheduler iframe { width:100%; min-height:680px; border:0; display:block; }
   @media (max-width:620px) { .scheduler .iclosed-widget, .scheduler iframe { min-height:820px; } }
@@ -328,6 +357,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       host.setAttribute('data-url', href);
       host.setAttribute('title', SCHEDULER.title);
       slot.innerHTML = '';
+      slot.classList.add('scheduler--live');
       slot.appendChild(host);
 
       var sc = document.createElement('script');
@@ -336,6 +366,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       sc.onerror = function () {
         // Vendor unreachable. Restore the pending panel rather than leave
         // a tall empty box on the page someone came here to book from.
+        slot.classList.remove('scheduler--live');
         slot.innerHTML =
           '<div class="scheduler-pending"><span class="mark">New Terrain</span>' +
           '<p>The booking calendar did not load. Email ' +
