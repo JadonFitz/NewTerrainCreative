@@ -60,12 +60,27 @@ const pick = (obj, ...paths) => {
   return undefined;
 };
 
+/* THE ORDER HERE IS THE WHOLE DEDUPLICATION STORY.
+
+   iClosed carries two different identifiers for one booking:
+
+     event.callPreviewId   call_apxC1su7DBFw    the one on the redirect
+     event.uuid            2661131              an internal row id
+
+   /call-booked fires its browser Schedule keyed on the call_ form,
+   because that is what iClosed puts in the ?previewId= and
+   ?externalCallId= params when it sends someone to the confirmation
+   page. If the server copy used the numeric uuid instead, Meta would
+   see two different event ids for one booking and count it twice.
+
+   So callPreviewId first, always. The first cut of this read uuid and
+   would have doubled every conversion. */
 const bookingIdOf = (d) => pick(d,
-  'event.externalCallId', 'event.external_call_id', 'event.callId',
-  'event.call_id', 'event.uuid', 'event.id',
-  'externalCallId', 'external_call_id', 'callId', 'call_id',
-  'previewId', 'preview_id', 'id',
-  'call.externalCallId', 'call.id', 'data.externalCallId', 'data.id');
+  'event.callPreviewId', 'invitee.callPreviewId', 'contact.previewId',
+  'event.externalCallId', 'event.external_call_id',
+  'externalCallId', 'external_call_id', 'previewId', 'preview_id',
+  'event.callId', 'event.call_id', 'event.uuid', 'event.id',
+  'callId', 'call_id', 'id');
 
 const eventNameOf = (d) => String(
   pick(d, 'hookType', 'hook_type', 'eventType', 'trigger', 'type', 'event') || ''
@@ -150,9 +165,10 @@ export default async function handler(req, res) {
 
   const email = pick(d, 'invitee.email', 'contact.email',
                         'inviteeEmail', 'invitee_email', 'email', 'data.email');
-  const phone = pick(d, 'invitee.phone', 'invitee.phoneNumber', 'invitee.phone_number',
-                        'contact.phone', 'contact.phoneNumber',
-                        'inviteePhone', 'invitee_phone', 'phone', 'phoneNumber');
+  const phone = pick(d, 'invitee.text_reminder_number', 'contact.phoneNumber',
+                        'invitee.phone', 'invitee.phoneNumber', 'invitee.phone_number',
+                        'contact.phone', 'inviteePhone', 'invitee_phone',
+                        'phone', 'phoneNumber');
 
   /* First and last separately where they exist, because splitting a
      display name on whitespace guesses wrong on compound surnames, and
