@@ -35,10 +35,18 @@ import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 
 const SECRET = process.env.ICLOSED_WEBHOOK_SECRET || '';
 
-/* iClosed's payload shape is not documented publicly and we have not
-   seen one yet, so read defensively: try the plausible spellings, and
-   log what actually arrives so the first real delivery tells us the
-   truth. Tighten these lists once we have seen one. */
+/* The real payload, from the first delivery on 22 Sep 2026:
+
+     contact, event_type, event, contactFields, invitee,
+     questions_and_answers, questions_and_responses, tracking,
+     call_booked_from, externalIntegrationData, hookType
+
+   So the trigger is hookType, the booking lives under event, and the
+   person is split across invitee and contact. Alternative spellings are
+   kept as fallbacks because one delivery is not a contract.
+
+   Only SCALARS count as found: the first cut read `event`, which is an
+   object, and cheerfully stringified it to "[object object]". */
 const pick = (obj, ...paths) => {
   for (const path of paths) {
     let v = obj;
@@ -46,25 +54,42 @@ const pick = (obj, ...paths) => {
       if (v == null || typeof v !== 'object') { v = undefined; break; }
       v = v[part];
     }
-    if (v !== undefined && v !== null && String(v).trim() !== '') return v;
+    if (v === undefined || v === null || typeof v === 'object') continue;
+    if (String(v).trim() !== '') return v;
   }
   return undefined;
 };
 
 const bookingIdOf = (d) => pick(d,
+  'event.externalCallId', 'event.external_call_id', 'event.callId',
+  'event.call_id', 'event.uuid', 'event.id',
   'externalCallId', 'external_call_id', 'callId', 'call_id',
   'previewId', 'preview_id', 'id',
   'call.externalCallId', 'call.id', 'data.externalCallId', 'data.id');
 
 const eventNameOf = (d) => String(
-  pick(d, 'event', 'eventType', 'event_type', 'trigger', 'type') || ''
+  pick(d, 'hookType', 'hook_type', 'eventType', 'trigger', 'type', 'event') || ''
 ).toLowerCase();
+
+/* Log the shape without the contents. Keys two levels deep is enough to
+   see where a field lives; the values are someone's contact details. */
+function shapeOf(d) {
+  const out = {};
+  Object.keys(d).forEach(function (k) {
+    const v = d[k];
+    out[k] = (v && typeof v === 'object' && !Array.isArray(v))
+      ? Object.keys(v)
+      : Array.isArray(v) ? `array[${v.length}]` : typeof v;
+  });
+  return out;
+}
 
 /* Which offer a booking belongs to. The event name iClosed sends is the
    one configured in its dashboard, so match loosely rather than exactly:
    "Ad Sprint Call" and "Ad Sprint" must both land on ad_sprint. */
 function offerFrom(d) {
   const name = String(pick(d,
+    'event_type.name', 'event_type.title', 'eventType.name',
     'eventTypeName', 'event_type_name', 'eventName', 'name',
     'call.eventTypeName', 'data.eventTypeName') || '').toLowerCase();
   if (name.includes('founding')) return 'founding_three';
@@ -95,9 +120,8 @@ export default async function handler(req, res) {
   if (typeof d === 'string') { try { d = JSON.parse(d); } catch { d = null; } }
   if (!d || typeof d !== 'object') return res.status(400).json({ error: 'bad payload' });
 
-  // Until we have seen a real delivery, the payload itself is the
-  // documentation. Keys only: the values carry someone's contact details.
-  console.log('iclosed-webhook keys', JSON.stringify(Object.keys(d)));
+  // The payload is the documentation. Shape only, never values.
+  console.log('iclosed-webhook shape', JSON.stringify(shapeOf(d)));
 
   const trigger = eventNameOf(d);
   const bookingId = bookingIdOf(d);
@@ -124,13 +148,29 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, sent: false, reason: 'no booking id' });
   }
 
-  const email = pick(d, 'inviteeEmail', 'invitee_email', 'email',
-                        'contact.email', 'invitee.email', 'data.email');
-  const phone = pick(d, 'inviteePhone', 'invitee_phone', 'phone', 'phoneNumber',
-                        'contact.phone', 'invitee.phone', 'data.phone');
-  const full = String(pick(d, 'inviteeFullName', 'invitee_full_name', 'fullName',
-                               'name', 'contact.name', 'invitee.name') || '').trim();
-  const [firstName, ...rest] = full.split(/\s+/);
+  const email = pick(d, 'invitee.email', 'contact.email',
+                        'inviteeEmail', 'invitee_email', 'email', 'data.email');
+  const phone = pick(d, 'invitee.phone', 'invitee.phoneNumber', 'invitee.phone_number',
+                        'contact.phone', 'contact.phoneNumber',
+                        'inviteePhone', 'invitee_phone', 'phone', 'phoneNumber');
+
+  /* First and last separately where they exist, because splitting a
+     display name on whitespace guesses wrong on compound surnames, and
+     these go into the match. Fall back to a full name only if it must. */
+  let firstName = pick(d, 'invitee.firstName', 'invitee.first_name',
+                          'contact.firstName', 'contact.first_name');
+  let lastName = pick(d, 'invitee.lastName', 'invitee.last_name',
+                         'contact.lastName', 'contact.last_name');
+  if (!firstName && !lastName) {
+    const full = String(pick(d, 'invitee.name', 'invitee.fullName', 'invitee.full_name',
+                                'contact.name', 'contact.fullName',
+                                'inviteeFullName', 'fullName', 'name') || '').trim();
+    if (full) {
+      const parts = full.split(/\s+/);
+      firstName = parts.shift();
+      lastName = parts.join(' ') || undefined;
+    }
+  }
 
   try {
     const { ip, userAgent } = requestIdentity(req);
@@ -143,7 +183,7 @@ export default async function handler(req, res) {
       userData: buildUserData({
         email, phone,
         firstName: firstName || undefined,
-        lastName: rest.join(' ') || undefined,
+        lastName: lastName || undefined,
         externalId: String(bookingId),
         ip, userAgent
       }),
