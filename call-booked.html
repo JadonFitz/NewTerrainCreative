@@ -43,6 +43,9 @@ fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<!-- Needed for the Schedule conversion at the foot of this page, and so
+     ?ntc_debug=1 logs it the way it does on every other page. -->
+<script src="/assets/track.js"></script>
 
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -364,6 +367,59 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         }
       }, ms);
     });
+
+    /* ── Schedule · the one conversion this page fires ─────────────────
+       iClosed was meant to own this. Its Conversions API setup rejects a
+       token Meta itself accepts, so until that is resolved a booking
+       reaches Meta as nothing at all and the funnel optimises toward
+       page views rather than booked calls.
+
+       Schedule is the event this project reserved from the start for a
+       genuinely confirmed appointment, and has never used. This is it.
+
+       THREE THINGS MAKE IT SAFE TO FIRE A CONVERSION FROM A PAGE:
+
+       1. The event id IS the booking id. Meta deduplicates on event name
+          plus event id, so a reload, a back button or a forwarded link
+          resolves to the same conversion rather than a second one. That
+          was the only reason this page fired nothing before.
+
+       2. It waits for iClosed to confirm the booking. The card is only
+          visible here because the vendor rendered real appointment
+          details for this id, so a crafted URL carrying an invented call
+          id gets a hidden card and no conversion. Under-counting when
+          the vendor is unreachable is the safer way to be wrong.
+
+       3. It is browser only. Schedule is deliberately absent from
+          NAME_MAP in track.js, so store() no-ops and this never reaches
+          /api/track, whose RESERVED guard refuses schedule precisely so
+          the public endpoint cannot mint appointments.
+
+       If iClosed's integration later starts working, check whether it
+       keys on this same booking id. If it does, the two deduplicate. If
+       it does not, turn one of them off rather than counting both. */
+    setTimeout(function () {
+      if (booking.hidden) return;
+      if (getComputedStyle(widget).display === 'none') return;
+      if (!window.ntc) return;
+
+      var bookingId = params.get('externalCallId') || params.get('previewId') || '';
+      if (!/^call_[A-Za-z0-9_-]{6,64}$/.test(bookingId)) {
+        console.warn('call-booked: no usable booking id, Schedule not fired');
+        return;
+      }
+
+      // The same three identifiers the rest of the funnel reports on.
+      var OFFER_ID = { 'founding-three': 'founding_three',
+                       'growth': 'paid_retainer',
+                       'sprint': 'ad_sprint' };
+
+      ntc.track('Schedule', {
+        offer: OFFER_ID[offer] || 'paid_retainer',
+        content_name: params.get('event_type_name') || 'Strategy call',
+        booking_id: bookingId
+      }, { eventId: bookingId });
+    }, 3500);
 
     var sc = document.createElement('script');
     sc.src = 'https://app.iclosed.io/assets/widget.js';
