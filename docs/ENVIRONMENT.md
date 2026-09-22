@@ -15,6 +15,7 @@ it should ever contain.
 | `SUPABASE_SERVICE_ROLE_KEY` | `api/_supabase.js` | Server only. Bypasses row level security. Never expose to a browser and never use it as a signing key. |
 | `SENDGRID_API_KEY` | `api/apply.js`, `api/project.js` | Mail Send permission only. **Keep.** For `/apply` this is the second capture path, not a courtesy email: a submission fails only when Supabase *and* email both fail. Removing it makes Supabase a single point of failure for a record carrying contractual acknowledgements. |
 | `META_CAPI_TOKEN` | `api/_meta.js` | Conversions API access token. |
+| `ICLOSED_WEBHOOK_SECRET` | `api/iclosed-webhook.js` | At least 32 random bytes. iClosed offers no signing secret, only a subscriber URL, so the URL carries this as `?key=`. Weaker than a signature because it sits in their logs and ours; rotate by changing this variable and the subscriber URL in iClosed together. The handler returns 503 without it rather than accepting anything, so an unset variable means no conversions, never open access. |
 
 ## Retired
 
