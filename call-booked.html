@@ -109,15 +109,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
     text-transform:uppercase; color:var(--gold); margin-bottom:14px;
   }
-  /* The vendor gives its iframe height="100%", and an iframe is not
-     intrinsically sized, so this container never grows to fit: it sits
-     at exactly its min-height and anything taller is cut off inside the
-     frame. That is what clipped the appointment details. There is no
-     resize messaging on this embed the way there is on the scheduler,
-     so the floor has to be generous rather than tight, and the frame is
-     left scrollable so a taller booking is reachable rather than lost. */
-  .call-details-widget { width:100%; min-height:560px; }
-  @media (max-width:520px) { .call-details-widget { min-height:680px; } }
+  /* The vendor gives its iframe height="100%". A percentage height on an
+     iframe only resolves against a parent with a DEFINITE height, and
+     min-height is not one, so the frame fell back to the HTML default of
+     150px and the appointment details scrolled inside that. Raising the
+     min-height did nothing, because the frame was never following it.
+
+     So: a definite height here, and the frame told to fill it in our own
+     CSS rather than trusting the vendor's attribute. This embed sends no
+     resize message, unlike the scheduler, so the height is fixed and a
+     little generous. Too tall costs some empty space inside the frame;
+     too short hides the booking.
+     Measured against a real booking: the card needs about 305px on
+     desktop and about 385px on a phone, where Time and Where wrap. The
+     values below carry headroom for a longer event name or a location
+     that is an address rather than "Google Meet". */
+  .call-details-widget { width:100%; height:360px; }
+  .call-details-widget iframe { width:100%; height:100%; border:0; display:block; }
+  @media (max-width:520px) { .call-details-widget { height:460px; } }
 
   .reschedule {
     margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
@@ -285,6 +294,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       clearTimeout(timer);
       booking.hidden = false;
     };
+    // The 60ms hop is gone: a rAF inside revealIfRendered is the
+    // measure point now, and it is tied to an actual paint.
+
     var giveUp = function () {
       if (settled) return;
       settled = true;
@@ -303,21 +315,28 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     /* iClosed hides its own widget when it cannot resolve the booking,
        by setting display:none on the host. The iframe still fires load,
        so revealing on load alone showed a bordered card with a heading
-       and nothing under it. Check the host is actually visible first. */
+       and nothing under it.
+
+       The host cannot be measured while it is inside a hidden card: it
+       reads zero whatever the vendor did. So show the card, measure,
+       and put it back if the vendor had in fact hidden itself. The
+       card starts hidden and is painted in the same frame it is
+       measured, so nothing flashes. */
     var revealIfRendered = function () {
-      var hidden = getComputedStyle(widget).display === 'none'
+      if (settled) return;
+      booking.hidden = false;
+      requestAnimationFrame(function () {
+        var gone = getComputedStyle(widget).display === 'none'
                 || widget.getBoundingClientRect().height < 40;
-      if (hidden) { giveUp(); return; }
-      reveal();
+        if (gone) { booking.hidden = true; giveUp(); return; }
+        reveal();
+      });
     };
 
     var observer = new MutationObserver(function () {
       var frame = widget.querySelector('iframe');
       if (frame) {
-        frame.addEventListener('load', function () {
-          // one frame of slack, so the vendor's own styling lands first
-          setTimeout(revealIfRendered, 60);
-        }, { once: true });
+        frame.addEventListener('load', revealIfRendered, { once: true });
         frame.addEventListener('error', giveUp, { once: true });
         observer.disconnect();
         return;
