@@ -206,6 +206,27 @@ bad('the booking widget is on page(s) that already ask for something: '
     + ', '.join(wrong)) if wrong     else ok('the booking widget is on ' + (', '.join('/' + c for c in carriers) or 'no page')
             + ', and nothing with a form')
 
+# Every page a visitor can land on must carry the Meta pixel. /grow had
+# ViewContent and CTAClick handlers written and firing into nothing for
+# want of a base pixel, and the homepage reported no PageView at all,
+# because the id was copy-pasted per page and two pages were missed.
+# One id, checked everywhere, so a new page cannot ship untracked.
+PIXEL = '1634935111618929'
+NO_PIXEL_NEEDED = {'755b0bb56edaeb4dbe35c2cb512311c2', 'privacy', 'terms',
+                   'onboarding', 'book'}
+untracked = sorted(f.name for f in ROOT.glob('*.html')
+                   if f.stem not in NO_PIXEL_NEEDED
+                   and PIXEL not in f.read_text(encoding='utf-8'))
+bad('page(s) carry no Meta pixel: ' + ', '.join(untracked)) if untracked \
+    else ok('every landing page carries the Meta pixel')
+
+# And one id everywhere: a second id would split the dataset in two.
+ids = set()
+for f in ROOT.glob('*.html'):
+    ids.update(re.findall(r"fbq\('init',\s*'(\d+)'\)", f.read_text(encoding='utf-8')))
+bad('more than one pixel id in use: ' + ', '.join(sorted(ids))) if len(ids) > 1 \
+    else ok(f'one pixel id across the site ({", ".join(ids) or "none"})')
+
 # Parked pages. /apply still works and is deliberately unlinked: the
 # Founding Three event in iClosed now asks the same questions, and two
 # forms back to back was a place to drop out of. Linking it again is a

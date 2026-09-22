@@ -19,6 +19,20 @@
 <meta name="twitter:image" content="https://www.newterraincreative.com/assets/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -2342,6 +2356,31 @@
     window.scrollTo(0, 0);
     window.location.reload();
   });
+
+  /* ── tracking ───────────────────────────────────────────────────────
+     The homepage had no pixel and no track.js until 21 Sep 2026, so it
+     reported nothing at all: not a PageView, and not a click on any of
+     the three engagement CTAs. The base pixel in <head> now covers
+     PageView; this covers the rest. Same shape as /grow.
+
+     No Lead here. The homepage is a browse, not an enquiry. */
+  (function () {
+    if (!window.ntc) return;
+
+    ntc.track('ViewContent', {
+      content_name: document.title,
+      offer: 'studio'
+    });
+
+    document.querySelectorAll('[data-cta]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        ntc.track('CTAClick', {
+          offer: 'studio',
+          position: el.getAttribute('data-cta')
+        }, { once: false });
+      });
+    });
+  })();
 
   const header = document.querySelector('header');
   window.addEventListener('scroll', () => {
