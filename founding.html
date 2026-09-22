@@ -921,6 +921,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      the description stays shut until it is asked for. One tap opens it,
      the next one plays. */
   @media (hover: none) {
+    /* A tap on touch latches the :hover state and holds it until something
+       else is tapped. That left the poster scaled up 4% under a gloss and a
+       scrim that do not scale, so the card's dark wash sat a few pixels off
+       the image it was washing. None of the hover pass survives here. */
+    .reel-card:hover .reel-media { transform: none; }
+    .reel-card:hover .reel-veil { opacity: 0; }
+    .reel-card:hover:not(.is-open) { border-color: var(--line); }
+
     .reel-more { max-height: 0; opacity: 0; }
     .reel-card.is-open .reel-more { max-height: 190px; opacity: 1; }
     .reel-card.is-open .reel-veil { opacity: 1; }
@@ -928,6 +936,50 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     .reel-card.is-open .reel-note { font-size: 11px; line-height: 1.65; }
     .reel-nav { display: none; }
     .reel-shine { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    /* The player on a phone. Its height came from 80vh, which is a slice of
+       the tallest the viewport ever gets rather than of what is on screen
+       now, so the frame ran on under the browser chrome: the clip arrived
+       cropped and the close button sat off the bottom of the glass. The
+       column is pinned to the dynamic viewport instead and the stage takes
+       whatever the bar and the meta leave it. The video is object-fit:
+       contain, so it sits in that box whole at whatever size fits. */
+    .vmodal { height: 100vh; height: 100dvh; }
+    .vmodal-inner {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+    }
+    .vmodal-bar { flex: none; }
+    .vmodal-stage {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
+      width: 100%;
+      max-width: none;
+      aspect-ratio: auto;
+      border: none;
+      background: none;
+    }
+    .vmodal-stage video { object-fit: contain; }
+    .vmodal-meta {
+      flex: none;
+      display: block;
+      padding-top: 12px;
+    }
+    .vmodal-stats {
+      justify-content: flex-start;
+      margin-top: 8px;
+      gap: 14px;
+      font-size: 10.5px;
+    }
+    /* An 11px word held at 0.6 is not a target for a thumb. */
+    .vmodal-btn { padding: 15px 2px; opacity: 1; }
+    .vmodal-close { padding-left: 18px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .reel-shine { display: none; animation: none; }
@@ -1716,7 +1768,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   });
 
   modal.querySelector('.vmodal-close').addEventListener('click', closePlayer);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closePlayer(); });
+  // Anything that is not the clip or a control closes it. The frame leaves
+  // almost no backdrop to aim at on a phone, and the letterboxing beside a
+  // 9:16 clip is the part of the screen a thumb actually lands on.
+  modal.addEventListener('click', (e) => {
+    if (e.target.tagName === 'VIDEO') return;
+    if (e.target.closest('.vmodal-bar, .vmodal-meta')) return;
+    closePlayer();
+  });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closePlayer(); });
   document.addEventListener('click', (e) => { if (opened && !e.target.closest('.reel-card')) closeOpened(); });
 })();
