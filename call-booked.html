@@ -109,11 +109,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
     text-transform:uppercase; color:var(--gold); margin-bottom:14px;
   }
-  /* The vendor snippet ships an inline height. Min-height keeps the card
-     from collapsing while it loads and lets it grow on a narrow screen,
-     where the details wrap onto more lines. */
-  .call-details-widget { width:100%; min-height:340px; }
-  @media (max-width:520px) { .call-details-widget { min-height:430px; } }
+  /* The vendor gives its iframe height="100%", and an iframe is not
+     intrinsically sized, so this container never grows to fit: it sits
+     at exactly its min-height and anything taller is cut off inside the
+     frame. That is what clipped the appointment details. There is no
+     resize messaging on this embed the way there is on the scheduler,
+     so the floor has to be generous rather than tight, and the frame is
+     left scrollable so a taller booking is reachable rather than lost. */
+  .call-details-widget { width:100%; min-height:560px; }
+  @media (max-width:520px) { .call-details-widget { min-height:680px; } }
 
   .reschedule {
     margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
@@ -296,10 +300,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        showing an empty bordered box. We cannot read inside the frame,
        so whatever iClosed renders in it, including its own not-found
        state, is shown as-is. That is theirs to say, not ours to hide. */
+    /* iClosed hides its own widget when it cannot resolve the booking,
+       by setting display:none on the host. The iframe still fires load,
+       so revealing on load alone showed a bordered card with a heading
+       and nothing under it. Check the host is actually visible first. */
+    var revealIfRendered = function () {
+      var hidden = getComputedStyle(widget).display === 'none'
+                || widget.getBoundingClientRect().height < 40;
+      if (hidden) { giveUp(); return; }
+      reveal();
+    };
+
     var observer = new MutationObserver(function () {
       var frame = widget.querySelector('iframe');
       if (frame) {
-        frame.addEventListener('load', reveal, { once: true });
+        frame.addEventListener('load', function () {
+          // one frame of slack, so the vendor's own styling lands first
+          setTimeout(revealIfRendered, 60);
+        }, { once: true });
         frame.addEventListener('error', giveUp, { once: true });
         observer.disconnect();
         return;

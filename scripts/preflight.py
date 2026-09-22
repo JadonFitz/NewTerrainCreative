@@ -223,7 +223,7 @@ for page in PARKED:
 # the moment someone adds one and forgets.
 # /call-booked is reached only by an iClosed redirect after a booking, so
 # nothing on the site should link it and nothing should index it.
-UNLISTED = ['growth-guide', 'call-booked']
+UNLISTED = ['call-booked']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     body = sitemap.read_text(encoding='utf-8')
@@ -247,7 +247,7 @@ for u in UNLISTED:
 import json as _json
 _cfg = _json.loads((ROOT / 'vercel.json').read_text(encoding='utf-8'))
 _redirects = {r['source']: r['destination'] for r in _cfg.get('redirects', [])}
-RETIRED = {'/production-media': '/grow'}
+RETIRED = {'/production-media': '/grow', '/growth-guide': '/grow'}
 
 for src, dest in RETIRED.items():
     stem = src.lstrip('/')

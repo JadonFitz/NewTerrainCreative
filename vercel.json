@@ -13,9 +13,22 @@
       "source": "/production-media.html",
       "destination": "/grow",
       "permanent": false
+    },
+    {
+      "source": "/growth-guide",
+      "destination": "/grow",
+      "permanent": false
+    },
+    {
+      "source": "/growth-guide.html",
+      "destination": "/grow",
+      "permanent": false
     }
   ],
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
   ]
 }
