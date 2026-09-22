@@ -326,9 +326,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       if (settled) return;
       booking.hidden = false;
       requestAnimationFrame(function () {
-        var gone = getComputedStyle(widget).display === 'none'
-                || widget.getBoundingClientRect().height < 40;
-        if (gone) { booking.hidden = true; giveUp(); return; }
+        var frame = widget.querySelector('iframe');
+        if (!frame || frame.getBoundingClientRect().height < 40) {
+          booking.hidden = true; giveUp(); return;
+        }
         reveal();
       });
     };
@@ -345,6 +346,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     });
     observer.observe(widget, { childList: true, subtree: true, characterData: true });
     var timer = setTimeout(giveUp, 8000);
+
+    /* iClosed decides whether it can resolve the booking about two
+       seconds AFTER the iframe fires load, and says so by setting
+       display:none on its own host. Checking once on load is therefore
+       too early: we reveal, and the vendor then hides its widget,
+       leaving a bordered card with a heading and nothing under it.
+
+       So keep looking for a few seconds. The host's own computed
+       display is readable even while our card is hidden, unlike its
+       height, which is why this watches display and the reveal above
+       watches the frame. */
+    [500, 1500, 3000, 5000].forEach(function (ms) {
+      setTimeout(function () {
+        if (getComputedStyle(widget).display === 'none') {
+          booking.hidden = true;
+        }
+      }, ms);
+    });
 
     var sc = document.createElement('script');
     sc.src = 'https://app.iclosed.io/assets/widget.js';
