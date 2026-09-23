@@ -49,9 +49,9 @@ check('bounded, stated as not unlimited', 'not unlimited production' in FND,
 check('months two and three optional',
       'optional' in FND and 'Nothing rolls over on its own' in FND,
       'continuationRequired is false')
-check('continuation PRICE not published here',
+check('continuation PRICE not in this page\'s copy',
       '3,500' not in FND,
-      "continuationDisclosedAt is 'application step 2', not this page")
+      'disclosed on the iClosed booking form and in the VSL, not in the copy here')
 check('client funds own ad spend',
       'own ad account' in FND or 'pay the platform directly' in FND,
       'spend is client funded and never held by us')

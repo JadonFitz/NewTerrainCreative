@@ -70,7 +70,13 @@
       applicationsCloseAt: '2026-09-30T23:59:59-07:00',
 
       continuationRequired: false,
-      continuationDisclosedAt: 'application step 2',
+      /* Changed 22 Sep 2026. Was 'application step 2', which stopped
+         existing when /apply was parked and Founding started routing
+         straight to iClosed. The figure is now disclosed in the required
+         terms acknowledgement on the booking form, before anyone picks
+         a slot, and spoken aloud in the VSL. Both sit before any
+         commitment, which was always the point of the rule. */
+      continuationDisclosedAt: 'iClosed booking form, and the VSL',
       continuationMonthly: 3500,
       continuationMonths: 2,
       continuationTotal: 7000,
@@ -248,9 +254,22 @@
        reversal. Nothing is added on top: no free production promise, no
        performance guarantee, no refund, no open-ended remedy.
 
-       continuationPricePublicOnFoundingPage is false on purpose.
-       continuationDisclosedAt above is 'application step 2', so the
-       figure must not appear on /founding.
+       continuationPricePublicOnFoundingPage is false on purpose, and
+       stays false. $3,500 must not appear in the COPY of /founding.
+
+       What that rule is protecting has not changed: nobody should meet
+       the continuation price before they understand what the waived
+       month actually is. It is a reason to keep it out of the page's
+       running text, not a reason to hide it. It is disclosed in the
+       required terms acknowledgement on the iClosed booking form and
+       spoken in the VSL, both before any commitment.
+
+       SO: if the VSL is ever embedded on /founding, the page will state
+       $3,500 aloud while this flag says it must not appear. That is
+       fine and it is deliberate. The flag governs the written copy,
+       where a number with no context reads as a price list. A figure
+       inside a two-minute explanation is the context. Do not "fix" the
+       mismatch by muting the VSL or by adding the price to the copy.
        ─────────────────────────────────────────────────────────────── */
     foundingRiskReversal: {
       serviceFeeWaivedMonthOne: true,
