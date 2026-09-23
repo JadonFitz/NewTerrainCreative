@@ -45,29 +45,37 @@
         'Work outside the agreed 30-day scope'
       ],
       // Optional continuation. NOT contractually required, and NOT priced
-      // on the landing page. Disclosed at step two of the application,
-      // before anyone submits, which is the whole reason the application
-      // has two steps.
+      // in the copy of the landing page. See continuationDisclosedAt
+      // below for where it is disclosed and why that is enough.
       //
-      // The figure lives here rather than in api/_rates.js because step
-      // two renders it: it is a published term now, not an internal rate.
-      // api/_rates.js mirrors it for server-side quoting and
-      // scripts/check-offer.py fails if the two ever disagree.
+      // The figure lives here rather than in api/_rates.js because it is
+      // a published term now, not an internal rate. api/_rates.js mirrors
+      // it for server-side quoting and scripts/check-offer.py fails if
+      // the two ever disagree.
       /* ── application window ─────────────────────────────────────
-         A REAL deadline, not a rolling countdown. The page renders this
-         date and hides the callout entirely once it has passed, so a
-         lapsed date can never sit on the page pretending to be live.
+         REMOVED 22 Sep 2026. There is no date, on purpose.
 
-         To extend or reopen the round, change this ONE line. Do not
-         make it relative to the visitor's clock: a "7 days" that resets
-         per visitor is the fake-urgency pattern, and it costs more
-         trust than it buys.
+         applicationsCloseAt was '2026-09-30T23:59:59-07:00', eight days
+         out at the point the Founding VSL was being filmed. An ad
+         cannot outrun its own deadline: the flight would have carried
+         an offer whose close date had passed, while /founding either
+         hid the callout or contradicted it.
 
-         Set to the end of September 2026. Visitors arriving later in
-         the window correctly see less time remaining, which is how a
-         real deadline behaves.
+         The honest answer was that the round was always going to run
+         until three partners were signed, and the date would have been
+         extended rather than enforced. A deadline you would extend
+         anyway teaches people your deadlines do not mean anything, and
+         that is a worse trade than the urgency is worth.
+
+         SCARCITY IS NOW THE SLOT COUNT ALONE. slots: 3 is a real
+         constraint that closes itself, it is verifiable against how
+         many partners exist, and it needs no maintenance.
+
+         If a dated round is ever wanted again, put the field back with
+         a date you will actually hold, and never make it relative to
+         the visitor's clock: a "7 days" that resets per visitor is the
+         fake-urgency pattern and costs more trust than it buys.
          ─────────────────────────────────────────────────────────── */
-      applicationsCloseAt: '2026-09-30T23:59:59-07:00',
 
       continuationRequired: false,
       /* Changed 22 Sep 2026. Was 'application step 2', which stopped
@@ -359,6 +367,10 @@
       'guaranteed leads, revenue or ROAS',
       'a Founding Partner is a paying retainer client',
       'months two and three are required',
+      // Added 22 Sep 2026 with the removal of applicationsCloseAt.
+      // Three slots is the only scarcity this offer has. A date would
+      // have to be one we would actually hold.
+      'a closing date for applications that we would extend anyway',
       'the free month is unlimited',
       'results, testimonials or logos we do not have',
       // Withdrawn 13 Sep 2026. It was unbounded, its benchmark was
