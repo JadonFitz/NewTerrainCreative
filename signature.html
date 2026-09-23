@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signature Work · New Terrain Creative</title>
+<meta name="description" content="For the work that shouldn't look like content. Commercials, documentaries, brand films and custom productions built from concept through final delivery. Los Angeles · Tampa.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.newterraincreative.com/signature">
+<meta property="og:title" content="Signature Work · New Terrain Creative">
+<meta property="og:description" content="For the work that shouldn't look like content. Commercials, documentaries, brand films and custom productions, concept through final delivery.">
+<meta property="og:image" content="https://www.newterraincreative.com/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Signature Work · New Terrain Creative">
+<meta name="twitter:description" content="For the work that shouldn't look like content. Commercials, documentaries, brand films and custom productions, concept through final delivery.">
+<meta name="twitter:image" content="https://www.newterraincreative.com/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  /signature · Signature Work
+  ──────────────────────────────────────────────────────────────────────
+  The sales and portfolio page for the bespoke cinematic work. It sits
+  ABOVE /project rather than replacing it: every CTA here routes to
+  /project?offer=signature, and the brief that form collects is still
+  the qualification layer. Signature traffic does not go to iClosed.
+
+  No pricing and no tiers, deliberately. Signature Work is scoped per
+  project, and a thirty-second spot and a documentary share nothing but
+  a camera. /grow and /sprint publish figures because those offers have
+  fixed scope; this one does not.
+
+  EVENTS · PageView and ViewContent only, plus CTAClick on the buttons.
+  No Lead fires from this page. Lead belongs to the completed /project
+  submission, where there is an actual enquiry attached to it.
+
+  Every claim, number, award and credit on this page already appears on
+  index.html. Nothing here is new proof. If a figure changes there it
+  must change here too.
+  ══════════════════════════════════════════════════════════════════════
+-->
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --surface: #141414;
+    --card: #1C1C1C;
+    --gold: #C8A96E;
+    --gold-dim: #A08A57;
+    --parchment: #F5F0E8;
+    --muted: #8B847D;
+    --line: #1e1e1e;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--gold); color: var(--black); }
+
+  a { color: inherit; }
+
+  /* ── HEADER ─────────────────────────────────────────────────────── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 26px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.4s ease, border-color 0.4s ease;
+    border-bottom: 1px solid transparent;
+  }
+  header.scrolled {
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom-color: var(--line);
+  }
+
+  .wordmark {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--parchment);
+  }
+  .wordmark span { color: var(--gold); }
+
+  .header-right { display: flex; align-items: center; gap: 26px; }
+
+  .header-link {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.3s ease;
+  }
+  .header-link:hover { color: var(--parchment); }
+
+  .header-cta {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--black);
+    background: var(--gold);
+    padding: 11px 19px;
+    transition: background 0.3s ease;
+    white-space: nowrap;
+  }
+  .header-cta:hover { background: var(--parchment); }
+
+  /* Mobile-only persistent CTA. The header button does not fit beside
+     the wordmark at 390px, and a page this long should not leave a phone
+     without a way to act on it. Same label as every other CTA here. */
+  .sticky-cta {
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 90;
+    text-align: center;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 19px 16px calc(19px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(102%);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .sticky-cta.on { transform: none; }
+
+  /* ── REVEAL ─────────────────────────────────────────────────────── */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ── SHARED SECTION FURNITURE ───────────────────────────────────── */
+  section { padding: 120px 48px; }
+
+  .section-head { max-width: 1280px; margin: 0 auto 64px; }
+
+  .section-index {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-rule { flex: 1; height: 1px; background: var(--line); }
+
+  .section-title {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(38px, 5.4vw, 72px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  .section-lede {
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--muted);
+    max-width: 62ch;
+  }
+
+  /* ── BUTTONS ────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 18px 34px;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  .btn--gold { background: var(--gold); color: var(--black); }
+  .btn--gold:hover { background: var(--parchment); }
+  .btn--ghost {
+    border: 1px solid var(--line);
+    color: var(--parchment);
+  }
+  .btn--ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  :where(a, button):focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  /* ── HERO ───────────────────────────────────────────────────────── */
+  #hero {
+    position: relative;
+    min-height: 92vh;
+    padding: 0;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  /* Letterbox. Two solid bars rather than a gradient, because the point
+     is the shape of a frame, not a vignette. */
+  .hero-bar {
+    position: absolute;
+    left: 0; right: 0;
+    height: 46px;
+    background: var(--black);
+    z-index: 3;
+  }
+  .hero-bar--top { top: 0; }
+  .hero-bar--bottom { bottom: 0; }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(to top, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.55) 45%, rgba(10,10,10,0.38) 100%),
+      linear-gradient(to right, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.1) 60%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px 108px;
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 26px;
+  }
+  .hero-eyebrow::after {
+    content: '';
+    width: 72px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .hero-headline {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(44px, 7.4vw, 108px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    max-width: 17ch;
+    text-wrap: balance;
+  }
+  .hero-headline em { font-style: italic; color: var(--gold); }
+
+  .hero-desc {
+    margin-top: 30px;
+    font-size: clamp(15px, 1.5vw, 18px);
+    line-height: 1.75;
+    color: var(--parchment);
+    opacity: 0.88;
+    max-width: 56ch;
+  }
+
+  .hero-cta-row {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .hero-credits {
+    margin-top: 46px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(245,240,232,0.14);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 46px;
+  }
+  .credit-item {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .credit-item strong { color: var(--parchment); font-weight: 400; }
+
+  /* ── WORK GRID ──────────────────────────────────────────────────── */
+  #work { background: var(--black); }
+
+  .work-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 10px;
+  }
+
+  .work-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    grid-column: span 6;
+    background: var(--card);
+  }
+  .work-item::before { content: ''; display: block; padding-top: 56.25%; }
+
+  .work-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 1.1s cubic-bezier(0.16,1,0.3,1), filter 0.7s ease;
+    filter: saturate(0.82);
+  }
+  .work-item:hover .work-bg { transform: scale(1.05); filter: saturate(1); }
+
+  .work-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.42) 52%, rgba(10,10,10,0.12) 100%);
+    transition: background 0.5s ease;
+  }
+  .work-item--light .work-overlay {
+    background: linear-gradient(to top, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.62) 55%, rgba(10,10,10,0.3) 100%);
+  }
+
+  .work-meta {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    z-index: 3;
+    padding: 28px 30px;
+    transform: translateY(8px);
+    transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .work-item:hover .work-meta { transform: none; }
+
+  .work-type {
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 9px;
+  }
+  .work-title {
+    font-family: var(--display);
+    font-size: clamp(24px, 2.6vw, 38px);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+  .work-detail {
+    margin-top: 8px;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--muted);
+    opacity: 0.72;
+    transition: opacity 0.4s ease;
+  }
+  .work-item:hover .work-detail { opacity: 1; }
+
+  .work-action {
+    position: absolute;
+    top: 24px; right: 24px;
+    z-index: 4;
+    font-family: var(--body);
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    background: rgba(10,10,10,0.6);
+    border: 1px solid rgba(245,240,232,0.24);
+    padding: 10px 15px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s ease, color 0.3s ease;
+  }
+  .work-item:hover .work-action,
+  .work-action:focus-visible { opacity: 1; transform: none; }
+  .work-action:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+  .work-note {
+    max-width: 1280px;
+    margin: 30px auto 0;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* ── WHAT WE MAKE ───────────────────────────────────────────────── */
+  #formats { background: var(--surface); }
+
+  .format-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .format-item {
+    background: var(--surface);
+    padding: 38px 34px 42px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .format-tag {
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .format-name {
+    font-family: var(--display);
+    font-size: 27px;
+    font-weight: 300;
+    line-height: 1.15;
+  }
+  .format-desc {
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--muted);
+  }
+
+  /* ── APPROACH ───────────────────────────────────────────────────── */
+  #approach { background: var(--black); }
+
+  .approach-list {
+    max-width: 1280px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+
+  .approach-step {
+    display: grid;
+    grid-template-columns: 96px 1fr 1.35fr;
+    gap: 34px;
+    align-items: start;
+    padding: 38px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .approach-num {
+    font-family: var(--display);
+    font-size: 34px;
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.75;
+    line-height: 1;
+  }
+  .approach-name {
+    font-family: var(--display);
+    font-size: 27px;
+    font-weight: 300;
+    line-height: 1.2;
+  }
+  .approach-body {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+  }
+  .approach-body b { color: var(--parchment); font-weight: 400; }
+
+  .approach-close {
+    max-width: 1280px;
+    margin: 34px auto 0;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 68ch;
+  }
+  .approach-close b { color: var(--parchment); font-weight: 400; }
+
+  /* ── PROOF ──────────────────────────────────────────────────────── */
+  #proof { background: var(--surface); }
+
+  .proof-rows { max-width: 1280px; margin: 0 auto; }
+
+  .proof-row {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 42px;
+    padding: 44px 0;
+    border-top: 1px solid var(--line);
+  }
+  .proof-row:last-of-type { border-bottom: 1px solid var(--line); }
+
+  .proof-number {
+    font-family: var(--display);
+    font-size: clamp(42px, 4.6vw, 64px);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .proof-label {
+    margin-top: 10px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .proof-tier {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.8;
+    margin-bottom: 10px;
+  }
+  .proof-client {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1.15;
+  }
+  .proof-desc {
+    margin-top: 13px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 66ch;
+  }
+  .proof-desc em { color: var(--parchment); font-style: italic; }
+
+  .proof-mini {
+    margin-top: 26px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 22px 30px;
+  }
+  .mini-num {
+    font-size: 19px;
+    color: var(--parchment);
+    font-variant-numeric: tabular-nums;
+  }
+  .mini-label {
+    margin-top: 5px;
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .awards {
+    max-width: 1280px;
+    margin: 58px auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .award {
+    background: var(--surface);
+    padding: 28px 30px;
+  }
+  .award-name {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--parchment);
+  }
+  .award-name strong { color: var(--gold); font-weight: 400; }
+  .award-role {
+    margin-top: 9px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── FIT ────────────────────────────────────────────────────────── */
+  #fit { background: var(--black); }
+
+  .fit-cols {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 10px;
+  }
+
+  .fit-col {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 40px 36px 44px;
+  }
+  .fit-col--yes { border-color: rgba(200,169,110,0.42); }
+
+  .fit-col-title {
+    font-family: var(--display);
+    font-size: 25px;
+    font-weight: 300;
+    margin-bottom: 24px;
+    line-height: 1.25;
+  }
+  .fit-col--yes .fit-col-title { color: var(--gold); }
+
+  .fit-list { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+  .fit-list li {
+    position: relative;
+    padding-left: 26px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .fit-mark {
+    position: absolute;
+    left: 0; top: 0;
+    font-size: 12px;
+    color: var(--gold);
+  }
+  .fit-col--no .fit-mark { color: var(--muted); }
+
+  .fit-scope {
+    max-width: 1280px;
+    margin: 34px auto 0;
+    padding: 26px 30px;
+    border-left: 2px solid var(--gold);
+    background: var(--surface);
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 78ch;
+  }
+  .fit-scope b { color: var(--parchment); font-weight: 400; }
+
+  /* ── CLOSE ──────────────────────────────────────────────────────── */
+  #close {
+    background: var(--black);
+    text-align: center;
+    padding: 148px 48px 128px;
+    border-top: 1px solid var(--line);
+  }
+  .close-pre {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 26px;
+  }
+  .close-title {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(40px, 6vw, 86px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .close-title em { font-style: italic; color: var(--gold); }
+  .close-lede {
+    margin: 28px auto 0;
+    max-width: 58ch;
+    font-size: 14.5px;
+    line-height: 1.9;
+    color: var(--muted);
+  }
+  .close-cta { margin-top: 42px; }
+  .close-mail {
+    display: block;
+    margin-top: 28px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .close-mail:hover { color: var(--gold); }
+
+  /* ── FOOTER ─────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 34px 48px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 34px;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+
+  /* ── VIDEO MODAL ────────────────────────────────────────────────── */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(5,5,5,0.94);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .modal-inner {
+    width: 100%;
+    max-width: 1100px;
+    transform: scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .modal-backdrop.open .modal-inner { transform: none; }
+
+  .modal-ratio { position: relative; padding-top: 56.25%; background: #000; }
+  .modal-ratio iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .modal-close {
+    display: block;
+    margin: 0 0 14px auto;
+    background: none;
+    border: 0;
+    color: var(--parchment);
+    font-family: var(--body);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  .modal-close:hover { opacity: 1; }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────────────── */
+  @media (max-width: 1080px) {
+    .format-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .approach-step { grid-template-columns: 62px 1fr; gap: 20px; }
+    .approach-body { grid-column: 2; }
+    .proof-row { grid-template-columns: 1fr; gap: 22px; }
+  }
+
+  @media (max-width: 720px) {
+    header { padding: 18px 20px; }
+    .header-link, .header-cta { display: none; }
+    .wordmark { font-size: 10px; letter-spacing: 0.22em; white-space: nowrap; }
+    .sticky-cta { display: block; }
+    section { padding: 78px 20px; }
+    #hero { min-height: 88vh; }
+    .hero-bar { height: 28px; }
+    .hero-content { padding: 0 20px 72px; }
+    .hero-headline { max-width: none; }
+    .hero-credits { gap: 11px 26px; margin-top: 34px; }
+    .hero-cta-row .btn { width: 100%; text-align: center; }
+    .section-head { margin-bottom: 44px; }
+    .work-item { grid-column: span 12; }
+    .work-meta { padding: 20px 22px; transform: none; }
+    .work-action { opacity: 1; transform: none; top: 16px; right: 16px; }
+    .work-detail { opacity: 1; }
+    .format-grid { grid-template-columns: 1fr; }
+    .format-item { padding: 30px 26px 34px; }
+    .fit-col { padding: 32px 26px 36px; }
+    #close { padding: 96px 20px 88px; }
+    .close-cta .btn { width: 100%; text-align: center; }
+    footer { padding: 26px 20px calc(26px + 62px); }
+    .modal-backdrop { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <a class="wordmark" href="/">New Terrain <span>Creative</span></a>
+  <div class="header-right">
+    <a class="header-link" href="/">The Studio</a>
+    <a class="header-cta" data-cta="header" href="/project?offer=signature">Tell Us About the Project</a>
+  </div>
+</header>
+
+<!-- ══ HERO ═══════════════════════════════════════════════════════════
+     The reel is the same master the homepage opens on. It is the
+     strongest cinematic asset in the repo and this is the page that
+     asks the viewer to judge us on craft, so it earns its weight here.
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/og-image.jpg" aria-hidden="true">
+    <source src="assets/hero-reel.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-bar hero-bar--top"></div>
+  <div class="hero-bar hero-bar--bottom"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Signature Work</div>
+    <h1 class="hero-headline">For the work that shouldn't look like <em>content.</em></h1>
+    <p class="hero-desc">Commercials, documentaries, brand films and custom productions built from concept through final delivery.</p>
+    <div class="hero-cta-row">
+      <a class="btn btn--gold" data-cta="hero" href="/project?offer=signature">Tell Us About the Project</a>
+      <a class="btn btn--ghost" href="#work">See the work</a>
+    </div>
+    <div class="hero-credits">
+      <div class="credit-item">Based in <strong>Los Angeles · Tampa</strong></div>
+      <div class="credit-item">Award-winning · <strong>Tribeca · Telluride · Gasparilla</strong></div>
+      <div class="credit-item">Direction by <strong>Jadon Cal Fitzpatrick</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 01 · SELECTED WORK ═════════════════════════════════════════════
+     The six cinematic pieces from the homepage grid, same YouTube ids,
+     same credits. The social growth row is deliberately not here: that
+     work sells /grow, and putting it on this page would blur the line
+     the page exists to draw.
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="work">
+  <div class="section-head">
+    <div class="section-index reveal">
+      <span class="section-num">01</span>
+      <span class="section-eyebrow">Selected Signature Work</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-title reveal">Festivals, streamers,<br>and <em>brands.</em></h2>
+    <p class="section-lede reveal">The format changes. The standard doesn't. A brand film gets the same cinematic intention we bring to a festival project, from treatment through final color.</p>
+  </div>
+
+  <div class="work-grid">
+
+    <div class="work-item reveal">
+      <div class="work-bg" style="background-image:url('assets/offrip-thumbnail.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="9eEiEanqUXg">Watch Trailer &#8599;</button>
+      <div class="work-meta">
+        <div class="work-type">Feature Film · Sports Drama</div>
+        <div class="work-title">Off Rip</div>
+        <div class="work-detail">Grand Jury Award, Gasparilla · Now on Amazon &amp; Apple</div>
+      </div>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-bg" style="background-image:url('assets/botnot-thumbnail.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="KybQ0SDiDAk">Watch Trailer &#8599;</button>
+      <div class="work-meta">
+        <div class="work-type">Short Film · Sci-Fi Thriller</div>
+        <div class="work-title">Bot or Not</div>
+        <div class="work-detail">Lois Weber Best Sci-Fi · FilmQuest Official Selection</div>
+      </div>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-bg" data-yt="XPzlTc6Shsg"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="XPzlTc6Shsg">Watch Spot &#8599;</button>
+      <div class="work-meta">
+        <div class="work-type">Spec Commercial</div>
+        <div class="work-title">Ghirardelli</div>
+        <div class="work-detail">Spec spot · Direction, cinematography, post</div>
+      </div>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-bg" style="background-image:url('assets/aldertalk-thumbnail.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="O8G7Ou88mjM">Watch Doc &#8599;</button>
+      <div class="work-meta">
+        <div class="work-type">Documentary</div>
+        <div class="work-title">AlderTalk Summit</div>
+        <div class="work-detail">$650-a-ticket summit · Multi-camera · Full post</div>
+      </div>
+    </div>
+
+    <div class="work-item work-item--light reveal">
+      <div class="work-bg" style="background-image:url('assets/four-thumbnail.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="LxgDdkYP2gE">Watch Trailer &#8599;</button>
+      <div class="work-meta">
+        <div class="work-type">Feature Trailer · Drama</div>
+        <div class="work-title">FOUR</div>
+        <div class="work-detail">460K views · 294 reshares · Trailer cut in-house</div>
+      </div>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-bg" style="background-image:url('assets/robbie-thumbnail.jpg')"></div>
+      <div class="work-overlay"></div>
+      <button class="work-action" data-video="2S4zX-l6UD4">Watch Film &#8599;</button>
+      <div class="work-meta">
+        <div class="work-type">Short Film · Performance</div>
+        <div class="work-title">Robbie Ain't Right No More</div>
+        <div class="work-detail">Tribeca · Telluride · Official Selections</div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="work-note reveal">Podcast build-outs and the ongoing brand work live on <a href="/">the studio page</a>, alongside the social side of what we do.</p>
+</section>
+
+<!-- ══ 02 · WHAT WE MAKE ══════════════════════════════════════════════ -->
+<section id="formats">
+  <div class="section-head">
+    <div class="section-index reveal">
+      <span class="section-num">02</span>
+      <span class="section-eyebrow">What We Make</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-title reveal">Six shapes.<br>One visual <em>language.</em></h2>
+    <p class="section-lede reveal">Format changes the running time and the delivery spec. It does not change how the thing gets made, who directs it, or where it gets colored.</p>
+  </div>
+
+  <div class="format-grid">
+
+    <div class="format-item reveal">
+      <span class="format-tag">Paid · Broadcast · Social</span>
+      <div class="format-name">Commercials</div>
+      <p class="format-desc">Spots built around a single idea rather than a shot list. Concepted, directed, shot and finished in house, then cut down to every placement the campaign actually runs in.</p>
+    </div>
+
+    <div class="format-item reveal">
+      <span class="format-tag">Identity</span>
+      <div class="format-name">Brand Films</div>
+      <p class="format-desc">The piece that sits on the homepage, opens the keynote, or plays in the room before you speak. Made to be watched on purpose, not skipped past.</p>
+    </div>
+
+    <div class="format-item reveal">
+      <span class="format-tag">Long-Form</span>
+      <div class="format-name">Documentaries</div>
+      <p class="format-desc">Real subjects, real access, structured like a film. Interview-led or vérité, with the story shaped in the edit rather than assembled from a template.</p>
+    </div>
+
+    <div class="format-item reveal">
+      <span class="format-tag">Campaign</span>
+      <div class="format-name">Launch &amp; Campaign Films</div>
+      <p class="format-desc">A product, a raise, an opening, a rebrand. One production built to feed the hero film and every derivative the launch needs across its run.</p>
+    </div>
+
+    <div class="format-item reveal">
+      <span class="format-tag">Audio · Video · Set</span>
+      <div class="format-name">Podcast Build-Outs</div>
+      <p class="format-desc">The whole show, not just the shoot: set design and lighting, multi-camera capture, audio post, episode cutdowns, and a format that holds up past episode three.</p>
+    </div>
+
+    <div class="format-item reveal">
+      <span class="format-tag">Studio Scale</span>
+      <div class="format-name">Larger Custom Productions</div>
+      <p class="format-desc">Multi-shoot, multi-deliverable work, up to New Terrain running as your brand's entire content department. Scoped around the project rather than forced into a package.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 03 · APPROACH ══════════════════════════════════════════════════ -->
+<section id="approach">
+  <div class="section-head">
+    <div class="section-index reveal">
+      <span class="section-num">03</span>
+      <span class="section-eyebrow">How Custom Projects Run</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-title reveal">No two of these<br>are the <em>same.</em></h2>
+    <p class="section-lede reveal">Which is why the process starts with a brief instead of a package. Five stages, and you know what happens in each one before anything is booked.</p>
+  </div>
+
+  <div class="approach-list">
+
+    <div class="approach-step reveal">
+      <span class="approach-num">I</span>
+      <div class="approach-name">The Brief</div>
+      <p class="approach-body">You tell us what the project is, who it has to move, and when it has to exist. That happens in writing first, on purpose: <b>a written brief is worth more than a discovery call</b>, and it means the first conversation starts somewhere useful instead of at the beginning.</p>
+    </div>
+
+    <div class="approach-step reveal">
+      <span class="approach-num">II</span>
+      <div class="approach-name">Concept &amp; Treatment</div>
+      <p class="approach-body">Before a camera turns on, we figure out what makes people choose you, then build every shot around it. You see the idea, the visual references and the shape of the piece in a treatment. <b>No generic b-roll packages, no "we'll find it in the edit."</b></p>
+    </div>
+
+    <div class="approach-step reveal">
+      <span class="approach-num">III</span>
+      <div class="approach-name">Production</div>
+      <p class="approach-body">Director-led shoots where the person behind the camera is the same one who built the plan. <b>No handoffs, no gaps in vision.</b> Crew sized to the project, from a two-person documentary unit up to a full commercial crew.</p>
+    </div>
+
+    <div class="approach-step reveal">
+      <span class="approach-num">IV</span>
+      <div class="approach-name">Post</div>
+      <p class="approach-body">Edit, color and sound in house. We own the look from first frame to last, which is why the grade on a brand film matches the grade on a feature.</p>
+    </div>
+
+    <div class="approach-step reveal">
+      <span class="approach-num">V</span>
+      <div class="approach-name">Delivery</div>
+      <p class="approach-body">Masters plus every aspect ratio, cutdown and caption file the release actually runs in. <b>Usage and ownership are agreed in the scope, in writing, before anything is shot.</b> If the piece has a second life as ads or social, it was framed for that from the treatment onward.</p>
+    </div>
+
+  </div>
+
+  <p class="approach-close reveal">The through line is that one person carries the project from the brief to the master. <b>That is the whole reason this work is called Signature.</b></p>
+</section>
+
+<!-- ══ 04 · PROOF ═════════════════════════════════════════════════════
+     Every figure here is the same figure published on index.html.
+     Nothing on this page is a new claim.
+     ═══════════════════════════════════════════════════════════════════ -->
+<section id="proof">
+  <div class="section-head">
+    <div class="section-index reveal">
+      <span class="section-num">04</span>
+      <span class="section-eyebrow">Proof</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-title reveal">Story moves<br><em>numbers.</em></h2>
+    <p class="section-lede reveal">Most brand content gets scrolled past. Not because the budget was too small, but because there was no reason to care. Every audience we have grown started with the same question a film starts with: <em>why should anyone watch this?</em></p>
+  </div>
+
+  <div class="proof-rows">
+
+    <div class="proof-row reveal">
+      <div>
+        <div class="proof-number">338K+</div>
+        <div class="proof-label">Organic Reach · First 9 Days</div>
+      </div>
+      <div>
+        <span class="proof-tier">Signature Work · Film</span>
+        <div class="proof-client">Bot or Not · Launch</div>
+        <p class="proof-desc">Uploaded to YouTube in late June 2026 and shared once on r/Filmmakers. With zero paid spend, the post became #2 of the day and the audience followed the film across platforms. The demand question investors ask of any concept, answered with data.</p>
+        <div class="proof-mini">
+          <div>
+            <div class="mini-num">168K+</div>
+            <div class="mini-label">Reddit views in 4 days · 91.6% upvoted</div>
+          </div>
+          <div>
+            <div class="mini-num">20K</div>
+            <div class="mini-label">IG views · one organic trailer post</div>
+          </div>
+          <div>
+            <div class="mini-num">12K</div>
+            <div class="mini-label">YouTube views · 97.5% from recommendations</div>
+          </div>
+          <div>
+            <div class="mini-num">8:55</div>
+            <div class="mini-label">Avg. watch time on a 21-min short</div>
+          </div>
+          <div>
+            <div class="mini-num">US · CA · UK</div>
+            <div class="mini-label">~72% of viewers in primary buyer markets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-row reveal">
+      <div>
+        <div class="proof-number">800K</div>
+        <div class="proof-label">Streaming Minutes</div>
+      </div>
+      <div>
+        <span class="proof-tier">Signature Work · Film</span>
+        <div class="proof-client">Off Rip</div>
+        <p class="proof-desc">A feature film made story-first on an independent budget: Grand Jury Award at Gasparilla, now streaming on Amazon and Apple, with Tubi coming soon. The same discipline goes into every brand piece we cut.</p>
+      </div>
+    </div>
+
+    <div class="proof-row reveal">
+      <div>
+        <div class="proof-number">460K</div>
+        <div class="proof-label">Trailer Views</div>
+      </div>
+      <div>
+        <span class="proof-tier">Signature Work · Film</span>
+        <div class="proof-client">FOUR · Trailer Campaign</div>
+        <p class="proof-desc">A feature starring Meghan Carrasquillo, with the trailer cut in-house at New Terrain. Just under half a million views and 294 reshares: when a story brings healing, the audience does the distribution for you.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="awards">
+    <div class="award reveal">
+      <div class="award-name"><strong>Grand Jury Award</strong> · Gasparilla Film Festival</div>
+      <div class="award-role">Dir / Writer / Producer · Off Rip</div>
+    </div>
+    <div class="award reveal">
+      <div class="award-name"><strong>Tribeca &amp; Telluride</strong> · Official Selection</div>
+      <div class="award-role">Actor · Robbie Ain't Right No More</div>
+    </div>
+    <div class="award reveal">
+      <div class="award-name"><strong>Lois Weber Best Sci-Fi</strong> · FilmQuest</div>
+      <div class="award-role">Co-Director / Producer · Bot or Not</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 05 · PROJECT FIT ═══════════════════════════════════════════════ -->
+<section id="fit">
+  <div class="section-head">
+    <div class="section-index reveal">
+      <span class="section-num">05</span>
+      <span class="section-eyebrow">Project Fit</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-title reveal">Worth saying out loud<br>before you <em>write in.</em></h2>
+    <p class="section-lede reveal">Signature Work is not the right answer to every video problem, and the fastest way to waste both our time is to find that out on a call.</p>
+  </div>
+
+  <div class="fit-cols">
+
+    <div class="fit-col fit-col--yes reveal">
+      <div class="fit-col-title">This is the right room when</div>
+      <ul class="fit-list">
+        <li><span class="fit-mark">&#10003;</span>The piece carries real weight: a launch, a raise, a rebrand, a film that has to represent you for years</li>
+        <li><span class="fit-mark">&#10003;</span>You want a point of view on the story, not a crew who shoots what they are told</li>
+        <li><span class="fit-mark">&#10003;</span>Craft is the point. If it looked like everyone else's, it would not be worth making</li>
+        <li><span class="fit-mark">&#10003;</span>You have a decision maker in the room and a date the work has to exist by</li>
+        <li><span class="fit-mark">&#10003;</span>The project deserves a treatment before a quote</li>
+      </ul>
+    </div>
+
+    <div class="fit-col fit-col--no reveal">
+      <div class="fit-col-title">Something else fits better when</div>
+      <ul class="fit-list">
+        <li><span class="fit-mark">&#8212;</span>What you actually need is a batch of ads to test. That is the <a href="/sprint">Ad Sprint</a>, and it is a fixed price</li>
+        <li><span class="fit-mark">&#8212;</span>You need consistent monthly volume across your channels. That is a <a href="/grow">growth retainer</a></li>
+        <li><span class="fit-mark">&#8212;</span>The deliverable is already fully specified and you are collecting bids on it</li>
+        <li><span class="fit-mark">&#8212;</span>The timeline is days. Custom work is scoped, treated and scheduled, and that takes longer than a shoot</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="fit-scope reveal"><b>On budget.</b> There is no price list on this page because there is no package behind it. A thirty-second spot and a feature documentary share a camera and nothing else, so scope and fee are built from the brief. Tell us the range you are working within and we will tell you honestly what is possible inside it, including when the answer is that it is not.</p>
+</section>
+
+<!-- ══ CLOSE ══════════════════════════════════════════════════════════ -->
+<section id="close">
+  <p class="close-pre reveal">New Terrain Creative</p>
+  <h2 class="close-title reveal">Tell us what<br>you want to <em>make.</em></h2>
+  <p class="close-lede reveal">A few questions about the project, the timeline and the shape of it. It takes a couple of minutes and it means the first real conversation starts somewhere worth starting.</p>
+  <div class="close-cta reveal">
+    <a class="btn btn--gold" data-cta="close" href="/project?offer=signature">Tell Us About the Project</a>
+  </div>
+  <a class="close-mail reveal" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+</section>
+
+<a class="sticky-cta" id="stickyCta" data-cta="sticky" href="/project?offer=signature">Tell Us About the Project</a>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="/">The Studio</a>
+  <a href="/grow">Growth Retainers</a>
+  <a href="/sprint">Ad Sprint</a>
+  <a href="/privacy">Privacy</a>
+  <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
+</footer>
+
+<!-- VIDEO MODAL -->
+<div class="modal-backdrop" id="videoModal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="modal-inner">
+    <button class="modal-close" id="modalClose">Close</button>
+    <div class="modal-ratio">
+      <iframe id="modalFrame" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Video player"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── reveal ─────────────────────────────────────────────────────── */
+  var reveals = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var delay = parseInt(entry.target.dataset.delay || 0, 10);
+        setTimeout(function () { entry.target.classList.add('visible'); }, delay);
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(function (el) {
+      var sibs = Array.prototype.filter.call(
+        (el.parentElement && el.parentElement.children) || [],
+        function (c) { return c.classList.contains('reveal'); });
+      el.dataset.delay = sibs.indexOf(el) * 80;
+      obs.observe(el);
+    });
+  }
+
+  /* ── YouTube thumbnail, maxres with an hq fallback ──────────────── */
+  document.querySelectorAll('.work-bg[data-yt]').forEach(function (el) {
+    var id = el.dataset.yt;
+    var img = new Image();
+    img.onload = function () {
+      el.style.backgroundImage = "url('https://img.youtube.com/vi/" + id + "/maxresdefault.jpg')";
+    };
+    img.onerror = function () {
+      el.style.backgroundImage = "url('https://img.youtube.com/vi/" + id + "/hqdefault.jpg')";
+    };
+    img.src = 'https://img.youtube.com/vi/' + id + '/maxresdefault.jpg';
+  });
+
+  /* ── video modal ────────────────────────────────────────────────── */
+  var modal = document.getElementById('videoModal');
+  var frame = document.getElementById('modalFrame');
+  var lastFocus = null;
+
+  function openModal(src, origin) {
+    lastFocus = origin || null;
+    frame.src = src;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('modalClose').focus();
+  }
+
+  function closeModal() {
+    if (!modal.classList.contains('open')) return;
+    modal.classList.remove('open');
+    frame.src = '';
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.querySelectorAll('[data-video]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var params = new URLSearchParams({ autoplay: 1, rel: 0 });
+      openModal('https://www.youtube.com/embed/' + btn.dataset.video + '?' + params, btn);
+    });
+  });
+
+  // The whole card opens the piece, not just the small button.
+  document.querySelectorAll('.work-item').forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      if (e.target.closest('.work-action')) return;
+      var action = item.querySelector('.work-action');
+      if (action) action.click();
+    });
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  /* ── header state, and the mobile CTA ───────────────────────────── */
+  var header = document.getElementById('siteHeader');
+  var sticky = document.getElementById('stickyCta');
+  var hero = document.getElementById('hero');
+  var closeSection = document.getElementById('close');
+
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('scrolled', window.scrollY > 80);
+    // Held back until the hero is behind them, and retracted again once
+    // the closing section is on screen: the hero and the close both carry
+    // this exact button, and stacking it on itself is noise.
+    var closeTop = closeSection.getBoundingClientRect().top;
+    sticky.classList.toggle('on',
+      window.scrollY > hero.offsetHeight - 120 && closeTop > window.innerHeight * 0.75);
+  }, { passive: true });
+
+  /* ── tracking ───────────────────────────────────────────────────────
+     ViewContent on arrival and CTAClick on the buttons. Nothing here is
+     a conversion: Lead belongs to the completed /project submission,
+     which is the first point at which an actual enquiry exists.
+     ───────────────────────────────────────────────────────────────── */
+  if (!window.ntc) return;
+
+  ntc.track('ViewContent', {
+    content_name: document.title,
+    offer: 'signature_work'
+  });
+
+  document.querySelectorAll('[data-cta]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      ntc.track('CTAClick', {
+        offer: 'signature_work',
+        position: el.getAttribute('data-cta')
+      }, { once: false });
+    });
+  });
+})();
+</script>
+</body>
+</html>
