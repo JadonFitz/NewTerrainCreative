@@ -90,8 +90,10 @@ project funnels will optimise as one audience.
 
 ## No booking without qualification
 
-Every call now starts with a completed form. `/book` forwards to
-`/strategy-call` rather than the scheduler, and the only page allowed to
+Every call now starts with a completed form. `/book` and the other
+booking-shaped paths (`/booking`, `/book-a-call`, `/book-call`,
+`/schedule`, `/call`) redirect to `/strategy-call` in `vercel.json`,
+query string intact, rather than to the scheduler, and the only page allowed to
 link the scheduler directly is `apply.html`, as a success state shown
 after a full application. `scripts/preflight.py` fails the build if any
 other page links it.

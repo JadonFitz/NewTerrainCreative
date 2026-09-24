@@ -23,6 +23,41 @@
       "source": "/growth-guide.html",
       "destination": "/grow",
       "permanent": false
+    },
+    {
+      "source": "/book",
+      "destination": "/strategy-call",
+      "permanent": false
+    },
+    {
+      "source": "/book.html",
+      "destination": "/strategy-call",
+      "permanent": false
+    },
+    {
+      "source": "/booking",
+      "destination": "/strategy-call",
+      "permanent": false
+    },
+    {
+      "source": "/book-a-call",
+      "destination": "/strategy-call",
+      "permanent": false
+    },
+    {
+      "source": "/book-call",
+      "destination": "/strategy-call",
+      "permanent": false
+    },
+    {
+      "source": "/schedule",
+      "destination": "/strategy-call",
+      "permanent": false
+    },
+    {
+      "source": "/call",
+      "destination": "/strategy-call",
+      "permanent": false
     }
   ],
   "rewrites": [
