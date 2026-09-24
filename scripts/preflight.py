@@ -24,6 +24,7 @@ import re
 import subprocess
 import sys
 import pathlib
+import json as _json_mod
 import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -79,10 +80,19 @@ for f in sorted(ROOT.glob('*.html')):
         continue
     text = f.read_text(encoding='utf-8')
     # Inline scripts only. A src= script is a file we already checked.
-    blocks = re.findall(r'<script(?![^>]*\ssrc=)[^>]*>(.*?)</script>', text, re.S)
+    # Captures the attributes too, so a type= that is not JavaScript can
+    # be routed to the right parser: JSON-LD is data, and handing it to
+    # node produces a syntax error on a perfectly valid block.
+    blocks = re.findall(r'<script((?![^>]*\ssrc=)[^>]*)>(.*?)</script>', text, re.S)
     broken = []
-    for i, b in enumerate(blocks):
+    for i, (attrs, b) in enumerate(blocks):
         if not b.strip():
+            continue
+        if 'ld+json' in attrs or 'application/json' in attrs:
+            try:
+                _json_mod.loads(b)
+            except Exception as e:
+                broken.append(f'block {i + 1}: invalid JSON · {e}')
             continue
         r = node_check(None, b)
         if r.returncode != 0:
@@ -233,7 +243,7 @@ bad('more than one pixel id in use: ' + ', '.join(sorted(ids))) if len(ids) > 1 
 # qualification step. /apply went first, /project followed when the
 # Signature Project Consultation event went live. Linking either again
 # is a real decision, so it should fail here first.
-PARKED = ['apply', 'project']
+PARKED = ['apply', 'project']  # also used by the sitemap check below
 for page in PARKED:
     linkers = [f.name for f in ROOT.glob('*.html')
                if f.stem != page
@@ -249,8 +259,12 @@ for page in PARKED:
 UNLISTED = ['call-booked']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
-    body = sitemap.read_text(encoding='utf-8')
-    leaked = [u for u in UNLISTED if u in body]
+    # Strip comments first. The sitemap documents which pages are left
+    # out and why, so a naive substring search finds the very names the
+    # file exists to exclude and fails on correct content.
+    body = re.sub(r'<!--[\s\S]*?-->', '', sitemap.read_text(encoding='utf-8'))
+    leaked = [u for u in UNLISTED + PARKED + ['strategy-call', 'booked']
+              if f'/{u}<' in body or f'/{u}/' in body]
     bad('sitemap.xml lists unlisted page(s): ' + ', '.join(leaked)) if leaked \
         else ok('sitemap.xml excludes every unlisted page')
 else:
