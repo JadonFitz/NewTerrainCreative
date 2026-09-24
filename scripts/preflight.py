@@ -197,7 +197,7 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
 # submitted application or a confirmation is noise, not a CTA.
 LIFT = 'data-cta-widget'
 NO_LIFT = ['apply.html', 'founding.html', 'project.html', 'strategy-call.html',
-           'booked.html', 'call-booked.html', 'onboarding.html', 'book.html']
+           'booked.html', 'call-booked.html', 'onboarding.html']
 wrong = [n for n in NO_LIFT
          if (ROOT / n).exists() and LIFT in (ROOT / n).read_text(encoding='utf-8')]
 carriers = sorted(f.stem for f in ROOT.glob('*.html')
@@ -213,7 +213,7 @@ bad('the booking widget is on page(s) that already ask for something: '
 # One id, checked everywhere, so a new page cannot ship untracked.
 PIXEL = '1634935111618929'
 NO_PIXEL_NEEDED = {'755b0bb56edaeb4dbe35c2cb512311c2', 'privacy', 'terms',
-                   'onboarding', 'book'}
+                   'onboarding'}
 untracked = sorted(f.name for f in ROOT.glob('*.html')
                    if f.stem not in NO_PIXEL_NEEDED
                    and PIXEL not in f.read_text(encoding='utf-8'))

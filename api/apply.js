@@ -31,7 +31,7 @@ const FROM = process.env.APPLY_FROM || 'New Terrain Creative <applications@newte
    confirmations, reminders and SMS. /apply records the application and
    its acknowledgements, then hands off. It builds no scheduling,
    reminder, messaging or pipeline logic of its own and must not start. */
-const BOOKING_URL = process.env.BOOKING_URL || 'https://calendar.app.google/qardoZkWtaBsq2RG9';
+const BOOKING_URL = process.env.BOOKING_URL || '/strategy-call?offer=founding-three';
 
 // Step one: is this the right offer for them, and who are we talking to.
 const STEP_ONE = ['name', 'email', 'phone', 'role', 'authority',

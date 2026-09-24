@@ -135,7 +135,7 @@
     var p = w.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
     if (p === '/founding' || p === '/apply') return 'founding_three';
     if (p === '/grow' || p === '/strategy-call') return 'paid_retainer';
-    if (p === '/sprint' || p === '/book' || p === '/booked') return 'ad_sprint';
+    if (p === '/sprint' || p === '/booked') return 'ad_sprint';
     if (p === '/growth-guide') return 'sales_enablement';
     return 'organic_site';
   }
