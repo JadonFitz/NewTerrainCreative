@@ -246,7 +246,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      conversion iClosed fires for it.
 
      Reached here as:
-       /apply success      -> ?offer=founding-three
+       /founding           -> ?offer=founding-three
+       /sprint             -> ?offer=ad-sprint
+       / and /signature    -> ?offer=signature
        /grow               -> no parameter
        ?offer=production-media -> kept although /production-media is
          retired and now redirects to /grow. A live ad may still carry
@@ -259,6 +261,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
       title: 'Apply to book a Founding Three call with New Terrain Creative'
+    },
+    /* Signature Work. The cinema side's only path, and the one offer
+       whose booking form replaced a form of ours rather than sitting
+       beside it: /project is parked the way /apply was, because asking
+       for a brief and then asking the same things again to book is the
+       drop-out gap we already removed once. */
+    'signature': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/signature-project',
+      title: 'Request a Signature Project consultation with New Terrain Creative',
+      eyebrow: 'Signature Work',
+      lede:    'Tell us what the project is, who it has to move, and when it has to exist. Thirty minutes to work out whether it is something we should make, and what it would take. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.'
     },
     // Retired page, retained identifier. See the note above.
     'production-media': {

@@ -227,11 +227,13 @@ for f in ROOT.glob('*.html'):
 bad('more than one pixel id in use: ' + ', '.join(sorted(ids))) if len(ids) > 1 \
     else ok(f'one pixel id across the site ({", ".join(ids) or "none"})')
 
-# Parked pages. /apply still works and is deliberately unlinked: the
-# Founding Three event in iClosed now asks the same questions, and two
-# forms back to back was a place to drop out of. Linking it again is a
-# real decision, so it should fail here first. See the note in apply.html.
-PARKED = ['apply']
+# Parked pages. Both still work and are deliberately unlinked, for the
+# same reason: an iClosed event now asks what the form asked, and two
+# forms back to back was a place to drop out of rather than a
+# qualification step. /apply went first, /project followed when the
+# Signature Project Consultation event went live. Linking either again
+# is a real decision, so it should fail here first.
+PARKED = ['apply', 'project']
 for page in PARKED:
     linkers = [f.name for f in ROOT.glob('*.html')
                if f.stem != page

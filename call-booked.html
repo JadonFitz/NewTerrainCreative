@@ -237,7 +237,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                       'further. Rough numbers are fine.',
     'sprint':         '<b>About the Ad Sprint:</b> this is a fit call, not a sales call with a ' +
                       'deposit at the end. We will work out whether a Sprint is the right thing ' +
-                      'for you and which of the two sizes actually fits.'
+                      'for you and which of the two sizes actually fits.',
+    'signature':      '<b>Before we talk:</b> anything you already have that shows the shape of ' +
+                      'it helps, a reference, a rough brief, a deck, even a competitor piece you ' +
+                      'liked. Nothing polished, and nothing required.'
   };
 
   /* The key here is whatever the iClosed redirect for that event is
@@ -245,7 +248,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      /strategy-call forwarded on the way in. Both spellings are accepted
      so a redirect set to either one shows the right line. */
   var ALIAS = { 'ad-sprint': 'sprint', 'production-media': 'growth',
-                'paid_retainer': 'growth', 'founding_three': 'founding-three' };
+                'paid_retainer': 'growth', 'founding_three': 'founding-three',
+                'signature-project': 'signature', 'signature_work': 'signature' };
 
   var params = new URLSearchParams(window.location.search);
   var offer = (params.get('offer') || '').trim().toLowerCase();
@@ -412,7 +416,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       // The same three identifiers the rest of the funnel reports on.
       var OFFER_ID = { 'founding-three': 'founding_three',
                        'growth': 'paid_retainer',
-                       'sprint': 'ad_sprint' };
+                       'sprint': 'ad_sprint',
+                       'signature': 'signature_work' };
 
       ntc.track('Schedule', {
         offer: OFFER_ID[offer] || 'paid_retainer',
