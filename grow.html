@@ -528,6 +528,9 @@
 
   .close-mail:hover { color: var(--gold); }
 
+  .mail-row { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+  .mail-row a { margin-top: 0; }
+
   footer {
     display: flex;
     justify-content: space-between;
@@ -1018,7 +1021,10 @@
     <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
     <a class="btn btn--ghost" href="#pricing">See Pricing</a>
   </div>
-  <a class="hero-mail reveal" href="mailto:business@newterraincreative.com">Prefer email? business@newterraincreative.com</a>
+  <div class="mail-row reveal" style="margin-top:24px">
+    <a class="hero-mail" href="mailto:business@newterraincreative.com">Prefer email? business@newterraincreative.com</a>
+    <a class="hero-mail" href="tel:+18182668213">Or call or text (818) 266-8213</a>
+  </div>
 </section>
 
 <!-- STAT BAR -->
@@ -1578,12 +1584,16 @@
   <div class="close-ctas reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
   </div>
-  <a class="close-mail reveal" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
+    <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+    <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>
+  </div>
 </section>
 
 <footer>
   <span>New Terrain Creative © 2026</span>
   <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="tel:+18182668213">(818) 266-8213</a>
   <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
   <a href="index.html">See the cinema side →</a>
   <a href="/privacy">Privacy</a>

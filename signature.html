@@ -736,6 +736,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .close-mail:hover { color: var(--gold); }
 
+  .mail-row { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+  .mail-row a { margin-top: 0; }
+
   /* ── FOOTER ─────────────────────────────────────────────────────── */
   footer {
     border-top: 1px solid var(--line);
@@ -1210,7 +1213,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <div class="close-cta reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=signature">Tell Us About the Project</a>
   </div>
-  <a class="close-mail reveal" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
+    <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+    <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>
+  </div>
 </section>
 
 <a class="sticky-cta" id="stickyCta" data-cta="sticky" href="/strategy-call?offer=signature">Tell Us About the Project</a>
