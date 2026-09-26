@@ -68,6 +68,56 @@ in one monthly production system.
 
 ---
 
+## 1A · In-house comparison, published beside every price
+
+> Added 26 September 2026. Lives in `assets/offer.js` `inHouse`, rendered
+> on `/grow` (per tier card), `/sprint` (ledger under the price cards),
+> the homepage engage cards, and `/about`. `scripts/check-offer.py`
+> treats the role rates and team totals as declared figures.
+>
+> **Format is a ledger, not prose.** Each row is a label, an amount and a
+> bar scaled to the payroll total; payroll rows are dim, our row is gold.
+> A first prose version read at a glance as more prices from us, which
+> is the opposite of the point. Akoola's `/apply` page uses the same
+> device in text form (three roles, a total of about $17,000, "with
+> Akoola: all three, one dedicated team"); their videographer-editor and
+> media buyer figures are within a few hundred dollars of ours.
+
+A price on its own has nothing to be judged against, so the prospect
+supplies the reference point, and it is usually a freelancer's day rate.
+The comparison we publish is against **hiring**, not against another
+agency, because hiring is the alternative a business at this size is
+actually weighing.
+
+| Package | Price | Roles it replaces | In-house, monthly |
+|---|---|---|---|
+| Ad Sprint | $2,500 or $4,500 once | Videographer-editor $5,500 + creative strategist $6,000 | about $11,500 |
+| The Anchor | $3,500 | Videographer-editor $5,500 + creative lead $7,000 | about $12,500 |
+| Growth Partner | $6,500 | Anchor team + paid media manager $7,000 | about $19,500 |
+| Brand Builder | $15,000 | 2 videographer-editors $11,000 + creative lead $7,000 + paid media manager $7,000 + producer $5,000 | about $30,000 |
+
+**Basis.** Los Angeles salaries at the low end of the published ranges
+(ZipRecruiter, Salary.com, Glassdoor, September 2026), before benefits,
+payroll tax, gear, software and management time. Deliberately
+conservative: the LA averages run higher (video editor $66k to $90k,
+paid media manager about $110k, creative director well over $100k even
+at startups), and a figure nobody can argue with is worth more than a
+bigger one that invites the argument. Tampa salaries are lower, which
+narrows the gap there; the copy says "in Los Angeles" where it names a
+salary and does not claim the figures for Tampa.
+
+**What it must not become.** Not a claim that the package equals a
+full-time team. The grow page says so in the basis note: a team of your
+own is the right call once the volume justifies it. The comparison sizes
+the decision; it does not knock hiring.
+
+**What replaces it.** Salary anchoring is the right move while there
+are no public results. Once the Founding clients produce tracked
+numbers, a calculator that shows what the work earns is the stronger
+asset, because salary math only shows what it saves.
+
+---
+
 ## 2 · Superseded proposal, kept for the reasoning
 
 Everything below this line was the 12 September proposal. The deliverable

@@ -328,6 +328,45 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .speed-price { font-family: var(--display); font-size: 22px; color: var(--gold); white-space: nowrap; text-align: right; }
   .speed-price small { font-family: var(--body); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 4px; }
 
+  /* Compared with hiring. A ledger, not prose: each row is a label,
+     an amount and a bar scaled to the amount, so the payroll figures
+     and our price are read against each other rather than as more
+     prices from us. Payroll rows dim, our rows gold. */
+  .cmp-wrap {
+    margin-top: 1px;
+    background: var(--black);
+    border: 1px solid var(--line);
+    border-top: none;
+    padding: 40px 40px 42px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 34px 48px;
+    align-items: start;
+  }
+  .cmp-head .speed-tag { margin-bottom: 10px; }
+  .cmp-title { font-family: var(--display); font-size: 30px; font-weight: 300; line-height: 1.1; color: var(--parchment); }
+  .cmp-title em { font-style: italic; color: var(--gold); }
+  .cmp-note { margin-top: 16px; font-size: 12px; line-height: 1.8; color: var(--muted); }
+  .cmp { display: flex; flex-direction: column; gap: 14px; }
+  .cmp-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; row-gap: 7px; column-gap: 16px; }
+  .cmp-label { font-size: 12.5px; letter-spacing: 0.02em; color: var(--muted); }
+  .cmp-amt { font-family: var(--display); font-size: 22px; font-weight: 300; line-height: 1; color: var(--muted); white-space: nowrap; }
+  .cmp-amt small { font-family: var(--body); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); margin-left: 4px; }
+  .cmp-bar { grid-column: 1 / -1; height: 6px; background: #1a1815; position: relative; }
+  .cmp-bar::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: var(--w, 0%); background: #4a443b; }
+  .cmp-row--total .cmp-label, .cmp-row--total .cmp-amt { color: var(--parchment); }
+  .cmp-row--total .cmp-bar::after { background: #6b6357; }
+  .cmp-row--us .cmp-label { color: var(--parchment); }
+  .cmp-row--us .cmp-amt { color: var(--gold); }
+  .cmp-row--us .cmp-bar::after { background: var(--gold); }
+  .cmp-divider { height: 1px; background: var(--line); margin: 4px 0; }
+  .cmp-side { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+  .cmp-side--us { color: var(--gold); opacity: 0.75; }
+  @media (max-width: 820px) {
+    .cmp-wrap { grid-template-columns: 1fr; padding: 30px 24px 32px; gap: 26px; }
+    .cmp-title { font-size: 26px; }
+  }
+
   .fine {
     margin-top: 30px;
     font-size: 11px;
@@ -1291,6 +1330,29 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </div>
     <p class="speed-body">The whole thing in seven days instead of fourteen. You take the next slot on the calendar and your cut jumps the queue in post. If we miss the date, you do not pay the priority fee.</p>
     <div class="speed-price">+20%<small>7 days · $500 on Eight · $900 on Fifteen</small></div>
+  </div>
+
+  <!-- Compared with hiring. Salaries are Los Angeles, low end of the
+       published ranges, declared in assets/offer.js inHouse so
+       check-offer passes. Bar widths are each amount over the two-salary
+       total. Do not put arithmetic in this comment: check-offer reads
+       the raw file, comments included. -->
+  <div class="cmp-wrap reveal">
+    <div class="cmp-head">
+      <span class="speed-tag">Compared with hiring</span>
+      <div class="cmp-title">Hire it, or <em>Sprint it.</em></div>
+      <p class="cmp-note">Either Sprint costs less than half of one month of those two salaries, and the salaries still would not bring you the angles. Ad spend is separate in both cases.</p>
+    </div>
+    <div class="cmp">
+      <span class="cmp-side">If you hired for this in-house, per month</span>
+      <div class="cmp-row"><span class="cmp-label">A videographer who can also edit</span><span class="cmp-amt">$5,500<small>/ mo</small></span><span class="cmp-bar" style="--w:48%"></span></div>
+      <div class="cmp-row"><span class="cmp-label">A creative strategist for the angles, hooks and testing plan</span><span class="cmp-amt">$6,000<small>/ mo</small></span><span class="cmp-bar" style="--w:52%"></span></div>
+      <div class="cmp-row cmp-row--total"><span class="cmp-label">Two hires to recruit, manage and keep busy</span><span class="cmp-amt">$11,500<small>/ mo</small></span><span class="cmp-bar" style="--w:100%"></span></div>
+      <div class="cmp-divider"></div>
+      <span class="cmp-side cmp-side--us">With the Ad Sprint, once</span>
+      <div class="cmp-row cmp-row--us"><span class="cmp-label">The Eight · 8 creatives</span><span class="cmp-amt">$2,500<small>once</small></span><span class="cmp-bar" style="--w:22%"></span></div>
+      <div class="cmp-row cmp-row--us"><span class="cmp-label">The Fifteen · 15 creatives</span><span class="cmp-amt">$4,500<small>once</small></span><span class="cmp-bar" style="--w:39%"></span></div>
+    </div>
   </div>
 
   <p class="fine reveal">Ad spend is separate and always yours: you pay Meta and Apple directly and we never mark up or hold your budget. Music from our licensed libraries is included. Prices exclude ad spend, paid media placements, talent, and travel outside Los Angeles or Tampa. Shoots happen on location at your business rather than in a studio, which is deliberate: it is what makes the footage read as real. Running the media is not included here and is available separately, or built into the monthly retainers if you decide to keep going.</p>

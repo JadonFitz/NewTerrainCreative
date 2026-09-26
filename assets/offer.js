@@ -207,6 +207,62 @@
     campaignManagementAddOn: 1500,
     communityManagementAddOn: 750,
 
+    /* ── In-house comparison · price anchoring ────────────────────────
+       Added 26 Sep 2026. Every published price is now shown beside what
+       the same work costs as payroll, because a package price on its own
+       has nothing to be judged against and a prospect supplies their own
+       reference point, usually a freelancer's day rate.
+
+       The comparison is against HIRING, not against another agency, and
+       it is deliberately conservative: each role sits at the low end of
+       the published Los Angeles salary ranges (ZipRecruiter, Salary.com,
+       Glassdoor, Sep 2026), before benefits, payroll tax, gear, software
+       and management time. A figure nobody can argue with is worth more
+       than a bigger one that invites the argument.
+
+       Roles are what a business would actually have to hire to get the
+       package's output, not a wish list. Team totals are the plain sum of
+       the roles; the checker treats them as declared prices so they may
+       appear in page copy.
+
+       Salary anchoring is the right move while there are no public
+       results. Once the Founding clients produce tracked numbers, a
+       calculator that shows what the work earns replaces this, because
+       salary math only shows what it saves.
+       ─────────────────────────────────────────────────────────────── */
+    inHouse: {
+      basis: 'Los Angeles salaries at the low end of the published ranges for each role, before benefits, payroll tax, gear, software and management time.',
+      roles: {
+        videographerEditor: { title: 'a videographer who can also edit', monthly: 5500 },
+        creativeStrategist: { title: 'a creative strategist for the angles, hooks and testing plan', monthly: 6000 },
+        creativeLead:       { title: 'a creative lead to direct the concepts and keep the content sharp', monthly: 7000 },
+        paidMediaManager:   { title: 'a paid media manager to build and run the campaigns', monthly: 7000 },
+        producer:           { title: 'a producer to schedule the days and move the work through post', monthly: 5000 }
+      },
+      teams: {
+        'Ad Sprint': {
+          roles: ['videographerEditor', 'creativeStrategist'],
+          teamMonthly: 11500,
+          summary: 'A videographer-editor and a creative strategist'
+        },
+        'The Anchor': {
+          roles: ['videographerEditor', 'creativeLead'],
+          teamMonthly: 12500,
+          summary: 'A videographer-editor and a creative lead'
+        },
+        'Growth Partner': {
+          roles: ['videographerEditor', 'creativeLead', 'paidMediaManager'],
+          teamMonthly: 19500,
+          summary: 'A videographer-editor, a creative lead and a paid media manager'
+        },
+        'Brand Builder': {
+          roles: ['videographerEditor', 'videographerEditor', 'creativeLead', 'paidMediaManager', 'producer'],
+          teamMonthly: 30000,
+          summary: 'Two videographer-editors, a creative lead, a paid media manager and a producer'
+        }
+      }
+    },
+
     // ── One-time products ─────────────────────────────────────────────
     products: {
       /* Sprint packages are sold on OUTPUT, not on hours. No shoot
