@@ -426,25 +426,40 @@
   .tier-line b { color: var(--parchment); font-weight: 400; }
   .tier-meta { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font-size: 11.5px; line-height: 1.7; color: var(--muted); }
   .tier-promise { color: var(--gold-dim); }
-  /* Compared with hiring, rendered from offer.js inHouse.teams. A
-     two-row ledger with bars scaled to the amounts, so the payroll
-     figure reads as the thing our price is measured against, not as a
-     second price. Payroll row dim, our row gold. */
-  .cmp { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
-  .cmp-k { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
-  .cmp-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; row-gap: 5px; column-gap: 12px; }
-  .cmp-label { font-size: 12px; color: var(--muted); }
-  .cmp-amt { font-family: var(--display); font-size: 19px; font-weight: 300; line-height: 1; color: var(--muted); white-space: nowrap; }
-  .cmp-amt small { font-family: var(--body); font-size: 10px; letter-spacing: .06em; margin-left: 3px; }
-  .cmp-bar { grid-column: 1 / -1; height: 5px; background: #1a1815; position: relative; }
+  /* Compared with hiring, rendered from offer.js inHouse.teams into a
+     strip of its own directly under the tier grid, one column per tier.
+     It used to sit inside each card, where the payroll figure read as
+     part of the package. Each column stacks: what hiring costs, then the
+     package name, then our price. Payroll dim, ours gold. */
+  .cmp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-top: none;
+  }
+  /* The heading sits outside the grid on purpose: a spanning cell would
+     force the track count up and the columns would stop lining up under
+     the tier cards. Kept out of the grid, both use the same auto-fit rule
+     and so always agree on the column count. */
+  .cmp-head { background: var(--black); border: 1px solid var(--line); border-top: none; border-bottom: none; padding: 18px 24px 4px; font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); opacity: .8; }
+  .cmp-col { background: var(--black); padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .cmp-col--mid { background: #0f0d09; }
+  .cmp-label { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .cmp-amt { font-family: var(--display); font-size: 26px; font-weight: 300; line-height: 1; color: var(--muted); white-space: nowrap; margin-top: 2px; }
+  .cmp-amt small { font-family: var(--body); font-size: 10px; letter-spacing: .06em; margin-left: 4px; text-transform: none; }
+  .cmp-bar { height: 5px; background: #1a1815; position: relative; margin-top: 4px; }
   .cmp-bar::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: var(--w, 0%); background: #4a443b; }
-  .cmp-row--us .cmp-label { color: var(--parchment); }
-  .cmp-row--us .cmp-amt { color: var(--gold); }
-  .cmp-row--us .cmp-bar::after { background: var(--gold); }
-  .cmp-why { font-size: 11.5px; line-height: 1.65; color: var(--muted); }
-  .cmp + .tier-meta { margin-top: 0; }
+  .cmp-why { font-size: 11.5px; line-height: 1.65; color: var(--muted); margin-top: 4px; }
+  .cmp-us { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+  .cmp-us .cmp-label { color: var(--parchment); }
+  .cmp-us .cmp-amt { color: var(--gold); }
+  .cmp-us .cmp-bar::after { background: var(--gold); }
+  @media (max-width: 720px) { .cmp-col { padding: 14px 20px 22px; } .cmp-head { padding: 16px 20px 2px; } }
   .anchor-basis { margin: 22px 0 0; font-size: 12.5px; line-height: 1.85; color: var(--muted); max-width: 72ch; }
   .anchor-basis + .invest-note { margin-top: 14px; }
+  .invest-note--boutique { margin-top: 12px; color: var(--parchment); }
   @media (max-width: 720px) { .tier { padding: 24px 20px; } }
 
   .invest-fit {
@@ -1530,13 +1545,21 @@
        object /growth-guide reads. One definition, two depths: this page
        qualifies, the guide closes. Do not hard-code a figure here. -->
   <div class="tiers reveal" id="tiers"></div>
+  <!-- Compared with hiring: rendered by the same script as the cards,
+       one column per tier, from assets/offer.js inHouse. -->
+  <div class="cmp-grid reveal" id="tiers-cmp"></div>
 
-  <!-- The "hired in-house" figure on each card is what the same output
-       costs as payroll. Figures come from assets/offer.js inHouse; the
-       basis is stated here so nobody has to guess what they include. -->
+  <!-- The basis of the in-house figures is stated here so nobody has to
+       guess what they include. -->
   <p class="anchor-basis reveal">In-house figures are Los Angeles salaries at the low end of the published range for each role the package replaces, before benefits, gear or management time. Ad spend is separate in both cases.</p>
 
   <p class="invest-note reveal">Three month minimum on all three, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
+
+  <!-- Boutique by design. The claim is paired with its mechanism on
+       purpose (offer.js boutique): the person who plans the shoot is the
+       person who shoots and cuts it, and there is no account manager.
+       "A handful" is unquantified until there is a ceiling we will hold. -->
+  <p class="invest-note invest-note--boutique reveal">We run a handful of retainers at a time, by design. The person who plans your shoot is the person who shoots it and cuts it, and you talk to Jadon and Meghan directly rather than to an account manager.</p>
 
   <div class="invest-fit reveal">
     <div class="invest-fit-col">
@@ -1546,6 +1569,7 @@
         <li>A real service, already selling, with capacity to take on more customers</li>
         <li>Someone who answers a lead the day it arrives</li>
         <li>Willingness to fund advertising alongside the production</li>
+        <li>Someone who wants a direct line to the people making the work</li>
       </ul>
     </div>
     <div class="invest-fit-col">
@@ -1562,7 +1586,7 @@
 
   <div class="promise reveal">
     <div class="promise-head">The 90-Day Production Promise</div>
-    <p class="promise-claim">If we do not improve the benchmark we agree on before launch within 90 days, <em>your next standard production cycle is on us.</em></p>
+    <p class="promise-claim">If we do not improve the benchmark we agree on before launch within 90 days, <em>we add a free Ad Sprint on top of your retainer,</em> aimed at the number we missed.</p>
     <p class="promise-terms"><b>Available on Growth Partner and Brand Builder, not on The Anchor.</b> At Anchor we make the creative and hand it to you to run, so we are not in a position to move the benchmark and could not honour a promise to. The same applies to Anchor with the ad management add-on, where we run the campaign but the creative is a fixed batch. Full terms are provided before signing.</p>
   </div>
 
@@ -1940,31 +1964,41 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var promise = t.productionPromiseEligible
         ? '<span class="tier-promise">90-Day Production Promise eligible</span>'
         : 'Production only. The 90-Day Promise does not apply at this tier.';
-      // Compared with hiring: a two-row ledger, payroll versus this
-      // package, bars scaled to the payroll total. Keyed by tier name in
-      // offer.js inHouse.teams; a tier without one renders without it.
-      var team = O.inHouse && O.inHouse.teams && O.inHouse.teams[t.name];
-      var anchor = team
-        ? '<div class="cmp">' +
-            '<span class="cmp-k">Compared with hiring</span>' +
-            '<div class="cmp-row"><span class="cmp-label">Hiring in-house</span>' +
-              '<span class="cmp-amt">' + O.fmt(team.teamMonthly) + '<small>/ mo</small></span>' +
-              '<span class="cmp-bar" style="--w:100%"></span></div>' +
-            '<div class="cmp-row cmp-row--us"><span class="cmp-label">' + t.name + '</span>' +
-              '<span class="cmp-amt">' + O.fmt(t.monthly) + '<small>/ mo</small></span>' +
-              '<span class="cmp-bar" style="--w:' + Math.round(t.monthly / team.teamMonthly * 100) + '%"></span></div>' +
-            '<p class="cmp-why">' + team.summary + '.</p>' +
-          '</div>'
-        : '';
       return '<div class="tier' + (i === 1 ? ' tier--mid' : '') + '">' +
                '<div class="tier-label">' + (t.label || '') + '</div>' +
                '<div class="tier-name">' + t.name + '</div>' +
                '<div class="tier-price">' + O.fmt(t.monthly) + ' <span>/ month</span></div>' +
                lines +
-               anchor +
                '<div class="tier-meta">' + promise + '</div>' +
              '</div>';
     }).join('');
+
+    // Compared with hiring. One column per tier, stacked: what the same
+    // output costs as payroll, then the package and our price, bars
+    // scaled to the payroll figure. Keyed by tier name in offer.js
+    // inHouse.teams; if any tier lacks one the strip is not rendered at
+    // all rather than rendered with a hole.
+    var cmpHost = document.getElementById('tiers-cmp');
+    var teams = O.inHouse && O.inHouse.teams;
+    var complete = teams && tiers.every(function (t) { return teams[t.name]; });
+    if (!cmpHost) return;
+    if (!complete) { cmpHost.remove(); return; }
+    cmpHost.insertAdjacentHTML('beforebegin', '<div class="cmp-head">Compared with hiring</div>');
+    cmpHost.innerHTML = tiers.map(function (t, i) {
+        var team = teams[t.name];
+        var w = Math.round(t.monthly / team.teamMonthly * 100);
+        return '<div class="cmp-col' + (i === 1 ? ' cmp-col--mid' : '') + '">' +
+                 '<span class="cmp-label">Hiring in-house</span>' +
+                 '<span class="cmp-amt">' + O.fmt(team.teamMonthly) + '<small>/ mo</small></span>' +
+                 '<span class="cmp-bar" style="--w:100%"></span>' +
+                 '<p class="cmp-why">' + team.summary + '.</p>' +
+                 '<div class="cmp-us">' +
+                   '<span class="cmp-label">' + t.name + '</span>' +
+                   '<span class="cmp-amt">' + O.fmt(t.monthly) + '<small>/ mo</small></span>' +
+                   '<span class="cmp-bar" style="--w:' + w + '%"></span>' +
+                 '</div>' +
+               '</div>';
+      }).join('');
   })();
   (function () {
     if (!window.ntc) return;

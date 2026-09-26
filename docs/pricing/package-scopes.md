@@ -71,7 +71,9 @@ in one monthly production system.
 ## 1A · In-house comparison, published beside every price
 
 > Added 26 September 2026. Lives in `assets/offer.js` `inHouse`, rendered
-> on `/grow` (per tier card), `/sprint` (ledger under the price cards),
+> on `/grow` (a strip under the tier grid, one column per tier; it was
+> inside the cards first, where the payroll figure read as part of the
+> package), `/sprint` (ledger under the price cards),
 > the homepage engage cards, and `/about`. `scripts/check-offer.py`
 > treats the role rates and team totals as declared figures.
 >

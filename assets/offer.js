@@ -103,7 +103,16 @@
     productionPromise: {
       days: 90,
       // A promise about our work, never about the client's revenue.
-      remedy: 'one standard production cycle matching the contracted monthly allocation',
+      //
+      // Changed 26 Sep 2026. Was "one standard production cycle matching
+      // the contracted monthly allocation", which at Brand Builder rates
+      // is a month of four production days given away, and which the
+      // terms draft flagged as needing a cap nobody had set. The remedy
+      // is now a defined product: one Ad Sprint at The Eight scope, on
+      // top of the retainer, pointed at the benchmark that was missed.
+      // Bounded by the published Sprint price, so the cap sets itself.
+      remedy: 'one Ad Sprint (The Eight: 8 ad creatives) at no charge, on top of the contracted monthly allocation, aimed at the missed benchmark',
+      remedyProduct: 'adSprintEight',
       remedyIncludesRevisions: 1,
       isServiceCredit: true,      // never a cash refund
       stacksWithFoundingWaiver: false,
@@ -344,6 +353,38 @@
       resultGuaranteed: false
     },
 
+    /* ── Boutique, by design ──────────────────────────────────────────
+       Added 26 Sep 2026. Positioning decision: we say we are small on
+       purpose rather than hide it. Akoola sells scale, the content farms
+       sell volume; nobody in the lane sells a small roster as the reason
+       to buy. Until we scale, if we decide to, this is how we run.
+
+       Two rules for any copy that uses it. By design, never by default:
+       "a handful of clients at a time, on purpose", never "we are a
+       small business". And always paired with a mechanism from the list
+       below, or it is fluff.
+
+       maxActiveRetainers is null on purpose. A number is stronger, but
+       only one we will hold; a cap we would quietly raise teaches people
+       our caps mean nothing (see the removed application deadline above).
+       Set it when there is a real ceiling, and print it then.
+       ─────────────────────────────────────────────────────────────── */
+    boutique: {
+      byDesign: true,
+      maxActiveRetainers: null,
+      directAccess: ['Jadon Cal Fitzpatrick', 'Meghan Carrasquillo'],
+      accountManager: false,
+      // Mechanisms that are true today. Add to this list before claiming
+      // anything new in copy.
+      mechanisms: [
+        'The person who plans the shoot is the person who shoots and cuts it',
+        'Clients talk to the founder and the creative strategist directly',
+        'The Angle Call before any Sprint shoot',
+        'Monthly analytics and creative direction on every retainer',
+        'Weekly campaign management on Growth Partner and Brand Builder'
+      ]
+    },
+
     // ── Priority industries ───────────────────────────────────────────
     // Used to build the application's industry field. "Other" is accepted
     // but flagged as non-priority rather than hidden.
@@ -432,7 +473,9 @@
       // Withdrawn 13 Sep 2026. It was unbounded, its benchmark was
       // undefined, and it stacked on the Founding waived month. It must
       // not come back in any wording.
-      'a free shoot day if the creative does not beat your baseline'
+      'a free shoot day if the creative does not beat your baseline',
+      // Added 26 Sep 2026 with the boutique block.
+      'a client cap we would raise quietly, or a review cadence a tier does not include'
     ]
   };
 
