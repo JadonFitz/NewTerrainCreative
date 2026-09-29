@@ -140,7 +140,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     color: #A09890;
     max-width: 620px;
   }
-  .hero-cta { margin-top: 42px; }
+  .hero-cta { margin-top: 42px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px 24px; }
+  .hero-cta-note { font-size: 12.5px; letter-spacing: 0.02em; color: var(--parchment); line-height: 1.6; text-align: center; }
   .hero-micro {
     margin-top: 22px;
     font-size: 11.5px;
@@ -1023,7 +1024,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <section id="hero">
   <h1 class="title reveal">A complete campaign.<br>Built, launched and <em>managed in thirty days.</em></h1>
   <p class="hero-sub reveal">A production day at your business, a batch of campaign creative, the campaign built and launched on Meta, managed for the rest of the month, and a written read on what it actually did. <b>For three selected businesses, our service fee for that first thirty days is waived.</b> You fund your own advertising spend, paid straight to the platform. Months two and three are optional.</p>
-  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a></div>
+  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a><span class="hero-cta-note">Spots are limited. We review every application personally.</span></div>
   <p class="hero-micro reveal">A defined thirty day scope, not unlimited production. Applying does not guarantee acceptance, and no result is guaranteed.</p>
 </section>
 
@@ -1039,9 +1040,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
            update the number in .found-count-n. Three dots, three slots. -->
       <div class="found-count">
         <div class="found-dots">
-          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="dot taken"></span><span class="dot"></span><span class="dot"></span>
         </div>
-        <div class="found-count-n">3 of 3 open</div>
+        <div class="found-count-n">2 of 3 open</div>
       </div>
     </div>
 
