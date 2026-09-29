@@ -954,6 +954,21 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   a.engage-tier-price:hover { border-color: var(--gold); }
 
+  /* Compared with hiring: a two-row ledger under the prices, bars
+     scaled to the payroll figure, so it reads as a comparison and not
+     as another price from us. Payroll row dim, our row gold. */
+  .cmp { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #1e1e1e; display: flex; flex-direction: column; gap: 9px; }
+  .cmp-k { font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: #8B847D; }
+  .cmp-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; row-gap: 5px; column-gap: 12px; }
+  .cmp-label { font-size: 11.5px; letter-spacing: .03em; color: #8B847D; }
+  .cmp-amt { font-family: var(--display, 'Cormorant Garamond', serif); font-size: 18px; font-weight: 300; line-height: 1; color: #8B847D; white-space: nowrap; }
+  .cmp-amt small { font-family: inherit; font-size: 11px; font-style: italic; margin-left: 3px; }
+  .cmp-bar { grid-column: 1 / -1; height: 5px; background: #1a1815; position: relative; }
+  .cmp-bar::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: var(--w, 0%); background: #4a443b; }
+  .cmp-row--us .cmp-label { color: var(--parchment); }
+  .cmp-row--us .cmp-amt { color: var(--gold); }
+  .cmp-row--us .cmp-bar::after { background: var(--gold); }
+
   .engage-guarantee {
     margin-top: 18px;
     font-size: 11px;
@@ -1205,7 +1220,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   .contact-links {
     display: flex;
-    gap: 48px;
+    flex-wrap: wrap;
+    gap: 24px 48px;
     align-items: center;
     margin-bottom: 64px;
   }
@@ -1633,7 +1649,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
     </div>
     <div class="hero-cta">
-      <a class="primary" data-cta="hero" href="/strategy-call">Request a Strategy Call</a>
+      <!-- This is the cinema side, so its CTA is Signature Work, not the
+           growth retainer. -->
+      <a class="primary" data-cta="hero" href="/strategy-call?offer=signature">Tell Us About the Project</a>
       <a class="ghost" data-cta="hero-work" href="#work">See the work</a>
     </div>
     <div class="scroll-signal">
@@ -1666,7 +1684,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div class="work-meta">
         <div class="work-type">Feature Film · Sports Drama</div>
         <div class="work-title">Off Rip</div>
-        <div class="work-detail">Grand Jury Award, Gasparilla · Now on Amazon &amp; Apple</div>
+        <div class="work-detail">Grand Jury Award, Gasparilla · Now on Amazon, Apple, Tubi &amp; Roku</div>
       </div>
     </div>
 
@@ -1955,13 +1973,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </div>
     <div class="result-row reveal">
       <div>
-        <div class="result-number">800K</div>
+        <div class="result-number">1M+</div>
         <div class="result-label">Streaming Minutes</div>
       </div>
       <div>
         <span class="result-tier">Signature Work · Film</span>
         <div class="result-client">Off Rip</div>
-        <p class="result-desc">A feature film made story-first on an independent budget: Grand Jury Award at Gasparilla, now streaming on Amazon and Apple, with Tubi coming soon. The same discipline goes into every brand piece we cut.</p>
+        <p class="result-desc">A feature film made story-first on an independent budget: Grand Jury Award at Gasparilla, now streaming on Amazon, Apple, Tubi and Roku. The same discipline goes into every brand piece we cut.</p>
       </div>
     </div>
   </div>
@@ -2065,13 +2083,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <div class="section-title reveal">Why New Terrain?</div>
   <div class="vs-cols">
     <div class="vs-col reveal">
-      <div class="vs-col-title">The typical video guy</div>
+      <div class="vs-col-title">The typical video guy, or agency</div>
       <ul class="vs-list">
         <li><span class="vs-mark">✕</span>Shoots the footage, hands you a hard drive, disappears</li>
         <li><span class="vs-mark">✕</span>One deliverable per shoot; every cutdown costs extra</li>
         <li><span class="vs-mark">✕</span>You get files, not a plan</li>
         <li><span class="vs-mark">✕</span>A gear renter with a camera and a day rate</li>
         <li><span class="vs-mark">✕</span>Books out weeks ahead, ghosts on fast turnarounds</li>
+        <li><span class="vs-mark">✕</span>At an agency, one of forty accounts, handled by whoever is free that week</li>
       </ul>
     </div>
     <div class="vs-col vs-col--ntc reveal">
@@ -2080,8 +2099,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <li><span class="vs-mark">✓</span>Full pipeline: shot, edited, colored, captioned, delivered ready to post</li>
         <li><span class="vs-mark">✓</span>Up to 55 deliverables a month on retainer, cutdowns included</li>
         <li><span class="vs-mark">✓</span>Every project starts knowing what it needs to say and who it needs to move</li>
-        <li><span class="vs-mark">✓</span>A working filmmaker: festival wins and a feature streaming on Amazon and Apple</li>
+        <li><span class="vs-mark">✓</span>A working filmmaker: festival wins and a feature streaming on Amazon, Apple, Tubi and Roku</li>
         <li><span class="vs-mark">✓</span>You never chase an edit, write a hook, or manage a freelancer again</li>
+        <li><span class="vs-mark">✓</span>A handful of clients at a time, on purpose. You work with Jadon and Meghan, not an account manager</li>
       </ul>
     </div>
   </div>
@@ -2107,6 +2127,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <div class="engage-tier"><span><strong>The Eight</strong> · 8 creatives</span><span class="engage-tier-price">$2,500</span></div>
         <div class="engage-tier"><span><strong>The Fifteen</strong> · 15 creatives</span><span class="engage-tier-price">$4,500</span></div>
       </div>
+      <div class="cmp">
+        <span class="cmp-k">Compared with hiring</span>
+        <div class="cmp-row"><span class="cmp-label">Hiring in-house, two roles</span><span class="cmp-amt">$11,500<small>/ mo</small></span><span class="cmp-bar" style="--w:100%"></span></div>
+        <div class="cmp-row cmp-row--us"><span class="cmp-label">Ad Sprint</span><span class="cmp-amt">from $2,500<small>once</small></span><span class="cmp-bar" style="--w:22%"></span></div>
+      </div>
       <p class="engage-guarantee">One time, fixed price, no retainer. You own the footage and every cut.</p>
       <div class="engage-actions">
         <a class="engage-book" data-cta="engage-sprint" href="/strategy-call?offer=ad-sprint">Book a fit call</a>
@@ -2127,6 +2152,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </ul>
       <div class="engage-tiers">
         <div class="engage-tier"><span>Production Media partnerships typically begin in the <strong>mid-four figures monthly</strong>, scaled to the production volume and campaign management a business actually needs.</span></div>
+      </div>
+      <div class="cmp">
+        <span class="cmp-k">Compared with hiring</span>
+        <div class="cmp-row"><span class="cmp-label">Hiring in-house, smallest team</span><span class="cmp-amt">$12,500<small>/ mo</small></span><span class="cmp-bar" style="--w:100%"></span></div>
+        <div class="cmp-row cmp-row--us"><span class="cmp-label">Growth Retainers</span><span class="cmp-amt">from mid-four figures<small>/ mo</small></span><span class="cmp-bar" style="--w:28%"></span></div>
       </div>
       <p class="engage-guarantee">Scope and fee are set after a strategy call, once we understand what you sell and what you are trying to grow.</p>
       <div class="engage-actions">
@@ -2149,7 +2179,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
     </div>
   </div>
-  <p class="engage-note reveal">Every engagement starts with a conversation: <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a></p>
+  <p class="engage-note reveal">Every engagement starts with a conversation: <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a> or <a href="tel:+18182668213">(818) 266-8213</a></p>
 </section>
 
 <!-- CONTACT -->
@@ -2157,8 +2187,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <p class="contact-pre reveal">New Terrain Creative</p>
   <h2 class="contact-title reveal">Let's build<br>something <em>real.</em></h2>
   <div class="contact-links reveal">
-    <a href="/strategy-call" data-cta="contact" class="contact-link primary">Request a Strategy Call</a>
+    <a href="/strategy-call?offer=signature" data-cta="contact" class="contact-link primary">Tell Us About the Project</a>
+    <a href="/signature" data-cta="contact-signature" class="contact-link">See Signature Work</a>
     <a href="mailto:business@newterraincreative.com" class="contact-link">business@newterraincreative.com</a>
+    <a href="tel:+18182668213" class="contact-link">(818) 266-8213</a>
   </div>
   <p class="contact-location reveal">Los Angeles, CA &nbsp;·&nbsp; Tampa, FL &nbsp;·&nbsp; Available worldwide</p>
 </section>

@@ -205,6 +205,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <span class="mark">New Terrain</span>
       <p>The booking calendar for this offer is being connected. In the meantime, email
          <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+         or call or text <a href="tel:+18182668213">(818) 266-8213</a>
          and we will find a time by hand, usually the same day.</p>
     </div>
   </div>
@@ -216,6 +217,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <footer>
   <span>New Terrain Creative © 2026</span>
   <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="tel:+18182668213">(818) 266-8213</a>
   <a href="/privacy">Privacy</a>
   <span>Los Angeles, CA · Tampa, FL</span>
 </footer>
@@ -246,7 +248,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      conversion iClosed fires for it.
 
      Reached here as:
-       /apply success      -> ?offer=founding-three
+       /founding           -> ?offer=founding-three
+       /sprint             -> ?offer=ad-sprint
+       / and /signature    -> ?offer=signature
        /grow               -> no parameter
        ?offer=production-media -> kept although /production-media is
          retired and now redirects to /grow. A live ad may still carry
@@ -259,6 +263,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
       title: 'Apply to book a Founding Three call with New Terrain Creative'
+    },
+    /* Signature Work. The cinema side's only path, and the one offer
+       whose booking form replaced a form of ours rather than sitting
+       beside it: /project is parked the way /apply was, because asking
+       for a brief and then asking the same things again to book is the
+       drop-out gap we already removed once. */
+    'signature': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/signature-project',
+      title: 'Request a Signature Project consultation with New Terrain Creative',
+      eyebrow: 'Signature Work',
+      lede:    'Tell us what the project is, who it has to move, and when it has to exist. Thirty minutes to work out whether it is something we should make, and what it would take. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.'
     },
     // Retired page, retained identifier. See the note above.
     'production-media': {
@@ -375,6 +391,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           '<div class="scheduler-pending"><span class="mark">New Terrain</span>' +
           '<p>The booking calendar did not load. Email ' +
           '<a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>' +
+          ' or call or text <a href="tel:+18182668213">(818) 266-8213</a>' +
           ' and we will find a time by hand, usually the same day.</p></div>';
         console.warn('strategy-call: iClosed widget failed to load');
       };

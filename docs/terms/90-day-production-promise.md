@@ -10,6 +10,13 @@
 >
 > Drafted 12 September 2026. Supersedes the earlier total-views guarantee,
 > which is withdrawn and must not be reinstated in any form.
+>
+> **Remedy changed 26 September 2026.** Was one standard production
+> cycle matching the contracted monthly allocation. Now one Ad Sprint at
+> The Eight scope, on top of the retainer. A production cycle at Brand
+> Builder rates was a month of four production days given away, and
+> open question 2 below (a cap nobody had set) existed because of it. A
+> defined product bounds the exposure by its published price.
 
 ## 1 · Public language
 
@@ -17,23 +24,26 @@ Headline, verbatim, on `/grow`:
 
 > **THE 90-DAY PRODUCTION PROMISE**
 >
-> If, after 90 consecutive days, the campaign has not improved the primary
-> performance benchmark we agree upon during onboarding, the next standard
-> production cycle is on us.
+> If we do not improve the benchmark we agree on before launch within 90
+> days, we add a free Ad Sprint on top of your retainer, aimed at the
+> number we missed.
 
 Supporting sentence, permitted anywhere the short form is needed:
 
 > If the agreed campaign benchmark does not improve during the first 90
-> days, month four's standard production is on us.
+> days, we add an Ad Sprint, eight ad creatives, at no charge on top of
+> the retainer.
 
 Nothing else may be said publicly about this promise without the full
 terms available alongside it.
 
 ## 2 · What is being promised, in one line
 
-One further production cycle at no charge, if an agreed and measurable
-campaign benchmark has not improved over a complete, properly run 90-day
-period.
+One Ad Sprint at The Eight scope (eight ad creatives from one shoot, in
+every placement), at no charge and on top of the contracted monthly
+allocation, if an agreed and measurable campaign benchmark has not
+improved over a complete, properly run 90-day period. The Sprint is
+briefed against the benchmark that was missed.
 
 It is a promise about **our work**, not about the client's business
 outcome. That distinction is the whole design and every clause below
@@ -116,9 +126,12 @@ period.
 
 ## 5 · The remedy
 
-5.1 One defined standard production cycle, matching the contracted monthly
-production allocation, **subject to a maximum value documented in the
-agreement**.
+5.1 One Ad Sprint at The Eight scope as published on `/sprint` (eight ad
+creatives, one shoot on location, every placement, captions, colour and
+licensed music), delivered **on top of** the contracted monthly production
+allocation, not in place of it, and briefed against the missed benchmark.
+Its maximum value is the published price of The Eight, which serves as
+the documented cap.
 
 5.2 Includes the defined production component and **one** standard
 revision round.
@@ -131,8 +144,9 @@ purchases, and any third-party expense.
 not exchangeable for a fee reduction.
 
 5.5 **Cannot be stacked with the Founding Three waived first month.** A
-Founding Three client has already received a production cycle at no
-service charge; the promise does not entitle them to a second. This must
+Founding Three client has already received a month of production at no
+service charge; the promise does not entitle them to a second round of
+free work. This must
 be stated in the Founding Three agreement as well as here, because it is
 the term a founding client is most likely to be surprised by.
 
@@ -155,9 +169,11 @@ signed. A headline on a web page is not the term; it is a pointer to it.
    arguably in bad faith. A stated threshold is fairer and much harder to
    argue about later. This is a commercial decision before it is a legal
    one.
-2. **Maximum value.** Clause 5.1 requires a documented cap. No figure is
-   set. At Brand Builder rates an uncapped production cycle is a
-   materially different exposure than at Anchor.
+2. ~~**Maximum value.**~~ **Resolved 26 September 2026.** The remedy is
+   now a defined product, one Ad Sprint at The Eight scope, so its cap is
+   the published Sprint price on every tier. Counsel should confirm the
+   agreement references the scope by name rather than by price, so a
+   later price change does not reopen the term.
 3. **Who judges.** Nothing says who determines whether conditions 4.1 to
    4.6 were met, or what happens when the parties disagree.
 4. **Qualified.** Two eligible benchmarks turn on "qualified" leads. That
