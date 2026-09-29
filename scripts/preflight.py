@@ -197,7 +197,7 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
 # submitted application or a confirmation is noise, not a CTA.
 LIFT = 'data-cta-widget'
 NO_LIFT = ['apply.html', 'founding.html', 'project.html', 'strategy-call.html',
-           'booked.html', 'call-booked.html', 'onboarding.html']
+           'booked.html', 'call-booked.html', 'onboarding.html', 'welcome.html']
 wrong = [n for n in NO_LIFT
          if (ROOT / n).exists() and LIFT in (ROOT / n).read_text(encoding='utf-8')]
 carriers = sorted(f.stem for f in ROOT.glob('*.html')
