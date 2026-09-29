@@ -130,6 +130,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .video-cap { font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-top:14px; }
 
   /* next steps */
+  /* intake: the one thing to do today, so it sits above the emails */
+  .first {
+    margin-top:26px; border:1px solid var(--gold-dim); background:var(--raised);
+    padding:26px 28px; display:flex; align-items:center; justify-content:space-between; gap:18px 28px; flex-wrap:wrap;
+  }
+  .first-when { font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .first h3 { font-family:var(--display); font-weight:400; font-size:26px; line-height:1.15; color:var(--parchment); margin-bottom:6px; }
+  .first p { font-size:13px; line-height:1.7; margin:0; max-width:46ch; }
+  .btn.btn--solid { background:var(--gold); color:var(--black); }
+  .btn.btn--solid:hover { background:var(--parchment); border-color:var(--parchment); }
   .next { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:26px; }
   .next-card { background:var(--black); padding:26px 24px 28px; display:flex; flex-direction:column; }
   .next-when { font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
@@ -185,6 +195,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     .bar-tag { display:none; }
     .next, .contact, .incl ul { grid-template-columns:1fr; }
     ol.steps > li { grid-template-columns:1fr; gap:6px; }
+    .first { padding:22px 20px; }
   }
 </style>
 </head>
@@ -209,7 +220,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <section class="sec">
     <div class="sec-n">01</div>
     <h2>The next <em>few days</em></h2>
-    <p>Three emails are on their way to the address you checked out with, and should already be there. Check spam if one is missing.</p>
+    <div class="first">
+      <div>
+        <div class="first-when">Do this first · about 10 minutes</div>
+        <h3>Your intake form</h3>
+        <p>Meghan reads it before kickoff, so the call goes on strategy instead of basics. Brand assets can go in here too.</p>
+      </div>
+      <a class="btn btn--solid" id="intakeLink" href="#" target="_blank" rel="noopener">Start the intake form &#8599;</a>
+    </div>
+    <p style="margin-top:34px">Three emails are on their way to the address you checked out with, and should already be there. Check spam if one is missing.</p>
     <div class="next">
       <div class="next-card">
         <div class="next-when">In your inbox now</div>
@@ -219,7 +238,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div class="next-card">
         <div class="next-when">In your inbox now</div>
         <h3>The welcome packet</h3>
-        <p>Who's who, your first week, and your intake form: about ten minutes, and the one thing to do today.</p>
+        <p>Who's who, your first week, how shoot days and revisions work, and what we'll ask access to.</p>
         <a class="btn" id="packetLink" href="#" target="_blank" rel="noopener">Open the packet &#8599;</a>
       </div>
       <div class="next-card">
@@ -288,11 +307,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      phone      Display form. Empty hides the line.
      packet     The client welcome document. The onboarding email sends it
                 too; this is the same link, so nobody has to go looking.
+     intake     The shared client intake Google Form, the public viewform
+                link. Same link for every client and every package.
      ─────────────────────────────────────────────────────────────────── */
   var WELCOME = {
     video: { src: '', poster: '' },
     phone: '(818) 266-8213',
-    packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0'
+    packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0',
+    intake: 'https://docs.google.com/forms/d/e/1FAIpQLSc9olRsWj6QBLaG5430pFgxAGKeKgmIzuaWeI0rTDDBJQLcRw/viewform'
   };
 
   var O = window.NTC_OFFER || {};
@@ -308,7 +330,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   var retainerSteps = function (managed) {
     return [
       ['Day 0 to 1', 'Your intake form',
-        'About ten minutes, linked in the welcome packet. Meghan reads it before kickoff and sends your access checklist' +
+        'About ten minutes, linked at the top of this page. Meghan reads it before kickoff and sends your access checklist' +
         (managed ? ': partner access to your ad account, Page and Pixel, never passwords.' : ': role-based access to the accounts we post to, never passwords.')],
       ['Day 1 to 3', 'Kickoff call',
         'About an hour. We learn your business, agree on the one number we\u2019re going to move, and put your check-ins and 90-day review on the calendar.'],
@@ -451,6 +473,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
 
   $('packetLink').href = WELCOME.packet;
+  $('intakeLink').href = WELCOME.intake;
 
   if (WELCOME.phone) {
     $('phoneLink').textContent = WELCOME.phone;
