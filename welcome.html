@@ -418,8 +418,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     'anchor': function () {
       var t = tier('The Anchor');
+      // Managed since 2 Oct 2026: every retainer includes paid media
+      // management, so The Anchor gets the ad-account access checklist
+      // and the campaign-and-creative review like the other two. The
+      // CRM questionnaire is a separate decision and is unchanged.
       return { name: 'The Anchor', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(false, false), incl: fromTier(t), crm: false };
+               steps: retainerSteps(true, false), incl: fromTier(t), crm: false };
     },
     'growth': function () {
       var t = tier('Growth Partner');

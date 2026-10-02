@@ -5,7 +5,31 @@
    nothing here is bundled into a page, so these figures never reach a
    browser.
 
-   ── WHERE THE PUBLISHED TRUTH LIVES ─────────────────────────────────
+   ── NOT PUBLISHED, AND UNDER REVISION ───────────────────────────────
+   2 Oct 2026. Pricing was pulled off the site while the rate card is
+   reworked. assets/offer.js no longer declares any retainer rate,
+   Sprint price, add-on rate or capacity signal, no page renders one,
+   and scripts/check-offer.py fails if either comes back.
+
+   The STRUCTURE changed the same day, and the site already reflects
+   it: every retainer now includes paid media management, there is no
+   production-only tier and no ad management add-on, and the 90-Day
+   Production Promise is off the site until its eligibility is decided.
+   Posting became organic distribution of the campaign creative only,
+   community management left the offer, and longform is Brand Builder.
+   The tier objects, the add-on fields and the promise flags below still
+   describe the OLD structure.
+
+   The tiers below are the LAST PUBLISHED card, kept as the record of
+   what was live. They are not current quotes. Replace them here when
+   the new card is locked; nothing else needs to change for the site to
+   keep publishing nothing.
+
+   Everything under the next heading describes how this file related to
+   offer.js while prices were public. It is history until they are
+   again.
+
+   ── WHERE THE PUBLISHED TRUTH LIVED ─────────────────────────────────
    assets/offer.js `retainer.publicGuideTiers` is now the source of
    truth for package names, prices, scope lines and deliverables. It is
    what /growth-guide renders, so it is what a client sees.
@@ -33,14 +57,14 @@
    ══════════════════════════════════════════════════════════════════════ */
 
 export const RETAINER = {
-  // APPROVED and published. /growth-guide renders these three packages
-  // from assets/offer.js retainer.publicGuideTiers. Prices and
-  // deliverables below mirror what is published; change offer.js first,
-  // then mirror it here.
+  // Approved 12 Sep 2026, withdrawn from the site 2 Oct 2026 and under
+  // revision since. Not published anywhere. See the note at the top.
   approved: true,
   approvedOn: '2026-09-12',
-  publishedAt: '/growth-guide',
-  publishedSource: 'assets/offer.js · retainer.publicGuideTiers',
+  withdrawnOn: '2026-10-02',
+  underRevision: true,
+  publishedAt: null,
+  publishedSource: null,
 
   tiers: [
     {
@@ -97,8 +121,9 @@ export const RETAINER = {
   prepayMonthsGiven: 12,
   prepayPublishable: false,
 
-  // What the public page is allowed to say.
-  publicCapacitySignal: 'mid four figures monthly'
+  // What the public page is allowed to say. Nothing, since 2 Oct 2026:
+  // the "mid four figures monthly" signal went with the prices.
+  publicCapacitySignal: null
 };
 
 /* ── Founding Three continuation ──────────────────────────────────────

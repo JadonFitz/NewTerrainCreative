@@ -7,6 +7,17 @@ declared in assets/offer.js nor derivable from it (prepay annual and
 savings). Survey bands inside form option values are ignored: those
 describe a client's spend, not our price.
 
+PRICING IS WITHDRAWN FROM THE SITE (2 Oct 2026), so this now checks two
+things. assets/offer.js must declare no price, because that file ships
+to the browser. And a page may only show the figures that are left:
+the client's own ad-spend minimum anywhere, and the Founding terms and
+survey bands on the form pages that ask about them. Anything else that
+looks like a price fails, which is the point.
+
+Monthly deliverable counts came off the same day and are guarded the
+same way: "N deliverables" may not appear on a page or in offer.js. The
+Ad Sprint's 8 and 15 are "creatives", on purpose, and are not caught.
+
     python3 scripts/check-offer.py
 """
 import re, sys, pathlib
@@ -53,18 +64,24 @@ if rates_path.exists():
             f'continuation mismatch: offer.js says ${pub.group(1)}, '
             f'api/_rates.js says ${srv.group(1)}')
 
-    pub_tiers = re.search(r'publicGuideTiers:\s*\[(.*?)\]\s*\n\s*\}', offer, re.S)
-    srv_tiers = re.search(r'tiers:\s*\[(.*?)\]\s*,\s*\n\s*\n', rates, re.S)
-    public_pairs = dict(re.findall(
-        r"name:\s*'([^']+)'\s*,\s*monthly:\s*(\d+)",
-        pub_tiers.group(1) if pub_tiers else ''))
-    server_pairs = dict(re.findall(
-        r"name:\s*'([^']+)'\s*,\s*monthly:\s*(\d+)",
-        srv_tiers.group(1) if srv_tiers else ''))
-    if public_pairs != server_pairs:
+# ── no price may be declared in the public file ───────────────────────
+# Retainer rates, Sprint prices, add-on rates and the payroll comparison
+# were deleted from offer.js on 2 Oct 2026. The tier mirror against
+# api/_rates.js went with them: there is nothing public left to mirror.
+# Founding terms are not on this list. They sit outside the rate card.
+WITHDRAWN = [
+    ('a retainer rate',          r"name:\s*'[^']+'\s*,\s*monthly:\s*\d"),
+    ('a product price',          r'\bprice:\s*\d'),
+    ('an add-on rate',           r'AddOn:\s*\d'),
+    ('the payroll comparison',   r'\binHouse:\s*\{'),
+    ('a capacity signal',        r'publicCapacitySignal'),
+    ('a monthly deliverable count', r'\b\d+\s+deliverables\b'),
+]
+for label, pat in WITHDRAWN:
+    if re.search(pat, offer):
         mirror_fail.append(
-            f'retainer tier mismatch: offer.js has {public_pairs}; '
-            f'api/_rates.js has {server_pairs}')
+            f'assets/offer.js declares {label}, and pricing is withdrawn '
+            f'from the site. That file ships to the browser.')
 
 # ── the paid-offer allowlist also lives in two files ──────────────────
 # assets/offer.js ships to the browser; api/_offer.js runs on the server
@@ -90,8 +107,16 @@ if offer_path.exists():
 fmt = lambda n: f'{n:,}'
 allowed = {fmt(n) for n in declared}
 
+# Where a declared figure may appear. The ad-spend minimum is the
+# client's own money and is stated wherever the qualification is. The
+# rest are Founding terms and survey bands, which only the forms show.
+m_spend = re.search(r'minMonthlyAdSpend:\s*(\d+)', offer)
+anywhere = {fmt(int(m_spend.group(1)))} if m_spend else set()
+FORM_PAGES = {'apply.html', 'project.html', 'strategy-call.html'}
+
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
+print(f'Allowed outside the form pages: ' + '  '.join('$' + a for a in sorted(anywhere)))
 print()
 
 if mirror_fail:
@@ -110,7 +135,11 @@ for f in sorted(root.glob('*.html')):
     text = re.sub(r'value="\$[^"]*"', '', text)
     text = re.sub(r'placeholder="[^"]*"', '', text)
     found = set(re.findall(r'\$(\d{1,3}(?:,\d{3})+)', text))
-    bad = sorted(found - allowed)
+    bad = sorted(found - (allowed if f.name in FORM_PAGES else anywhere))
+    counts = sorted(set(re.findall(r'\b\d+\s+deliverables\b', text)))
+    if counts:
+        fail.append((f.name, counts))
+        print(f'  ✗ {f.name:<16} monthly scope count: ' + ', '.join(counts))
     if bad:
         fail.append((f.name, bad))
         print(f'  ✗ {f.name:<16} undeclared: ' + ' '.join('$' + b for b in bad))
@@ -119,12 +148,14 @@ for f in sorted(root.glob('*.html')):
 
 print()
 if mirror_fail:
-    print('FAIL · published prices disagree with the internal rate card.')
+    print('FAIL · the public offer file declares a withdrawn price, or')
+    print('       disagrees with the internal rate card.')
     sys.exit(1)
 if fail:
-    print('FAIL · a page names a figure assets/offer.js does not declare.')
-    print('       Either the page publishes something it should not, or the')
-    print('       canonical public offer file needs updating. Only prices')
-    print('       intentionally declared there may appear on a rendered page.')
+    print('FAIL · a page names a figure it may not show.')
+    print('       Pricing is withdrawn from the site, so outside the form')
+    print('       pages only the ad-spend minimum may appear, and no page')
+    print('       may state a monthly deliverable count. To publish a')
+    print('       price again, declare it in assets/offer.js first.')
     sys.exit(1)
-print('PASS · every figure on every page traces back to assets/offer.js')
+print('PASS · no page publishes a price, and every figure left traces back to assets/offer.js')

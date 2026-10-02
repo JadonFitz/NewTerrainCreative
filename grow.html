@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Growth · New Terrain Creative. Content that gets you leads.</title>
-<meta name="description" content="Production Media for established businesses: strategy, production, campaign management, optimisation and reporting under one roof. Partnerships typically begin in the mid-four figures monthly.">
+<meta name="description" content="Production Media for established businesses: strategy, production, campaign management, optimisation and reporting under one roof.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="New Terrain Creative · Social Growth">
 <meta property="og:description" content="Content that gets you leads, not just likes. Creative and paid media under one roof.">
@@ -246,8 +246,8 @@
     margin-top: 9px;
   }
 
-  /* ── PRICING ── */
-  #pricing { border-top: 1px solid var(--line); }
+  /* ── PACKAGES ── */
+  #packages { border-top: 1px solid var(--line); }
 
   .price-cards {
     margin-top: 70px;
@@ -399,8 +399,8 @@
 
 
   /* ── TIER CARDS · the public qualifier, not the full menu ──
-     Deliberately short. Exact deliverable composition, add-ons and terms
-     live in /growth-guide, which is sent after a call. */
+     Deliberately short. Exact deliverable composition and terms are
+     set in the proposal, which is sent after a call. */
   .tiers {
     margin-top: 34px;
     display: grid;
@@ -418,47 +418,9 @@
     font-family: var(--display); font-weight: 300; font-size: 26px;
     line-height: 1.1; color: var(--parchment);
   }
-  .tier-price {
-    font-family: var(--display); font-size: 30px; color: var(--gold); line-height: 1;
-  }
-  .tier-price span { font-family: var(--body); font-size: 12px; color: var(--muted); letter-spacing: .04em; }
   .tier-line { font-size: 13px; line-height: 1.7; color: var(--soft); }
   .tier-line b { color: var(--parchment); font-weight: 400; }
-  .tier-meta { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font-size: 11.5px; line-height: 1.7; color: var(--muted); }
-  .tier-promise { color: var(--gold-dim); }
-  /* Compared with hiring, rendered from offer.js inHouse.teams into a
-     strip of its own directly under the tier grid, one column per tier.
-     It used to sit inside each card, where the payroll figure read as
-     part of the package. Each column stacks: what hiring costs, then the
-     package name, then our price. Payroll dim, ours gold. */
-  .cmp-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-top: none;
-  }
-  /* The heading sits outside the grid on purpose: a spanning cell would
-     force the track count up and the columns would stop lining up under
-     the tier cards. Kept out of the grid, both use the same auto-fit rule
-     and so always agree on the column count. */
-  .cmp-head { background: var(--black); border: 1px solid var(--line); border-top: none; border-bottom: none; padding: 18px 24px 4px; font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); opacity: .8; }
-  .cmp-col { background: var(--black); padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 6px; }
-  .cmp-col--mid { background: #0f0d09; }
-  .cmp-label { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .cmp-amt { font-family: var(--display); font-size: 26px; font-weight: 300; line-height: 1; color: var(--muted); white-space: nowrap; margin-top: 2px; }
-  .cmp-amt small { font-family: var(--body); font-size: 10px; letter-spacing: .06em; margin-left: 4px; text-transform: none; }
-  .cmp-bar { height: 5px; background: #1a1815; position: relative; margin-top: 4px; }
-  .cmp-bar::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: var(--w, 0%); background: #4a443b; }
-  .cmp-why { font-size: 11.5px; line-height: 1.65; color: var(--muted); margin-top: 4px; }
-  .cmp-us { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
-  .cmp-us .cmp-label { color: var(--parchment); }
-  .cmp-us .cmp-amt { color: var(--gold); }
-  .cmp-us .cmp-bar::after { background: var(--gold); }
-  @media (max-width: 720px) { .cmp-col { padding: 14px 20px 22px; } .cmp-head { padding: 16px 20px 2px; } }
-  .anchor-basis { margin: 22px 0 0; font-size: 12.5px; line-height: 1.85; color: var(--muted); max-width: 72ch; }
-  .anchor-basis + .invest-note { margin-top: 14px; }
+  .tiers + .invest-note { margin-top: 22px; }
   .invest-note--boutique { margin-top: 12px; color: var(--parchment); }
   @media (max-width: 720px) { .tier { padding: 24px 20px; } }
 
@@ -1053,7 +1015,7 @@
   <p class="hero-sub reveal">Most agencies hand you content and wish you luck, or run ads on stock footage that looks like everyone else's. We make the creative and we run the media. One team, one roof, judged on one number: what it brings back.</p>
   <div class="hero-ctas reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
-    <a class="btn btn--ghost" href="#pricing">See Pricing</a>
+    <a class="btn btn--ghost" href="#packages">See the Packages</a>
   </div>
   <div class="mail-row reveal" style="margin-top:24px">
     <a class="hero-mail" href="mailto:business@newterraincreative.com">Prefer email? business@newterraincreative.com</a>
@@ -1513,45 +1475,18 @@
   </div>
 </div>
 
-<!-- INVESTMENT -->
-<style>
-  .promise {
-    border:1px solid var(--gold-dim, #8A7647); padding:30px 32px; margin-top:34px;
-  }
-  .promise-head {
-    font-size:10px; letter-spacing:.26em; text-transform:uppercase;
-    color:var(--gold); margin-bottom:16px;
-  }
-  .promise-claim {
-    font-family:var(--display, 'Cormorant Garamond', Georgia, serif);
-    font-weight:300; font-size:clamp(20px,2.6vw,27px); line-height:1.35;
-    color:var(--parchment); margin-bottom:20px; max-width:46ch;
-  }
-  .promise-claim em { font-style:italic; color:var(--gold); }
-  .promise-terms {
-    font-size:12.5px; line-height:1.85; color:var(--muted); max-width:64ch;
-  }
-  .promise-terms + .promise-terms { margin-top:11px; }
-  .promise-terms b { color:var(--soft); font-weight:400; }
-  @media (max-width:620px) { .promise { padding:24px 20px; } }
-</style>
-
-<section id="pricing">
-  <div class="eyebrow reveal">What it costs</div>
+<!-- PACKAGES -->
+<section id="packages">
+  <div class="eyebrow reveal">The packages</div>
   <h2 class="title reveal">Three ways to <em>work together.</em></h2>
-  <p class="lede reveal">Rendered from the same source the proposal is built from, so what you read here is what gets quoted. Which one fits depends on production volume and how much of the campaign we run. <b>The exact scope is confirmed in writing before anything starts.</b></p>
+  <p class="lede reveal">Every one is the creative, the paid media management and the iteration, together. Which one fits depends on how much creative volume and testing the business needs. Scope and fee are set on a strategy call, once we understand what you sell and what you are trying to grow. <b>The exact scope is confirmed in writing before anything starts.</b></p>
 
-  <!-- Cards render from assets/offer.js retainer.publicGuideTiers, the same
-       object /growth-guide reads. One definition, two depths: this page
-       qualifies, the guide closes. Do not hard-code a figure here. -->
+  <!-- Cards render from assets/offer.js retainer.publicGuideTiers.
+       Pricing was withdrawn from the site on 2 Oct 2026 while the rate
+       card is reworked: no price, add-on rate, payroll comparison or
+       monthly deliverable count is rendered here, and none is declared
+       in offer.js to render. Do not hard-code a figure here. -->
   <div class="tiers reveal" id="tiers"></div>
-  <!-- Compared with hiring: rendered by the same script as the cards,
-       one column per tier, from assets/offer.js inHouse. -->
-  <div class="cmp-grid reveal" id="tiers-cmp"></div>
-
-  <!-- The basis of the in-house figures is stated here so nobody has to
-       guess what they include. -->
-  <p class="anchor-basis reveal">In-house figures are Los Angeles salaries at the low end of the published range for each role the package replaces, before benefits, gear or management time. Ad spend is separate in both cases.</p>
 
   <p class="invest-note reveal">Three month minimum on all three, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
 
@@ -1584,18 +1519,12 @@
   </div>
 
 
-  <div class="promise reveal">
-    <div class="promise-head">The 90-Day Production Promise</div>
-    <p class="promise-claim">If we do not improve the benchmark we agree on before launch within 90 days, <em>we add a free Ad Sprint on top of your retainer,</em> aimed at the number we missed.</p>
-    <p class="promise-terms"><b>Available on Growth Partner and Brand Builder, not on The Anchor.</b> At Anchor we make the creative and hand it to you to run, so we are not in a position to move the benchmark and could not honour a promise to. The same applies to Anchor with the ad management add-on, where we run the campaign but the creative is a fixed batch. Full terms are provided before signing.</p>
-  </div>
-
   <div class="invest-cta reveal">
     <a class="btn btn--gold" data-cta="strategy" href="/strategy-call">Request a strategy call</a>
     <p class="invest-cta-note">Thirty minutes. We will tell you what we would actually do, what it would cost, and whether we think it is worth doing. If it is not a fit we will say so on the call rather than send a proposal.</p>
   </div>
 
-  <p class="prepay-note reveal">Advertising spend is separate and always yours: you pay the platforms directly and we never mark up or hold your budget. Where paid is running, admin access to the ad account is part of the engagement, because we do not report on numbers we cannot see. Campaign work assumes a working lead path: a page, a form and tracking. Where that does not exist yet, building it is the first piece of work. Music from our licensed libraries is included; licensing a specific commercial track is quoted separately. Fees exclude ad spend, paid placements, talent, and travel outside Los Angeles or Tampa.</p>
+  <p class="prepay-note reveal">Advertising spend is separate and always yours: you pay the platforms directly and we never mark up or hold your budget. Admin access to the ad account is part of every engagement, because we do not report on numbers we cannot see. Campaign work assumes a working lead path: a page, a form and tracking. Where that does not exist yet, building it is the first piece of work. Music from our licensed libraries is included; licensing a specific commercial track is quoted separately. Fees exclude ad spend, paid placements, talent, and travel outside Los Angeles or Tampa.</p>
 
   <p class="prepay-note reveal" style="margin-top:14px">Also available, separately from a retainer: <a href="/sprint" style="color:var(--gold)">the Ad Sprint</a> as a one-time production, and event or summit coverage scoped per project. <a href="mailto:business@newterraincreative.com" style="color:var(--gold)">Ask us</a> and we will send detailed rates.</p>
 </section>
@@ -1920,15 +1849,30 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <script>
 
   /* ── tier cards ───────────────────────────────────────────────────
-     Built from assets/offer.js retainer.publicGuideTiers, the same object
-     /growth-guide renders. One definition, two depths: this page carries
-     a three-line summary to qualify, the guide carries the full
-     deliverable composition to close.
+     Built from assets/offer.js retainer.publicGuideTiers. This page
+     carries a three-line summary to qualify; the full deliverable
+     composition is confirmed in the proposal.
+
+     No price is rendered. Pricing was withdrawn from the site on
+     2 Oct 2026 and offer.js no longer declares one. The same goes for
+     monthly deliverable and production-day counts: the lines below are
+     qualitative on purpose, and the volume is agreed in the proposal.
+
+     Every tier includes paid media management. There is no
+     production-only tier and no ad management add-on, so no card may
+     say or imply one. The cards carry no promise line either: that
+     offer is off the site until its terms are decided.
+
+     "Organic distribution of campaign creative" means posting the ads
+     we already made. It is deliberately not "posting and scheduling",
+     which reads as running the client's whole social presence, and
+     community management is not part of any retainer. Longform lives
+     on Brand Builder only. The platform is never named: paid media.
 
      Summaries are keyed by tier name rather than derived from the full
      includes list, because the public card needs three lines, not seven.
      If a tier is added to offer.js without a summary here, the card still
-     renders with its name, price and scope, just without the short lines.
+     renders with its name and scope, just without the short lines.
      ─────────────────────────────────────────────────────────────── */
   (function () {
     var O = window.NTC_OFFER;
@@ -1941,19 +1885,19 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
     var SUMMARY = {
       'The Anchor': [
-        'Content production system.',
-        '<b>16 deliverables</b> from a half-day media day each month.',
-        'Meta ad management available at +$1,500.'
+        'A focused monthly ad creative and paid media system.',
+        'Recurring campaign concepts, shot and cut as ads, on a steady monthly volume.',
+        'Paid media management, testing, reporting and organic distribution of campaign creative included.'
       ],
       'Growth Partner': [
-        'Creative and acquisition under one roof.',
-        '<b>30 deliverables</b> from two production days\u2019 worth each month.',
-        'Meta campaign management included.'
+        'Everything in The Anchor, at higher volume.',
+        'More concepts and variants in testing, and more ambitious campaign creative.',
+        'Paid media management, testing, reporting and organic distribution of campaign creative included.'
       ],
       'Brand Builder': [
-        'Full-volume media engine.',
-        '<b>55 deliverables</b> from up to four full production days.',
-        'Longform, short-form and ads together.'
+        'Our largest production allocation.',
+        'Premium campaign work and longform: founder interviews, YouTube episodes, case-study pieces.',
+        'Paid media management, testing, reporting and organic distribution of campaign creative included.'
       ]
     };
 
@@ -1961,44 +1905,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var lines = (SUMMARY[t.name] || [t.scope]).map(function (l) {
         return '<p class="tier-line">' + l + '</p>';
       }).join('');
-      var promise = t.productionPromiseEligible
-        ? '<span class="tier-promise">90-Day Production Promise eligible</span>'
-        : 'Production only. The 90-Day Promise does not apply at this tier.';
       return '<div class="tier' + (i === 1 ? ' tier--mid' : '') + '">' +
                '<div class="tier-label">' + (t.label || '') + '</div>' +
                '<div class="tier-name">' + t.name + '</div>' +
-               '<div class="tier-price">' + O.fmt(t.monthly) + ' <span>/ month</span></div>' +
                lines +
-               '<div class="tier-meta">' + promise + '</div>' +
              '</div>';
     }).join('');
-
-    // Compared with hiring. One column per tier, stacked: what the same
-    // output costs as payroll, then the package and our price, bars
-    // scaled to the payroll figure. Keyed by tier name in offer.js
-    // inHouse.teams; if any tier lacks one the strip is not rendered at
-    // all rather than rendered with a hole.
-    var cmpHost = document.getElementById('tiers-cmp');
-    var teams = O.inHouse && O.inHouse.teams;
-    var complete = teams && tiers.every(function (t) { return teams[t.name]; });
-    if (!cmpHost) return;
-    if (!complete) { cmpHost.remove(); return; }
-    cmpHost.insertAdjacentHTML('beforebegin', '<div class="cmp-head">Compared with hiring</div>');
-    cmpHost.innerHTML = tiers.map(function (t, i) {
-        var team = teams[t.name];
-        var w = Math.round(t.monthly / team.teamMonthly * 100);
-        return '<div class="cmp-col' + (i === 1 ? ' cmp-col--mid' : '') + '">' +
-                 '<span class="cmp-label">Hiring in-house</span>' +
-                 '<span class="cmp-amt">' + O.fmt(team.teamMonthly) + '<small>/ mo</small></span>' +
-                 '<span class="cmp-bar" style="--w:100%"></span>' +
-                 '<p class="cmp-why">' + team.summary + '.</p>' +
-                 '<div class="cmp-us">' +
-                   '<span class="cmp-label">' + t.name + '</span>' +
-                   '<span class="cmp-amt">' + O.fmt(t.monthly) + '<small>/ mo</small></span>' +
-                   '<span class="cmp-bar" style="--w:' + w + '%"></span>' +
-                 '</div>' +
-               '</div>';
-      }).join('');
   })();
   (function () {
     if (!window.ntc) return;

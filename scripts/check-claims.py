@@ -100,7 +100,17 @@ check('the "same day either way" line has not returned',
 
 print('\nWithdrawn guarantee must appear on no page')
 BANNED = ['next shoot day is free', 'beats your baseline',
-          'outperforms your current content', 'until we get you a creative']
+          'outperforms your current content', 'until we get you a creative',
+          # Off the site since 2 Oct 2026, while its terms and eligibility
+          # are reworked. assets/offer.js productionPromise.published.
+          '90-day production promise', '90-day promise',
+          # Every retainer includes paid media management now, so neither
+          # of these can be true of one.
+          'ad management available as an add-on', 'production-only engagement',
+          # Retainers carry organic distribution of the campaign creative,
+          # not social management, and community management left the offer.
+          'posting and scheduling are included', 'posting, scheduling',
+          'community management available']
 for phrase in BANNED:
     hits = [p.name for p in root.glob('*.html')
             if phrase in p.read_text(encoding='utf-8').lower()]

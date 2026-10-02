@@ -1,14 +1,29 @@
 /* ══════════════════════════════════════════════════════════════════════
    New Terrain Creative · canonical offer terms
    ──────────────────────────────────────────────────────────────────────
-   SINGLE SOURCE OF TRUTH for every price, scope bound and qualification
+   SINGLE SOURCE OF TRUTH for every scope bound and qualification
    threshold on the site.
+
+   PRICING WITHDRAWN 2 Oct 2026. The rate card is being reworked and the
+   site publishes no price while it is: no retainer rate, no Sprint
+   price, no add-on rate, no rush fee, no "mid four figures" signal and
+   no payroll comparison, which only existed to anchor the prices.
+   Monthly deliverable and production-day counts came off the same day,
+   because the package scopes are being reworked with the prices and a
+   stale count is a promise in the same way a stale price is. The
+   figures were deleted from this file rather than hidden on the pages,
+   for the reason in the next paragraph. The internal card is
+   api/_rates.js, which never reaches a browser. When pricing is
+   published again, declare it here first and scripts/check-offer.py
+   will let it onto a page.
+
+   What is still a number here is not our price list: the Founding
+   Three terms, which sit outside the rate card, the client's own
+   ad-spend minimum, and the survey bands the forms ask applicants about.
 
    PUBLIC TERMS ONLY. Everything here ships to the browser and is
    inspectable whether or not it is rendered, so only figures we are
-   willing to publish belong in this file. High-level retainer rates are
-   published only in the unlisted /growth-guide and mirrored server side
-   in api/_rates.js.
+   willing to publish belong in this file.
 
    If a number appears in page copy it must match this file. Run
    `scripts/check-offer.py` to verify; it greps every page and fails on a
@@ -93,183 +108,88 @@
       geography: 'Los Angeles'
     },
 
-    // ── The 90-Day Production Promise ─────────────────────────────────
-    // Public terms only. Full conditions, and the questions still open on
-    // them, are in docs/terms/90-day-production-promise.md, which is NOT
-    // attorney-approved and must not be published as-is.
+    // ── The 90-Day Production Promise · WITHDRAWN 2 Oct 2026 ──────────
+    // Off the site while its terms are reworked. It was written for a
+    // structure in which The Anchor was production only and so could not
+    // carry it; every retainer now includes paid media management, which
+    // removes that reason and leaves the eligibility rule undecided.
+    // Rather than publish a promise whose scope is open, no page states
+    // one. The last terms are in docs/terms/90-day-production-promise.md,
+    // which is NOT attorney-approved and must not be published as-is.
     //
-    // This replaces the withdrawn total-views guarantee. Do not reinstate
-    // that in any form.
-    productionPromise: {
-      days: 90,
-      // A promise about our work, never about the client's revenue.
-      //
-      // Changed 26 Sep 2026. Was "one standard production cycle matching
-      // the contracted monthly allocation", which at Brand Builder rates
-      // is a month of four production days given away, and which the
-      // terms draft flagged as needing a cap nobody had set. The remedy
-      // is now a defined product: one Ad Sprint at The Eight scope, on
-      // top of the retainer, pointed at the benchmark that was missed.
-      // Bounded by the published Sprint price, so the cap sets itself.
-      remedy: 'one Ad Sprint (The Eight: 8 ad creatives) at no charge, on top of the contracted monthly allocation, aimed at the missed benchmark',
-      remedyProduct: 'adSprintEight',
-      remedyIncludesRevisions: 1,
-      isServiceCredit: true,      // never a cash refund
-      stacksWithFoundingWaiver: false,
-      benchmarkChosenBeforeLaunch: true,
-      eligibleBenchmarks: [
-        'Qualified cost per lead',
-        'Qualified-lead rate',
-        'Landing page conversion rate',
-        'Click-through rate',
-        'Another mutually agreed measurable indicator'
-      ],
-      // Explicitly not a default benchmark. This is the term that made the
-      // old guarantee meaningless.
-      totalViewsEligibleByDefault: false,
-
-      // WHERE IT APPLIES. Growth Partner and Brand Builder only.
-      //
-      // Not Anchor, and not Anchor plus the campaign-management add-on.
-      // The promise requires that we managed the campaign AND could change
-      // the creative in response to it. Anchor is production only, so
-      // every claim would fail on the management condition automatically;
-      // the add-on gives us management of a fixed batch with no iteration
-      // budget, so the lever the remedy assumes is missing. A promise
-      // offered where it can never pay out is worse than no promise.
-      //
-      // /grow does not publish package names, so it states the same rule
-      // as "engagements where we manage the campaign". /growth-guide names
-      // the packages because it publishes them.
-      eligiblePackages: ['Growth Partner', 'Brand Builder'],
-      ineligiblePackages: ['The Anchor', 'The Anchor plus campaign management'],
-      requiresManagedCampaign: true,
-
-      attorneyApproved: false
-    },
+    // It replaced the withdrawn total-views guarantee. Do not reinstate
+    // that in any form, and do not bring this back by pasting old copy:
+    // decide who it applies to first.
+    productionPromise: { published: false },
 
     // ── Paid retainer ─────────────────────────────────────────────────
-    // /grow still publishes only the capacity signal below. The tier
-    // summaries render on the unlisted /growth-guide, which is sent by
-    // hand after qualification. These deliverable counts are the approved
-    // package baselines; a proposal confirms fit and any custom scope.
+    // /grow renders the three packages from publicGuideTiers: name,
+    // label and a short summary, with no price and no monthly counts.
+    // The volume and production allocation are agreed in the proposal.
+    //
+    // STRUCTURE, changed 2 Oct 2026. Every retainer is creative plus
+    // paid media management plus iteration. There is no production-only
+    // tier and no ad management add-on any more: The Anchor used to be
+    // both. The tiers differ on creative volume and depth of testing,
+    // not on whether we run the campaign. Creative production with no
+    // ongoing media management is the Ad Sprint, and only the Ad Sprint.
+    //
+    // Also 2 Oct 2026. "Posting and scheduling" became "organic
+    // distribution of the campaign creative": we post the ads we made,
+    // we do not run the client's social presence. Community management
+    // left the offer. Longform is Brand Builder only. And the platform
+    // is not named in retainer copy: it is paid media, chosen for the
+    // audience. The Founding Three scope above still names its platform
+    // because that is a defined pilot with its own terms.
     retainer: {
-      /* Kept for copy that still needs a single figure rather than the
-         table: the homepage engage card, /grow's meta description, the
-         video scripts, a reply to "roughly what does it cost". It is NO
-         LONGER what the body of /grow publishes.
-         /production-media used to be the main consumer; that page was
-         retired 21 Sep 2026 and redirects to /grow.
-         Changed 21 Sep 2026: /grow now renders publicGuideTiers, the
-         same object /growth-guide reads. One definition, two depths.
-         The page qualifies, the guide closes. */
-      publicCapacitySignal: 'mid four figures monthly',
+      /* No rate and no capacity signal, on purpose. Both were removed
+         2 Oct 2026 with the rest of the pricing: the per-tier monthly
+         figure, and the single-line signal the homepage engage card and
+         /grow's meta description used to carry. Scope and fee are set on
+         a strategy call. */
+      pricePublished: false,
       minimumTermMonths: 3,
       publicGuideTiers: [
         {
-          name: 'The Anchor', monthly: 3500, from: false,
-          label: 'Production partner',
-          scope: 'Consistency is the whole game: one focused media day a month, with the feed, posting and creative read handled.',
+          name: 'The Anchor',
+          label: 'Creative + paid media',
+          scope: 'A focused monthly ad creative and paid media system: recurring campaign concepts, production, testing and management under one roof.',
           includes: [
-            'One half-day media day each month',
-            '16 deliverables: 12 short-form + 4 scripted hero pieces',
-            '3–4 directed setups, with hero pieces finished with b-roll, sound design and color',
-            'Posting and scheduling across your channels',
+            'A recurring monthly media day',
+            'A steady monthly volume of ad creative, built as ad creative',
+            'Directed setups, finished with b-roll, sound design and color',
+            'Organic distribution of the campaign creative',
             'Monthly analytics and creative direction',
-            'Meta ad management available as a $1,500 monthly add-on',
-            'Community management available as a $750 monthly add-on'
-          ],
-          productionPromiseEligible: false
+            'Paid media management, testing and iteration'
+          ]
         },
         {
-          name: 'Growth Partner', monthly: 6500, from: false,
-          label: 'Production + campaign system',
-          scope: 'The conversion tier: brand content and dedicated ad creative, with production and paid media under one roof.',
+          name: 'Growth Partner',
+          label: 'More volume, deeper testing',
+          scope: 'Higher creative volume, deeper testing and more ambitious campaign concepts, for a business ready to scale what is working.',
           includes: [
-            '4 half-day or 2 full-day shoots each month',
-            '30 deliverables across brand content and ad creative',
-            'Dedicated ad concepts and hook variations—not repurposed brand cuts',
+            'More shoot time each month than The Anchor',
+            'A higher monthly volume across brand content and ad creative',
+            'Dedicated ad concepts and hook variations, not repurposed brand cuts',
             'Event, product and brand-identity coverage within the included shoot days',
-            'Posting and scheduling across your channels',
-            'Meta campaign setup and weekly management',
+            'Organic distribution of the campaign creative',
+            'Paid media setup and weekly management',
             'Monthly analytics and creative direction'
-          ],
-          productionPromiseEligible: true
+          ]
         },
         {
-          name: 'Brand Builder', monthly: 15000, from: false,
+          name: 'Brand Builder',
           label: 'Flagship partnership',
-          scope: 'The engine at full volume: longform, short-form and dedicated ad creative in one monthly production system.',
+          scope: 'Our largest production allocation, with broader testing and premium campaign creative.',
           includes: [
-            'Up to 4 full production days each month',
-            '55 deliverables: 10 longform + 30 short-form + 15 ads',
-            'Everything in Growth Partner, including Meta management',
-            'Podcasts, YouTube content and founder interviews',
+            'Our largest monthly production allocation',
+            'Our highest monthly volume across longform, short-form and ads',
+            'Everything in Growth Partner, including paid media management',
+            'Longform: founder interviews, YouTube episodes, podcasts and case-study pieces',
             'Monthly analytics and creative direction'
-          ],
-          productionPromiseEligible: true
+          ]
         }
       ]
-    },
-
-    // Optional services attached to the package structure above.
-    campaignManagementAddOn: 1500,
-    communityManagementAddOn: 750,
-
-    /* ── In-house comparison · price anchoring ────────────────────────
-       Added 26 Sep 2026. Every published price is now shown beside what
-       the same work costs as payroll, because a package price on its own
-       has nothing to be judged against and a prospect supplies their own
-       reference point, usually a freelancer's day rate.
-
-       The comparison is against HIRING, not against another agency, and
-       it is deliberately conservative: each role sits at the low end of
-       the published Los Angeles salary ranges (ZipRecruiter, Salary.com,
-       Glassdoor, Sep 2026), before benefits, payroll tax, gear, software
-       and management time. A figure nobody can argue with is worth more
-       than a bigger one that invites the argument.
-
-       Roles are what a business would actually have to hire to get the
-       package's output, not a wish list. Team totals are the plain sum of
-       the roles; the checker treats them as declared prices so they may
-       appear in page copy.
-
-       Salary anchoring is the right move while there are no public
-       results. Once the Founding clients produce tracked numbers, a
-       calculator that shows what the work earns replaces this, because
-       salary math only shows what it saves.
-       ─────────────────────────────────────────────────────────────── */
-    inHouse: {
-      basis: 'Los Angeles salaries at the low end of the published ranges for each role, before benefits, payroll tax, gear, software and management time.',
-      roles: {
-        videographerEditor: { title: 'a videographer who can also edit', monthly: 5500 },
-        creativeStrategist: { title: 'a creative strategist for the angles, hooks and testing plan', monthly: 6000 },
-        creativeLead:       { title: 'a creative lead to direct the concepts and keep the content sharp', monthly: 7000 },
-        paidMediaManager:   { title: 'a paid media manager to build and run the campaigns', monthly: 7000 },
-        producer:           { title: 'a producer to schedule the days and move the work through post', monthly: 5000 }
-      },
-      teams: {
-        'Ad Sprint': {
-          roles: ['videographerEditor', 'creativeStrategist'],
-          teamMonthly: 11500,
-          summary: 'A videographer-editor and a creative strategist'
-        },
-        'The Anchor': {
-          roles: ['videographerEditor', 'creativeLead'],
-          teamMonthly: 12500,
-          summary: 'A videographer-editor and a creative lead'
-        },
-        'Growth Partner': {
-          roles: ['videographerEditor', 'creativeLead', 'paidMediaManager'],
-          teamMonthly: 19500,
-          summary: 'A videographer-editor, a creative lead and a paid media manager'
-        },
-        'Brand Builder': {
-          roles: ['videographerEditor', 'videographerEditor', 'creativeLead', 'paidMediaManager', 'producer'],
-          teamMonthly: 30000,
-          summary: 'Two videographer-editors, a creative lead, a paid media manager and a producer'
-        }
-      }
     },
 
     // ── One-time products ─────────────────────────────────────────────
@@ -291,14 +211,14 @@
          claim appears on /sprint at all.
 
          The ladder still reads correctly without hours, because the
-         packages differ on what you walk away with:
-           $2,500  one-off,  8 creatives     The Eight
-           $3,500  monthly, 16 pieces        The Anchor
-           $4,500  one-off, 15 creatives     The Fifteen
-           $6,500  monthly, 30 pieces        Growth Partner */
-      adSprintEight:   { name: 'The Eight',   price: 2500, creatives: 8 },
-      adSprintFifteen: { name: 'The Fifteen', price: 4500, creatives: 15 },
-      leadFoundation:  { name: 'Lead Foundation', price: 2500 }
+         packages differ on what you walk away with: 8 creatives, then
+         15, one-off; then a monthly volume on the retainers.
+
+         No price on any of them since 2 Oct 2026. The Sprint is still
+         fixed price; the figure is quoted on the fit call. */
+      adSprintEight:   { name: 'The Eight',   creatives: 8 },
+      adSprintFifteen: { name: 'The Fifteen', creatives: 15 },
+      leadFoundation:  { name: 'Lead Foundation' }
     },
 
     /* ── Ad Sprint · what reduces the buyer's risk ───────────────────
@@ -381,7 +301,7 @@
         'Clients talk to the founder and the creative strategist directly',
         'The Angle Call before any Sprint shoot',
         'Monthly analytics and creative direction on every retainer',
-        'Weekly campaign management on Growth Partner and Brand Builder'
+        'Paid media management on every retainer'
       ]
     },
 
@@ -406,9 +326,8 @@
     adSpendBands: [1500, 5000],
 
     // Boundaries for "what can you invest monthly in production and
-    // campaign work" on the strategy call form. Set so the bands straddle
-    // the mid-four-figure starting point and an applicant can self-select
-    // without us publishing a rate card.
+    // campaign work" on the strategy call form. Set so an applicant can
+    // self-select without us publishing a rate card.
     budgetBands: [2500, 5000, 10000],
 
     // Founding Three asks for a 90-DAY total, not a monthly figure, so it
@@ -475,7 +394,13 @@
       // not come back in any wording.
       'a free shoot day if the creative does not beat your baseline',
       // Added 26 Sep 2026 with the boutique block.
-      'a client cap we would raise quietly, or a review cadence a tier does not include'
+      'a client cap we would raise quietly, or a review cadence a tier does not include',
+      // Added 2 Oct 2026 with the withdrawal of published pricing.
+      'a price, a starting-from figure or a payroll comparison, on any page, until pricing is published again',
+      'a monthly deliverable or production-day count on a retainer, until the package scopes are published again',
+      'a production-only retainer, or ad management as an optional add-on to one',
+      'full organic social management or community management as part of a retainer',
+      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided'
     ]
   };
 
