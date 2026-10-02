@@ -323,7 +323,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                 link. Same link for every client and every package.
      crm        The shared Funnel and CRM Build Questionnaire, same deal.
                 Shown only for plans marked crm: true in PLANS below, which
-                today are Growth Partner, Brand Builder and Founding. The
+                today are all three retainers and Founding. The
                 welcome email sends the same links.
      ─────────────────────────────────────────────────────────────────── */
   var WELCOME = {
@@ -420,10 +420,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var t = tier('The Anchor');
       // Managed since 2 Oct 2026: every retainer includes paid media
       // management, so The Anchor gets the ad-account access checklist
-      // and the campaign-and-creative review like the other two. The
-      // CRM questionnaire is a separate decision and is unchanged.
+      // and the campaign-and-creative review like the other two. It
+      // also includes the funnel and tracking setup now, so it gets the
+      // CRM questionnaire too.
       return { name: 'The Anchor', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(true, false), incl: fromTier(t), crm: false };
+               steps: retainerSteps(true, true), incl: fromTier(t), crm: true };
     },
     'growth': function () {
       var t = tier('Growth Partner');

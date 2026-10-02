@@ -141,6 +141,15 @@
     // is not named in retainer copy: it is paid media, chosen for the
     // audience. The Founding Three scope above still names its platform
     // because that is a defined pilot with its own terms.
+    //
+    // Also 2 Oct 2026. Every retainer includes funnel, tracking and
+    // automation support, "conversion infrastructure" in the headline
+    // copy: landing-page flow, lead routing into the CRM, conversion
+    // tracking and core automations. It means a STANDARD setup, built
+    // and managed inside the engagement. Custom systems work (bespoke
+    // integrations, dashboards, multi-step custom funnels) is scoped
+    // separately and no page may suggest otherwise. The line is the
+    // same on every tier in public; depth per tier is internal.
     retainer: {
       /* No rate and no capacity signal, on purpose. Both were removed
          2 Oct 2026 with the rest of the pricing: the per-tier monthly
@@ -160,7 +169,8 @@
             'Directed setups, finished with b-roll, sound design and color',
             'Organic distribution of the campaign creative',
             'Monthly analytics and creative direction',
-            'Paid media management, testing and iteration'
+            'Paid media management, testing and iteration',
+            'Funnel, tracking and automation support: lead routing, conversion tracking and core automations'
           ]
         },
         {
@@ -174,6 +184,7 @@
             'Event, product and brand-identity coverage within the included shoot days',
             'Organic distribution of the campaign creative',
             'Paid media setup and weekly management',
+            'Funnel, tracking and automation support: lead routing, conversion tracking and core automations',
             'Monthly analytics and creative direction'
           ]
         },
@@ -400,6 +411,7 @@
       'a monthly deliverable or production-day count on a retainer, until the package scopes are published again',
       'a production-only retainer, or ad management as an optional add-on to one',
       'full organic social management or community management as part of a retainer',
+      'unlimited or custom systems development as part of a retainer',
       'the 90-Day Production Promise, on any page, until its terms and eligibility are decided'
     ]
   };
