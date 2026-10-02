@@ -57,72 +57,88 @@
    ══════════════════════════════════════════════════════════════════════ */
 
 export const RETAINER = {
-  // Approved 12 Sep 2026, withdrawn from the site 2 Oct 2026 and under
-  // revision since. Not published anywhere. See the note at the top.
+  // Approved 2 Oct 2026. NOT published: the site carries no price. The
+  // card is quoted in private sales conversations, proposals, agreements,
+  // Stripe checkout and invoices only. Stripe and the agent's catalog
+  // (ntc-speed-to-lead, agent/migrations/024_offer_v2.sql) carry the
+  // same figures; change them together.
   approved: true,
-  approvedOn: '2026-09-12',
-  withdrawnOn: '2026-10-02',
-  underRevision: true,
+  approvedOn: '2026-10-02',
+  withdrawnOn: null,
+  underRevision: false,
   publishedAt: null,
   publishedSource: null,
 
+  // Every retainer includes creative strategy, scripting, production,
+  // editing, paid media management (platform-neutral, Meta the usual
+  // default), creative testing and iteration, reporting, organic
+  // distribution of the campaign creative NTC produces, and standard
+  // conversion infrastructure: landing-page flow, CRM lead routing,
+  // conversion tracking, core follow-up automations, basic funnel
+  // maintenance. Custom systems work is scoped and quoted separately.
+  // Longform is Brand Builder only. No production-only tier, no add-ons,
+  // no community management, no performance promise.
   tiers: [
     {
-      name: 'The Anchor', monthly: 3500, from: false,
-      label: 'Production partner',
-      scope: 'One focused media day a month, with the feed, posting and creative read handled. Production only: we do not run the campaign at this tier unless the ad management add-on is taken.',
-      mediaDaysPerMonth: 0.5,
-      deliverables: 16,          // 12 short-form + 4 scripted hero
-      includesPosting: true,
-      includesCampaignManagement: false,
+      name: 'The Anchor', monthly: 6000, from: false,
+      label: 'Creative + paid media',
+      adCreatives: 12, coreConcepts: 4, productionDays: 1,
+      heroAds: 0, longform: false,
+      includesCampaignManagement: true,
+      includesConversionInfrastructure: true,
       productionPromiseEligible: false
     },
     {
-      name: 'Growth Partner', monthly: 6500, from: false,
-      label: 'Production + campaign system',
-      scope: 'Brand content and dedicated ad creative, with production and paid media under one roof. Ad concepts are built as ads, not repurposed brand cuts.',
-      mediaDaysPerMonth: 2,      // 4 half-days or 2 full days
-      deliverables: 30,
-      includesPosting: true,
+      name: 'Growth Partner', monthly: 9000, from: false,
+      label: 'More volume, deeper testing',
+      totalAssets: 20, coreConcepts: 5, productionDays: 2,
+      heroAds: 1, longform: false,
       includesCampaignManagement: true,
-      productionPromiseEligible: true
+      includesConversionInfrastructure: true,
+      productionPromiseEligible: false
     },
     {
       name: 'Brand Builder', monthly: 15000, from: false,
       label: 'Flagship partnership',
-      scope: 'Longform, short-form and dedicated ad creative in one monthly production system. Everything in Growth Partner, plus podcasts, YouTube and founder interviews.',
-      mediaDaysPerMonth: 4,
-      deliverables: 55,          // 10 longform + 30 short-form + 15 ads
-      includesPosting: true,
+      totalAssets: 30, productionDays: 2,
+      heroAds: 2, longform: true,
       includesCampaignManagement: true,
-      productionPromiseEligible: true
+      includesConversionInfrastructure: true,
+      productionPromiseEligible: false
     }
   ],
 
-  // Published on The Anchor card. Bolting management onto Anchor reaches
-  // $5,000, which is $1,500 under Growth Partner, and the gap is real
-  // scope rather than a pricing accident: Anchor runs one half-day media
-  // day and 16 deliverables against Growth Partner's two days and 30,
-  // with ad creative built as ad creative. The add-on does NOT carry the
-  // 90-Day Production Promise, because it buys management of a fixed
-  // batch with no iteration budget.
-  campaignManagementAddOn: 1500,
+  // Quoted individually. No standard Payment Link unless approved.
+  customFrom: 18000,
+
+  // One-time, paid in full upfront. Creative production only.
+  sprints: [
+    { name: 'The Eight', creatives: 8, oneTime: 3000 },
+    { name: 'The Fifteen', creatives: 15, oneTime: 5500 }
+  ],
+
+  // Retired 2 Oct 2026. Kept as fields so nothing reads undefined.
+  campaignManagementAddOn: null,
+  communityManagementAddOn: null,
   addOnProductionPromiseEligible: false,
 
-  // Also published on The Anchor card.
-  communityManagementAddOn: 750,
-
   minimumTermMonths: 3,
+  noticeDays: 30,
+  // First month paid before onboarding or production begins; then
+  // monthly in advance.
+  firstMonthUpfront: true,
 
-  // Twelve months for the price of ten. Still WITHHELD from the client
-  // guide: the packages are approved, this incentive is not, and it does
-  // not appear on /growth-guide. Internal only until that changes.
-  prepayMonthsCharged: 10,
-  prepayMonthsGiven: 12,
+  // Annual plans retired 2 Oct 2026; revisit only if deliberately modelled.
+  prepayMonthsCharged: null,
+  prepayMonthsGiven: null,
   prepayPublishable: false,
 
-  // What the public page is allowed to say. Nothing, since 2 Oct 2026:
-  // the "mid four figures monthly" signal went with the prices.
+  // Rush: no standard fee for now, quoted by hand per request.
+  rushFee: null,
+
+  // Client-funded, paid directly to the platform. Recommended minimum.
+  recommendedMinMonthlyAdSpend: 1500,
+
   publicCapacitySignal: null
 };
 
