@@ -1807,8 +1807,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     var frame = document.querySelector('#video .video-frame');
     if (!frame) return;
     frame.addEventListener('vslstart', function () {
-      ntc.watchVideo(frame);
-      ntc.track('VSLPlay', { offer: 'ad_sprint' });
+      var video = { offer: 'ad_sprint', video_name: 'ad_sprint_vsl' };
+      ntc.watchVideo(frame, video);
+      ntc.track('VSLPlay', video);
     }, { once: true });
   })();
 </script>

@@ -61,6 +61,28 @@ check('landing event carries campaign and ad',
 check('CTA position survives enrichment', click?.metadata?.position === 'hero');
 check('attribution persists first touch', JSON.parse(stored.get('ntc_attribution')).utm_campaign === 'dentist-la');
 
+// VSL events: the play and every milestone are custom Meta events, are
+// stored first party, and carry which video they came from.
+const vsl = { offer: 'ad_sprint', video_name: 'ad_sprint_vsl' };
+const player = new EventTarget();
+window.ntc.watchVideo(player, vsl);
+window.ntc.track('VSLPlay', vsl);
+player.duration = 200; player.currentTime = 100;
+player.dispatchEvent(new Event('timeupdate'));
+player.dispatchEvent(new Event('timeupdate'));
+await new Promise((resolve) => setTimeout(resolve, 0));
+
+const pixelVsl = pixel.filter((a) => /^VSL/.test(a[1]));
+const playStored = requests.filter((r) => r.body.event_name === 'vsl_play');
+const half = requests.filter((r) => r.body.event_name === 'vsl_50');
+check('VSLPlay uses a custom Meta event', pixelVsl[0]?.[0] === 'trackCustom' && pixelVsl[0]?.[1] === 'VSLPlay');
+check('VSLPlay is stored first party', playStored.length === 1 && playStored[0].body.metadata?.video_name === 'ad_sprint_vsl');
+check('milestones fire once each, up to the point watched',
+  pixelVsl.map((a) => a[1]).join() === 'VSLPlay,VSL25,VSL50' && half.length === 1);
+check('milestones carry offer, video and percent',
+  half[0]?.body.metadata?.offer === 'ad_sprint' && half[0]?.body.metadata?.video_name === 'ad_sprint_vsl' &&
+  half[0]?.body.metadata?.percent === 50 && pixelVsl[2]?.[2]?.video_name === 'ad_sprint_vsl');
+
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · browser events are attributable and correctly routed'
   : `\x1b[31mFAIL\x1b[0m · ${failures} check(s) failed`}`);

@@ -61,6 +61,16 @@ check('unknown funnel cannot be stored', made[0]?.body?.funnel === undefined);
 check('known event still records without a funnel', res.payload.stored === true);
 
 n = calls.length;
+res = await request('POST', {
+  event_name: 'vsl_play', funnel: 'ad_sprint',
+  metadata: { offer: 'ad_sprint', video_name: 'ad_sprint_vsl', full_name: 'A Person' }
+});
+made = calls.slice(n);
+check('vsl_play is stored', res.payload.stored === true && made[0]?.body?.event_name === 'vsl_play');
+check('video_name survives the metadata filter', made[0]?.body?.metadata?.video_name === 'ad_sprint_vsl');
+check('other name fields are still removed', made[0]?.body?.metadata?.full_name === undefined);
+
+n = calls.length;
 res = await request('POST', { event_name: 'anything_i_want' });
 check('unknown event is ignored', res.payload.ignored === 'unknown event' && calls.length === n);
 

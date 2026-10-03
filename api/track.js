@@ -18,6 +18,7 @@ const ALLOWED = new Set([
   'landing_view',
   'view_content',
   'cta_click',
+  'vsl_play',             // the click that starts a VSL, before any milestone
   'vsl_25', 'vsl_50', 'vsl_75', 'vsl_90',
   'initial_fit_completed', // step one of the application. NOT a conversion:
                            // it exists so step one to step two abandonment
@@ -73,7 +74,9 @@ function safeMetadata(m) {
   let n = 0;
   for (const [k, v] of Object.entries(m)) {
     if (n >= 20) break;
-    if (banned.test(k)) continue;
+    // video_name labels which VSL an event came from. It trips the "name"
+    // pattern but is a fixed slug set by the page, never a person's name.
+    if (banned.test(k) && k !== 'video_name') continue;
     if (v === null || ['string', 'number', 'boolean'].includes(typeof v)) {
       out[k] = typeof v === 'string' ? v.slice(0, 200) : v;
       n++;

@@ -6,7 +6,7 @@
      ntc.track('ViewContent')             browser Meta event + internal
      ntc.track('VSL50')                   custom milestone
      ntc.context()                        attribution to POST to the server
-     ntc.watchVideo(el)                   auto-fires VSL25/50/75/90 once each
+     ntc.watchVideo(el, data)             auto-fires VSL25/50/75/90 once each
 
    Deliberately does NOT fire PageView: the Meta base pixel in each page's
    head already does, and firing here would double count.
@@ -155,6 +155,7 @@
   var NAME_MAP = {
     ViewContent: 'view_content', PageView: 'landing_view',
     CTAClick: 'cta_click',
+    VSLPlay: 'vsl_play',
     VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90',
     // First party only. See trackInternal below: this never reaches Meta.
     InitialFitCompleted: 'initial_fit_completed',
@@ -196,7 +197,7 @@
 
     if (typeof w.fbq === 'function') {
       try {
-        var custom = eventName === 'CTAClick' || /^VSL\d+$/.test(eventName);
+        var custom = eventName === 'CTAClick' || /^VSL/.test(eventName);
         w.fbq(custom ? 'trackCustom' : 'track', eventName, payload, { eventID: eventId });
         log('fbq', eventName, eventId, payload);
       } catch (e) {
@@ -236,8 +237,10 @@
 
   // ── VSL milestones ───────────────────────────────────────────────────
   // Attach to a <video>. Fires VSL25/50/75/90 once each per page view.
-  // Deliberately does not send every timeupdate to Meta.
-  function watchVideo(el) {
+  // Deliberately does not send every timeupdate to Meta. `data` rides on
+  // every milestone, e.g. { offer: 'ad_sprint', video_name: 'ad_sprint_vsl' },
+  // so more than one VSL stays tellable apart.
+  function watchVideo(el, data) {
     if (!el || !el.addEventListener) return;
     var marks = [25, 50, 75, 90];
     var done = {};
@@ -249,7 +252,9 @@
       marks.forEach(function (m) {
         if (pct >= m && !done[m]) {
           done[m] = true;
-          track('VSL' + m, { percent: m });
+          var payload = { percent: m };
+          Object.keys(data || {}).forEach(function (k) { payload[k] = data[k]; });
+          track('VSL' + m, payload);
         }
       });
     });
