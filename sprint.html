@@ -1506,16 +1506,36 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   window.addEventListener('resize', measure);
 
   // Loop only the cards actually on screen. Twenty-odd silent videos running
-  // at once is a tax nobody sees.
+  // at once is a tax nobody sees. "On screen" takes two checks: inside the
+  // row's own scroll window (root: track) AND the row itself in the page
+  // viewport, since an element root ignores the viewport entirely. The VSL
+  // also gets the decoder to itself while it plays with sound.
+  const vsl = document.querySelector('#video mux-player');
+  const inRow = new Set();
+  let rowOnScreen = false;
+  function vslListening() { return !!vsl && !vsl.paused && !vsl.muted; }
+  function previewsMayPlay() { return rowOnScreen && !reduce && !vslListening(); }
+  function syncPreviews() {
+    const ok = previewsMayPlay();
+    cards.forEach((c) => {
+      const v = c.querySelector('.reel-media');
+      if (!v || v.tagName !== 'VIDEO') return;
+      if (ok && inRow.has(c)) { v.play().catch(() => {}); }
+      else if (!v.paused) { v.pause(); }
+    });
+  }
   const watcher = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      const v = e.target.querySelector('.reel-media');
-      if (!v || v.tagName !== 'VIDEO') return;
-      if (e.isIntersecting && !reduce) { v.play().catch(() => {}); }
-      else { v.pause(); }
+      if (e.isIntersecting) inRow.add(e.target); else inRow.delete(e.target);
     });
+    syncPreviews();
   }, { root: track, threshold: 0.15 });
   cards.forEach((c) => watcher.observe(c));
+  new IntersectionObserver((entries) => {
+    rowOnScreen = entries[entries.length - 1].isIntersecting;
+    syncPreviews();
+  }).observe(track);
+  if (vsl) ['play', 'pause', 'ended', 'volumechange'].forEach((t) => vsl.addEventListener(t, syncPreviews));
 
   // ── Drift ──
   // Right to left, slow enough to read. Holds while you are hovering,
@@ -1530,7 +1550,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   function frame(ts) {
     const dt = lastTs ? Math.min(64, ts - lastTs) : 0;
     lastTs = ts;
-    if (!reduce && !hovering && !dragging && !opened && ts > holdUntil && !document.hidden) {
+    if (!reduce && rowOnScreen && !hovering && !dragging && !opened && ts > holdUntil && !document.hidden) {
       // Carry the position as a float. At this speed a frame is well under a
       // pixel, and handing scrollLeft a sub-pixel delta every frame rounds
       // straight back to where it started, so the row never moves.
