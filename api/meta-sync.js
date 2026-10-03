@@ -36,17 +36,41 @@
 
    Meta's ids are stored too. Names get edited; ids do not.
 
+   MORE THAN ONE AD ACCOUNT
+   One today, but nothing below assumes it. META_AD_ACCOUNT_IDS takes a
+   comma-separated list. Each account is fetched, replaced and logged on
+   its own, so one account failing never touches another's figures, and
+   each may have its own token: META_ADS_TOKEN_<digits> wins over the
+   shared META_ADS_TOKEN, because a second business should be read with
+   its own authorisation, not ours.
+
+   Before a second account is switched on, the owner report needs an
+   account filter. It sums every account today. See migration 0008.
+
    Env:
-     META_ADS_TOKEN          system user token with ads_read, secret
-     META_AD_ACCOUNT_ID      digits, with or without the act_ prefix
-     CRON_SECRET             what Vercel Cron authenticates with
-     META_GRAPH_API_VERSION  defaults to v21.0, shared with api/_meta.js
+     META_ADS_TOKEN            system user token with ads_read, secret
+     META_ADS_TOKEN_<digits>   optional, a token for that one account
+     META_AD_ACCOUNT_IDS       one or more ids, comma separated, with or
+                               without the act_ prefix
+     META_AD_ACCOUNT_ID        the single-account spelling, still read
+     CRON_SECRET               what Vercel Cron authenticates with
+     META_GRAPH_API_VERSION    defaults to v21.0, shared with api/_meta.js
    ══════════════════════════════════════════════════════════════════════ */
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { rpc, select, configured } from './_supabase.js';
 
-const TOKEN = process.env.META_ADS_TOKEN || '';
-const ACCOUNT = String(process.env.META_AD_ACCOUNT_ID || '').trim().replace(/^act_/, '');
+/* Accounts as digits. Anything that is not a plain account number is
+   dropped here, so nothing from the environment reaches a URL unchecked. */
+const ACCOUNTS = [...new Set(
+  String(process.env.META_AD_ACCOUNT_IDS || process.env.META_AD_ACCOUNT_ID || '')
+    .split(',')
+    .map((v) => v.trim().replace(/^act_/, ''))
+)];
+const VALID_ACCOUNTS = ACCOUNTS.filter((a) => /^\d{5,}$/.test(a));
+const ACCOUNTS_OK = VALID_ACCOUNTS.length > 0 && VALID_ACCOUNTS.length === ACCOUNTS.length;
+
+const tokenFor = (account) =>
+  process.env[`META_ADS_TOKEN_${account}`] || process.env.META_ADS_TOKEN || '';
 const CRON_SECRET = process.env.CRON_SECRET || '';
 const API_VERSION = process.env.META_GRAPH_API_VERSION || 'v21.0';
 
@@ -68,7 +92,7 @@ function shiftDay(day, delta) {
 }
 
 /** Every ad, every day in the window. Follows Meta's paging to the end. */
-async function fetchInsights(since, until) {
+async function fetchInsights(account, token, since, until) {
   const params = new URLSearchParams({
     level: 'ad',
     time_increment: '1',
@@ -82,8 +106,8 @@ async function fetchInsights(since, until) {
 
   // The token rides in a header for the first request. Meta's `next`
   // links carry it in the query string, so a URL is never logged here.
-  let url = `https://graph.facebook.com/${API_VERSION}/act_${ACCOUNT}/insights?${params}`;
-  let headers = { Authorization: `Bearer ${TOKEN}` };
+  let url = `https://graph.facebook.com/${API_VERSION}/act_${account}/insights?${params}`;
+  let headers = { Authorization: `Bearer ${token}` };
   const out = [];
 
   for (let page = 0; url; page++) {
@@ -163,20 +187,35 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'unauthorized' });
   }
 
-  if (!TOKEN || !/^\d{5,}$/.test(ACCOUNT)) {
-    console.error('meta-sync: META_ADS_TOKEN or META_AD_ACCOUNT_ID missing or malformed');
+  if (!ACCOUNTS_OK || VALID_ACCOUNTS.some((a) => !tokenFor(a))) {
+    console.error('meta-sync: an ad account id is missing or malformed, or an account has no token');
     return res.status(503).json({ error: 'meta not configured' });
   }
   if (!configured) return res.status(503).json({ error: 'database not configured' });
 
+  const asked = Number.parseInt((req.query && req.query.days) || '', 10);
+
+  // One account at a time, each whole or not at all. A failure is recorded
+  // and the loop moves on: one account's expired token must not stop
+  // another account's figures from refreshing.
+  const results = [];
+  for (const account of VALID_ACCOUNTS) {
+    results.push(await syncAccount(`act_${account}`, account, asked));
+  }
+
+  const failed = results.filter((r) => !r.ok);
+  return res.status(failed.length ? 502 : 200).json({ ok: failed.length === 0, accounts: results });
+}
+
+async function syncAccount(label, account, asked) {
   // What the log line says if this run dies partway.
-  const run = { status: 'error', stage: 'window', since: null, until: null };
+  const run = { account: label, status: 'error', stage: 'window', since: null, until: null };
 
   try {
-    let days = Number.parseInt((req.query && req.query.days) || '', 10);
+    let days = asked;
     if (!Number.isInteger(days) || days < 1) {
       const synced = await select('campaign_daily_metrics',
-        'select=metric_date&platform=eq.meta&ad_id=neq.&limit=1');
+        `select=metric_date&platform=eq.meta&ad_account_id=eq.${label}&ad_id=neq.&limit=1`);
       days = synced.length ? TRAILING_DAYS : FIRST_RUN_DAYS;
     }
     days = Math.min(days, FIRST_RUN_DAYS);
@@ -186,26 +225,26 @@ export default async function handler(req, res) {
     run.days = days;
 
     run.stage = 'meta';
-    const fetched = (await fetchInsights(run.since, run.until)).map(toRow)
-      .filter((r) => r.ad_id && r.metric_date);
+    const fetched = (await fetchInsights(account, tokenFor(account), run.since, run.until))
+      .map(toRow).filter((r) => r.ad_id && r.metric_date);
     const rows = onePerAdPerDay(fetched);
     run.meta = 200;
     run.fetched = rows.length;
 
     run.stage = 'store';
     const result = await rpc('meta_sync_replace',
-      { p_from: run.since, p_to: run.until, p_rows: rows });
+      { p_from: run.since, p_to: run.until, p_rows: rows, p_account: label });
 
     report('log', { ...run, status: 'ok', stage: 'done', ...result });
-    return res.status(200).json({
-      ok: true, since: run.since, until: run.until, fetched: rows.length, ...result
-    });
+    return { ok: true, account: label, since: run.since, until: run.until,
+             fetched: rows.length, ...result };
   } catch (e) {
-    // Nothing was replaced: the fetch or the single replace call failed
-    // whole. The figures already stored stand, and last_synced_at does
-    // not move, which is how a failing sync shows up on the dashboard.
+    // Nothing was replaced for this account: the fetch or the single
+    // replace call failed whole. Its stored figures stand, and its
+    // last_synced_at does not move, which is how a failing sync shows up
+    // on the dashboard.
     if (e && e.metaStatus) run.meta = e.metaStatus;
     report('error', { ...run, error: String((e && e.message) || e).slice(0, 300) });
-    return res.status(502).json({ ok: false, error: 'sync failed', stage: run.stage });
+    return { ok: false, account: label, error: 'sync failed', stage: run.stage };
   }
 }

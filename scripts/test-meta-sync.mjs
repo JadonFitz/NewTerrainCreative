@@ -20,6 +20,7 @@ const insight = (over = {}) => ({
 const calls = [];
 let alreadySynced = true;
 let metaStatus = 200;
+let failAccount = null;
 globalThis.fetch = async (url, opts = {}) => {
   url = String(url);
   let body;
@@ -27,7 +28,7 @@ globalThis.fetch = async (url, opts = {}) => {
   calls.push({ url, method: opts.method || 'GET', body, headers: opts.headers || {} });
 
   if (/graph\.facebook\.com/.test(url)) {
-    if (metaStatus !== 200) {
+    if (metaStatus !== 200 || (failAccount && url.includes(`act_${failAccount}/`))) {
       return { ok: false, status: metaStatus, text: async () => '{"error":{"message":"token expired"}}' };
     }
     if (/after=PAGE2/.test(url)) {
@@ -37,7 +38,8 @@ globalThis.fetch = async (url, opts = {}) => {
       data: [insight(), insight({ ad_id: '', ad_name: 'no id' }),
              // Meta repeating an ad and day must fold into one row, not two.
              insight({ ad_name: 'hook-a renamed', spend: '1.22', impressions: '100', inline_link_clicks: '1' })],
-      paging: { next: 'https://graph.facebook.com/v21.0/act_1234567890/insights?after=PAGE2&access_token=stub-ads-token' }
+      // Meta's next link stays on the account that was asked.
+      paging: { next: `https://graph.facebook.com/v21.0/${url.match(/act_\d+/)[0]}/insights?after=PAGE2&access_token=stub-ads-token` }
     }) };
   }
   if (/rpc\/meta_sync_replace/.test(url)) {
@@ -97,6 +99,11 @@ res = await request();
 let made = calls.slice(n);
 const sent = replace(made)[0]?.body;
 check('it succeeds', res.statusCode === 200 && res.payload.ok === true);
+check('the result names the account', res.payload.accounts.length === 1
+  && res.payload.accounts[0].account === 'act_1234567890' && res.payload.accounts[0].ok === true);
+check('the replace is scoped to that account', sent.p_account === 'act_1234567890');
+check('the first-run check is scoped to that account',
+  made.some((c) => /campaign_daily_metrics\?.*ad_account_id=eq\.act_1234567890/.test(c.url)));
 check('it asks the right ad account', /\/act_1234567890\/insights\?/.test(meta(made)[0].url));
 check('per ad, per day', /level=ad/.test(meta(made)[0].url) && /time_increment=1/.test(meta(made)[0].url));
 check('the token rides in a header, not the URL',
@@ -117,7 +124,7 @@ check('clicks are link clicks', row.clicks === 35);
 const okLine = logged.find((l) => /"status":"ok"/.test(l)) || '';
 check('one log line carries the window and the outcome',
   /^meta-sync \{/.test(okLine) && /"since":"\d{4}-\d\d-\d\d"/.test(okLine) && /"meta":200/.test(okLine)
-  && /"inserted":2/.test(okLine));
+  && /"inserted":2/.test(okLine) && /"account":"act_1234567890"/.test(okLine));
 check('the day is Meta\'s day', row.metric_date === '2026-10-01');
 check('the token is never logged or returned',
   !logged.join(' ').includes('stub-ads-token') && !JSON.stringify(res.payload).includes('stub-ads-token'));
@@ -147,17 +154,55 @@ made = calls.slice(n);
 check('it reports failure', res.statusCode === 502 && res.payload.ok === false);
 check('and replaces nothing', replace(made).length === 0);
 check('without leaking Meta\'s error to the caller',
-  res.payload.error === 'sync failed' && !JSON.stringify(res.payload).includes('token expired'));
+  res.payload.accounts[0].error === 'sync failed' && !JSON.stringify(res.payload).includes('token expired'));
 const errLine = logged.filter((l) => /"status":"error"/.test(l)).pop() || '';
 check('the log line names the stage and Meta\'s status',
   /"stage":"meta"/.test(errLine) && /"meta":400/.test(errLine) && /"since":/.test(errLine));
 metaStatus = 200;
 
+console.info('\n\x1b[1mMORE THAN ONE AD ACCOUNT\x1b[0m');
+{
+  process.env.META_AD_ACCOUNT_IDS = 'act_1234567890, 9876543210';
+  process.env.META_ADS_TOKEN_9876543210 = 'stub-second-token';
+  const { default: multi } = await import('../api/meta-sync.js?case=multi');
+  const run = async () => {
+    const r = response();
+    await multi({ method: 'GET', query: {}, headers: { authorization: `Bearer ${process.env.CRON_SECRET}` } }, r);
+    return r;
+  };
+
+  n = calls.length;
+  let r = await run();
+  made = calls.slice(n);
+  const reps = replace(made);
+  check('each account is synced', r.statusCode === 200 && r.payload.accounts.length === 2);
+  check('each replace names its own account',
+    reps.length === 2 && reps[0].body.p_account === 'act_1234567890' && reps[1].body.p_account === 'act_9876543210');
+  const second = meta(made).find((c) => c.url.includes('act_9876543210/'));
+  const first = meta(made).find((c) => c.url.includes('act_1234567890/'));
+  check('an account with its own token is read with it', second?.headers.Authorization === 'Bearer stub-second-token');
+  check('the others use the shared token', first?.headers.Authorization === 'Bearer stub-ads-token');
+
+  failAccount = '1234567890';
+  n = calls.length;
+  r = await run();
+  made = calls.slice(n);
+  check('one account failing is reported', r.statusCode === 502 && r.payload.ok === false
+    && r.payload.accounts[0].ok === false);
+  check('and does not stop the other account', r.payload.accounts[1].ok === true
+    && replace(made).length === 1 && replace(made)[0].body.p_account === 'act_9876543210');
+  failAccount = null;
+
+  delete process.env.META_AD_ACCOUNT_IDS;
+  delete process.env.META_ADS_TOKEN_9876543210;
+}
+
 console.info('\n\x1b[1mFAILS CLOSED\x1b[0m');
 const cases = [
   ['no cron secret', { CRON_SECRET: '' }, 503],
   ['no ads token', { META_ADS_TOKEN: '' }, 503],
-  ['a malformed account id', { META_AD_ACCOUNT_ID: 'my account' }, 503]
+  ['a malformed account id', { META_AD_ACCOUNT_ID: 'my account' }, 503],
+  ['one bad id in a list', { META_AD_ACCOUNT_IDS: '1234567890,oops' }, 503]
 ];
 for (const [label, env, want] of cases) {
   const saved = {};
@@ -167,7 +212,9 @@ for (const [label, env, want] of cases) {
   const r = response();
   await h({ method: 'GET', query: {}, headers: { authorization: `Bearer ${saved.CRON_SECRET || process.env.CRON_SECRET}` } }, r);
   check(`${label}: ${want}, and nothing is called`, r.statusCode === want && calls.length === n, String(r.statusCode));
-  for (const k of Object.keys(saved)) process.env[k] = saved[k];
+  for (const k of Object.keys(saved)) {
+    if (saved[k] === undefined) delete process.env[k]; else process.env[k] = saved[k];
+  }
 }
 
 console.info(`\n${failures === 0

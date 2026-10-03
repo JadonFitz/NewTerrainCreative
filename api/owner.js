@@ -162,12 +162,15 @@ export default async function handler(req, res) {
   try {
     const report = await rpc('owner_funnel_report', { p_from: from, p_to: to, p_tz: TZ });
 
-    // When Meta spend was last refreshed. Optional: the report must still
-    // load if this table is missing or the read fails.
+    // When Meta spend was last refreshed. With more than one ad account
+    // this is the one refreshed longest ago, since that is the one whose
+    // figures might be stale. Optional: the report must still load if this
+    // table is missing or the read fails.
     let spendSync = null;
     try {
       const rows = await select('sync_status',
-        'select=last_synced_at,window_from,window_to,rows_written&source=eq.meta_ads&limit=1');
+        'select=source,last_synced_at,window_from,window_to,rows_written' +
+        '&source=like.meta_ads:*&order=last_synced_at.asc&limit=1');
       spendSync = (Array.isArray(rows) && rows[0]) || null;
     } catch (e) {
       console.warn('owner: sync status unavailable', (e && e.message) || e);

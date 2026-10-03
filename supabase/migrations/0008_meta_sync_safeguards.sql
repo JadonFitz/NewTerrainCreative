@@ -15,21 +15,46 @@
 -- imports have ad_id '' and are still governed by the primary key alone.
 --
 -- ── 2 · WHEN META WAS LAST REFRESHED ──────────────────────────────────
--- sync_status holds one row per sync source. meta_sync_replace() stamps
+-- sync_status holds one row per sync source, which for Meta means one per
+-- ad account ('meta_ads:act_<digits>'). meta_sync_replace() stamps
 -- it inside the same transaction as the replace, so last_synced_at moves
 -- only when the figures really were refreshed, including on a day when
 -- Meta legitimately returned no rows. A stale timestamp therefore means
 -- the sync is failing, which is otherwise invisible: a failed sync
 -- deliberately leaves the stored figures alone.
 --
+-- ── 3 · MORE THAN ONE AD ACCOUNT, LATER ───────────────────────────────
+-- One account today, but nothing here may assume that. Every synced row
+-- records the ad account it came from, the replace is scoped to ONE
+-- account, and sync_status keeps a row per account. Without that scoping
+-- a second account's sync would delete the first account's window, since
+-- both are platform 'meta'.
+--
+-- That is why meta_sync_replace() gains p_account and the three-argument
+-- version from 0007 is dropped: a replace with no account named is
+-- exactly the call that must not exist.
+--
+-- What this does NOT do: owner_funnel_report() still sums every account.
+-- Before a second account is switched on, the report needs an account
+-- filter, or two businesses' spend lands on one dashboard.
+--
 -- ── BACKWARD COMPATIBLE ───────────────────────────────────────────────
---   * one index, one new table, one function replaced with the same
---     signature and the same behaviour plus the stamp
---   * nothing existing is renamed, retyped or dropped
+--   * one index, one column, one new table, and meta_sync_replace()
+--     replaced by a version that takes the account. Only /api/meta-sync
+--     calls it, and it ships with this migration
+--   * no table or column is renamed, retyped or dropped
 --
 -- Safe to re-run.
 -- ══════════════════════════════════════════════════════════════════════
 
+-- '' for hand imports, 'act_<digits>' for synced rows.
+alter table public.campaign_daily_metrics
+  add column if not exists ad_account_id text not null default '';
+
+create index if not exists campaign_daily_metrics_account_idx
+  on public.campaign_daily_metrics (ad_account_id, metric_date desc);
+
+-- Meta ad ids are unique across accounts, so date + ad_id is enough.
 create unique index if not exists campaign_daily_metrics_meta_ad_day_key
   on public.campaign_daily_metrics (metric_date, ad_id)
   where platform = 'meta' and ad_id <> '';
@@ -49,10 +74,13 @@ alter table public.sync_status enable row level security;
 revoke all on public.sync_status from anon, authenticated;
 grant select, insert, update, delete on public.sync_status to service_role;
 
+drop function if exists public.meta_sync_replace(date, date, jsonb);
+
 create or replace function public.meta_sync_replace(
-  p_from date,
-  p_to   date,
-  p_rows jsonb
+  p_from    date,
+  p_to      date,
+  p_rows    jsonb,
+  p_account text
 )
 returns jsonb
 language plpgsql
@@ -63,15 +91,22 @@ declare
   v_inserted integer;
   v_now      timestamptz := now();
 begin
+  if coalesce(p_account, '') = '' then
+    raise exception 'meta_sync_replace needs an ad account';
+  end if;
+
+  -- This account's rows only. Another account's window is not ours to clear.
   delete from public.campaign_daily_metrics
    where platform = 'meta'
      and ad_id <> ''
+     and ad_account_id = p_account
      and metric_date between p_from and p_to;
   get diagnostics v_deleted = row_count;
 
   insert into public.campaign_daily_metrics
     (metric_date, platform, funnel, source, medium, campaign, ad,
-     impressions, clicks, spend, campaign_id, adset_id, adset_name, ad_id)
+     impressions, clicks, spend, campaign_id, adset_id, adset_name, ad_id,
+     ad_account_id)
   select
     r.metric_date,
     'meta',
@@ -107,7 +142,8 @@ begin
     r.campaign_id,
     r.adset_id,
     r.adset_name,
-    r.ad_id
+    r.ad_id,
+    p_account
   from jsonb_to_recordset(p_rows) as r(
     metric_date date, campaign text, ad text,
     impressions bigint, clicks bigint, spend numeric,
@@ -120,7 +156,7 @@ begin
   -- Same transaction as the replace. If anything above failed, this never
   -- runs and the timestamp stays where it was.
   insert into public.sync_status (source, last_synced_at, window_from, window_to, rows_written)
-  values ('meta_ads', v_now, p_from, p_to, v_inserted)
+  values ('meta_ads:' || p_account, v_now, p_from, p_to, v_inserted)
   on conflict (source) do update
     set last_synced_at = excluded.last_synced_at,
         window_from    = excluded.window_from,
@@ -128,11 +164,12 @@ begin
         rows_written   = excluded.rows_written;
 
   return jsonb_build_object(
-    'deleted', v_deleted, 'inserted', v_inserted, 'last_synced_at', v_now);
+    'account', p_account, 'deleted', v_deleted, 'inserted', v_inserted,
+    'last_synced_at', v_now);
 end;
 $$;
 
-revoke all on function public.meta_sync_replace(date, date, jsonb)
+revoke all on function public.meta_sync_replace(date, date, jsonb, text)
   from public, anon, authenticated;
-grant execute on function public.meta_sync_replace(date, date, jsonb)
+grant execute on function public.meta_sync_replace(date, date, jsonb, text)
   to service_role;

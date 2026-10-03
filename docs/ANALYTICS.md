@@ -58,6 +58,11 @@ pulls 90. Clicks are link clicks. Meta's campaign, ad set and ad ids are
 stored beside the names. This table is the source for impressions, clicks,
 and spend; the site must not attempt to reconstruct those figures.
 
+Every synced row records its ad account, and each account is fetched,
+replaced and stamped on its own, so a second account can be added without
+either touching the other's figures. The owner report does not filter by
+account yet; that has to come before a second account is switched on.
+
 The database allows one row per Meta ad per day. Each successful run stamps
 `sync_status.last_synced_at` in the same transaction as the replace; a
 failed run changes nothing, so a stale timestamp is the sign of a failing
