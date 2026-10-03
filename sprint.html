@@ -26,10 +26,7 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
 <script src="/assets/track.js"></script>
-<link rel="preconnect" href="https://stream.mux.com" crossorigin>
-<link rel="preconnect" href="https://image.mux.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player@3" defer></script>
+<link rel="preconnect" href="https://player.vimeo.com">
 
 <!--
   ════════════════════════════════════════════════════════════════
@@ -184,37 +181,85 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     background: #0d0d0d;
     position: relative;
   }
-  .video-frame mux-player {
+  .video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video-play {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: #0d0d0d;
+    cursor: pointer;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .video-play[hidden] { display: none; }
+  .video-play img {
     display: block;
     width: 100%;
     height: 100%;
-    --media-object-fit: contain;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.2,0.7,0.2,1);
   }
-  .video-unmute {
+  .video-play::after {
+    content: '';
     position: absolute;
     inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.62), rgba(10,10,10,0) 42%);
+    pointer-events: none;
+  }
+  .video-play:hover img,
+  .video-play:focus-visible img { transform: scale(1.025); }
+  .video-play:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+  .video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(54px, 8vw, 76px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    z-index: 2;
-  }
-  .video-unmute span {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 22px;
+    border-radius: 50%;
     background: var(--gold);
     color: var(--black);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    transition: transform 0.35s ease, background 0.35s ease;
+    z-index: 1;
   }
-  .video-unmute:hover span { background: var(--parchment); }
-  .video-unmute[hidden] { display: none; }
+  .video-play-btn svg { width: 34%; height: 34%; margin-left: 6%; }
+  .video-play:hover .video-play-btn,
+  .video-play:focus-visible .video-play-btn {
+    transform: translate(-50%, -50%) scale(1.07);
+    background: var(--parchment);
+  }
+  .video-play.is-loading .video-play-btn { animation: videoWait 1.1s ease-in-out infinite; }
+  @keyframes videoWait { 50% { opacity: 0.45; } }
+  .video-play-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(14px, 3vw, 26px);
+    text-align: center;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    z-index: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .video-play img, .video-play-btn { transition: none; }
+    .video-play.is-loading .video-play-btn { animation: none; }
+  }
 
   /* ── OLD WAY / NEW WAY ── */
   #contrast { border-top: 1px solid var(--line); }
@@ -946,20 +991,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
 <!-- VIDEO -->
 <section id="video">
-  <div class="video-frame reveal">
-    <mux-player
-      playback-id="01DeffFuINRndChvC201ZLxWUmTJwf0037VE5kvfIcS5y4"
-      metadata-video-title="Ad Sprint: Meet Meghan"
-      accent-color="#C8A96E"
-      primary-color="#F5F0E8"
-      title="Ad Sprint: Meet Meghan"
-      default-hidden-captions
-      autoplay="muted"
-      preload="auto"
-      playsinline
-    ></mux-player>
-    <button class="video-unmute" type="button" aria-label="Play with sound from the start">
-      <span>&#128264; Tap for sound</span>
+  <!--
+    The VSL lives on Vimeo. To swap it: change data-vimeo to the new video ID,
+    data-title to its name, the time in .video-play-label, and replace
+    assets/vsl-ad-sprint.jpg (16:9). Nothing loads from Vimeo until the click.
+  -->
+  <div class="video-frame reveal" data-vimeo="1232642465" data-title="The Ad Sprint - New Terrain Creative">
+    <button class="video-play" type="button" aria-label="Play the Ad Sprint video with sound">
+      <img src="assets/vsl-ad-sprint.jpg" alt="" width="1920" height="1080" fetchpriority="high">
+      <span class="video-play-btn" aria-hidden="true"><svg viewBox="0 0 20 22" fill="currentColor"><path d="M1 1.2v19.6a1 1 0 0 0 1.5.86l16.8-9.8a1 1 0 0 0 0-1.72L2.5.34A1 1 0 0 0 1 1.2z"/></svg></span>
+      <span class="video-play-label">Play with sound &middot; 3:10</span>
     </button>
   </div>
 </section>
@@ -1509,11 +1550,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   // at once is a tax nobody sees. "On screen" takes two checks: inside the
   // row's own scroll window (root: track) AND the row itself in the page
   // viewport, since an element root ignores the viewport entirely. The VSL
-  // also gets the decoder to itself while it plays with sound.
-  const vsl = document.querySelector('#video mux-player');
+  // also gets the decoder to itself while it plays with sound. Its frame
+  // mirrors the Vimeo player's state and events (see the VSL script below).
+  const vsl = document.querySelector('#video .video-frame');
   const inRow = new Set();
   let rowOnScreen = false;
-  function vslListening() { return !!vsl && !vsl.paused && !vsl.muted; }
+  function vslListening() { return !!vsl && vsl.paused === false && !vsl.muted; }
   function previewsMayPlay() { return rowOnScreen && !reduce && !vslListening(); }
   function syncPreviews() {
     const ok = previewsMayPlay();
@@ -1683,6 +1725,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     v.preload = 'auto';
     stage.innerHTML = '';
     stage.appendChild(v);
+    if (vsl && vsl.pauseVsl) vsl.pauseVsl(); // one soundtrack at a time
     playing = v;
     fillMeta(card);
     applySound();
@@ -1759,29 +1802,72 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   (function () {
     if (!window.ntc) return;
     ntc.track('ViewContent', { content_name: document.title, offer: 'ad_sprint' });
-    // The VSL autoplays muted, so silent autoplay must not count toward the
-    // VSL milestones. Attach them only once a viewer turns the sound on,
-    // either through the overlay (which restarts from 0:00) or the player's
-    // own volume control.
-    var v = document.querySelector('#video mux-player');
-    var btn = document.querySelector('#video .video-unmute');
-    if (!v) return;
-    var watching = false;
-    function startWatching() {
-      if (watching) return;
-      watching = true;
-      if (btn) btn.hidden = true;
-      ntc.watchVideo(v);
-      ntc.track('VSLUnmute', { offer: 'ad_sprint' });
+    // Every VSL play is a click with sound on, so the milestones attach at
+    // the click. The frame carries the player's time (see the script below).
+    var frame = document.querySelector('#video .video-frame');
+    if (!frame) return;
+    frame.addEventListener('vslstart', function () {
+      ntc.watchVideo(frame);
+      ntc.track('VSLPlay', { offer: 'ad_sprint' });
+    }, { once: true });
+  })();
+</script>
+
+<script>
+  // The VSL. A poster and a play button until someone asks for it, then the
+  // Vimeo player is built inside the click so it starts with sound. The
+  // frame mirrors the player (paused, muted, currentTime, duration, plus the
+  // matching events) so the tracking and the reel can treat it like a <video>.
+  (function () {
+    var frame = document.querySelector('#video .video-frame');
+    var btn = frame && frame.querySelector('.video-play');
+    if (!btn) return;
+    function emit(type) { frame.dispatchEvent(new Event(type)); }
+
+    function wire(player) {
+      frame.pauseVsl = function () { player.pause().catch(function () {}); };
+      player.on('play', function () {
+        frame.paused = false;
+        player.getMuted().then(function (m) { frame.muted = m; emit('volumechange'); }).catch(function () {});
+        emit('play');
+      });
+      player.on('pause', function () { frame.paused = true; emit('pause'); });
+      player.on('ended', function () { frame.paused = true; emit('ended'); });
+      player.on('volumechange', function (d) {
+        frame.muted = d.muted === true || d.volume === 0;
+        emit('volumechange');
+      });
+      player.on('timeupdate', function (d) {
+        frame.currentTime = d.seconds;
+        frame.duration = d.duration;
+        emit('timeupdate');
+      });
+      player.getPaused().then(function (p) { frame.paused = p; emit(p ? 'pause' : 'play'); }).catch(function () {});
     }
-    if (btn) btn.addEventListener('click', function () {
-      v.currentTime = 0;
-      v.muted = false;
-      v.play();
-      startWatching();
-    });
-    v.addEventListener('volumechange', function () {
-      if (!v.muted) startWatching();
+
+    btn.addEventListener('click', function () {
+      if (btn.classList.contains('is-loading')) return;
+      btn.classList.add('is-loading');
+
+      var f = document.createElement('iframe');
+      f.src = 'https://player.vimeo.com/video/' + frame.dataset.vimeo +
+        '?autoplay=1&title=0&byline=0&portrait=0&badge=0&autopause=0&color=C8A96E&player_id=0&app_id=58479';
+      f.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      f.title = frame.dataset.title || 'Video';
+      // The poster stays up until the player has painted, so there is no black flash.
+      function reveal() { btn.hidden = true; }
+      f.addEventListener('load', function () { reveal(); f.focus(); });
+      frame.addEventListener('play', reveal);
+      setTimeout(reveal, 4000); // never leave the poster over a playing video
+      frame.appendChild(f);
+      emit('vslstart');
+
+      var s = document.createElement('script');
+      s.src = 'https://player.vimeo.com/api/player.js';
+      s.onload = function () { if (window.Vimeo) wire(new Vimeo.Player(f)); };
+      document.head.appendChild(s);
     });
   })();
 </script>
