@@ -23,10 +23,11 @@
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   :root {
-    --black:#0A0A0A; --raised:#111010;
+    --black:#0A0A0A; --raised:#111010; --rail:#191817;
     --gold:#C8A96E; --gold-dim:#A08A57;
-    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D; --faint:#5F5A55;
     --line:#1e1e1e; --line-strong:#2a2826;
+    --ok:#8FBF9A; --warn:#D9A866;
     --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
     --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   }
@@ -37,11 +38,11 @@
     min-height:100vh;
   }
   [hidden] { display:none !important; }
-  .wrap { max-width:1080px; margin:0 auto; padding:0 16px 80px; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 16px 72px; }
 
   header.top {
     display:flex; align-items:baseline; justify-content:space-between; gap:16px;
-    padding:28px 0 20px; border-bottom:1px solid var(--line);
+    padding:24px 0 16px; border-bottom:1px solid var(--line);
   }
   .brand { font-family:var(--display); font-size:26px; font-weight:300; letter-spacing:.01em; }
   .brand em { color:var(--gold); font-style:italic; }
@@ -60,77 +61,116 @@
     width:100%; background:var(--raised); border:1px solid var(--line-strong); color:var(--parchment);
     font:inherit; padding:12px 14px; border-radius:2px; color-scheme:dark;
   }
-  input:focus-visible, button:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  input:focus-visible, button:focus-visible, summary:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
   .btn {
     display:inline-block; background:var(--gold); color:var(--black); border:0; cursor:pointer;
     font:inherit; font-weight:500; font-size:13px; letter-spacing:.08em; text-transform:uppercase;
     padding:13px 22px; border-radius:2px; margin-top:16px; width:100%;
   }
   .btn:disabled { opacity:.5; cursor:default; }
-  .error { color:#E0A08A; font-size:14px; margin-top:14px; min-height:21px; }
+  .error { color:#E0A08A; font-size:14px; margin-top:10px; }
+  .error:empty { display:none; }
 
   /* ── controls ────────────────────────────────────────────────────── */
-  .controls { display:flex; flex-wrap:wrap; gap:12px 24px; align-items:flex-end; padding:20px 0 4px; }
-  .group { display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .group > span { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
-  .seg { display:flex; flex-wrap:wrap; gap:6px; }
+  .controls { display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; justify-content:space-between; padding:16px 0 0; }
+  .seg { display:flex; flex-wrap:wrap; gap:2px; background:var(--raised); border:1px solid var(--line-strong); border-radius:4px; padding:3px; }
   .seg button {
-    background:none; border:1px solid var(--line-strong); color:var(--soft);
-    font:inherit; font-size:13px; padding:7px 12px; border-radius:2px; cursor:pointer;
+    background:none; border:0; color:var(--soft);
+    font:inherit; font-size:13px; padding:6px 13px; border-radius:2px; cursor:pointer;
   }
-  .seg button:hover { color:var(--parchment); border-color:var(--muted); }
-  .seg button[aria-pressed=true] { color:var(--black); background:var(--gold); border-color:var(--gold); font-weight:400; }
-  .dates { display:flex; gap:8px; align-items:center; }
-  .dates input { width:auto; padding:6px 8px; font-size:13px; }
-  .dates span { color:var(--muted); font-size:13px; }
+  .seg button:hover { color:var(--parchment); }
+  .seg button[aria-pressed=true] { color:var(--black); background:var(--gold); font-weight:500; }
+  .custom { display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:flex-end; padding-top:10px; }
+  .custom input { width:auto; padding:6px 8px; font-size:13px; }
+  .custom span { color:var(--muted); font-size:13px; }
+  .rangeline { color:var(--muted); font-size:12px; padding-top:10px; }
 
-  .rangeline { color:var(--muted); font-size:13px; padding:14px 0 0; }
+  /* ── KPI grid ────────────────────────────────────────────────────── */
+  .kpis { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin-top:16px; }
+  .kpis.six { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+  .kpi { background:var(--raised); border:1px solid var(--line); border-radius:4px; padding:16px 16px 14px; min-width:0; }
+  .kpi .k { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .kpi .v { font-family:var(--display); font-size:40px; font-weight:300; line-height:1.15; margin-top:6px; font-variant-numeric:tabular-nums lining-nums; }
+  .kpi .v.blank { color:var(--faint); }
+  .kpi .s { font-size:12px; color:var(--muted); margin-top:2px; min-height:18px; }
+  .mark { color:var(--gold-dim); }
 
-  /* ── tiles ───────────────────────────────────────────────────────── */
-  .tiles { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:1px; margin-top:20px; padding:1px; }
-  .tile { background:var(--black); padding:18px 16px; min-width:0; box-shadow:0 0 0 1px var(--line); }
-  .tile .k { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
-  .tile .v { display:block; font-family:var(--display); font-size:38px; font-weight:300; line-height:1.1; margin-top:8px; font-variant-numeric:tabular-nums lining-nums; }
-  .tile .s { font-size:12px; color:var(--muted); margin-top:4px; }
-  .na { color:var(--muted); font-style:italic; }
-  .tile .v.na { font-size:22px; line-height:42px; }
+  /* ── sections ────────────────────────────────────────────────────── */
+  h2 { font-family:var(--display); font-weight:300; font-size:24px; margin:40px 0 2px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:14px; }
 
-  /* ── funnel ──────────────────────────────────────────────────────── */
-  h2 { font-family:var(--display); font-weight:300; font-size:26px; margin:44px 0 4px; }
-  .sub { color:var(--muted); font-size:13px; margin-bottom:16px; }
-  .funnel { border-top:1px solid var(--line); }
+  /* ── funnel, one progression ─────────────────────────────────────── */
+  .funnel { position:relative; }
   .step {
-    display:grid; grid-template-columns:150px minmax(60px, 1fr) 76px 84px 84px; gap:14px; align-items:center;
-    padding:11px 0; border-bottom:1px solid var(--line);
+    display:grid; grid-template-columns:18px 132px minmax(60px, 1fr) 64px 118px; gap:12px; align-items:center;
+    padding:9px 0; position:relative;
   }
-  .step.headrow { color:var(--muted); font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:10px 0; }
-  .step .name { color:var(--parchment); font-size:14px; }
-  .step .name small { display:block; color:var(--muted); font-size:12px; }
-  .track { height:14px; }
-  .bar { height:14px; background:var(--gold); border-radius:0 4px 4px 0; min-width:2px; }
+  /* the rail that ties the steps into one path */
+  .step .dot { width:9px; height:9px; border-radius:50%; background:var(--gold); justify-self:center; position:relative; z-index:1; }
+  .step.blank .dot { background:var(--black); box-shadow:inset 0 0 0 1.5px var(--faint); }
+  .step::before { content:''; position:absolute; left:8.5px; top:0; bottom:0; width:1px; background:var(--line-strong); }
+  .step:first-child::before { top:50%; }
+  .step:last-child::before { bottom:50%; }
+  .step .name { font-size:14px; }
+  .step.depth .name { color:var(--soft); }
+  .track { height:18px; background:var(--rail); border-radius:0 4px 4px 0; overflow:hidden; }
+  .bar { height:100%; background:var(--gold); border-radius:0 4px 4px 0; min-width:2px; }
+  .step.depth .bar { background:var(--gold-dim); }
   .num { text-align:right; font-variant-numeric:tabular-nums; }
   .num.count { font-size:16px; font-weight:400; }
-  .num.pct { color:var(--soft); font-size:14px; }
+  .num.count.blank { color:var(--faint); }
+  .conv { text-align:right; font-size:13px; color:var(--soft); font-variant-numeric:tabular-nums; }
+  .conv b { color:var(--parchment); font-weight:400; }
+  .conv small { color:var(--muted); font-size:12px; }
 
-  /* ── table ───────────────────────────────────────────────────────── */
-  .scroll { overflow-x:auto; border-top:1px solid var(--line); }
-  table { width:100%; border-collapse:collapse; font-size:13px; min-width:780px; }
-  th, td { padding:10px 12px 10px 0; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap; font-variant-numeric:tabular-nums; }
-  th { color:var(--muted); font-weight:400; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
-  th:first-child, td:first-child { text-align:left; white-space:normal; min-width:200px; }
-  td:first-child small { display:block; color:var(--muted); }
+  /* ── campaign table ──────────────────────────────────────────────── */
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; min-width:720px; }
+  th, td { padding:10px 14px 10px 0; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  th:last-child, td:last-child { padding-right:0; }
+  th { color:var(--muted); font-weight:400; font-size:11px; letter-spacing:.08em; text-transform:uppercase; border-bottom-color:var(--line-strong); }
+  th:first-child, td:first-child { text-align:left; white-space:normal; min-width:190px; }
+  td:first-child { font-size:14px; }
+  td:first-child small { display:block; color:var(--muted); font-size:12px; }
+  tr.untagged td { color:var(--muted); }
+  tr.untagged td:first-child { font-style:italic; }
+  td.blank { color:var(--faint); }
   tbody tr:hover td { background:var(--raised); }
+  .empty { color:var(--muted); padding:24px 0; text-align:left; }
 
-  .notes { margin-top:28px; color:var(--muted); font-size:13px; }
-  .notes li { list-style:none; padding:4px 0 4px 18px; position:relative; }
-  .notes li::before { content:'·'; position:absolute; left:4px; color:var(--gold-dim); }
-  .mark { color:var(--gold-dim); }
-  .empty { color:var(--muted); padding:28px 0; }
+  /* ── status strip ────────────────────────────────────────────────── */
+  .health { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:1px; margin-top:44px; border:1px solid var(--line); border-radius:4px; overflow:hidden; background:var(--line); }
+  .health div { background:var(--black); padding:10px 14px; font-size:12px; color:var(--muted); min-width:0; }
+  .health b { display:block; font-weight:400; font-size:13px; color:var(--parchment); }
+  .health b::before { content:''; display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:8px; vertical-align:1px; background:var(--faint); }
+  .health .ok b::before { background:var(--ok); }
+  .health .warn b::before { background:var(--warn); }
 
+  /* ── data notes ──────────────────────────────────────────────────── */
+  details.notes { margin-top:12px; border:1px solid var(--line); border-radius:4px; }
+  details.notes summary { list-style:none; cursor:pointer; padding:10px 14px; display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; font-size:13px; color:var(--soft); }
+  details.notes summary::-webkit-details-marker { display:none; }
+  details.notes summary .title { color:var(--parchment); }
+  details.notes summary .title::before { content:'+'; display:inline-block; width:14px; color:var(--gold); }
+  details.notes[open] summary .title::before { content:'−'; }
+  details.notes summary .brief { color:var(--muted); font-size:12px; }
+  details.notes summary .brief + .brief::before { content:'·'; margin-right:14px; color:var(--faint); }
+  details.notes ul { padding:2px 14px 12px 28px; color:var(--muted); font-size:13px; border-top:1px solid var(--line); }
+  details.notes li { padding:5px 0 0; }
+  details.notes li::marker { color:var(--gold-dim); }
+
+  @media (max-width:860px) {
+    .kpis, .kpis.six { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .health { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width:640px) {
-    .step { grid-template-columns:104px minmax(30px, 1fr) 56px 62px; gap:10px; }
-    .step .prev { display:none; }
-    .tile .v { font-size:32px; }
+    .controls { justify-content:flex-start; }
+    .custom { justify-content:flex-start; }
+    .step { grid-template-columns:18px 84px minmax(24px, 1fr) 46px 74px; gap:8px; }
+    .step .name { font-size:13px; }
+    .conv small { display:block; }
+    .kpi { padding:14px 14px 12px; }
+    .kpi .v { font-size:32px; }
   }
 </style>
 </head>
@@ -157,42 +197,39 @@
     </header>
 
     <div class="controls">
-      <div class="group">
-        <span>Offer</span>
-        <div class="seg" id="offers"></div>
+      <div class="seg" id="offers" role="group" aria-label="Offer"></div>
+      <div class="seg" id="presets" role="group" aria-label="Range">
+        <button type="button" data-days="7">7 days</button>
+        <button type="button" data-days="30">30 days</button>
+        <button type="button" data-days="90">90 days</button>
+        <button type="button" data-days="0" id="custom-toggle">Custom</button>
       </div>
-      <div class="group">
-        <span>Range</span>
-        <div class="seg" id="presets">
-          <button type="button" data-days="7">7 days</button>
-          <button type="button" data-days="30">30 days</button>
-          <button type="button" data-days="90">90 days</button>
-        </div>
-      </div>
-      <div class="group">
-        <span>Custom</span>
-        <div class="dates">
-          <input type="date" id="from" aria-label="From">
-          <span>to</span>
-          <input type="date" id="to" aria-label="To">
-        </div>
-      </div>
+    </div>
+    <div class="custom" id="custom" hidden>
+      <input type="date" id="from" aria-label="From">
+      <span>to</span>
+      <input type="date" id="to" aria-label="To">
     </div>
     <div class="rangeline" id="rangeline"></div>
     <div class="error" id="dash-error" role="alert"></div>
 
     <div id="report" hidden>
-      <div class="tiles" id="tiles"></div>
+      <div class="kpis" id="kpis"></div>
 
       <h2>Funnel</h2>
-      <div class="sub">Unique sessions at each step. A visitor who replays the video or clicks twice counts once.</div>
+      <div class="sub">Unique sessions at each step, with the share that carried on from the step before.</div>
       <div class="funnel" id="funnel"></div>
 
       <h2>By campaign and ad</h2>
       <div class="sub">Grouped on the UTM values the visitor first arrived with.</div>
       <div class="scroll"><table id="campaigns"></table></div>
 
-      <ul class="notes" id="notes"></ul>
+      <div class="health" id="health"></div>
+
+      <details class="notes" id="notes">
+        <summary><span class="title">Data notes</span></summary>
+        <ul id="notes-list"></ul>
+      </details>
     </div>
   </section>
 </div>
@@ -202,6 +239,7 @@
   'use strict';
 
   var TZ = 'America/Los_Angeles';
+  var DASH = '—';
   var OFFER_LABEL = {
     ad_sprint: 'Ad Sprint', paid_retainer: 'Paid retainer',
     founding_three: 'Founding Three', signature_work: 'Signature Work',
@@ -244,13 +282,21 @@
     return new Date(day + 'T12:00:00Z').toLocaleDateString('en-GB',
       { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   }
+  function shortDay(day) {
+    return new Date(day + 'T12:00:00Z').toLocaleDateString('en-GB',
+      { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  }
+  function prettyTime(iso) {
+    return new Date(iso).toLocaleString('en-GB',
+      { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: TZ });
+  }
   var int = new Intl.NumberFormat('en-US');
   var money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
   function pct(a, b) {
     if (a == null || b == null || !b) return null;
     return (100 * a / b);
   }
-  function pctText(v) { return v == null ? '–' : (v >= 10 ? v.toFixed(0) : v.toFixed(1)) + '%'; }
+  function pctText(v) { return v == null ? DASH : (v >= 10 ? v.toFixed(0) : v.toFixed(1)) + '%'; }
 
   // ── data shaping ─────────────────────────────────────────────────────
   var COUNT_KEYS = ['landing_sessions', 'vsl_plays', 'vsl_25', 'vsl_50', 'vsl_75', 'vsl_90',
@@ -287,11 +333,32 @@
     return first ? dayIn(TZ, new Date(first)) : null;
   }
 
+  /** The most recent time any of these events was recorded, on any offer. */
+  function lastSeen(eventNames) {
+    var last = null;
+    (state.data.coverage || []).forEach(function (c) {
+      if (eventNames.indexOf(c.event_name) < 0) return;
+      if (!last || c.last_seen > last) last = c.last_seen;
+    });
+    return last;
+  }
+
   /** { value, na, since }. na: unavailable. since: partial, recorded from that day. */
   function metric(value, eventName, offer) {
     var first = firstSeen(eventName, offer);
     if (!first || first > state.to) return { value: null, na: true, first: first };
     return { value: value, na: false, since: first > state.from ? first : null };
+  }
+
+  /* A ratio is only honest when both halves cover the same days. Plays
+     recorded for two days over landing sessions recorded for thirty is
+     not a play rate, it is a wrong number, so it is withheld until the
+     range starts where both were being recorded. */
+  function comparable(a, b) {
+    return !a.na && !b.na && (a.since || '') === (b.since || '');
+  }
+  function laterStart(a, b) {
+    return [a.since, b.since, a.first, b.first].filter(Boolean).sort().pop();
   }
 
   function offersIn(data) {
@@ -304,45 +371,39 @@
   }
 
   // ── rendering ────────────────────────────────────────────────────────
-  var notes = [];
+  var notes = [];   // the full explanations, inside the disclosure
+  var briefs = [];  // the few that show while it is closed
   function note(text) { if (notes.indexOf(text) < 0) notes.push(text); }
+  function brief(text) { if (briefs.indexOf(text) < 0) briefs.push(text); }
 
-  function valueNode(m, format, cls) {
-    if (m.na) return el('span', { class: (cls || '') + ' na', text: 'Unavailable' });
-    var n = el('span', { class: cls || '', text: format(m.value) });
-    if (m.since) n.appendChild(el('span', { class: 'mark', text: ' *', title: 'Recorded since ' + prettyDay(m.since) }));
-    return n;
+  /* Why a figure is blank, in a few words. The full sentence goes into the
+     data notes; this is what sits under the dash. */
+  function whyBlank(m, awaiting) {
+    return m.first ? 'Tracked from ' + shortDay(m.first) : awaiting;
   }
 
-  function tile(label, node, sub) {
-    node.classList.add('v');
-    return el('div', { class: 'tile' }, [
-      el('div', { class: 'k', text: label }), node,
-      sub ? el('div', { class: 's', text: sub }) : null
+  function kpi(label, value, sub, blank) {
+    return el('div', { class: 'kpi' }, [
+      el('div', { class: 'k', text: label }),
+      el('div', { class: 'v' + (blank ? ' blank' : ''), text: value }),
+      el('div', { class: 's', text: sub || '' })
     ]);
   }
-  /* A ratio is only honest when both halves cover the same days. Plays
-     recorded for two days over landing sessions recorded for thirty is
-     not a play rate, it is a wrong number, so it is withheld until the
-     range starts where both were being recorded. */
-  function comparable(a, b) {
-    return !a.na && !b.na && (a.since || '') === (b.since || '');
+  function countKpi(label, m, awaiting, sub) {
+    if (m.na) return kpi(label, DASH, whyBlank(m, awaiting), true);
+    return kpi(label, int.format(m.value), m.since ? 'Since ' + shortDay(m.since) : sub);
   }
-  function laterStart(a, b) {
-    return [a.since, b.since, a.first, b.first].filter(Boolean).sort().pop();
-  }
-  function ratioTile(label, a, b, sub) {
-    if (comparable(a, b)) return tile(label, el('div', { text: pctText(pct(a.value, b.value)) }), sub);
+  function ratioKpi(label, a, b, sub) {
+    if (comparable(a, b)) return kpi(label, pctText(pct(a.value, b.value)), sub, pct(a.value, b.value) == null);
     var from = (!a.na && !b.na) ? laterStart(a, b) : null;
     if (from) note(label + ' needs both of its figures for the same days. Start the range on ' +
       prettyDay(from) + ' or later to see it.');
-    return tile(label, el('div', { class: 'na', text: 'Unavailable' }),
-      from ? 'Start the range on ' + prettyDay(from) + ' or later' : sub);
+    return kpi(label, DASH, from ? 'Not enough data before ' + shortDay(from) : 'Not enough data', true);
   }
 
   function render() {
     var data = state.data;
-    notes = [];
+    notes = []; briefs = [];
     var offers = offersIn(data);
     if (!state.offer || offers.indexOf(state.offer) < 0) state.offer = offers[0] || null;
 
@@ -354,13 +415,13 @@
       seg.appendChild(b);
     });
 
-    $('rangeline').textContent = prettyDay(state.from) + ' to ' + prettyDay(state.to) +
-      ' · days are Pacific time';
+    $('rangeline').textContent = prettyDay(state.from) + ' to ' + prettyDay(state.to) + ' · Pacific time';
 
     var rows = data.rows.filter(function (r) { return r.funnel === state.offer; });
     var t = totals(rows);
     var o = state.offer;
     var hasVsl = VSL_EVENTS.some(function (e) { return firstSeen(e, o); });
+    var synced = data.spend_coverage && data.spend_coverage.first_day;
 
     var m = {
       landing: metric(t.landing_sessions, 'view_content', o),
@@ -373,81 +434,92 @@
       booked: metric(t.bookings, 'schedule', o)
     };
 
-    // ── tiles ──
-    var tiles = $('tiles'); clear(tiles);
-    tiles.appendChild(tile('Landing sessions', valueNode(m.landing, int.format, ''), 'Unique visitors to the page'));
+    // ── KPIs ──
+    var kpis = $('kpis'); clear(kpis);
+    kpis.appendChild(countKpi('Landing sessions', m.landing, 'No visits recorded yet', 'Unique visitors'));
     if (hasVsl) {
-      tiles.appendChild(ratioTile('Play rate', m.plays, m.landing, 'Plays / landing sessions'));
-      tiles.appendChild(ratioTile('Watched half', m.v50, m.plays, '50% reached / plays'));
+      kpis.appendChild(countKpi('VSL plays', m.plays, 'No plays recorded yet', 'Pressed play'));
+      kpis.appendChild(ratioKpi('Play rate', m.plays, m.landing, 'Plays / landing sessions'));
+      kpis.appendChild(countKpi('Watched 50%', m.v50, 'No views recorded yet',
+        comparable(m.v50, m.plays) && m.plays.value ? pctText(pct(m.v50.value, m.plays.value)) + ' of plays' : 'Reached halfway'));
     }
-    tiles.appendChild(tile('Booked', valueNode(m.booked, int.format, ''), 'Confirmed by iClosed'));
-    if (hasVsl) tiles.appendChild(ratioTile('Booked per play', m.booked, m.plays, 'Bookings / plays'));
-    else tiles.appendChild(ratioTile('Booked per visit', m.booked, m.landing, 'Bookings / landing sessions'));
-
-    var spendNode = t.spend == null
-      ? el('div', { class: 'na', text: 'Unavailable' })
-      : el('div', { text: money.format(t.spend) });
-    var synced = data.spend_coverage && data.spend_coverage.first_day;
-    tiles.appendChild(tile('Ad spend', spendNode, t.spend != null ? 'From Meta'
-      : synced ? 'No Meta spend matched to this offer' : 'No Meta totals imported'));
-
-    var cpb = (t.spend == null || m.booked.na)
-      ? el('div', { class: 'na', text: 'Unavailable' })
-      : el('div', { text: t.bookings ? money.format(t.spend / t.bookings) : '–' });
-    tiles.appendChild(tile('Cost per booking', cpb, 'Spend / bookings'));
+    kpis.appendChild(countKpi('CTA clicks', m.cta, 'No clicks recorded yet',
+      comparable(m.cta, m.landing) && m.landing.value ? pctText(pct(m.cta.value, m.landing.value)) + ' of landing sessions' : 'Sessions that clicked'));
+    kpis.appendChild(countKpi('Booked', m.booked, 'Awaiting first booking', 'Confirmed by iClosed'));
+    kpis.appendChild(t.spend == null
+      ? kpi('Ad spend', DASH, synced ? 'No Meta spend on this offer' : 'Awaiting first Meta spend', true)
+      : kpi('Ad spend', money.format(t.spend), 'From Meta'));
+    kpis.appendChild((t.spend == null || m.booked.na || !t.bookings)
+      ? kpi('Cost per booking', DASH, 'Needs spend and bookings', true)
+      : kpi('Cost per booking', money.format(t.spend / t.bookings), 'Spend / bookings'));
+    kpis.className = 'kpis' + (kpis.children.length === 6 ? ' six' : '');
 
     // ── funnel ──
-    var steps = [['Landing sessions', 'Opened the page', m.landing]];
+    // Each step names the step it is measured against: the one a visitor
+    // has to pass through to get there. Watch depth chains from the play;
+    // a CTA click comes from the page, not from the end of the video.
+    var steps = [{ label: 'Landing', m: m.landing }];
     if (hasVsl) {
-      steps.push(['VSL plays', 'Pressed play', m.plays]);
-      steps.push(['Watched 25%', null, m.v25], ['Watched 50%', null, m.v50],
-                 ['Watched 75%', null, m.v75], ['Watched 90%', null, m.v90]);
+      steps.push({ label: 'Play', m: m.plays, from: m.landing, of: 'landing' });
+      steps.push({ label: 'Watched 25%', m: m.v25, from: m.plays, of: 'plays', depth: true });
+      steps.push({ label: 'Watched 50%', m: m.v50, from: m.v25, of: '25%', depth: true });
+      steps.push({ label: 'Watched 75%', m: m.v75, from: m.v50, of: '50%', depth: true });
+      steps.push({ label: 'Watched 90%', m: m.v90, from: m.v75, of: '75%', depth: true });
     }
-    steps.push(['CTA clicks', 'Sessions that clicked a CTA', m.cta]);
+    steps.push({ label: 'CTA click', m: m.cta, from: m.landing, of: 'landing' });
+    var beforeBooked = { m: m.cta, of: 'CTA clicks' };
     if (HAS_FORM[o]) {
-      steps.push(['Leads', 'Completed forms', { value: t.leads, na: false, since: null }]);
+      var leads = { value: t.leads, na: false, since: null };
+      steps.push({ label: 'Lead', m: leads, from: m.cta, of: 'CTA clicks' });
+      beforeBooked = { m: leads, of: 'leads' };
     }
-    steps.push(['Booked', 'Confirmed by iClosed', m.booked]);
+    steps.push({ label: 'Booked', m: m.booked, from: beforeBooked.m, of: beforeBooked.of });
 
-    var top = Math.max.apply(null, steps.map(function (s) { return s[2].na ? 0 : s[2].value; }).concat([0]));
+    var top = Math.max.apply(null, steps.map(function (s) { return s.m.na ? 0 : s.m.value; }).concat([0]));
     var funnel = $('funnel'); clear(funnel);
-    funnel.appendChild(el('div', { class: 'step headrow' }, [
-      el('div', { text: 'Step' }), el('div'),
-      el('div', { class: 'num', text: 'Sessions' }),
-      el('div', { class: 'num', text: 'Of landing' }),
-      el('div', { class: 'num prev', text: hasVsl ? 'Of plays' : '' })
-    ]));
-    steps.forEach(function (s, i) {
-      var mm = s[2];
-      var name = el('div', { class: 'name', text: s[0] });
-      if (s[1]) name.appendChild(el('small', { text: s[1] }));
+    var partialUntil = null;   // the latest day any step began recording
+    steps.forEach(function (s) {
+      var mm = s.m;
       var track = el('div', { class: 'track' });
-      if (!mm.na && top > 0) {
+      if (!mm.na && top > 0 && mm.value > 0) {
         var bar = el('div', { class: 'bar' });
         bar.style.width = (100 * mm.value / top) + '%';
-        if (mm.value === 0) bar.style.visibility = 'hidden';
         track.appendChild(bar);
       }
-      var ofLanding = (i === 0 || !comparable(mm, m.landing)) ? null : pct(mm.value, m.landing.value);
-      // Retention: how many of the people who pressed play got this far.
-      var isDepth = /^Watched/.test(s[0]);
-      var ofPlays = (!isDepth || !comparable(mm, m.plays)) ? null : pct(mm.value, m.plays.value);
-      funnel.appendChild(el('div', { class: 'step' }, [
-        name, track,
-        valueNode(mm, int.format, 'num count'),
-        el('div', { class: 'num pct', text: i === 0 ? '' : pctText(ofLanding) }),
-        el('div', { class: 'num pct prev', text: isDepth ? pctText(ofPlays) : '' })
+      var count = mm.na
+        ? el('div', { class: 'num count blank', text: DASH })
+        : el('div', { class: 'num count', text: int.format(mm.value) });
+      if (mm.since) count.appendChild(el('span', { class: 'mark', text: '*', title: 'Recorded since ' + prettyDay(mm.since) }));
+
+      var conv = el('div', { class: 'conv' });
+      if (s.from) {
+        var v = comparable(mm, s.from) ? pct(mm.value, s.from.value) : null;
+        if (v != null) {
+          conv.appendChild(el('b', { text: pctText(v) }));
+          conv.appendChild(el('small', { text: ' of ' + s.of }));
+        } else {
+          conv.textContent = DASH;
+        }
+      }
+      funnel.appendChild(el('div', { class: 'step' + (s.depth ? ' depth' : '') + (mm.na ? ' blank' : '') }, [
+        el('div', { class: 'dot' }), el('div', { class: 'name', text: s.label }), track, count, conv
       ]));
-      if (mm.since) note('* ' + s[0] + ' has been recorded since ' + prettyDay(mm.since) +
-        ', so earlier days in this range are missing from that figure.');
-      if (mm.na) note(s[0] + ' is unavailable: ' + (mm.first
+
+      if (mm.since) {
+        note('* ' + s.label + ' has been recorded since ' + prettyDay(mm.since) +
+          ', so earlier days in this range are missing from that figure.');
+        if (!partialUntil || mm.since > partialUntil) partialUntil = mm.since;
+      }
+      if (mm.na) note(s.label + ' is unavailable: ' + (mm.first
         ? 'recording began ' + prettyDay(mm.first) + ', after this range.'
         : 'nothing has been recorded for it yet.'));
     });
 
+    if (partialUntil) brief('Tracking coverage is partial before ' + shortDay(partialUntil));
+
     // ── campaign table ──
     var table = $('campaigns'); clear(table);
-    var cols = ['Campaign / ad', 'Landing'];
+    var cols = ['Campaign', 'Landing'];
     if (hasVsl) cols.push('Plays', 'Play rate', '50%');
     cols.push('CTA', 'Booked', 'Spend', 'Per booking');
     table.appendChild(el('thead', {}, [el('tr', {}, cols.map(function (c) { return el('th', { text: c, scope: 'col' }); }))]));
@@ -455,18 +527,22 @@
     rows.slice().sort(function (a, b) {
       return (b.landing_sessions - a.landing_sessions) || (b.bookings - a.bookings);
     }).forEach(function (r) {
-      var first = el('td', { text: r.campaign === '(none)' ? 'No campaign tag' : r.campaign });
-      first.appendChild(el('small', { text: (r.ad === '(none)' ? 'no ad tag' : r.ad) + ' · ' + (r.source === '(none)' ? 'direct or untagged' : r.source) }));
+      var untagged = r.campaign === '(none)';
+      var first = el('td', { text: untagged ? 'Direct / unattributed' : r.campaign });
+      var second = [];
+      if (r.ad !== '(none)') second.push(r.ad);
+      if (r.source !== '(none)') second.push(r.source);
+      if (second.length) first.appendChild(el('small', { text: second.join(' · ') }));
       var cells = [first, cell(m.landing, r.landing_sessions)];
       if (hasVsl) {
         cells.push(cell(m.plays, r.vsl_plays));
-        cells.push(el('td', { text: comparable(m.plays, m.landing) ? pctText(pct(r.vsl_plays, r.landing_sessions)) : '–' }));
+        cells.push(textCell(comparable(m.plays, m.landing) ? pctText(pct(r.vsl_plays, r.landing_sessions)) : DASH));
         cells.push(cell(m.v50, r.vsl_50));
       }
       cells.push(cell(m.cta, r.cta_sessions), cell(m.booked, r.bookings));
-      cells.push(r.spend == null ? el('td', { class: 'na', text: 'Unavailable' }) : el('td', { text: money.format(r.spend) }));
-      cells.push(el('td', { text: (r.spend == null || m.booked.na || !Number(r.bookings)) ? '–' : money.format(r.spend / r.bookings) }));
-      body.appendChild(el('tr', {}, cells));
+      cells.push(textCell(r.spend == null ? DASH : money.format(r.spend)));
+      cells.push(textCell((r.spend == null || m.booked.na || !Number(r.bookings)) ? DASH : money.format(r.spend / r.bookings)));
+      body.appendChild(el('tr', untagged ? { class: 'untagged' } : {}, cells));
     });
     if (!rows.length) {
       body.appendChild(el('tr', {}, [el('td', { class: 'empty', colspan: String(cols.length), text: 'Nothing recorded for this offer in this range.' })]));
@@ -475,7 +551,15 @@
 
     // ── notes ──
     var sc = data.spend_coverage;
+    var sync = data.spend_sync;
+    var stale = sync && sync.last_synced_at && (Date.now() - new Date(sync.last_synced_at).getTime()) > 36 * 3600000;
+    if (sync && sync.last_synced_at) {
+      brief('Meta refreshed ' + prettyTime(sync.last_synced_at) + (stale ? ', out of date' : ''));
+      note('Meta spend was last refreshed ' + prettyTime(sync.last_synced_at) + ' Pacific.' +
+        (stale ? ' That is more than a day ago, so the daily sync is failing and recent spend is out of date.' : ''));
+    }
     if (t.spend == null) {
+      if (!synced) brief('Meta spend not yet available');
       note(sc && sc.first_day
         ? 'Ad spend is unavailable: no Meta spend is filed under this offer for this range. Meta figures on hand run ' +
           prettyDay(sc.first_day) + ' to ' + prettyDay(sc.last_day) + '. If ads were running, check the Unclassified tab and the UTM names on the ads.'
@@ -484,25 +568,55 @@
       note('Meta figures on hand run ' + prettyDay(sc.first_day) + ' to ' + prettyDay(sc.last_day) +
         ', so spend and cost figures may cover only part of this range.');
     }
-    var sync = data.spend_sync;
-    if (sync && sync.last_synced_at) {
-      var at = new Date(sync.last_synced_at);
-      var when = at.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: TZ });
-      var stale = (Date.now() - at.getTime()) > 36 * 3600000;
-      note('Meta spend was last refreshed ' + when + ' Pacific.' +
-        (stale ? ' That is more than a day ago, so the daily sync is failing and recent spend is out of date.' : ''));
-    }
     if (!m.booked.na) {
-      note('Bookings carry a campaign only when iClosed passes the UTM values through. Otherwise they sit under "No campaign tag".');
+      note('Bookings carry a campaign only when iClosed passes the UTM values through. Otherwise they sit under "Direct / unattributed".');
     }
-    var list = $('notes'); clear(list);
+    note('Every funnel step counts unique sessions. A visitor who replays the video or clicks twice counts once.');
+    note('A ratio is shown only when both of its figures were being recorded for the same days. Otherwise it is left blank rather than calculated across different date ranges.');
+    note('"Direct / unattributed" is traffic that arrived with no campaign tag: direct visits, organic links and untagged ads.');
+    note('Days are Pacific time, both ends of the range included.');
+
+    var summary = $('notes').querySelector('summary'); clear(summary);
+    summary.appendChild(el('span', { class: 'title', text: 'Data notes' }));
+    briefs.slice(0, 3).forEach(function (b) { summary.appendChild(el('span', { class: 'brief', text: b })); });
+    var list = $('notes-list'); clear(list);
     notes.forEach(function (n) { list.appendChild(el('li', { text: n })); });
 
+    renderHealth(sync, stale);
     $('report').hidden = false;
   }
 
+  /* What is known to be flowing, read from the same coverage the report
+     uses. "Active" means an event arrived recently; it is never claimed on
+     the strength of the wiring alone. */
+  function renderHealth(sync, stale) {
+    var now = Date.now();
+    function recent(iso, days) { return iso && (now - new Date(iso).getTime()) < days * 86400000; }
+    function item(label, cls, status) {
+      return el('div', { class: cls }, [el('b', { text: status }), document.createTextNode(label)]);
+    }
+    var site = lastSeen(['view_content', 'cta_click', 'landing_view']);
+    var vsl = lastSeen(VSL_EVENTS);
+    var booked = lastSeen(['schedule']);
+
+    var health = $('health'); clear(health);
+    health.appendChild(!site ? item('Site tracking', '', 'No events yet')
+      : recent(site, 7) ? item('Site tracking', 'ok', 'Active')
+      : item('Site tracking', 'warn', 'Quiet since ' + shortDay(dayIn(TZ, new Date(site)))));
+    health.appendChild(!vsl ? item('VSL tracking', '', 'No plays yet')
+      : recent(vsl, 14) ? item('VSL tracking', 'ok', 'Active')
+      : item('VSL tracking', 'warn', 'Quiet since ' + shortDay(dayIn(TZ, new Date(vsl)))));
+    health.appendChild(!booked ? item('iClosed bookings', '', 'Awaiting first booking')
+      : item('iClosed bookings', 'ok', 'Last booking ' + shortDay(dayIn(TZ, new Date(booked)))));
+    health.appendChild(!(sync && sync.last_synced_at) ? item('Meta sync', '', 'Awaiting first sync')
+      : item('Meta sync', stale ? 'warn' : 'ok', (stale ? 'Out of date · ' : 'Refreshed ') + prettyTime(sync.last_synced_at)));
+  }
+
+  function textCell(text) {
+    return el('td', text === DASH ? { class: 'blank', text: text } : { text: text });
+  }
   function cell(m, v) {
-    return m.na ? el('td', { class: 'na', text: '–' }) : el('td', { text: int.format(Number(v) || 0) });
+    return textCell(m.na ? DASH : int.format(Number(v) || 0));
   }
 
   // ── loading ──────────────────────────────────────────────────────────
@@ -517,6 +631,7 @@
     [].forEach.call($('presets').children, function (b) {
       b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-days')) === state.days));
     });
+    $('custom').hidden = state.days !== 0;
   }
 
   function load() {
@@ -536,7 +651,7 @@
             // Never render stale numbers under a failed request.
             $('report').hidden = true;
             $('dash-error').textContent = r.status === 502
-              ? 'The report could not be loaded. If the 0006 migration has not been run in Supabase yet, that is why.'
+              ? 'The report could not be loaded. Try again in a moment.'
               : (body.error || 'Something went wrong.');
             return null;
           }
@@ -559,7 +674,14 @@
   }
 
   [].forEach.call($('presets').children, function (b) {
-    b.addEventListener('click', function () { setPreset(Number(b.getAttribute('data-days'))); });
+    b.addEventListener('click', function () {
+      var days = Number(b.getAttribute('data-days'));
+      if (days) return setPreset(days);
+      // Custom: keep the range on screen and open the date fields.
+      state.days = 0;
+      syncControls();
+      $('from').focus();
+    });
   });
   ['from', 'to'].forEach(function (id) {
     $(id).addEventListener('change', function () {
