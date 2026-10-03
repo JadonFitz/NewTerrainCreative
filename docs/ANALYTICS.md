@@ -51,9 +51,24 @@ calendar actually confirms the appointment.
 
 ## Campaign costs
 
-Import Meta totals into `campaign_daily_metrics` by date and ad. This table is
-the source for impressions, clicks, and spend; the site must not attempt to
-reconstruct those figures. The `funnel_performance` view then calculates:
+`/api/meta-sync` fills `campaign_daily_metrics` from the Marketing API, one
+row per ad per day, on a daily Vercel cron (13:00 UTC). Each run replaces
+the trailing 7 days, because Meta revises recent figures; the first run
+pulls 90. Clicks are link clicks. Meta's campaign, ad set and ad ids are
+stored beside the names. This table is the source for impressions, clicks,
+and spend; the site must not attempt to reconstruct those figures.
+
+The database allows one row per Meta ad per day. Each successful run stamps
+`sync_status.last_synced_at` in the same transaction as the replace; a
+failed run changes nothing, so a stale timestamp is the sign of a failing
+sync, and `/owner` says so once it is more than 36 hours old. Every run
+writes one `meta-sync {…}` line to the Vercel logs with the window, the
+stage it reached and Meta's HTTP status.
+
+A row is filed under the offer its campaign and ad actually sent visitors
+to, then by campaign name, then as `(unclassified)`. Spend that sits under
+Unclassified on the dashboard means the ad's UTM names do not match Meta's
+names: use `{{campaign.name}}` and `{{ad.name}}` in the URL parameters. The `funnel_performance` view then calculates:
 
 - ad CTR and cost per ad click;
 - landing-to-CTA and landing-to-lead rates;

@@ -15,6 +15,9 @@ it should ever contain.
 | `SUPABASE_SERVICE_ROLE_KEY` | `api/_supabase.js` | Server only. Bypasses row level security. Never expose to a browser and never use it as a signing key. |
 | `SENDGRID_API_KEY` | `api/apply.js`, `api/project.js` | Mail Send permission only. **Keep.** For `/apply` this is the second capture path, not a courtesy email: a submission fails only when Supabase *and* email both fail. Removing it makes Supabase a single point of failure for a record carrying contractual acknowledgements. |
 | `META_CAPI_TOKEN` | `api/_meta.js` | Conversions API access token. |
+| `META_ADS_TOKEN` | `api/meta-sync.js` | System user token with `ads_read` on the NTC ad account. Reads spend; it cannot send conversions, and `META_CAPI_TOKEN` cannot read spend. Keep them separate. Production only. |
+| `META_AD_ACCOUNT_ID` | `api/meta-sync.js` | The ad account number, with or without `act_`. Not a secret. |
+| `CRON_SECRET` | `api/meta-sync.js` | What Vercel Cron authenticates with. At least 16 characters. The sync returns 503 without it. |
 | `OWNER_DASHBOARD_PASSWORD` | `api/owner.js` | The shared password for `/owner`. At least 12 characters, and long is the point: the attempt limiter is per server instance, so length is the real defence. It is also the source of the session signing key, so changing it signs everyone out. The handler returns 503 without it rather than letting anyone in. Production only is enough. |
 | `ICLOSED_WEBHOOK_SECRET` | `api/iclosed-webhook.js` | At least 32 random bytes. iClosed offers no signing secret, only a subscriber URL, so the URL carries this as `?key=`. Weaker than a signature because it sits in their logs and ours; rotate by changing this variable and the subscriber URL in iClosed together. The handler returns 503 without it rather than accepting anything, so an unset variable means no conversions, never open access. |
 
@@ -23,7 +26,6 @@ it should ever contain.
 | Variable | Status |
 |---|---|
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | **Resolved 21 Sep 2026.** Provisioned for the abandoned `feat/lead-booking-automation` branch, which polled Google Calendar because Appointment Schedules emit no booking webhook. iClosed made it unnecessary. The key was revoked in Google Cloud and the variable removed from Vercel. Nothing deployed ever referenced it. |
-| `CRON_SECRET` | Still set on Production and Preview. It guarded `/api/sync-bookings`, which is not deployed and exists only on `feat/lead-booking-automation`. Remove it when that branch is formally retired. |
 | `APPLY_STEP_SECRET` | Removed earlier. The two-step application became stateless, so nothing signs a handoff token any more. |
 
 ## Optional, with defaults in code

@@ -346,6 +346,7 @@ for test, label in (
     ('test-track-api.mjs', 'first-party event ingestion'),
     ('test-owner.mjs', 'owner dashboard access'),
     ('test-iclosed-webhook.mjs', 'booking webhook'),
+    ('test-meta-sync.mjs', 'Meta spend sync'),
 ):
     r = subprocess.run(['node', str(ROOT / 'scripts' / test)],
                        capture_output=True, text=True)

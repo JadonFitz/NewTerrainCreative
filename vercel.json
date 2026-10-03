@@ -60,6 +60,9 @@
       "permanent": false
     }
   ],
+  "crons": [
+    { "path": "/api/meta-sync", "schedule": "0 13 * * *" }
+  ],
   "headers": [
     {
       "source": "/owner(\\.html)?",

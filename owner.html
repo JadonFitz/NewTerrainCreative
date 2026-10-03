@@ -387,7 +387,9 @@
     var spendNode = t.spend == null
       ? el('div', { class: 'na', text: 'Unavailable' })
       : el('div', { text: money.format(t.spend) });
-    tiles.appendChild(tile('Ad spend', spendNode, t.spend == null ? 'No Meta totals imported' : 'Imported from Meta'));
+    var synced = data.spend_coverage && data.spend_coverage.first_day;
+    tiles.appendChild(tile('Ad spend', spendNode, t.spend != null ? 'From Meta'
+      : synced ? 'No Meta spend matched to this offer' : 'No Meta totals imported'));
 
     var cpb = (t.spend == null || m.booked.na)
       ? el('div', { class: 'na', text: 'Unavailable' })
@@ -474,11 +476,21 @@
     // ── notes ──
     var sc = data.spend_coverage;
     if (t.spend == null) {
-      note('Ad spend is unavailable: no Meta totals have been imported into campaign_daily_metrics for this offer and range' +
-        (sc && sc.first_day ? ' (imports cover ' + prettyDay(sc.first_day) + ' to ' + prettyDay(sc.last_day) + ').' : '.'));
+      note(sc && sc.first_day
+        ? 'Ad spend is unavailable: no Meta spend is filed under this offer for this range. Meta figures on hand run ' +
+          prettyDay(sc.first_day) + ' to ' + prettyDay(sc.last_day) + '. If ads were running, check the Unclassified tab and the UTM names on the ads.'
+        : 'Ad spend is unavailable: no Meta totals have been imported yet.');
     } else if (sc && sc.first_day && (sc.first_day > state.from || sc.last_day < state.to)) {
-      note('Ad spend is imported for ' + prettyDay(sc.first_day) + ' to ' + prettyDay(sc.last_day) +
-        ' only, so spend and cost figures cover part of this range.');
+      note('Meta figures on hand run ' + prettyDay(sc.first_day) + ' to ' + prettyDay(sc.last_day) +
+        ', so spend and cost figures may cover only part of this range.');
+    }
+    var sync = data.spend_sync;
+    if (sync && sync.last_synced_at) {
+      var at = new Date(sync.last_synced_at);
+      var when = at.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: TZ });
+      var stale = (Date.now() - at.getTime()) > 36 * 3600000;
+      note('Meta spend was last refreshed ' + when + ' Pacific.' +
+        (stale ? ' That is more than a day ago, so the daily sync is failing and recent spend is out of date.' : ''));
     }
     if (!m.booked.na) {
       note('Bookings carry a campaign only when iClosed passes the UTM values through. Otherwise they sit under "No campaign tag".');

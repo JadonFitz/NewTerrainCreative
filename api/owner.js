@@ -26,7 +26,7 @@
    rather than stopping it. The real defence is a long password.
    ══════════════════════════════════════════════════════════════════════ */
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
-import { rpc, configured } from './_supabase.js';
+import { rpc, select, configured } from './_supabase.js';
 
 const PASSWORD = process.env.OWNER_DASHBOARD_PASSWORD || '';
 const READY = PASSWORD.length >= 12;
@@ -161,12 +161,24 @@ export default async function handler(req, res) {
 
   try {
     const report = await rpc('owner_funnel_report', { p_from: from, p_to: to, p_tz: TZ });
+
+    // When Meta spend was last refreshed. Optional: the report must still
+    // load if this table is missing or the read fails.
+    let spendSync = null;
+    try {
+      const rows = await select('sync_status',
+        'select=last_synced_at,window_from,window_to,rows_written&source=eq.meta_ads&limit=1');
+      spendSync = (Array.isArray(rows) && rows[0]) || null;
+    } catch (e) {
+      console.warn('owner: sync status unavailable', (e && e.message) || e);
+    }
     return res.status(200).json({
       ok: true,
       from, to, timezone: TZ,
       rows: (report && report.rows) || [],
       coverage: (report && report.coverage) || [],
-      spend_coverage: (report && report.spend_coverage) || null
+      spend_coverage: (report && report.spend_coverage) || null,
+      spend_sync: spendSync
     });
   } catch (e) {
     // PostgREST errors describe the query, never a customer. Logged, not

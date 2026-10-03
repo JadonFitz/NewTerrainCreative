@@ -123,6 +123,22 @@ export async function update(table, id, patchRow, opts = {}) {
 }
 
 /**
+ * Read rows. `query` is a PostgREST query string, written by the caller
+ * from constants: never interpolate request input into it.
+ *
+ * @returns {Promise<object[]>}
+ */
+export async function select(table, query = '') {
+  if (!configured) throw new Error('supabase not configured');
+
+  const res = await fetch(`${URL_BASE}/rest/v1/${table}${query ? `?${query}` : ''}`, {
+    headers: headers()
+  });
+  if (!res.ok) throw new Error(`supabase select ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+/**
  * Call a Postgres function through PostgREST.
  *
  * Read side of the owner dashboard: the function does the aggregation, so

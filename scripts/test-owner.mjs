@@ -21,13 +21,21 @@ const REPORT = {
   spend_coverage: { first_day: null, last_day: null }
 };
 
+const SYNC = { last_synced_at: '2026-10-03T13:00:04Z', window_from: '2026-09-27',
+               window_to: '2026-10-03', rows_written: 14 };
+
 const calls = [];
 let failNext = false;
+let syncStatusDown = false;
 globalThis.fetch = async (url, opts = {}) => {
   let body;
   try { body = opts.body ? JSON.parse(opts.body) : undefined; } catch { body = opts.body; }
   calls.push({ url: String(url), method: opts.method, body, headers: opts.headers });
   if (failNext) { failNext = false; return { ok: false, status: 404, text: async () => 'no function' }; }
+  if (/sync_status/.test(String(url))) {
+    if (syncStatusDown) return { ok: false, status: 404, text: async () => 'no table' };
+    return { ok: true, status: 200, json: async () => [SYNC], text: async () => '' };
+  }
   return { ok: true, status: 200, json: async () => REPORT, text: async () => '' };
 };
 
@@ -98,7 +106,16 @@ n = calls.length;
 res = await request({ cookie, query: { from: '2026-09-01', to: '2026-09-30' } });
 let made = calls.slice(n);
 check('a signed-in request returns the report', res.statusCode === 200 && res.payload.ok === true);
-check('it calls the report function once', made.length === 1 && /\/rest\/v1\/rpc\/owner_funnel_report$/.test(made[0].url));
+check('it calls the report function once',
+  made.filter((c) => /\/rest\/v1\/rpc\/owner_funnel_report$/.test(c.url)).length === 1 && made[0].method === 'POST');
+check('it reports when Meta spend was last refreshed', res.payload.spend_sync?.last_synced_at === SYNC.last_synced_at);
+
+syncStatusDown = true;
+console.warn = () => {};
+res = await request({ cookie, query: { from: '2026-09-01', to: '2026-09-30' } });
+check('a missing sync status does not break the report',
+  res.statusCode === 200 && res.payload.spend_sync === null && res.payload.rows.length === 1);
+syncStatusDown = false;
 check('it passes the range through', made[0].body.p_from === '2026-09-01' && made[0].body.p_to === '2026-09-30');
 check('it reports in Pacific time', made[0].body.p_tz === 'America/Los_Angeles');
 check('it never queries a table directly', !made.some((c) => /\/rest\/v1\/(leads|funnel_events)/.test(c.url)));

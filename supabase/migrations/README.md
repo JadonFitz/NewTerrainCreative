@@ -63,6 +63,8 @@ columns are exposed. Not a copied snippet.
 | `0003_analytics.sql` | `campaign_daily_metrics`, RLS |
 | `0004_project_enquiry.sql` | Signature Work enquiry fields |
 | `0005_vsl_plays.sql` | `vsl_plays` appended to `funnel_performance` |
+| `0007_meta_spend_sync.sql` | Meta ids on `campaign_daily_metrics`, `ad_id` in its key, and `meta_sync_replace()` for the daily spend sync. Execute granted to `service_role` only |
+| `0008_meta_sync_safeguards.sql` | Unique `(metric_date, ad_id)` for Meta rows, and `sync_status` with `last_synced_at`, stamped by `meta_sync_replace()`. Granted to `service_role` only |
 | `0006_owner_dashboard.sql` | `owner_funnel_report()`, the date-ranged read behind `/owner`. Execute granted to `service_role` only |
 
 Verification scripts live one level up in `supabase/`. They are read
