@@ -26,6 +26,10 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
 <script src="/assets/track.js"></script>
+<link rel="preconnect" href="https://stream.mux.com" crossorigin>
+<link rel="preconnect" href="https://image.mux.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player@3" defer></script>
 
 <!--
   ════════════════════════════════════════════════════════════════
@@ -171,6 +175,46 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
 
 /* ── VIDEO SLOT ── */
+  #video { padding-top: 0; }
+  .video-frame {
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    background: #0d0d0d;
+    position: relative;
+  }
+  .video-frame mux-player {
+    display: block;
+    width: 100%;
+    height: 100%;
+    --media-object-fit: contain;
+  }
+  .video-unmute {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .video-unmute span {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .video-unmute:hover span { background: var(--parchment); }
+  .video-unmute[hidden] { display: none; }
 
   /* ── OLD WAY / NEW WAY ── */
   #contrast { border-top: 1px solid var(--line); }
@@ -898,6 +942,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <p class="hero-sub reveal">A focused shoot on location with you. A full set of ready-to-run ads, start to finish in three weeks, shot to look like a real person instead of a commercial. Then you find out which ones bring in leads.</p>
   <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=ad-sprint">Plan My Ad Sprint</a></div>
   <p class="hero-micro reveal">One time, fixed price, no retainer. You own the footage and every cut. No result is guaranteed.</p>
+</section>
+
+<!-- VIDEO -->
+<section id="video">
+  <div class="video-frame reveal">
+    <mux-player
+      playback-id="01DeffFuINRndChvC201ZLxWUmTJwf0037VE5kvfIcS5y4"
+      metadata-video-title="Ad Sprint: Meet Meghan"
+      accent-color="#C8A96E"
+      primary-color="#F5F0E8"
+      title="Ad Sprint: Meet Meghan"
+      default-hidden-captions
+      autoplay="muted"
+      preload="auto"
+      playsinline
+    ></mux-player>
+    <button class="video-unmute" type="button" aria-label="Play with sound from the start">
+      <span>&#128264; Tap for sound</span>
+    </button>
+  </div>
 </section>
 
 <!-- OLD WAY / NEW WAY -->
@@ -1675,9 +1739,30 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   (function () {
     if (!window.ntc) return;
     ntc.track('ViewContent', { content_name: document.title, offer: 'ad_sprint' });
-    // Attach playback milestones once the video exists in the slot.
-    var v = document.querySelector('#video video');
-    if (v) ntc.watchVideo(v);
+    // The VSL autoplays muted, so silent autoplay must not count toward the
+    // VSL milestones. Attach them only once a viewer turns the sound on,
+    // either through the overlay (which restarts from 0:00) or the player's
+    // own volume control.
+    var v = document.querySelector('#video mux-player');
+    var btn = document.querySelector('#video .video-unmute');
+    if (!v) return;
+    var watching = false;
+    function startWatching() {
+      if (watching) return;
+      watching = true;
+      if (btn) btn.hidden = true;
+      ntc.watchVideo(v);
+      ntc.track('VSLUnmute', { offer: 'ad_sprint' });
+    }
+    if (btn) btn.addEventListener('click', function () {
+      v.currentTime = 0;
+      v.muted = false;
+      v.play();
+      startWatching();
+    });
+    v.addEventListener('volumechange', function () {
+      if (!v.muted) startWatching();
+    });
   })();
 </script>
 </body>
