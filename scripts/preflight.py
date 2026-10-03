@@ -224,6 +224,28 @@ bad('the booking widget is on page(s) that already ask for something: '
 PIXEL = '1634935111618929'
 NO_PIXEL_NEEDED = {'755b0bb56edaeb4dbe35c2cb512311c2', 'privacy', 'terms',
                    'onboarding'}
+
+# The owner dashboard is the opposite case: it must NOT carry the pixel or
+# the first-party tracker. Our own visits are not traffic, and a pixel
+# there would put the owners into the ad account's audiences.
+NO_PIXEL_NEEDED.add('owner')
+_owner = ROOT / 'owner.html'
+if _owner.exists():
+    _t = _owner.read_text(encoding='utf-8')
+    # Loaded scripts and pixel calls, not mentions: the page's own comment
+    # names the tracker in order to say it is absent.
+    tracked = [label for label, pat in (
+        ('the Meta pixel', r'fbq\s*\(|connect\.facebook\.net'),
+        ('assets/track.js', r'<script[^>]*track\.js'),
+        ('Google tags', r'<script[^>]*googletagmanager'),
+    ) if re.search(pat, _t)]
+    bad('owner.html loads tracking: ' + ', '.join(tracked)) if tracked \
+        else ok('/owner carries no pixel and no tracker')
+    ok('/owner is noindexed') if re.search(r'<meta name="robots" content="noindex', _t) \
+        else bad('owner.html is missing its noindex meta tag')
+    # The service role key lives in api/ only. The page talks to /api/owner.
+    bad('owner.html mentions Supabase directly') if re.search(r'supabase\.co|service_role', _t) \
+        else ok('/owner reads through /api/owner, never Supabase')
 untracked = sorted(f.name for f in ROOT.glob('*.html')
                    if f.stem not in NO_PIXEL_NEEDED
                    and PIXEL not in f.read_text(encoding='utf-8'))
@@ -256,7 +278,7 @@ for page in PARKED:
 # the moment someone adds one and forgets.
 # /call-booked is reached only by an iClosed redirect after a booking, so
 # nothing on the site should link it and nothing should index it.
-UNLISTED = ['call-booked']
+UNLISTED = ['call-booked', 'owner']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     # Strip comments first. The sitemap documents which pages are left
@@ -322,6 +344,8 @@ for test, label in (
     ('test-project.mjs', 'Signature Work enquiry'),
     ('test-tracking.mjs', 'browser attribution'),
     ('test-track-api.mjs', 'first-party event ingestion'),
+    ('test-owner.mjs', 'owner dashboard access'),
+    ('test-iclosed-webhook.mjs', 'booking webhook'),
 ):
     r = subprocess.run(['node', str(ROOT / 'scripts' / test)],
                        capture_output=True, text=True)

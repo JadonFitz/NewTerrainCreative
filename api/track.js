@@ -37,11 +37,11 @@ const ALLOWED = new Set([
    send. A Schedule event is supposed to mean an appointment was genuinely
    confirmed, and an event anyone can forge cannot mean that.
 
-   It will come back only when a booking-confirmation integration can
-   write it server side, authenticated, from the scheduler's own webhook.
-   Until then a request naming it is refused explicitly rather than
-   silently ignored, so a premature attempt to wire it up fails loudly in
-   testing instead of quietly producing fake conversions.
+   It is written server side instead, by /api/iclosed-webhook, which is
+   authenticated and fires only on a booking the scheduler confirmed.
+   Here a request naming it is refused explicitly rather than silently
+   ignored, so an attempt to post one fails loudly in testing instead of
+   quietly producing fake conversions.
    ─────────────────────────────────────────────────────────────────── */
 const RESERVED = new Set(['schedule']);
 

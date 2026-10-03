@@ -10,7 +10,8 @@
 | `submit_application` | Founding Step 2 captured | First party + Meta `SubmitApplication` |
 | `lead` | Paid-retainer inquiry captured (`/strategy-call`) | First party + Meta `Lead`, `offer: paid_retainer` |
 | `lead` | Signature Work enquiry captured (`/project`) | First party + Meta `Lead`, `offer: signature_work` |
-| `schedule` | An appointment was actually confirmed | **Reserved and refused.** `/api/track` returns 403. Server-side only, from an authenticated booking confirmation |
+| `schedule` | An appointment was actually confirmed | First party, written only by `/api/iclosed-webhook`, keyed on the booking id. **Still reserved on `/api/track`**, which returns 403: the public endpoint cannot mint a booking |
+| `vsl_play` | The click that starts a VSL | First party + Meta custom `VSLPlay` |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
 
@@ -59,6 +60,30 @@ reconstruct those figures. The `funnel_performance` view then calculates:
 - lead-to-booking and booked-to-close rates;
 - cost per lead and client acquisition cost;
 - monthly retainer revenue won.
+
+## Owner dashboard
+
+`/owner` shows the funnel for a chosen offer and date range: landing
+sessions, VSL plays, the four watch depths, CTA clicks, leads and bookings,
+with spend beside them. It is noindexed, unlinked, carries no pixel and no
+tracker, and is signed in to with `OWNER_DASHBOARD_PASSWORD`.
+
+- The page reads `/api/owner`, which calls `owner_funnel_report()`
+  (migration `0006`) with the service role. Aggregates only: no lead and
+  no contact detail reaches the page.
+- Funnel steps are unique sessions. Bookings are distinct `schedule`
+  events, one per iClosed booking id.
+- A figure that was not being recorded for the whole range is shown as
+  unavailable, or starred with the day recording began, never as zero.
+  Ratios are withheld when their two halves cover different days. Spend is
+  unavailable until Meta totals are imported into `campaign_daily_metrics`.
+- Days are Pacific time, both ends inclusive.
+
+Bookings carry a campaign only if iClosed passes the UTM values through in
+the webhook's `tracking` object. Its inner keys were never recorded, so
+check the first stored `schedule` row: if `utm_campaign` is missing from
+its metadata, read the key names from the `iclosed-webhook shape` log line
+and add them to `attributionFrom()`.
 
 ## Remaining live verification
 

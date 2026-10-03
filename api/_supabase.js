@@ -122,6 +122,26 @@ export async function update(table, id, patchRow, opts = {}) {
   return Array.isArray(body) ? body[0] || null : body;
 }
 
+/**
+ * Call a Postgres function through PostgREST.
+ *
+ * Read side of the owner dashboard: the function does the aggregation, so
+ * no row of leads or funnel_events ever travels to this process.
+ *
+ * @returns {Promise<any>} whatever the function returns, parsed
+ */
+export async function rpc(fn, args = {}) {
+  if (!configured) throw new Error('supabase not configured');
+
+  const res = await fetch(`${URL_BASE}/rest/v1/rpc/${encodeURIComponent(fn)}`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify(args)
+  });
+  if (!res.ok) throw new Error(`supabase rpc ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
 /** Attach previously anonymous events to a lead once they identify themselves. */
 export async function linkSessionToLead(sessionId, leadId) {
   if (!configured || !sessionId || !leadId) return 0;

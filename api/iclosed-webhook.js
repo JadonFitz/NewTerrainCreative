@@ -30,8 +30,22 @@
 
    Set ICLOSED_WEBHOOK_SECRET in Vercel (Production and Preview) to at
    least 32 random bytes. The handler fails closed without it.
+
+   THE FIRST-PARTY COPY
+   Each confirmed booking is also written to funnel_events as a
+   `schedule` event, which is what the owner dashboard counts as booked.
+   This is the authenticated, server-side writer that /api/track's
+   RESERVED guard has been holding the name for: the public endpoint
+   still refuses schedule, and only a request carrying the webhook secret
+   reaches the insert here.
+
+   The row is keyed on the booking id, so a redelivered webhook collides
+   on the unique index instead of counting twice. Like every other row in
+   funnel_events it carries no contact details: the offer, the booking id
+   and whatever campaign parameters iClosed passed along, nothing else.
    ══════════════════════════════════════════════════════════════════════ */
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
+import { insert, configured } from './_supabase.js';
 
 const SECRET = process.env.ICLOSED_WEBHOOK_SECRET || '';
 
@@ -113,6 +127,53 @@ function offerFrom(d) {
   return 'paid_retainer';
 }
 
+/* The campaign a booking came from, if iClosed carried it through.
+
+   `tracking` is in the payload but its inner keys were never recorded, so
+   both spellings are tried and anything absent is simply left out. A
+   booking with no campaign still counts; it reports under (none). */
+function attributionFrom(d) {
+  const out = {};
+  for (const [key, camel] of [
+    ['utm_source', 'utmSource'], ['utm_medium', 'utmMedium'],
+    ['utm_campaign', 'utmCampaign'], ['utm_content', 'utmContent'],
+    ['utm_term', 'utmTerm']
+  ]) {
+    const v = pick(d, `tracking.${key}`, `tracking.${camel}`,
+                      `contact.${key}`, `contact.${camel}`, key, camel);
+    if (v !== undefined) out[key] = String(v).slice(0, 200);
+  }
+  return out;
+}
+
+/** Write the booking to funnel_events. Never throws: the Meta send and the
+    200 back to iClosed must not depend on our own database. */
+async function storeBooking(d, bookingId) {
+  if (!configured) {
+    console.warn('iclosed-webhook: supabase not configured, booking not stored');
+    return false;
+  }
+  try {
+    const offer = offerFrom(d);
+    await insert('funnel_events', {
+      event_id: String(bookingId).slice(0, 200),
+      event_name: 'schedule',
+      funnel: offer,
+      page_url: 'https://www.newterraincreative.com/call-booked',
+      metadata: {
+        ...attributionFrom(d),
+        offer,
+        booking_id: String(bookingId).slice(0, 200),
+        booking_source: 'iclosed'
+      }
+    }, { ignoreConflict: true });
+    return true;
+  } catch (e) {
+    console.error('iclosed-webhook: booking not stored', (e && e.message) || e);
+    return false;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -163,6 +224,10 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, sent: false, reason: 'no booking id' });
   }
 
+  // First party first, and independent of Meta: a CAPI outage must not
+  // cost the dashboard a booking, nor the other way round.
+  const stored = await storeBooking(d, bookingId);
+
   const email = pick(d, 'invitee.email', 'contact.email',
                         'inviteeEmail', 'invitee_email', 'email', 'data.email');
   const phone = pick(d, 'invitee.text_reminder_number', 'contact.phoneNumber',
@@ -211,11 +276,11 @@ export default async function handler(req, res) {
       }
     });
     console.log('iclosed-webhook: Schedule sent', bookingId, JSON.stringify(result));
-    return res.status(200).json({ ok: true, sent: true });
+    return res.status(200).json({ ok: true, sent: true, stored });
   } catch (e) {
     console.error('iclosed-webhook: Schedule failed', (e && e.message) || e);
     // Still 200. The booking happened regardless, and we would rather
     // lose one conversion than have the webhook switched off.
-    return res.status(200).json({ ok: true, sent: false });
+    return res.status(200).json({ ok: true, sent: false, stored });
   }
 }

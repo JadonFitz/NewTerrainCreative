@@ -62,6 +62,8 @@ columns are exposed. Not a copied snippet.
 | `0002_two_funnels.sql` | Two funnels on one schema, reporting views |
 | `0003_analytics.sql` | `campaign_daily_metrics`, RLS |
 | `0004_project_enquiry.sql` | Signature Work enquiry fields |
+| `0005_vsl_plays.sql` | `vsl_plays` appended to `funnel_performance` |
+| `0006_owner_dashboard.sql` | `owner_funnel_report()`, the date-ranged read behind `/owner`. Execute granted to `service_role` only |
 
 Verification scripts live one level up in `supabase/`. They are read
 only and PII safe: identity columns come back as a digest or a boolean,
