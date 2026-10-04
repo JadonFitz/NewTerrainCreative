@@ -115,15 +115,22 @@ function shapeOf(d) {
 
 /* Which offer a booking belongs to. The event name iClosed sends is the
    one configured in its dashboard, so match loosely rather than exactly:
-   "Ad Sprint Call" and "Ad Sprint" must both land on ad_sprint. */
+   "Ad Sprint Call" and "Ad Sprint" must both land on ad_sprint. The slug
+   (the event's URL, e.g. signature-project) is read too, because it is
+   fixed in strategy-call.html while the display name can be renamed.
+   Signature is checked before the generic growth/strategy match: until
+   it was, every Signature booking fell through to paid_retainer. */
 function offerFrom(d) {
   const name = String(pick(d,
     'event_type.name', 'event_type.title', 'eventType.name',
     'eventTypeName', 'event_type_name', 'eventName', 'name',
     'call.eventTypeName', 'data.eventTypeName') || '').toLowerCase();
-  if (name.includes('founding')) return 'founding_three';
-  if (name.includes('sprint')) return 'ad_sprint';
-  if (name.includes('growth') || name.includes('strategy')) return 'paid_retainer';
+  const slug = String(pick(d, 'event_type.slug', 'eventType.slug') || '').toLowerCase();
+  const key = `${name} ${slug}`;
+  if (key.includes('founding')) return 'founding_three';
+  if (key.includes('sprint')) return 'ad_sprint';
+  if (key.includes('signature')) return 'signature_work';
+  if (key.includes('growth') || key.includes('strategy')) return 'paid_retainer';
   return 'paid_retainer';
 }
 
