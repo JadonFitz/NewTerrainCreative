@@ -47,7 +47,7 @@ check('service fee waived month one',
 check('bounded, stated as not unlimited', 'not unlimited production' in FND,
       "monthOneExcludes bans unlimited revisions")
 check('months two and three optional',
-      'optional' in FND and 'Nothing rolls over on its own' in FND,
+      'Months two and three are optional' in FND,
       'continuationRequired is false')
 check('continuation PRICE not in this page\'s copy',
       '3,500' not in FND,
@@ -60,8 +60,9 @@ check('acceptance not guaranteed', 'does not guarantee acceptance' in FND,
 check('no result guaranteed',
       'no particular result is guaranteed' in FND or 'no result is guaranteed' in FND,
       'foundingRiskReversal.resultGuaranteed is false')
-check('nothing added on top', 'not adding a performance guarantee' in FND,
-      'no further promise, refund or remedy may be offered')
+# The "nothing added on top" disclaimer was cut from /founding on purpose
+# (2026-10-04, slimming the page). What still binds: no guarantee, refund
+# or remedy may be ADDED to the Founding copy beyond the waived month.
 
 print('\nSprint · risk reduction is scope, price, no retainer, ownership')
 check('fixed scope named', 'Eight creatives or fifteen' in SPR,
