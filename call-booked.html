@@ -105,6 +105,21 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .offer-note b { color:var(--parchment); font-weight:400; }
 
+  /* Post-booking video, one per offer. Hidden until OFFERS below names a
+     src for the offer on the URL, so the generic page never shows it. */
+  .vsl { margin-top:34px; }
+  .vsl h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:14px;
+  }
+  .vsl-intro { font-size:14px; line-height:1.8; max-width:56ch; margin-bottom:18px; }
+  .vsl-frame {
+    aspect-ratio:16 / 9; border:1px solid var(--line); background:var(--raised);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .vsl-frame iframe, .vsl-frame video { width:100%; height:100%; border:0; display:block; }
+  .vsl-ph { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); text-align:center; padding:20px; }
+
 
   /* iClosed confirmation card, integrated rather than bolted on */
   .booking { margin-top:34px; border:1px solid var(--line); padding:clamp(20px,3vw,26px); }
@@ -161,6 +176,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <p class="eyebrow">Confirmed</p>
   <h1>You're <em>booked.</em></h1>
   <p class="lede">Your strategy call with New Terrain Creative is confirmed. <b>Check your inbox for the calendar invitation and the video link.</b> If it has not arrived in a few minutes, look in spam before you worry about it.</p>
+
+  <!-- POST-BOOKING VIDEO · one per offer, filled by OFFERS in the script
+       at the foot of this page. The src for each video lives there, not
+       here: search for "VSL: replace src". Stays hidden for an offer with
+       no video yet, and for the generic confirmation. -->
+  <section class="vsl" id="vsl" hidden aria-label="Watch before the call">
+    <h2 id="vsl-label">Watch before the call</h2>
+    <p class="vsl-intro" id="vsl-intro" hidden></p>
+    <!-- SPRINT VSL: replace src with final video (the src is in OFFERS below) -->
+    <div class="vsl-frame" id="vsl-frame"></div>
+  </section>
 
   <section class="prep">
     <h2>Worth a thought before the call</h2>
@@ -260,6 +286,98 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     note.hidden = false;
   }
 
+  /* ── Offer-specific confirmation ───────────────────────────────────
+     The markup above IS the generic confirmation and is the default. An
+     offer listed here replaces only the parts it names; anything it
+     leaves out, and any offer not listed, keeps the generic wording. An
+     absent or unrecognised ?offer= touches nothing.
+
+     vsl.src is the post-booking video for that offer. Leave it '' until
+     the video exists and the slot stays hidden for real visitors. Paste
+     either an embed URL (YouTube, Vimeo, Wistia) or a path to an .mp4.
+     To see an empty slot in place, add &vsl=preview to the URL.
+
+     Display only. Nothing here fires an event. */
+  var OFFERS = {
+    'sprint': {
+      /* SPRINT VSL: replace src with final video */
+      vsl: { src: '', poster: '', title: 'The Ad Sprint: watch before your call',
+             intro: 'Watch this short video before your call so we can spend our time talking ' +
+                    'about your business, your current ads, and what we would actually build for you.' },
+      h1: 'You\'re <em>booked.</em> Here\'s what happens next.',
+      prepTitle: 'What happens next',
+      prepIntro: '',
+      steps: [
+        'Come ready with your current ads, offer, and landing flow. We will review them together on the call.',
+        'On the call, we will identify the strongest creative angles for your business.',
+        'If the Ad Sprint is a fit, we will map the batch, shoot plan, and next steps together.'
+      ]
+    },
+    /* GROWTH VSL: replace src with final video */
+    'growth':         { vsl: { src: '', poster: '', title: 'Production Media: what happens after you book' } },
+    /* FOUNDING THREE VSL: replace src with final video */
+    'founding-three': { vsl: { src: '', poster: '', title: 'Founding Three: what happens after you book' } },
+    /* SIGNATURE VSL: replace src with final video */
+    'signature':      { vsl: { src: '', poster: '', title: 'Signature Work: what happens after you book' } }
+  };
+
+  var block = Object.prototype.hasOwnProperty.call(OFFERS, offer) ? OFFERS[offer] : null;
+  if (block) {
+    var set = function (sel, html) {
+      var el = document.querySelector(sel);
+      if (el && html) el.innerHTML = html;
+    };
+    set('main h1', block.h1);
+    set('main .lede', block.lede);
+    set('.prep h2', block.prepTitle);
+    set('.prep p', block.prepIntro);
+    // '' means the list needs no lead-in for this offer, not "keep the generic one".
+    if (block.prepIntro === '') {
+      var lead = document.querySelector('.prep p');
+      if (lead) lead.hidden = true;
+    }
+    var list = document.querySelector('.prep ul');
+    if (list && block.steps) {
+      list.textContent = '';
+      block.steps.forEach(function (text) {
+        var li = document.createElement('li');
+        li.textContent = text;
+        list.appendChild(li);
+      });
+    }
+
+    var vsl = document.getElementById('vsl');
+    var frame = document.getElementById('vsl-frame');
+    var v = block.vsl;
+    var intro = document.getElementById('vsl-intro');
+    if (intro && v && v.intro) { intro.textContent = v.intro; intro.hidden = false; }
+    if (vsl && frame && v && v.src) {
+      var media;
+      if (/\.(mp4|webm|mov)(\?|$)/i.test(v.src)) {
+        media = document.createElement('video');
+        media.controls = true;
+        media.playsInline = true;
+        media.preload = 'metadata';
+        if (v.poster) media.poster = v.poster;
+      } else {
+        media = document.createElement('iframe');
+        media.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        media.allowFullscreen = true;
+        media.loading = 'lazy';
+      }
+      media.src = v.src;
+      media.title = v.title || 'Watch before the call';
+      frame.appendChild(media);
+      vsl.hidden = false;
+    } else if (vsl && frame && v && params.get('vsl') === 'preview') {
+      var ph = document.createElement('p');
+      ph.className = 'vsl-ph';
+      ph.textContent = 'Video slot · ' + offer + ' · no src set yet';
+      frame.appendChild(ph);
+      vsl.hidden = false;
+    }
+  }
+
   /* ── iClosed confirmation card · display only ──────────────────────
      Shows the booked time, host and meeting link. It fires nothing.
 
@@ -288,7 +406,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var hasBookingContext = (function () {
     var n = 0;
-    params.forEach(function (_, k) { if (k !== 'offer') n++; });
+    params.forEach(function (_, k) { if (k !== 'offer' && k !== 'vsl') n++; });
     return n > 0;
   })();
 
