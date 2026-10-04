@@ -617,11 +617,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     max-width: 1280px;
     margin: 58px auto 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
   }
+  /* Three cards: three across, or one per row. Two across left an empty cell on iPad. */
+  @media (max-width: 900px) { .awards { grid-template-columns: 1fr; } }
   .award {
     background: var(--surface);
     padding: 28px 30px;
