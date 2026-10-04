@@ -93,6 +93,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     text-transform:uppercase; color:var(--gold); margin-bottom:16px;
   }
   .prep p { font-size:13.5px; color:var(--muted); margin-bottom:14px; max-width:56ch; }
+  .prep ul + h2 { margin-top:26px; }
   ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
   li { font-size:14.5px; line-height:1.6; padding-left:18px; position:relative; color:var(--soft); }
   li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:1px; background:var(--gold); }
@@ -288,8 +289,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   /* ── Offer-specific confirmation ───────────────────────────────────
      The markup above IS the generic confirmation and is the default. An
-     offer listed here replaces only the parts it names; anything it
-     leaves out, and any offer not listed, keeps the generic wording. An
+     offer listed here replaces only the parts it names (h1, lede,
+     sections, after, note); anything it leaves out, and any offer not
+     listed, keeps the generic wording. An
      absent or unrecognised ?offer= touches nothing.
 
      vsl.src is the post-booking video for that offer. Leave it '' until
@@ -302,16 +304,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'sprint': {
       /* SPRINT VSL: replace src with final video */
       vsl: { src: '', poster: '', title: 'The Ad Sprint: watch before your call',
-             intro: 'Watch this short video before your call so we can spend our time talking ' +
-                    'about your business, your current ads, and what we would actually build for you.' },
+             intro: 'Watch this short video before your call. It covers how the Sprint works ' +
+                    'so we can use the call on your business instead of the basics.' },
       h1: 'You\'re <em>booked.</em> Here\'s what happens next.',
-      prepTitle: 'What happens next',
-      prepIntro: '',
-      steps: [
-        'Come ready with your current ads, offer, and landing flow. We will review them together on the call.',
-        'On the call, we will identify the strongest creative angles for your business.',
-        'If the Ad Sprint is a fit, we will map the batch, shoot plan, and next steps together.'
-      ]
+      /* The video does the persuading. The page only confirms, says
+         watch, and says what to bring, so the generic closing paragraph
+         and the one-line offer note are both dropped for this offer. */
+      sections: [
+        { title: 'Before we talk', items: [
+          'Have your current ads, offer, and landing flow handy.',
+          'Know roughly what a customer is worth and what you are spending on ads.',
+          'If someone else weighs in on the decision, bring them to the call.'
+        ] },
+        { title: 'On the call', items: [
+          'We will review where the bottleneck actually is.',
+          'We will identify the strongest creative angles worth testing.',
+          'If the Sprint is a fit, we will map the shoot and next steps.'
+        ] }
+      ],
+      after: '',
+      note: false
     },
     /* GROWTH VSL: replace src with final video */
     'growth':         { vsl: { src: '', poster: '', title: 'Production Media: what happens after you book' } },
@@ -329,22 +341,28 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     };
     set('main h1', block.h1);
     set('main .lede', block.lede);
-    set('.prep h2', block.prepTitle);
-    set('.prep p', block.prepIntro);
-    // '' means the list needs no lead-in for this offer, not "keep the generic one".
-    if (block.prepIntro === '') {
-      var lead = document.querySelector('.prep p');
-      if (lead) lead.hidden = true;
-    }
-    var list = document.querySelector('.prep ul');
-    if (list && block.steps) {
-      list.textContent = '';
-      block.steps.forEach(function (text) {
-        var li = document.createElement('li');
-        li.textContent = text;
-        list.appendChild(li);
+    // sections replaces the whole prep box: one heading and list each.
+    var prep = document.querySelector('.prep');
+    if (prep && block.sections) {
+      prep.textContent = '';
+      block.sections.forEach(function (sec) {
+        var h = document.createElement('h2');
+        h.textContent = sec.title;
+        var list = document.createElement('ul');
+        sec.items.forEach(function (text) {
+          var li = document.createElement('li');
+          li.textContent = text;
+          list.appendChild(li);
+        });
+        prep.appendChild(h);
+        prep.appendChild(list);
       });
     }
+    // '' drops the generic closing paragraph; leaving it out keeps it.
+    var after = document.querySelector('main .after');
+    if (after && block.after === '') after.hidden = true;
+    else set('main .after', block.after);
+    if (note && block.note === false) note.hidden = true;
 
     var vsl = document.getElementById('vsl');
     var frame = document.getElementById('vsl-frame');
