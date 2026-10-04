@@ -45,6 +45,18 @@ window.ntc.trackInternal('InitialFitCompleted', { industry: 'Dental practice' })
 await new Promise((resolve) => setTimeout(resolve, 0));
 
 check('assigns the paid-retainer funnel from /grow', window.ntc.funnelName() === 'paid_retainer');
+// Regression: /signature once had no case and its traffic landed in
+// organic_site, so the dashboard's Signature funnel showed no visitors.
+const funnelAt = (path) => {
+  const was = window.location.pathname;
+  window.location.pathname = path;
+  try { return window.ntc.funnelName(); } finally { window.location.pathname = was; }
+};
+check('assigns the Signature funnel from /signature',
+  funnelAt('/signature') === 'signature_work' && funnelAt('/signature.html') === 'signature_work');
+check('every offer page keeps its own funnel',
+  funnelAt('/sprint') === 'ad_sprint' && funnelAt('/founding') === 'founding_three' &&
+  funnelAt('/grow') === 'paid_retainer' && funnelAt('/') === 'organic_site');
 check('creates stable event ids', Boolean(viewId && clickId && viewId !== clickId));
 check('ViewContent uses a standard Meta event', pixel[0]?.[0] === 'track' && pixel[0]?.[1] === 'ViewContent');
 check('CTAClick uses a custom Meta event', pixel[1]?.[0] === 'trackCustom' && pixel[1]?.[1] === 'CTAClick');

@@ -89,6 +89,36 @@ check('a booking with no campaign still stores', supa(made)[0]?.body?.event_name
   && supa(made)[0].body.metadata.utm_campaign === undefined);
 check('and lands on its own offer', supa(made)[0]?.body?.funnel === 'paid_retainer');
 
+console.info('\n\x1b[1mSIGNATURE IS ITS OWN OFFER\x1b[0m');
+// Regression: offerFrom() once had no signature case, so every Signature
+// booking fell through to paid_retainer and the dashboard's Signature tab
+// stayed empty. The slug is fixed in strategy-call.html (signature-project).
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_sigNature01', uuid: 2661132 },
+  event_type: { name: 'Signature Project Consultation', slug: 'signature-project' }
+}));
+made = calls.slice(n);
+check('a Signature booking files under signature_work',
+  supa(made)[0]?.body?.funnel === 'signature_work' && supa(made)[0]?.body?.metadata?.offer === 'signature_work');
+check('and tells Meta it was Signature', meta(made)[0]?.body.data[0].custom_data?.offer === 'signature_work');
+
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_sigNature02', uuid: 2661133 },
+  event_type: { name: 'Project Consultation', slug: 'signature-project' }
+}));
+made = calls.slice(n);
+check('a renamed Signature event still files by its slug', supa(made)[0]?.body?.funnel === 'signature_work');
+
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_sigNature03', uuid: 2661134 },
+  event_type: { name: 'Growth Strategy Consultation', slug: 'growth-strategy-consultation' }
+}));
+made = calls.slice(n);
+check('Growth is unaffected', supa(made)[0]?.body?.funnel === 'paid_retainer');
+
 console.info('\n\x1b[1mWHAT MUST NOT STORE\x1b[0m');
 n = calls.length;
 res = await request(booking(), 'wrong-key');
