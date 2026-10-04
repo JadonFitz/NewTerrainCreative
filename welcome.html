@@ -168,6 +168,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .step-what b { display:block; font-size:14px; margin-bottom:4px; }
   .step-what span { font-size:13px; line-height:1.7; }
 
+  .plan-note { margin-top:26px; padding:16px 20px; border-left:2px solid var(--gold); background:var(--raised); font-size:13.5px; line-height:1.7; color:var(--parchment); }
+  .plan-note b { color:var(--gold); font-weight:500; }
   .incl { margin-top:34px; background:var(--raised); border:1px solid var(--line); padding:24px 26px; }
   .incl h4 { font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:500; margin-bottom:14px; }
   .incl ul { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:9px 28px; }
@@ -268,6 +270,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <h2 id="planTitle"></h2>
     <p id="planIntro"></p>
     <ol class="steps" id="planSteps"></ol>
+    <p class="plan-note" id="planNote" hidden></p>
     <div class="incl" id="planIncl" hidden>
       <h4>What you've got</h4>
       <ul id="planInclList"></ul>
@@ -378,6 +381,27 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       'Files in your hands with a one-page testing plan: what to run first, what to spend, and when to call a winner.']
   ];
 
+  // Front of the Line: the priority 14-day schedule. The clock starts at
+  // the Angle Call. Matches the Front of the Line block on /sprint and the
+  // order form ("within 14 days of the kickoff call").
+  var sprintPrioritySteps = [
+    ['Day 1', 'The Angle Call',
+      'We lock the creative direction, offers, hooks and angles.'],
+    ['By day 3', 'Scripts approved',
+      'Concepts are finalized and your production plan is locked.'],
+    ['By day 7', 'The Shoot',
+      'Your production gets priority scheduling.'],
+    ['Days 8 to 13', 'The Cut',
+      'Editing, finishing and final approvals.'],
+    ['By day 14', 'Yours to run',
+      'Your finished ad creative is delivered and ready to launch.']
+  ];
+  var sprintIntro = 'Fixed scope, fixed price, no retainer. Here is how the three weeks run.';
+  var priorityIntro = 'Fixed scope, fixed price, no retainer. Front of the Line puts your Sprint on our priority 14-day schedule, counted from your Angle Call. Here is how it runs.';
+  // Shown on the standard Sprint pages: a client who added Front of the Line
+  // at checkout lands here too, and the page cannot tell them apart.
+  var priorityNote = '<b>Added Front of the Line?</b> Your Sprint moves to our priority 14-day production schedule. We’ll lock your exact shoot and delivery dates during your Angle Call.';
+
   var sprintIncl = function (p) {
     return [
       (p && p.creatives ? p.creatives + ' ready-to-run ad creatives' : 'Your full set of ad creatives'),
@@ -439,14 +463,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'eight': function () {
       var p = prod.adSprintEight;
       return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
-               intro: 'Fixed scope, fixed price, no retainer. Here is how the three weeks run.',
-               steps: sprintSteps, incl: sprintIncl(p) };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote };
     },
     'fifteen': function () {
       var p = prod.adSprintFifteen;
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
-               intro: 'Fixed scope, fixed price, no retainer. Here is how the three weeks run.',
-               steps: sprintSteps, incl: sprintIncl(p) };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote };
+    },
+    'eight-priority': function () {
+      var p = prod.adSprintEight;
+      return { name: ((p && p.name) || 'The Eight') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
+               intro: priorityIntro, steps: sprintPrioritySteps,
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']) };
+    },
+    'fifteen-priority': function () {
+      var p = prod.adSprintFifteen;
+      return { name: ((p && p.name) || 'The Fifteen') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
+               intro: priorityIntro, steps: sprintPrioritySteps,
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']) };
     }
   };
   var ALIASES = {
@@ -471,6 +505,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return '<li><div class="step-when">' + s[0] + '</div><div class="step-what"><b>' +
         s[1] + '</b><span>' + s[2] + '</span></div></li>';
     }).join('');
+    if (plan.note) { $('planNote').innerHTML = plan.note; $('planNote').hidden = false; }
     if (plan.incl && plan.incl.length) {
       var ul = $('planInclList');
       plan.incl.forEach(function (s) {
