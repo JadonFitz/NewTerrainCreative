@@ -254,7 +254,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { ip, userAgent } = requestIdentity(req);
+    /* The caller here is iClosed's server, not the person who booked.
+       Its IP would be sent as client_ip_address and matched against
+       nobody, and Meta flags a server IP in Diagnostics, so it is left
+       out. The user agent stays only because Meta requires one on a
+       website event; it is not the booker's either and adds nothing to
+       the match. Email, phone and name carry that. */
+    const { userAgent } = requestIdentity(req);
     const result = await sendMetaConversion({
       eventName: 'Schedule',
       // The booking id, which is what /call-booked uses in the browser.
@@ -266,7 +272,7 @@ export default async function handler(req, res) {
         firstName: firstName || undefined,
         lastName: lastName || undefined,
         externalId: String(bookingId),
-        ip, userAgent
+        userAgent
       }),
       customData: {
         offer: offerFrom(d),
