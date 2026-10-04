@@ -138,7 +138,7 @@ Two schemas, two owners:
 | `ops` | agent | 14 tables: `settings`, `offers`, `message_templates`, `clients`, `onboarding_steps`, `shoots`, `deliverables`, `approvals`, `inbound_events`, `client_messages`, `agent_events`, `agreement_templates`, `payment_links`, `agreements`; functions `set_updated_at()`, `check_shoot_date()` |
 
 - **Security model (both schemas):** RLS enabled on every table with **zero policies**, everything revoked from `anon` and `authenticated`, access only through the `service_role` key held server-side. The browser never talks to Supabase. Views use `security_invoker = on` after a `SECURITY DEFINER` view was found bypassing RLS (`42a86eb`).
-- **Migrations:** applied by hand in the Supabase SQL editor, no CLI. Website: `0001` to `0008` (1,179 lines) plus verify scripts. Agent: `001` to `036` (2,141 lines). Only `0004` carries an "applied" note; `0005` to `0008` are inferred applied because code depending on them shipped Oct 3.
+- **Migrations:** applied by hand in the Supabase SQL editor, no CLI. Website: `0001` to `0008` (1,179 lines) plus verify scripts. Agent: `001` to `036` (2,141 lines). Only `0004` carries an "applied" note in the repo. **Verified in production on Oct 4** from Vercel runtime logs: `0006` is live (signed-in `GET /api/owner` calls return 200, which requires `owner_funnel_report()`), and `0007` and `0008` are live (the 13:00 UTC cron returned `status: ok` through the four-argument `meta_sync_replace()` and wrote `sync_status`). `0005` only redefines the `funnel_performance` view, which nothing in production calls, so it could not be verified from logs; likely applied.
 - **Boundary:** the agent writes only `ops` and reads one thing from `public` (`db.findLeadByEmail` on `public.leads`). That boundary is enforced in code, not by database grants (the service-role key could technically write `public`).
 - **Unused tables:** `ops.deliverables` and `ops.client_messages` exist for planned flows and no code writes them.
 - **IF IT FAILS:** `/api/track` still answers 200 (`stored:false`), so visitors never see an error. The webhook keeps answering iClosed. The agent's `/healthz` returns 503 and Railway restarts it; stuck inbound events are replayed at boot (`recoverStuckEvents`).
@@ -171,8 +171,8 @@ STATUS: `LIVE`.
 |---|---|---|
 | `POST /api/track` | First-party event ingestion with an event allowlist, PII-stripping `safeMetadata()`, and `schedule` reserved (403) | LIVE |
 | `POST /api/iclosed-webhook` | Booking to `funnel_events` row and server CAPI `Schedule` | LIVE |
-| `GET /api/meta-sync` | Daily Meta spend pull into `campaign_daily_metrics` | LIVE (inferred) |
-| `GET/POST /api/owner` | Dashboard auth and report | LIVE (inferred) |
+| `GET /api/meta-sync` | Daily Meta spend pull into `campaign_daily_metrics` | LIVE (verified Oct 4; see 3.20) |
+| `GET/POST /api/owner` | Dashboard auth and report | LIVE (verified Oct 4) |
 | `POST /api/apply` | Founding two-step application | BUILT, NOT LIVE (parked) |
 | `POST /api/project` | Signature/Sprint enquiry | BUILT, NOT LIVE (parked) |
 | `* /api/strategy-call` | Returns 410 Gone | ABANDONED (tombstone, retired Sep 21 `4eaa70d`) |
@@ -215,8 +215,8 @@ sequenceDiagram
 - **Event contract:** browser and server share `event_id` for `Lead` (parked `/project`), `SubmitApplication` (parked `/apply`) and `Schedule` (iClosed booking id, `callPreviewId`). The dedup key was changed from `uuid` to `callPreviewId` because `uuid` double counted (`4079d70`).
 - **Offer attribution:** `funnelName()` is path based. `custom_data.offer` splits funnels inside Meta.
 - **IF IT FAILS:** CAPI send is fire-and-forget after capture; the sender returns "skipped" with no token. Analytics never errors to the visitor.
-- **Known bugs (inferred from code, unverified in production):**
-  1. `iclosed-webhook.js offerFrom()` maps any event name it does not recognise to `paid_retainer`, so **Signature bookings are probably filed as Growth**.
+- **Known bugs (confirmed from code on Oct 4; the fix is not yet made):**
+  1. `iclosed-webhook.js offerFrom()` matches only "founding", "sprint", "growth" or "strategy" in the event name and returns `paid_retainer` for everything else. The Signature event's slug is `signature-project` (`strategy-call.html` `SCHEDULERS`), so **Signature bookings are filed as Growth** unless the event's display name happens to contain one of those words. The live payload carries `event_type.slug`, which would be a more reliable key than the name.
   2. `track.js funnelName()` has no `/signature` case, so **Signature page traffic is filed as `organic_site`**. Together these would leave the dashboard's Signature tab empty.
 - **Not used:** GA4 and Google Ads (gtag loads with placeholder ids `G-XXXXXXXXXX` / `AW-XXXXXXXXXX` on three pages, yet `privacy.html` discloses both), GTM, TikTok pixel, any `Purchase` event (allowlisted, "not yet wired").
 - **STATUS:** Pixel, CAPI, first-party events `LIVE`. GA4/Google Ads `PLANNED` (stub). Purchase conversion `PLANNED`.
@@ -232,7 +232,7 @@ sequenceDiagram
 
 ### 3.10 GoHighLevel (CRM)
 
-- **What exists:** nothing in either repo. Zero references to GoHighLevel, GHL or `app.newterraincreative.com` in code, docs, migrations or env on any branch.
+- **What exists:** nothing in either repo. **Known cost:** the outside builder's quote is $1,600 (scope and timeline not yet confirmed). Zero references to GoHighLevel, GHL or `app.newterraincreative.com` in code, docs, migrations or env on any branch.
 - **Target architecture (00 file, not built here):** a white-labeled agency login at `app.newterraincreative.com` with one sub-account per client, deployed from a reusable master snapshot produced by an outside builder. First planned deployment: a pilot client. NTC's own internal CRM in GHL is out of scope for now.
 - **Adjacent hook:** every retainer client receives `BUILD_QUESTIONNAIRE_LINK` (the "Funnel + CRM build questionnaire", created by `agent/forms/ntc_forms.gs`). That questionnaire is the intake a GHL build would consume. There is no GHL onboarding step in the agent's `STEP_KEYS`.
 - **What NTC does have instead of a CRM:** `public.leads` with a `sales_stage` column and stamping trigger (`0003`, updated by hand, nothing in code writes it), iClosed's own contact records, and `ops.clients` for paying clients.
@@ -306,7 +306,7 @@ Meta Graph (CAPI, Marketing API insights), iClosed (widgets in, webhook out), Sl
 
 | Job | Where | Schedule | Status |
 |---|---|---|---|
-| Meta spend sync | Vercel Cron `/api/meta-sync` | `0 13 * * *` UTC; 90-day backfill on first run, then trailing 7 days | LIVE (inferred) |
+| Meta spend sync | Vercel Cron `/api/meta-sync` | `0 13 * * *` UTC; 90-day backfill on first run, then trailing 7 days | LIVE (verified Oct 4: `status ok`, but `fetched: 0` for the 90-day window) |
 | No-join nudge + close desk card upkeep | agent `setInterval` | hourly + at boot | LIVE |
 | Kickoff calendar sweep | agent `setInterval` | every 15 min + at boot | LIVE |
 | Stuck event recovery, Timeliner webhook registration | agent boot | at boot | LIVE |
@@ -328,6 +328,22 @@ Meta Graph (CAPI, Marketing API insights), iClosed (widgets in, webhook out), Sl
 ### 3.22 Alerts
 
 Agent `alerts.js`: `opsLine` (one-liners to `#agent-alerts`), `hqPost` and `stepProblem` (cards with Retry to `#agent-hq`). Speed-to-Lead posts a fallback line if it cannot build a card. Cowork Inbox Triage posts URGENT items to `#agent-alerts`. The dashboard shows stale-sync and stale-tracking warnings. There is no paging or on-call; alerts are Slack only.
+
+### 3.23 Production checks (Oct 4 2026)
+
+Read-only checks against production: unauthenticated requests to the live endpoints, and Vercel runtime logs for the `new-terrain-creative` project. No credentials were used and nothing was triggered.
+
+| Question | Finding | Evidence |
+|---|---|---|
+| Is the owner dashboard live? | **Yes.** `OWNER_DASHBOARD_PASSWORD` is set (unauthenticated `GET /api/owner` returns 401, not 503), and signed-in sessions load the report (several `GET /api/owner` 200s on Oct 3, after a `POST` sign-in) | live probe; runtime logs |
+| Is the Meta spend sync running? | **Yes, but it returns no data.** `CRON_SECRET` is set (401 without it). The Oct 4 13:00 UTC run logged `status: ok`, a 90-day window, Meta HTTP 200, and `fetched: 0, inserted: 0` | runtime log line `meta-sync {...}` |
+| Are migrations `0005` to `0008` live? | `0006`, `0007`, `0008`: **yes** (code paths that require them succeeded). `0005`: not verifiable from logs, likely | as above |
+| Are bookings reaching the webhook? | **Yes.** Oct 3 23:30: a booking stored and `Schedule` sent to Meta; 23:35: the same call cancelled and noted | runtime logs |
+| Anything wrong with the webhook? | **Two deliveries rejected with "bad key"** (Oct 3 23:02 and Oct 4 00:07 UTC). Likely a second or older iClosed webhook configured with an outdated URL key. Those bookings did not reach Meta server-side | runtime logs |
+| Is Signature attribution wrong? | **Yes, confirmed from code** (3.8) | `api/iclosed-webhook.js offerFrom()`, `assets/track.js funnelName()` |
+| Which close-desk texts are approved? | **Not checkable from here.** The approval flags live in Supabase `ops` tables, which these checks cannot read | see README for the read-only SQL |
+
+Why "fetched: 0" matters: either no ads ran in the configured ad account in the last 90 days, or the account id or token points at the wrong account. Until it returns rows, the dashboard's spend and cost-per-booking figures will read "unavailable".
 
 ## 4. Subsystem diagrams
 
@@ -379,7 +395,7 @@ sequenceDiagram
 |---|---|
 | Static site, tracking, CAPI, first-party events | LIVE |
 | iClosed booking + webhook | LIVE |
-| Owner dashboard, Meta spend sync | LIVE (inferred, Oct 3) |
+| Owner dashboard, Meta spend sync | LIVE (verified Oct 4 from Vercel logs; the sync currently returns 0 rows of ad data) |
 | Speed-to-Lead | LIVE |
 | Agent Phase 1: Flow A, billing alerts, internal alerts | LIVE (inferred) |
 | Close desk, Front of the Line, Sprint credit, annual plans | BUILT, NOT LIVE until text re-approved |

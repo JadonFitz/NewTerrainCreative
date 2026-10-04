@@ -185,9 +185,29 @@ The operating-system work (tracking, booking, agent, dashboard) falls between Se
 | Timeliner (pilot) | `agent/src/timeliner.js` | `[JADON: actual spend]` |
 | Claude (Claude Code, Cowork, API for Speed-to-Lead) | commit trailers, `api/slack.js` | `[JADON: actual spend]` |
 | GitHub Copilot (one commit) | `cca68df` trailer | `[JADON: actual spend]` |
-| GoHighLevel builder (outside builder, in development) | 00 file | `[JADON: actual spend]` |
+| GoHighLevel builder (outside builder, in development) | 00 file; cost confirmed by Jadon | **$1,600** quoted (one-time; scope and timeline not yet confirmed). Ongoing GHL subscription: `[JADON: actual spend]` |
 
 ## 8. Defensible marketing statements
+
+**Central story: the freelance realistic figure, $177K.** The agency figure ($309K) is supporting context only. It is the more dramatic number, but the freelance basis is harder to dismiss as marketing inflation.
+
+**Approved headline wording:**
+
+> We asked what it would cost a conventional US freelance team to recreate the system we built. The realistic estimate came back around $177,000.
+
+**Required qualifier, immediately after the headline:**
+
+> Based on approximately 1,825 estimated hours across development, automation, tracking, QA, AI implementation, design, and project management. Estimated replacement cost, not money NTC actually spent.
+
+**Positioning line:**
+
+> AI did not replace the operating system. AI helped us build and operate a better one.
+
+In body copy prefer "AI-enabled" or "AI-assisted backend" over "AI-powered". The automation engine is deterministic; the AI layer is Speed-to-Lead, the four scheduled Cowork tasks, and Claude Code as the development tool (03, section 0).
+
+**Before the cost comparison is used publicly,** two numbers are needed from Jadon: approximate cash spent on tools and contractors during the build (Claude, Vercel, Supabase, Railway, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours worked (a range such as "120 to 180 hours" is enough). Git commits do not measure labor.
+
+### Supporting statements
 
 1. **"A conventional US freelance team would need roughly 1,100 to 2,800 hours to build this system; at sourced 2026 rates that is about $108K to $272K, with a realistic estimate near $177K."** Rests on: section 3 totals and section 4 freelance row.
 2. **"Built in about 25 active days of work between September 2 and October 4, 2026; a conventional team of four to five would typically need four to five months of calendar time."** Rests on: git span (section 7) and the realistic calendar estimate (section 5). Replace "active days" with hours once `[JADON: total hours]` is known.
