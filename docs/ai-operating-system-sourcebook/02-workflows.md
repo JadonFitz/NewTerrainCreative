@@ -112,9 +112,9 @@ sequenceDiagram
 
 | Step | Level | Notes / code |
 |---|---|---|
-| Land on `/signature` | AUTO | **Bug (inferred):** `funnelName()` has no `/signature` case, so events file as `organic_site` |
+| Land on `/signature` | AUTO | Files as `signature_work` (before the Oct 4 fix, `dc2c996`, events filed as `organic_site`) |
 | CTA to `/strategy-call?offer=signature` | AUTO | `/project` enquiry form parked Sep 23 (`b37b13c`) |
-| Webhook | AUTO | **Bug (inferred):** `offerFrom()` defaults unknown names to `paid_retainer`, so Signature bookings likely file as Growth |
+| Webhook | AUTO | `offerFrom()` matches `signature` in the event name or slug (before the Oct 4 fix, Signature bookings filed as Growth) |
 | Quote, contract, production | HUMAN | Signature is bespoke; no Payment Link flow is evident in the agent catalog for it (inferred) |
 
 ---

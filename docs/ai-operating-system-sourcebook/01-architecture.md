@@ -215,9 +215,9 @@ sequenceDiagram
 - **Event contract:** browser and server share `event_id` for `Lead` (parked `/project`), `SubmitApplication` (parked `/apply`) and `Schedule` (iClosed booking id, `callPreviewId`). The dedup key was changed from `uuid` to `callPreviewId` because `uuid` double counted (`4079d70`).
 - **Offer attribution:** `funnelName()` is path based. `custom_data.offer` splits funnels inside Meta.
 - **IF IT FAILS:** CAPI send is fire-and-forget after capture; the sender returns "skipped" with no token. Analytics never errors to the visitor.
-- **Known bugs (confirmed from code on Oct 4; the fix is not yet made):**
+- **Bugs found Oct 4 (now fixed Oct 4 in PR #2 (`dc2c996`, merged as `84db545`), with regression checks in `scripts/test-iclosed-webhook.mjs` and `scripts/test-tracking.mjs`. Not retroactive: rows stored before the fix keep their old funnel):**
   1. `iclosed-webhook.js offerFrom()` matches only "founding", "sprint", "growth" or "strategy" in the event name and returns `paid_retainer` for everything else. The Signature event's slug is `signature-project` (`strategy-call.html` `SCHEDULERS`), so **Signature bookings are filed as Growth** unless the event's display name happens to contain one of those words. The live payload carries `event_type.slug`, which would be a more reliable key than the name.
-  2. `track.js funnelName()` has no `/signature` case, so **Signature page traffic is filed as `organic_site`**. Together these would leave the dashboard's Signature tab empty.
+  2. `track.js funnelName()` has no `/signature` case, so **Signature page traffic is filed as `organic_site`**. Together these left the dashboard's Signature tab empty.
 - **Not used:** GA4 and Google Ads (gtag loads with placeholder ids `G-XXXXXXXXXX` / `AW-XXXXXXXXXX` on three pages, yet `privacy.html` discloses both), GTM, TikTok pixel, any `Purchase` event (allowlisted, "not yet wired").
 - **STATUS:** Pixel, CAPI, first-party events `LIVE`. GA4/Google Ads `PLANNED` (stub). Purchase conversion `PLANNED`.
 
@@ -340,7 +340,7 @@ Read-only checks against production: unauthenticated requests to the live endpoi
 | Are migrations `0005` to `0008` live? | `0006`, `0007`, `0008`: **yes** (code paths that require them succeeded). `0005`: not verifiable from logs, likely | as above |
 | Are bookings reaching the webhook? | **Yes.** Oct 3 23:30: a booking stored and `Schedule` sent to Meta; 23:35: the same call cancelled and noted | runtime logs |
 | Anything wrong with the webhook? | **Two deliveries rejected with "bad key"** (Oct 3 23:02 and Oct 4 00:07 UTC). Likely a second or older iClosed webhook configured with an outdated URL key. Those bookings did not reach Meta server-side | runtime logs |
-| Is Signature attribution wrong? | **Yes, confirmed from code** (3.8) | `api/iclosed-webhook.js offerFrom()`, `assets/track.js funnelName()` |
+| Was Signature attribution wrong? | **Yes, confirmed from code, and fixed Oct 4 in PR #2 (`dc2c996`, merged as `84db545`), with regression checks in `scripts/test-iclosed-webhook.mjs` and `scripts/test-tracking.mjs`. Not retroactive: rows stored before the fix keep their old funnel** (3.8) | `api/iclosed-webhook.js offerFrom()`, `assets/track.js funnelName()` |
 | Which close-desk texts are approved? | **Not checkable from here.** The approval flags live in Supabase `ops` tables, which these checks cannot read | see README for the read-only SQL |
 
 Why "fetched: 0" matters: either no ads ran in the configured ad account in the last 90 days, or the account id or token points at the wrong account. Until it returns rows, the dashboard's spend and cost-per-booking figures will read "unavailable".

@@ -184,7 +184,7 @@ Every principle is grounded in something that actually happened. None is a claim
 ### 22. Attribution breaks at every handoff.
 
 - **In plain English:** each time a visitor moves between pages or tools, the record of where they came from can be lost.
-- **What happened at NTC:** an in-between booking page dropped campaign tags, and project-offer visitors were counted as retainer leads because they passed through a shared page (L33, L34). Signature-project bookings are currently filed under the wrong offer (L32).
+- **What happened at NTC:** an in-between booking page dropped campaign tags, and project-offer visitors were counted as retainer leads because they passed through a shared page (L33, L34). Signature-project bookings were filed under the wrong offer until this review caught it and it was fixed with a test that stops it coming back (L32).
 - **What to do:** run a test visit from an ad link through to a booked call, and confirm the source shows up at the end.
 - **Stage / dimension:** attribution / Intelligence.
 

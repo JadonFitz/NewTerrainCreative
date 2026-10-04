@@ -141,7 +141,7 @@ Format for each: **Thought / Happened / Changed / Recommend now.**
 
 **L31. Muted autoplay inflates video milestones** (`fecd5fd`), and first-party `VSLPlay` storage came later (`e1f3712`).
 
-**L32. Signature is invisible in the funnel (open, inferred).** `track.js funnelName()` has no `/signature` case and `iclosed-webhook.js offerFrom()` defaults unknown event names to `paid_retainer`. Not yet fixed.
+**L32. Signature was invisible in the funnel.** `track.js funnelName()` had no `/signature` case and `iclosed-webhook.js offerFrom()` defaulted unknown event names to `paid_retainer`. Found while writing this sourcebook, fixed Oct 4 in PR #2 (`dc2c996`, merged as `84db545`), with regression checks in `scripts/test-iclosed-webhook.mjs` and `scripts/test-tracking.mjs`. Not retroactive: rows stored before the fix keep their old funnel. The webhook now also reads the event slug, which is fixed in code while the display name can be renamed.
 
 ### 2.6 Attribution
 

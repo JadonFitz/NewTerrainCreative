@@ -36,7 +36,7 @@ Read-only checks (unauthenticated requests to live endpoints, plus Vercel runtim
 - **Owner dashboard: LIVE, verified.** Password set; signed-in report loads succeed.
 - **Migrations `0006`, `0007`, `0008`: live, verified.** `0005` cannot be verified from logs (likely applied).
 - **Meta spend sync: running, verified, but returning no data.** The Oct 4 run logged `status: ok` with `fetched: 0` over 90 days. Either no ads ran in the configured account, or the account id or token points at the wrong account.
-- **Signature attribution: wrong, confirmed from code.** Bookings from the `signature-project` event are filed as `paid_retainer`; `/signature` page traffic is filed as `organic_site`. Not fixed (a production code change, waiting on approval).
+- **Signature attribution: was wrong, now fixed.** Bookings from the `signature-project` event were filed as `paid_retainer` and `/signature` traffic as `organic_site`. Fixed in PR #2 (`dc2c996`, merged as `84db545`, live Oct 4) with regression checks that fail on the old code. Not retroactive.
 - **New finding: two iClosed webhook deliveries were rejected for a bad key** (Oct 3 23:02 and Oct 4 00:07 UTC), so those bookings never reached Meta server-side. Likely an older second webhook in iClosed with an outdated URL.
 - **Close-desk approvals: not checkable without database access.** To see them, run this read-only query in a fresh Supabase SQL editor tab:
 
@@ -53,15 +53,14 @@ order by 1, 2;
 
 1. Why does the Meta spend sync fetch 0 rows? Is the configured ad account the one running NTC's ads, and does the token have `ads_read` on it?
 2. Which close-desk texts are currently approved? (Run the query above.) Migrations `023` to `035` reset the MSA, order-form rows, payment links and Sprint-credit clauses to unapproved.
-3. Should the Signature attribution fix go in now? (Two small code changes: map the `signature-project` event to `signature_work` in the webhook, and add `/signature` to `track.js`.)
-4. Is there a second iClosed webhook with an old key? Check iClosed's webhook settings and delete or update the extra one.
-5. Is the Founding Stripe checkout a one-time $0 checkout or a trial that auto-charges month two? (Flagged Sep 29, left to check in Stripe.)
-6. Approximate cash spent during the build on tools and contractors (Claude, Vercel, Supabase, Railway, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours (a range is fine). Both are needed before the cost comparison is used publicly.
-7. GoHighLevel: the builder's quote is $1,600. What are the final scope and timeline, and when does the pilot sub-account go live?
-8. Timeliner go/no-go on Oct 26: if no, does Clipflow stay, and should the agent's Timeliner steps be switched off?
-9. When will `agent-v1` merge to `main`, and will the merge keep main's kickoff-ignore filter in `api/slack.js`?
-10. Should GA4 and Google Ads be wired up, or removed from the pages and the privacy policy?
-11. Are the four Cowork tasks still running on the schedules in the 00 file?
+3. Is there a second iClosed webhook with an old key? Check iClosed's webhook settings and delete or update the extra one.
+4. Is the Founding Stripe checkout a one-time $0 checkout or a trial that auto-charges month two? (Flagged Sep 29, left to check in Stripe.)
+5. Approximate cash spent during the build on tools and contractors (Claude, Vercel, Supabase, Railway, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours (a range is fine). Both are needed before the cost comparison is used publicly.
+6. GoHighLevel: the builder's quote is $1,600. What are the final scope and timeline, and when does the pilot sub-account go live?
+7. Timeliner go/no-go on Oct 26: if no, does Clipflow stay, and should the agent's Timeliner steps be switched off?
+8. When will `agent-v1` merge to `main`, and will the merge keep main's kickoff-ignore filter in `api/slack.js`?
+9. Should GA4 and Google Ads be wired up, or removed from the pages and the privacy policy?
+10. Are the four Cowork tasks still running on the schedules in the 00 file?
 
 ## Known gaps in the evidence
 
