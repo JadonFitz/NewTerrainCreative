@@ -237,10 +237,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       </div>
       <div class="first-row" id="crmRow" hidden>
         <div>
-          <h3>2 · Funnel and CRM build</h3>
+          <h3><span id="crmN">2 · </span>Funnel and CRM build</h3>
           <p>How leads reach you today and where they should land, so the funnel and CRM are built around the way you actually work.</p>
         </div>
         <a class="btn btn--solid" id="crmLink" href="#" target="_blank" rel="noopener">Start the CRM questionnaire &#8599;</a>
+      </div>
+      <div class="first-row" id="kickoffRow" hidden>
+        <div>
+          <h3><span id="kickoffN"></span>Book your <span id="kickoffName">kickoff call</span></h3>
+          <p id="kickoffText">Pick a time that suits you in the next few days. Send the form first and the call goes on strategy instead of basics.</p>
+        </div>
+        <a class="btn btn--solid" id="kickoffLink" href="#" target="_blank" rel="noopener">Pick a time &#8599;</a>
       </div>
     </div>
     <p style="margin-top:34px">Three emails are on their way to the address you checked out with, and should already be there. The welcome email carries the same form links. Check spam if one is missing.</p>
@@ -327,6 +334,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                 too; this is the same link, so nobody has to go looking.
      intake     The shared client intake Google Form, the public viewform
                 link. Same link for every client and every package.
+     kickoff    The booking link for the first call after purchase, shown as
+                the last "do this first" step on every version of this
+                page, with or without a plan in the URL. Each plan names
+                its own first call in PLANS below (`call`): the Angle Call
+                for a Sprint, the offer and strategy session for Founding,
+                the kickoff call for a retainer. Empty hides the step.
+                Not the sales calendars on /strategy-call: a booking there
+                is recorded as a new lead.
      crm        The shared Funnel and CRM Build Questionnaire, same deal.
                 Shown only for plans marked crm: true in PLANS below, which
                 today are all three retainers and Founding. The
@@ -345,6 +360,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     phone: '(818) 266-8213',
     packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0',
     intake: 'https://docs.google.com/forms/d/e/1FAIpQLSc9olRsWj6QBLaG5430pFgxAGKeKgmIzuaWeI0rTDDBJQLcRw/viewform',
+    kickoff: 'https://calendar.app.google/iz1Zwnv9WcLYQg6p8',
     crm: 'https://docs.google.com/forms/d/e/1FAIpQLSemCWXxyc1SI0G8fyCm1f9BHG2vbDAgvTjDfmPJWN_96Uo9ow/viewform'
   };
 
@@ -449,7 +465,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var f = O.founding || {};
       return { name: 'Your Founding Three place', label: 'Founding Three · month one',
                intro: 'Month one is a defined scope, not an open tab. Here is exactly what it covers and how it runs.',
-               steps: foundingSteps, incl: f.monthOneScope || [], crm: true, video: 'founding' };
+               steps: foundingSteps, incl: f.monthOneScope || [], crm: true, video: 'founding',
+               call: 'offer and strategy session' };
     },
     'anchor': function () {
       var t = tier('The Anchor');
@@ -474,24 +491,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'eight': function () {
       var p = prod.adSprintEight;
       return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint' };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
     },
     'fifteen': function () {
       var p = prod.adSprintFifteen;
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint' };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
     },
     'eight-priority': function () {
       var p = prod.adSprintEight;
       return { name: ((p && p.name) || 'The Eight') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
                intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint' };
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
     },
     'fifteen-priority': function () {
       var p = prod.adSprintFifteen;
       return { name: ((p && p.name) || 'The Fifteen') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
                intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint' };
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
     }
   };
   var ALIASES = {
@@ -558,10 +575,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   // The CRM questionnaire is only for packages with a funnel and CRM build
   // (crm: true above). No plan in the URL shows the intake form alone:
   // the welcome email still sends whichever forms apply.
-  if (plan && plan.crm) {
+  var crm = !!(plan && plan.crm);
+  if (crm) {
     $('crmRow').hidden = false;
     $('intakeN').hidden = false;
     $('firstWhen').textContent = 'Do these first · two forms, about 10 minutes each';
+  }
+
+  // The first call, booked after the forms so we have read them by then.
+  if (WELCOME.kickoff) {
+    $('kickoffLink').href = WELCOME.kickoff;
+    if (plan && plan.call) $('kickoffName').textContent = plan.call;
+    $('kickoffN').textContent = (crm ? '3' : '2') + ' · ';
+    $('intakeN').hidden = false;
+    if (crm) $('kickoffText').textContent = $('kickoffText').textContent.replace('Send the form first', 'Send both forms first');
+    $('firstWhen').textContent = crm
+      ? 'Do these first · two forms, about 10 minutes each, then book your call'
+      : 'Do these first · a 10 minute form, then book your call';
+    $('kickoffRow').hidden = false;
   }
 
   if (WELCOME.phone) {
