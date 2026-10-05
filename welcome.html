@@ -326,7 +326,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      videos     One welcome video per purchase, keyed by the `video` name
                 each plan carries in PLANS below. src is a Vimeo player URL
                 (the src of the embed's iframe) or a path to an mp4, which
-                can take an optional poster. Empty hides the section, so a
+                can take an optional poster. ratio is for a video that is
+                not 16:9, e.g. '4/3', so the frame fits it. Empty hides the section, so a
                 client never sees a blank box, and so does a visit with no
                 plan in the URL. Add ?preview=1 to see where it sits.
      phone      Display form. Empty hides the line.
@@ -351,7 +352,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     videos: {
       sprint: { src: 'https://player.vimeo.com/video/1232945719?badge=0&autopause=0&player_id=0&app_id=58479',
                 title: 'Welcome to the Ad Sprint' },
-      founding: { src: '', title: '' },
+      founding: { src: 'https://player.vimeo.com/video/1232956011?badge=0&autopause=0&player_id=0&app_id=58479',
+                  title: 'Welcome to the Founding Three', ratio: '4/3' },
       anchor: { src: 'https://player.vimeo.com/video/1232945587?badge=0&autopause=0&player_id=0&app_id=58479',
                 title: 'Welcome to The Anchor' },
       growth: { src: '', title: '' },
@@ -560,6 +562,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       el.referrerPolicy = 'strict-origin-when-cross-origin';
     }
     el.title = v.title || 'Welcome video';
+    if (v.ratio) $('videoFrame').style.aspectRatio = v.ratio;
     el.src = v.src;
     $('videoFrame').appendChild(el);
     $('video').hidden = false;
