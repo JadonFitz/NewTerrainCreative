@@ -339,8 +339,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                 the last "do this first" step on every version of this
                 page, with or without a plan in the URL. Each plan names
                 its own first call in PLANS below (`call`): the Angle Call
-                for a Sprint, the offer and strategy session for Founding,
-                the kickoff call for a retainer. Empty hides the step.
+                for a Sprint, and the kickoff call for everything else. Empty hides the step.
                 Not the sales calendars on /strategy-call: a booking there
                 is recorded as a new lead.
      crm        The shared Funnel and CRM Build Questionnaire, same deal.
@@ -468,8 +467,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var f = O.founding || {};
       return { name: 'Your Founding Three place', label: 'Founding Three · month one',
                intro: 'Month one is a defined scope, not an open tab. Here is exactly what it covers and how it runs.',
-               steps: foundingSteps, incl: f.monthOneScope || [], crm: true, video: 'founding',
-               call: 'offer and strategy session' };
+               steps: foundingSteps, incl: f.monthOneScope || [], crm: true, video: 'founding' };
     },
     'anchor': function () {
       var t = tier('The Anchor');
