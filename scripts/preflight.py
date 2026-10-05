@@ -192,8 +192,12 @@ for md in ROOT.glob('*.md'):
 # entirely, so no questions are asked, no attribution is attached and no
 # conversion fires. This guard exists because two homepage CTAs once did
 # exactly that in production.
+#
+# /welcome is exempt: it is only reached after payment, so its calendar
+# link is a client booking their kickoff call, not a prospect skipping
+# qualification. There is no lead to qualify or attribute.
 CALENDAR = 'calendar.app.google'
-MAY_LINK_CALENDAR = {'apply.html'}
+MAY_LINK_CALENDAR = {'apply.html', 'welcome.html'}
 leaks = [f.name for f in ROOT.glob('*.html')
          if f.name not in MAY_LINK_CALENDAR
          and CALENDAR in f.read_text(encoding='utf-8')]
