@@ -117,7 +117,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     position:relative; aspect-ratio:16/9; background:var(--sunk);
     border:1px solid var(--line); overflow:hidden;
   }
-  .video-frame video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; }
+  .video-frame video, .video-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; background:#000; }
+  .video-frame video { object-fit:cover; }
   .video-empty {
     position:absolute; inset:0; display:flex; flex-direction:column;
     align-items:center; justify-content:center; gap:10px; text-align:center; padding:24px;
@@ -315,10 +316,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   'use strict';
 
   /* ── EDIT HERE ──────────────────────────────────────────────────────
-     video      One general welcome video for every package: path to an mp4
-                (e.g. 'assets/welcome/welcome.mp4') and an optional poster.
-                Empty hides the section, so a client never sees a blank box.
-                Add ?preview=1 to the URL to see where it sits.
+     videos     One welcome video per purchase, keyed by the `video` name
+                each plan carries in PLANS below. src is a Vimeo player URL
+                (the src of the embed's iframe) or a path to an mp4, which
+                can take an optional poster. Empty hides the section, so a
+                client never sees a blank box, and so does a visit with no
+                plan in the URL. Add ?preview=1 to see where it sits.
      phone      Display form. Empty hides the line.
      packet     The client welcome document. The onboarding email sends it
                 too; this is the same link, so nobody has to go looking.
@@ -330,7 +333,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                 welcome email sends the same links.
      ─────────────────────────────────────────────────────────────────── */
   var WELCOME = {
-    video: { src: '', poster: '' },
+    videos: {
+      sprint: { src: 'https://player.vimeo.com/video/1232945719?badge=0&autopause=0&player_id=0&app_id=58479',
+                title: 'Welcome to the Ad Sprint' },
+      founding: { src: '', title: '' },
+      anchor: { src: 'https://player.vimeo.com/video/1232945587?badge=0&autopause=0&player_id=0&app_id=58479',
+                title: 'Welcome to The Anchor' },
+      growth: { src: '', title: '' },
+      'brand-builder': { src: '', title: '' }
+    },
     phone: '(818) 266-8213',
     packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0',
     intake: 'https://docs.google.com/forms/d/e/1FAIpQLSc9olRsWj6QBLaG5430pFgxAGKeKgmIzuaWeI0rTDDBJQLcRw/viewform',
@@ -438,7 +449,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var f = O.founding || {};
       return { name: 'Your Founding Three place', label: 'Founding Three · month one',
                intro: 'Month one is a defined scope, not an open tab. Here is exactly what it covers and how it runs.',
-               steps: foundingSteps, incl: f.monthOneScope || [], crm: true };
+               steps: foundingSteps, incl: f.monthOneScope || [], crm: true, video: 'founding' };
     },
     'anchor': function () {
       var t = tier('The Anchor');
@@ -448,39 +459,39 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       // also includes the funnel and tracking setup now, so it gets the
       // CRM questionnaire too.
       return { name: 'The Anchor', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(true, true), incl: fromTier(t), crm: true };
+               steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'anchor' };
     },
     'growth': function () {
       var t = tier('Growth Partner');
       return { name: 'Growth Partner', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(true, true), incl: fromTier(t), crm: true };
+               steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'growth' };
     },
     'brand-builder': function () {
       var t = tier('Brand Builder');
       return { name: 'Brand Builder', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(true, true), incl: fromTier(t), crm: true };
+               steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'brand-builder' };
     },
     'eight': function () {
       var p = prod.adSprintEight;
       return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint' };
     },
     'fifteen': function () {
       var p = prod.adSprintFifteen;
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint' };
     },
     'eight-priority': function () {
       var p = prod.adSprintEight;
       return { name: ((p && p.name) || 'The Eight') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
                intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']) };
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint' };
     },
     'fifteen-priority': function () {
       var p = prod.adSprintFifteen;
       return { name: ((p && p.name) || 'The Fifteen') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
                intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']) };
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint' };
     }
   };
   var ALIASES = {
@@ -518,11 +529,20 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     $('contactN').textContent = '02';
   }
 
-  var v = WELCOME.video;
+  var v = plan && plan.video && WELCOME.videos[plan.video];
   if (v && v.src) {
-    var el = document.createElement('video');
-    el.controls = true; el.playsInline = true; el.preload = 'metadata';
-    if (v.poster) el.poster = v.poster;
+    var el;
+    if (/\.(mp4|webm|mov)(\?|$)/i.test(v.src)) {
+      el = document.createElement('video');
+      el.controls = true; el.playsInline = true; el.preload = 'metadata';
+      if (v.poster) el.poster = v.poster;
+    } else {
+      el = document.createElement('iframe');
+      el.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
+      el.allowFullscreen = true;
+      el.referrerPolicy = 'strict-origin-when-cross-origin';
+    }
+    el.title = v.title || 'Welcome video';
     el.src = v.src;
     $('videoFrame').appendChild(el);
     $('video').hidden = false;
