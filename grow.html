@@ -135,6 +135,8 @@
 
   @media (max-width: 560px) {
     .header-side { display: none; }
+    /* One line, always: the label must not stack beside the wordmark. */
+    .header-cta { white-space: nowrap; padding: 10px 14px; letter-spacing: 0.18em; }
   }
 
   /* ── HERO ── */
@@ -998,6 +1000,20 @@
     .vmodal-btn { padding: 15px 2px; opacity: 1; }
     .vmodal-close { padding-left: 18px; }
   }
+
+  /* Bold leads. These pages are bullets rather than paragraphs: a line
+     opens on the part worth reading and adds a few words at most. */
+  .hero-sub b, .lede b, .roof-body b, .contrast-list b, .deliver-body b,
+  .speed-body b, .fine b, .qa-a b, .derisk-item p b, .derisk-fine b,
+  .invest-note b, .invest-fit-col b, .invest-cta-note b, .prepay-list b,
+  .found-lede b, .alt-path-copy b, .proof-desc b {
+    color: var(--parchment); font-weight: 500;
+  }
+
+  /* The engagement terms, as a list. Was one italic paragraph. */
+  .prepay-list { list-style: none; margin-top: 26px; display: flex; flex-direction: column; gap: 7px; }
+  .prepay-list li { font-size: 12px; line-height: 1.7; color: var(--muted); padding-left: 16px; position: relative; }
+  .prepay-list li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 1px; background: var(--gold); }
 </style>
 </head>
 <body>
@@ -1007,7 +1023,7 @@
   <div class="header-links">
     <a class="header-side" href="/sprint">Ad Sprint</a>
     <a class="header-side" href="index.html">The Cinema Side</a>
-    <a class="header-cta" data-cta="header" href="/strategy-call">Strategy Call</a>
+    <a class="header-cta" data-cta="header" href="/strategy-call">Growth Read</a>
   </div>
 </header>
 
@@ -1015,9 +1031,9 @@
 <section id="hero">
   <div class="eyebrow reveal">The Social Growth Side of New Terrain</div>
   <h1 class="title reveal">Less noise.<br>More <em>leads.</em></h1>
-  <p class="hero-sub reveal">Most agencies hand you content and wish you luck, or run ads on stock footage that looks like everyone else's. We make the creative and we run the media. One team, one roof, judged on one number: what it brings back.</p>
+  <p class="hero-sub reveal">We make the creative and we run the media. <b>One team, judged on one number: what it brings back.</b></p>
   <div class="hero-ctas reveal">
-    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Get my growth read</a>
     <a class="btn btn--ghost" href="#packages">See the Packages</a>
   </div>
   <div class="mail-row reveal" style="margin-top:24px">
@@ -1042,22 +1058,22 @@
     <div class="reveal">
       <span class="roof-num">I</span>
       <div class="roof-title">Ads that don't look like ads</div>
-      <p class="roof-body">Every piece is cut with the same eye that cuts award-winning films. In a feed full of stock footage and AI filler, yours is the one that earns the stop.</p>
+      <p class="roof-body">Cut with the same eye that cuts award-winning films.</p>
     </div>
     <div class="reveal">
       <span class="roof-num">II</span>
       <div class="roof-title">Media run against revenue</div>
-      <p class="roof-body">We build the campaigns from your own creative and optimize weekly against real revenue, not impressions or vanity metrics. When a hook wins, we scale it. When it dies, we cut it.</p>
+      <p class="roof-body">Built from your own creative, optimized weekly against revenue. Winners scaled, losers cut.</p>
     </div>
     <div class="reveal">
       <span class="roof-num">III</span>
       <div class="roof-title">The path after the click</div>
-      <p class="roof-body">We do not stop at the ad. We connect the landing-page flow, the routing into your CRM, the conversion tracking and the follow-up automations, so a lead actually goes somewhere and you can see which creative produced it.</p>
+      <p class="roof-body">Landing flow, CRM routing, tracking and follow-up, connected.</p>
     </div>
     <div class="reveal">
       <span class="roof-num">IV</span>
       <div class="roof-title">One team accountable</div>
-      <p class="roof-body">No hand-offs between a production company and an ad agency blaming each other. The people who made the ad are the people spending your budget on it.</p>
+      <p class="roof-body">The people who made the ad are the people spending your budget on it.</p>
     </div>
   </div>
 </section>
@@ -1491,7 +1507,7 @@
 <section id="packages">
   <div class="eyebrow reveal">The packages</div>
   <h2 class="title reveal">Three ways to <em>work together.</em></h2>
-  <p class="lede reveal">Creative, paid media and conversion infrastructure, managed as one system. Which one fits depends on how much creative volume and testing the business needs. Scope and fee are set on a strategy call, once we understand what you sell and what you are trying to grow. <b>The exact scope is confirmed in writing before anything starts.</b></p>
+  <p class="lede reveal">Creative, paid media and conversion infrastructure, run as one system. Scope and fee are set on the call. <b>The exact scope is confirmed in writing before anything starts.</b></p>
 
   <!-- Cards render from assets/offer.js retainer.publicGuideTiers.
        Pricing was withdrawn from the site on 2 Oct 2026 while the rate
@@ -1500,45 +1516,52 @@
        in offer.js to render. Do not hard-code a figure here. -->
   <div class="tiers reveal" id="tiers"></div>
 
-  <p class="invest-note reveal">Three month minimum on all three, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
+  <p class="invest-note reveal"><b>Three month minimum.</b> Your advertising spend stays on your own payment method, never marked up or held by us.</p>
 
   <!-- Boutique by design. The claim is paired with its mechanism on
        purpose (offer.js boutique): the person who plans the shoot is the
        person who shoots and cuts it, and there is no account manager.
        "A handful" is unquantified until there is a ceiling we will hold. -->
-  <p class="invest-note invest-note--boutique reveal">We run a handful of retainers at a time, by design. The person who plans your shoot is the person who shoots it and cuts it, and you talk to Jadon and Meghan directly rather than to an account manager.</p>
+  <p class="invest-note invest-note--boutique reveal"><b>A handful of retainers at a time, by design.</b> The person who plans your shoot shoots it and cuts it, and you talk to Jadon and Meghan directly, not an account manager.</p>
 
   <div class="invest-fit reveal">
     <div class="invest-fit-col">
       <h3>This fits</h3>
       <ul>
-        <li>Established health and wellness, legal, dental, and construction or contracting businesses</li>
-        <li>A real service, already selling, with capacity to take on more customers</li>
-        <li>Someone who answers a lead the day it arrives</li>
-        <li>Willingness to fund advertising alongside the production</li>
-        <li>Someone who wants a direct line to the people making the work</li>
+        <li><span><b>Established businesses</b> in health and wellness, legal, dental, and construction or contracting</span></li>
+        <li><span><b>Already selling,</b> with capacity to take on more customers</span></li>
+        <li><span><b>Leads answered</b> the day they arrive</span></li>
+        <li><span><b>Ready to fund advertising</b> alongside the production</span></li>
+        <li><span><b>A direct line</b> to the people making the work</span></li>
       </ul>
     </div>
     <div class="invest-fit-col">
       <h3>This does not</h3>
       <ul>
         <li>A one-off video with no campaign behind it</li>
-        <li>Organic posting alone, with nothing behind the creative</li>
-        <li>Anyone who needs a guaranteed number of leads. We do not sell those</li>
-        <li>Businesses without the capacity to serve more customers yet</li>
+        <li>Organic posting alone</li>
+        <li>A guaranteed number of leads. We do not sell those</li>
+        <li>No capacity to serve more customers yet</li>
       </ul>
     </div>
   </div>
 
 
   <div class="invest-cta reveal">
-    <a class="btn btn--gold" data-cta="strategy" href="/strategy-call">Request a strategy call</a>
-    <p class="invest-cta-note">Thirty minutes. We will tell you what we would actually do, what it would cost, and whether we think it is worth doing. If it is not a fit we will say so on the call rather than send a proposal.</p>
+    <a class="btn btn--gold" data-cta="strategy" href="/strategy-call">Get my growth read</a>
+    <p class="invest-cta-note">Thirty minutes. <b>If it is not a fit, we say so on the call.</b></p>
   </div>
 
-  <p class="prepay-note reveal">Advertising spend is separate and always yours: you pay the platforms directly and we never mark up or hold your budget. Admin access to the ad account is part of every engagement, because we do not report on numbers we cannot see. Every engagement includes a standard conversion setup: the landing-page flow, lead routing into your CRM, conversion tracking and the core automations. Where that does not exist yet, building it is the first piece of work. Custom systems work, such as bespoke integrations or dashboards, is scoped separately. Music from our licensed libraries is included; licensing a specific commercial track is quoted separately. Fees exclude ad spend, paid placements, talent, and travel outside Los Angeles or Tampa.</p>
+  <ul class="prepay-list reveal">
+    <li><b>Ad spend is always yours:</b> paid to the platforms directly, never marked up or held</li>
+    <li><b>Admin access to the ad account</b> is part of every engagement</li>
+    <li><b>Standard conversion setup included:</b> landing-page flow, CRM lead routing, conversion tracking and core automations</li>
+    <li><b>Custom systems work,</b> such as bespoke integrations or dashboards, is scoped separately</li>
+    <li><b>Licensed-library music included.</b> A specific commercial track is quoted separately</li>
+    <li><b>Fees exclude</b> ad spend, paid placements, talent, and travel outside Los Angeles or Tampa</li>
+  </ul>
 
-  <p class="prepay-note reveal" style="margin-top:14px">Also available, separately from a retainer: <a href="/sprint" style="color:var(--gold)">the Ad Sprint</a> as a one-time production, and event or summit coverage scoped per project. <a href="mailto:business@newterraincreative.com" style="color:var(--gold)">Ask us</a> and we will send detailed rates.</p>
+  <p class="prepay-note reveal" style="margin-top:14px">Also available, separately from a retainer: <a href="/sprint" style="color:var(--gold)">the Ad Sprint</a> as a one-time production, and event or summit coverage per project. <a href="mailto:business@newterraincreative.com" style="color:var(--gold)">Ask us</a>.</p>
 </section>
 
 <!-- PROOF -->
@@ -1548,19 +1571,19 @@
   <div class="proof-rows">
     <div class="proof-row reveal">
       <div><div class="proof-num">58K+</div><div class="proof-label">Followers Built</div></div>
-      <div><span class="proof-tier">Longform · Short-form</span><div class="proof-client">Mike Alder</div><p class="proof-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into a personal brand people actually follow.</p></div>
+      <div><span class="proof-tier">Longform · Short-form</span><div class="proof-client">Mike Alder</div><p class="proof-desc">Short-form and documentary content for the attorney behind $3.1B+ in settlements.</p></div>
     </div>
     <div class="proof-row reveal">
       <div><div class="proof-num">101K+</div><div class="proof-label">Combined Following</div></div>
-      <div><span class="proof-tier">Podcast · Short-form</span><div class="proof-client">Gina Zapanta</div><p class="proof-desc">A podcast and short-form engine across Instagram, YouTube, and TikTok, built episode by episode around her voice, not a content calendar template. Longform is the piece most studios will not take on.</p></div>
+      <div><span class="proof-tier">Podcast · Short-form</span><div class="proof-client">Gina Zapanta</div><p class="proof-desc">A podcast and short-form engine across Instagram, YouTube and TikTok.</p></div>
     </div>
     <div class="proof-row reveal">
       <div><div class="proof-num">338K+</div><div class="proof-label">Organic Reach · 9 Days</div></div>
-      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">Bot or Not · Launch</div><p class="proof-desc">One upload, one share, zero paid spend. The audience followed the film across platforms. The same hooks-first discipline goes into every ad we cut.</p></div>
+      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">Bot or Not · Launch</div><p class="proof-desc"><b>One upload, one share, zero paid spend.</b></p></div>
     </div>
     <div class="proof-row reveal">
       <div><div class="proof-num">460K</div><div class="proof-label">Trailer Views</div></div>
-      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">FOUR · Trailer Campaign</div><p class="proof-desc">Just under half a million views and 294 reshares on a trailer cut in-house. When the creative connects, the audience does the distribution for you.</p></div>
+      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">FOUR · Trailer Campaign</div><p class="proof-desc">Just under half a million views and <b>294 reshares</b> on a trailer cut in-house.</p></div>
     </div>
   </div>
 </section>
@@ -1569,9 +1592,9 @@
 <section id="close">
   <div class="eyebrow reveal">New Terrain Creative</div>
   <h2 class="title reveal">Let's fill<br>your <em>pipeline.</em></h2>
-  <p class="lede reveal">One call. We'll look at what you're running now, tell you honestly which rung fits, and map the first ninety days.</p>
+  <p class="lede reveal">One call. <b>Leave with a clear read on what is slowing growth,</b> and what we would do next.</p>
   <div class="close-ctas reveal">
-    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Get my growth read</a>
   </div>
   <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
     <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Request a Strategy Call · New Terrain Creative</title>
-<meta name="description" content="Tell us what you sell and what you are trying to grow. Thirty minutes, and we will tell you what we would do, what it would cost, and whether it is worth doing.">
+<meta name="description" content="Thirty minutes. Leave with a clear read on what is slowing growth, three creative angles worth testing, and a straight answer on whether it is worth doing.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -54,7 +54,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .eyebrow { font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
   h1 {
     font-family:var(--display); font-weight:300;
-    font-size:clamp(38px,7vw,58px); line-height:1.05;
+    font-size:clamp(34px,6.2vw,52px); line-height:1.06;
     color:var(--parchment); margin-bottom:20px; text-wrap:balance;
   }
   h1 em { font-style:italic; color:var(--gold); }
@@ -168,6 +168,40 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .scheduler-pending p { font-size:13.5px; line-height:1.8; color:var(--muted); max-width:38ch; }
   .scheduler-note { margin-top:14px; font-size:12.5px; line-height:1.75; color:var(--muted); max-width:56ch; }
+
+  /* ── What you leave with ──
+     The call is sold as what the visitor walks away with, and this sits
+     ABOVE the calendar so it is read before the ask, not after it. Every
+     line is a promise kept on every call: do not add one here that the
+     call does not deliver. Bullets, not paragraphs: a bold lead that
+     reads on its own, and a few words after it at most. */
+  .leave { margin-top:34px; border:1px solid var(--line); padding:clamp(22px,3vw,28px); }
+  .leave h2, .below h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:16px;
+  }
+  .ticks { list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .ticks li { font-size:14.5px; line-height:1.55; padding-left:18px; position:relative; color:var(--soft); }
+  .ticks li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:1px; background:var(--gold); }
+  .ticks li b { color:var(--parchment); font-weight:500; }
+  .leave-deadline { font-size:13px; line-height:1.6; color:var(--gold); margin-bottom:16px; }
+  .leave-recap {
+    margin-top:18px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:14.5px; line-height:1.55; color:var(--soft);
+  }
+  .leave-recap b { color:var(--parchment); font-weight:500; }
+
+  /* ── Below the calendar: who it is for, results ── */
+  .below { margin-top:56px; }
+  .proof { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .proof > div { background:var(--black); padding:18px 16px 16px; }
+  .proof-num { font-family:var(--display); font-weight:300; font-size:32px; line-height:1; color:var(--parchment); }
+  .proof-label { margin-top:8px; font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); line-height:1.5; }
+  .proof-client { margin-top:6px; font-size:12px; color:var(--muted); line-height:1.5; }
+  @media (max-width:620px) { .proof { grid-template-columns:repeat(2,1fr); } }
+
+  .back { margin-top:44px; }
+  .back .btn { display:inline-block; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -180,8 +214,25 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <div class="wrap">
 
   <div class="eyebrow">Strategy call</div>
-  <h1>Tell us what you're <em>trying to grow.</em></h1>
-  <p class="lede">Thirty minutes. We will tell you what we would actually do, roughly what it would cost, and whether it is worth doing. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.</p>
+  <h1>Leave with a clear read on what is slowing growth, <em>and what we would do next.</em></h1>
+  <p class="lede">Thirty minutes. <b>If it is not a fit, we say so on the call.</b></p>
+
+  <!-- WHAT YOU LEAVE WITH · the markup here is the Growth version and the
+       default. An offer with a CONTENT entry in the script at the foot of
+       this page replaces the lines it names. The written recap is part of
+       the promise: it is sent after every call, not when there is time. -->
+  <section class="leave" aria-labelledby="leave-h">
+    <h2 id="leave-h">What you leave with</h2>
+    <p class="leave-deadline" id="leave-deadline" hidden></p>
+    <ul class="ticks" id="leave-list">
+      <li><b>Where growth is stuck:</b> offer, creative, media, funnel or follow-up</li>
+      <li><b>What to change first</b> in how you get customers now</li>
+      <li><b>Three creative angles</b> worth testing</li>
+      <li><b>Your first 30 days,</b> mapped</li>
+      <li><b>What to spend,</b> and whether the opportunity justifies it</li>
+    </ul>
+    <p class="leave-recap" id="leave-recap"><b>Then all of it in writing.</b> A short recap after every call.</p>
+  </section>
 
   <!-- ══════════════════════════════════════════════════════════════════
        iCLOSED SCHEDULER
@@ -210,7 +261,31 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </div>
   </div>
 
-  <p class="scheduler-note">A few questions first, so the thirty minutes is useful rather than spent catching up. You will see available times as soon as you are through them.</p>
+  <p class="scheduler-note">A few questions first, then you pick a time.</p>
+
+  <section class="below" aria-labelledby="fit-h">
+    <h2 id="fit-h">Who this is for</h2>
+    <ul class="ticks" id="fit-list">
+      <li><b>Established businesses</b> in health and wellness, legal, dental, and construction or contracting</li>
+      <li><b>Already selling,</b> with capacity to take on more customers</li>
+      <li><b>Leads answered</b> the day they arrive</li>
+      <li><b>Ready to fund advertising</b> alongside the production</li>
+    </ul>
+  </section>
+
+  <!-- The same four figures /grow publishes under Proof. Change them
+       there first; nothing here may say more than that page does. -->
+  <section class="below" aria-labelledby="proof-h">
+    <h2 id="proof-h">Results</h2>
+    <div class="proof">
+      <div><div class="proof-num">58K+</div><div class="proof-label">Followers built</div><div class="proof-client">Mike Alder</div></div>
+      <div><div class="proof-num">101K+</div><div class="proof-label">Combined following</div><div class="proof-client">Gina Zapanta</div></div>
+      <div><div class="proof-num">338K+</div><div class="proof-label">Organic reach · 9 days</div><div class="proof-client">Bot or Not</div></div>
+      <div><div class="proof-num">460K</div><div class="proof-label">Trailer views</div><div class="proof-client">FOUR</div></div>
+    </div>
+  </section>
+
+  <p class="back"><a class="btn" id="back-cta" href="#scheduler">Get my growth read</a></p>
 
 </div>
 
@@ -262,7 +337,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'founding-three': {
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
-      title: 'Apply to book a Founding Three call with New Terrain Creative'
+      title: 'Apply to book a Founding Three call with New Terrain Creative',
+      content: 'founding',
+      eyebrow: 'Founding Three · application',
+      lede:    'This is the application: a few questions, then you pick a time. <b>If it is not a fit, we say so on the call.</b>'
     },
     /* Signature Work. The cinema side's only path, and the one offer
        whose booking form replaced a form of ours rather than sitting
@@ -273,8 +351,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/signature-project',
       title: 'Request a Signature Project consultation with New Terrain Creative',
+      content: 'signature',
       eyebrow: 'Signature Work',
-      lede:    'Tell us what the project is, who it has to move, and when it has to exist. Thirty minutes to work out whether it is something we should make, and what it would take. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.'
+      lede:    'Thirty minutes on what the project is, who it has to move and when it has to exist. <b>If it is not a fit, we say so on the call.</b>'
     },
     // Retired page, retained identifier. See the note above.
     'production-media': {
@@ -286,6 +365,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/ad-sprint',
       title: 'Book an Ad Sprint fit call with New Terrain Creative',
+      content: 'sprint',
       /* The Sprint is a one-time production buy, not a retainer, and it
          is the one offer that arrives here cold rather than through a
          form. The default heading asks what they are trying to grow,
@@ -293,7 +373,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
          question instead. Scope is confirmed on this call, payment
          follows it, and only then is a shoot booked. */
       eyebrow: 'Ad Sprint',
-      lede:    'Thirty minutes to confirm what we would shoot, which package fits, and what we would test first. <b>Nothing is due to book this call.</b> If the Sprint is not the right move we will say so on it.'
+      lede:    'Thirty minutes. <b>Nothing is due to book this call.</b> If the Sprint is not the right move, we say so on it.'
     }
   };
 
@@ -328,7 +408,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
     title: 'Book a Growth strategy consultation with New Terrain Creative',
     eyebrow: 'Founding Three · applications closed',
-    lede:    'Founding Three applications closed on October 24, and the waived first month closed with them. If your business is a fit we would still like to talk: this books a regular growth strategy call, on our standard engagement. Thirty minutes, and <b>if it is not a fit we will say so on the call</b> rather than send you a proposal.'
+    lede:    'Founding Three applications closed on October 24, and the waived first month closed with them. This books a regular growth strategy call, on our standard engagement. <b>If it is not a fit, we say so on the call.</b>'
   };
 
   var offerSlug = (new URLSearchParams(window.location.search).get('offer') || '')
@@ -375,6 +455,113 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }
     if (window.ntc && ntc.sessionId) u.searchParams.set('ntc_session', ntc.sessionId());
     return u.toString();
+  }
+
+  /* ── What the call is worth, per offer ─────────────────────────────
+     The markup on the page IS the Growth version and the default: /grow,
+     the retired production-media slug and a late Founding arrival all
+     keep it. An offer whose scheduler names a content key replaces the
+     lines listed for it here.
+
+     Every line is [bold lead, the few words after it]. Keep them that
+     short: this page is bullets, not explanation.
+
+     leave    "What you leave with". Each line is delivered on every call
+              for that offer; cut a line before letting it go unkept.
+     fit      "Who this is for". Only what the offer's own page already
+              says about fit.
+     cta      label on the link at the foot, which returns to the calendar. */
+  var CONTENT = {
+    'sprint': {
+      h1:    'Leave with a clear read on your ads, <em>and what we would shoot next.</em>',
+      leave: [
+        ['What is working', 'in your current creative, and what is not'],
+        ['Three angles', 'to build the next campaign around'],
+        ['The Eight or the Fifteen,', 'and why'],
+        ['What we would shoot', ''],
+        ['Your exact price', 'and the next open production window']
+      ],
+      fit: [
+        ['Running ads now, or ready to,', 'and in need of creative built to be tested'],
+        ['One-time production:', 'fixed scope, fixed price, no retainer'],
+        ['You run the campaign.', 'Managing it is not part of the Sprint']
+      ],
+      cta:   'Get my ad plan'
+    },
+    'founding': {
+      h1:    'Leave with the campaign we would build <em>for your first 30 days.</em>',
+      leave: [
+        ['Your biggest growth constraint,', 'read from your application'],
+        ['Your first 30-day campaign,', 'mapped'],
+        ['The creative and paid media priorities', 'we would attack first'],
+        ['Whether you qualify', 'for the Founding Three'],
+        ['The full structure', 'and next steps, if we both want to move forward']
+      ],
+      deadline: true,
+      fit: [
+        ['Established businesses', 'in health and wellness, legal, dental, and construction or contracting'],
+        ['In Los Angeles.', 'We shoot on location at your business'],
+        ['Capacity for more customers,', 'and leads answered the day they arrive'],
+        ['Your own ad spend:', 'a minimum of $1,500 for month one, paid directly to the platform']
+      ],
+      cta:   'Apply for a Founding Partner spot'
+    },
+    'signature': {
+      h1:    'Leave knowing what the piece should be, <em>and what it takes to make it.</em>',
+      leave: [
+        ['The concept', 'that gives the piece its best chance of working'],
+        ['Who it has to move,', 'and what they need to feel'],
+        ['The production approach:', 'crew, shoot days, scope and timeline'],
+        ['A realistic budget range', ''],
+        ['Whether it is worth producing', 'at that level']
+      ],
+      fit: [
+        ['The piece carries real weight:', 'a launch, a raise, a rebrand, a film that represents you for years'],
+        ['You want a point of view', 'on the story, not a crew who shoots what they are told'],
+        ['A decision maker in the room,', 'and a date the work has to exist by']
+      ],
+      cta:   'Tell us about the project'
+    }
+  };
+
+  var content = SCHEDULER.content &&
+    Object.prototype.hasOwnProperty.call(CONTENT, SCHEDULER.content)
+      ? CONTENT[SCHEDULER.content] : null;
+  if (content) {
+    var byId = function (id) { return document.getElementById(id); };
+    var fill = function (list, items) {
+      if (!list || !items) return;
+      list.textContent = '';
+      items.forEach(function (pair) {
+        var li = document.createElement('li');
+        var b = document.createElement('b');
+        b.textContent = pair[0];
+        li.appendChild(b);
+        if (pair[1]) li.appendChild(document.createTextNode(' ' + pair[1]));
+        list.appendChild(li);
+      });
+    };
+    var h1 = document.querySelector('.wrap h1');
+    if (h1 && content.h1) h1.innerHTML = content.h1;
+    fill(byId('leave-list'), content.leave);
+    fill(byId('fit-list'), content.fit);
+    if (byId('back-cta') && content.cta) byId('back-cta').textContent = content.cta;
+
+    /* The Founding deadline, read off CLOSE_AT rather than typed again,
+       so this line cannot drift from the instant the form closes. Only
+       reached while the round is open: past it SCHEDULER is the late
+       entry, which names no content key. */
+    var dl = byId('leave-deadline');
+    if (dl && content.deadline) {
+      var close = new Date(CLOSE_AT);
+      var tz = 'America/Los_Angeles';
+      dl.textContent = 'Applications close ' +
+        close.toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: tz }) +
+        ', ' +
+        close.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz }) +
+        ' Pacific. The call can fall after it.';
+      dl.hidden = false;
+    }
   }
 
   /* Per-offer heading, where an offer sets one. Everything else keeps
