@@ -575,6 +575,7 @@
     color: var(--muted);
     line-height: 1.9;
   }
+  .video-ph-copy { margin: 14px auto 22px; max-width: 34ch; font-size: 14px; line-height: 1.7; color: var(--muted); }
 
   /* ── THE REEL · horizontal showcase of vertical work ──
      One row of 9:16 cards that loop silently, gloss on the glass,
@@ -1079,9 +1080,13 @@
         <video src="assets/vsl-growth-engine.mp4" poster="assets/vsl-poster.jpg" controls playsinline></video>
       ════════════════════════════════════════════════════════════
     -->
+    <!-- Until the Growth film exists this slot points at /founding, which
+         has its film. Nothing is advertised to this page in the meantime. -->
     <div class="video-ph">
       <div class="video-ph-mark">NTC</div>
-      <div class="video-ph-note">Watch how Production Media works</div>
+      <div class="video-ph-note">Growth film coming soon</div>
+      <p class="video-ph-copy">While we finish it, see how we work with our first three partners.</p>
+      <a class="btn btn--ghost" href="/founding">See the Founding Three &rarr;</a>
     </div>
   </div>
 </section>
