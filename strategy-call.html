@@ -306,11 +306,44 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     title: 'Book a Growth strategy consultation with New Terrain Creative'
   };
 
+  /* Founding Three applications close at one fixed moment for everyone.
+     Mirrors assets/offer.js founding.applicationsCloseAt and the timer on
+     /founding (scripts/check-claims.py fails if they differ).
+
+     The date closes the APPLICATION, not the sale: anyone who applied
+     before it finishes the call and the decision afterwards. Past it,
+     ?offer=founding-three no longer loads the Founding event. A late
+     arrival is not turned away; they get the Growth calendar, on the
+     standard engagement, with the heading saying why. Their booking
+     carries offer=founding-three-late so it can be told apart from /grow
+     traffic.
+
+     This page can only stop sending people to the Founding event. The
+     event's own iClosed link still answers until it is switched off in
+     iClosed, which has to happen at the same moment. */
+  var CLOSE_AT = '2026-10-24T23:59:59-07:00';
+  var FOUNDING_LATE = {
+    ready: true,
+    slug:  'founding-three-late',
+    url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+    title: 'Book a Growth strategy consultation with New Terrain Creative',
+    eyebrow: 'Founding Three · applications closed',
+    lede:    'Founding Three applications closed on October 24, and the waived first month closed with them. If your business is a fit we would still like to talk: this books a regular growth strategy call, on our standard engagement. Thirty minutes, and <b>if it is not a fit we will say so on the call</b> rather than send you a proposal.'
+  };
+
   var offerSlug = (new URLSearchParams(window.location.search).get('offer') || '')
                     .trim().toLowerCase();
-  var SCHEDULER = Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)
-    ? SCHEDULERS[offerSlug]
-    : DEFAULT_SCHEDULER;
+  var foundingClosed = offerSlug === 'founding-three' &&
+                       Date.now() > new Date(CLOSE_AT).getTime();
+  var SCHEDULER = foundingClosed
+    ? FOUNDING_LATE
+    : Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)
+      ? SCHEDULERS[offerSlug]
+      : DEFAULT_SCHEDULER;
+  // The identifier forwarded to iClosed and to our own events. Only ever
+  // a slug we recognise, or the late-Founding one set just above.
+  var offerId = SCHEDULER.slug ||
+    (Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug) ? offerSlug : '');
 
   /* Attribution passthrough. iClosed reads fbp/fbc from the browser on
      its own; what it cannot know is which offer sent the visitor or what
@@ -325,9 +358,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     /* Only a slug we recognise. An unknown ?offer= falls through to the
        default calendar, and forwarding its text would put invented offer
        names into iClosed's booking records and our own reporting. */
-    if (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)) {
-      u.searchParams.set('offer', offerSlug);
-    }
+    if (offerId) u.searchParams.set('offer', offerId);
 
     /* /sprint sends pkg=eight or pkg=fifteen so the call opens already
        knowing which package they clicked. It is a hint for the call, not
@@ -407,8 +438,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     content_name: document.title,
     // The recognised slug, for the same reason the URL above carries only
     // recognised slugs: an unknown one is noise in the dataset.
-    offer: (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug))
-             ? offerSlug : 'paid_retainer'
+    offer: offerId || 'paid_retainer'
   });
 })();
 </script>

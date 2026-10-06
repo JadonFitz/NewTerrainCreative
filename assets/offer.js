@@ -79,6 +79,17 @@
          counts down to this fixed moment for every visitor, never to the
          visitor's own clock.
 
+         WHAT THE DATE CLOSES, added 5 Oct 2026. It is the deadline to
+         submit an application, not to finish the sale: anyone who
+         applies before it completes the call and the decision after.
+         Past it, a late applicant who fits is not turned away and is
+         not let into the round either. /strategy-call stops loading the
+         Founding event for ?offer=founding-three and loads the Growth
+         calendar instead, on the standard engagement with no waived
+         month, tagged founding-three-late. The Founding event itself
+         has to be switched off in iClosed at the same moment, and the
+         ads end with it; the site cannot do either.
+
          History, kept because the reasoning still applies to any future
          extension:
 

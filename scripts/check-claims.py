@@ -129,6 +129,18 @@ apply_close = re.search(r"var CLOSE_AT = '([^']+)'", (root / 'apply.html').read_
 check('apply.html counts down to the same instant',
       bool(apply_close) and apply_close.group(1) == close_at,
       'CLOSE_AT in apply.html must equal applicationsCloseAt')
+# The booking page has to agree with the timer, or the form outlives it.
+sc_raw = (root / 'strategy-call.html').read_text(encoding='utf-8')
+sc_close = re.search(r"var CLOSE_AT = '([^']+)'", sc_raw)
+check('strategy-call.html closes the Founding form at the same instant',
+      bool(sc_close) and sc_close.group(1) == close_at,
+      'CLOSE_AT in strategy-call.html must equal applicationsCloseAt')
+check('a late Founding arrival is routed to the Growth calendar',
+      re.search(r"FOUNDING_LATE = \{.*?growth-strategy-consultation", sc_raw, re.S) is not None
+      and 'foundingClosed' in sc_raw,
+      'past the date ?offer=founding-three must not load the Founding event')
+check('the date is stated as a deadline to apply', 'is the deadline to apply' in FND,
+      'October 24 closes applications; the call and the decision can follow it')
 check('the closing date is written on the page', 'October 24' in FND,
       'the countdown block names the date in words, not only as a timer')
 check('no open-slots counter', re.search(r'\b\d of \d open\b', FND) is None,

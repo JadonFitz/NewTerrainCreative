@@ -197,6 +197,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     font-variant-numeric: tabular-nums;
     color: var(--gold);
   }
+  .found-closed {
+    margin: 0 0 26px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--parchment);
+    max-width: 62ch;
+  }
   .found-lede {
     margin: 30px 0 0;
     font-size: 14px;
@@ -1103,7 +1110,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <section id="hero">
   <h1 class="title reveal">A complete campaign.<br>Set up and <em>live in month one.</em></h1>
   <p class="hero-sub reveal">A production day at your business, a batch of campaign creative, and the campaign built and launched on Meta. Month one is the set-up month: your ads go live in week three, we manage them through week four, and you get a written read on the first numbers. <b>For three selected businesses, our service fee for that first thirty days is waived.</b> You fund your own advertising spend, paid straight to the platform. Months two and three are optional.</p>
-  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a><span class="hero-cta-note">Applications close October 24. We review every one personally.</span></div>
+  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a><span class="hero-cta-note" id="heroCloseNote">Applications close October 24. We review every one personally.</span></div>
   <p class="hero-micro reveal">A defined thirty day scope, not unlimited production. Applying does not guarantee acceptance, and no result is guaranteed.</p>
 </section>
 
@@ -1137,7 +1144,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
            if they differ. The timer counts down to that fixed moment for
            every visitor, never to the visitor's clock. Past it, the block
            reads "Applications closed" and nothing is extended. The slot
-           counter that lived here came off on 5 Oct 2026. -->
+           counter that lived here came off on 5 Oct 2026.
+
+           The date closes the application, not the sale: an application
+           in before it is still in the round when the call falls after.
+           Past it the three CTAs keep their href but are relabelled, and
+           /strategy-call loads the Growth calendar for them instead of
+           the Founding event, so a late business that fits is routed to
+           the standard engagement rather than lost. -->
       <div class="found-count">
         <div class="found-count-n" id="foundCloseHead">Applications close</div>
         <div class="found-close" id="foundClose">October 24</div>
@@ -1159,6 +1173,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </ol>
 
     <div class="found-cta">
+      <p class="found-closed" id="foundClosedNote" hidden>Applications for the Founding Three closed on October 24. If your business is a fit we would still like to talk: the button below books a regular growth strategy call, on our standard engagement rather than the waived first month.</p>
       <a class="btn btn--gold" data-cta="founding" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a>
       <p class="found-fine">Applying does not guarantee acceptance: we are choosing three, and we would rather take none than take the wrong ones. No campaign result is guaranteed. Our service fee is waived only for the scope described above; your advertising spend is yours throughout, and months two and three are a choice rather than a commitment.</p>
     </div>
@@ -1616,6 +1631,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <p class="qa-a">We work with clients worldwide. Travel outside Los Angeles or Tampa gets quoted on top, and we will tell you what it costs on the call before you commit to anything. For some businesses the better answer is a hybrid: we direct remotely and cut from footage shot on your end.</p>
     </details>
     <details class="qa reveal">
+      <summary class="qa-q">Does everything have to be settled by October 24?</summary>
+      <p class="qa-a">No. October 24, 11:59 PM Pacific, is the deadline to apply. If your application is in by then, the call and the decision can happen after it. Applications that arrive later are not considered for the Founding Three. If the business is a fit we will still talk, through a regular growth strategy call and without the waived first month.</p>
+    </details>
+    <details class="qa reveal">
       <summary class="qa-q">Will you run the ads too?</summary>
       <p class="qa-a">Yes. We build and launch the Meta campaign in week three and manage it through the end of month one. You fund the ad spend directly in your own account; our service fee for the defined founding scope is waived.</p>
     </details>
@@ -2030,11 +2049,23 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   var timer = document.getElementById('foundTimer');
   if (!timer || !head || isNaN(end)) return;
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  // Past the date the page stops offering an application. The CTAs keep
+  // their href: /strategy-call checks the same instant and loads the
+  // Growth calendar for a late arrival instead of the Founding event.
+  function closed() {
+    var note = document.getElementById('heroCloseNote');
+    if (note) note.textContent = 'Applications closed October 24. A growth strategy call is still open.';
+    var late = document.getElementById('foundClosedNote');
+    if (late) late.hidden = false;
+    var ctas = document.querySelectorAll('a[href*="offer=founding-three"]');
+    for (var i = 0; i < ctas.length; i++) ctas[i].textContent = 'Book a Growth Strategy Call';
+  }
   function tick() {
     var left = end - Date.now();
     if (left <= 0) {
       head.textContent = 'Applications closed';
       timer.textContent = '';
+      closed();
       return;
     }
     var s = Math.floor(left / 1000);
