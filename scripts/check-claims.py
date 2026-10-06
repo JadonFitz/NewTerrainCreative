@@ -50,7 +50,7 @@ check('months two and three optional',
       'Months two and three are optional' in FND,
       'continuationRequired is false')
 check('continuation PRICE not in this page\'s copy',
-      '3,500' not in FND,
+      '5,000' not in FND and '3,500' not in FND,
       'disclosed on the iClosed booking form and in the VSL, not in the copy here')
 check('client funds own ad spend',
       'own ad account' in FND or 'pay the platform directly' in FND,

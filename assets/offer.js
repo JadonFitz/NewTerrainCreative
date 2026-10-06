@@ -100,9 +100,9 @@
          a slot, and spoken aloud in the VSL. Both sit before any
          commitment, which was always the point of the rule. */
       continuationDisclosedAt: 'iClosed booking form, and the VSL',
-      continuationMonthly: 3500,
+      continuationMonthly: 5000,
       continuationMonths: 2,
-      continuationTotal: 7000,
+      continuationTotal: 10000,
       // Client-funded, paid directly to the ad platform, never to us.
       minMonthlyAdSpend: 1500,
       geography: 'Los Angeles'

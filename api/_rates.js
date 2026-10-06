@@ -173,9 +173,9 @@ export const RETAINER = {
    or scripts/check-offer.py fails.
    ─────────────────────────────────────────────────────────────────── */
 export const FOUNDING_CONTINUATION = {
-  monthly: 3500,
+  monthly: 5000,
   months: 2,
-  total: 7000,
+  total: 10000,
   required: false,
   // Explicitly NOT the Anchor package, whatever the matching figure
   // suggests. See the note above.

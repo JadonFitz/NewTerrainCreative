@@ -34,7 +34,7 @@
     · the long qualification set: role, decision authority, industry,
       current spend, who runs the ads, tracking, service area, 90-day
       budget, capacity, value of a customer, lead sources, who answers
-      enquiries, response time, continuation at $3,500, availability.
+      enquiries, response time, continuation at $5,000, availability.
       That is call material rather than form material for three slots.
 
   scripts/preflight.py fails if any page links here again without this
@@ -482,7 +482,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
           <b>I've read the terms above and they're clear</b>
           Specifically: our service fee is waived for the scope listed above and nothing beyond it;
           I fund my own advertising spend, at least <span class="ack-spend">$1,500</span>, paid directly to the ad platform on my own
-          payment method; continuing after month one is optional and priced at <span class="ack-cont">$3,500</span> a month;
+          payment method; continuing after month one is optional and priced at <span class="ack-cont">$5,000</span> a month;
           giving New Terrain access to the campaign data and telling them honestly how it went are
           conditions of the waiver; applying does not guarantee a place; and no particular result is
           promised.
@@ -661,8 +661,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     }).join('');
 
     var spend = money(O.minMonthlyAdSpend || 1500);
-    var cont  = money(O.continuationMonthly || 3500);
-    var total = money(O.continuationTotal || 7000);
+    var cont  = money(O.continuationMonthly || 5000);
+    var total = money(O.continuationTotal || 10000);
     var months = O.continuationMonths || 2;
 
     el.innerHTML =

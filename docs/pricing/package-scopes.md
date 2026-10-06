@@ -261,8 +261,9 @@ Same rule, no rate card leaked.
 
 ## The Founding Three continuation is not The Anchor
 
-Both are $3,500 a month. They are different products and the shared figure
-is a coincidence to guard against, not a link.
+The continuation is $5,000 a month for months two and three (raised from
+$3,500 on Oct 5, 2026). The Anchor is $6,000. They are different products
+and must never be described as one another.
 
 | | The Anchor | Founding continuation |
 |---|---|---|
