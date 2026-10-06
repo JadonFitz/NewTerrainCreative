@@ -176,18 +176,25 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .found-title em { font-style: italic; color: var(--gold); }
   .found-count { text-align: right; flex-shrink: 0; }
-  .found-dots { display: flex; gap: 8px; justify-content: flex-end; }
-  .dot {
-    width: 11px; height: 11px;
-    border: 1px solid var(--gold);
-    display: block;
-  }
-  .dot.taken { background: var(--gold); }
   .found-count-n {
-    margin-top: 12px;
     font-size: 10px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
+    color: var(--gold);
+  }
+  .found-close {
+    margin-top: 8px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 26px;
+    line-height: 1.1;
+    color: var(--parchment);
+  }
+  .found-timer {
+    margin-top: 8px;
+    min-height: 1.4em;
+    font-size: 12.5px;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
     color: var(--gold);
   }
   .found-lede {
@@ -234,7 +241,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     .found-panel { padding: 38px 26px; }
     .found-terms { grid-template-columns: 1fr; gap: 22px; }
     .found-count { text-align: left; }
-    .found-dots { justify-content: flex-start; }
   }
 
   /* ── VIDEO SLOT ── */
@@ -1097,7 +1103,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <section id="hero">
   <h1 class="title reveal">A complete campaign.<br>Set up and <em>live in month one.</em></h1>
   <p class="hero-sub reveal">A production day at your business, a batch of campaign creative, and the campaign built and launched on Meta. Month one is the set-up month: your ads go live in week three, we manage them through week four, and you get a written read on the first numbers. <b>For three selected businesses, our service fee for that first thirty days is waived.</b> You fund your own advertising spend, paid straight to the platform. Months two and three are optional.</p>
-  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a><span class="hero-cta-note">Spots are limited. We review every application personally.</span></div>
+  <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a><span class="hero-cta-note">Applications close October 24. We review every one personally.</span></div>
   <p class="hero-micro reveal">A defined thirty day scope, not unlimited production. Applying does not guarantee acceptance, and no result is guaranteed.</p>
 </section>
 
@@ -1125,13 +1131,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <div class="eyebrow">The Founding Three</div>
         <h2 class="found-title">No service fee<br>for the <em>first thirty days.</em></h2>
       </div>
-      <!-- ══ SLOT COUNTER ══ As slots fill, add class "taken" to a dot and
-           update the number in .found-count-n. Three dots, three slots. -->
+      <!-- ══ APPLICATION WINDOW ══ Applications close at CLOSE_AT (script
+           at the foot of the page), the same instant assets/offer.js holds
+           as founding.applicationsCloseAt; scripts/check-claims.py fails
+           if they differ. The timer counts down to that fixed moment for
+           every visitor, never to the visitor's clock. Past it, the block
+           reads "Applications closed" and nothing is extended. The slot
+           counter that lived here came off on 5 Oct 2026. -->
       <div class="found-count">
-        <div class="found-dots">
-          <span class="dot taken"></span><span class="dot"></span><span class="dot"></span>
-        </div>
-        <div class="found-count-n">2 of 3 open</div>
+        <div class="found-count-n" id="foundCloseHead">Applications close</div>
+        <div class="found-close" id="foundClose">October 24</div>
+        <div class="found-timer" id="foundTimer"></div>
       </div>
     </div>
 
@@ -2009,6 +2019,33 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       document.head.appendChild(s);
     });
   })();
+</script>
+<script>
+(function () {
+  // Applications close at one fixed moment for everyone. Mirrors
+  // assets/offer.js founding.applicationsCloseAt (scripts/check-claims.py).
+  var CLOSE_AT = '2026-10-24T23:59:59-07:00';
+  var end = new Date(CLOSE_AT).getTime();
+  var head = document.getElementById('foundCloseHead');
+  var timer = document.getElementById('foundTimer');
+  if (!timer || !head || isNaN(end)) return;
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  function tick() {
+    var left = end - Date.now();
+    if (left <= 0) {
+      head.textContent = 'Applications closed';
+      timer.textContent = '';
+      return;
+    }
+    var s = Math.floor(left / 1000);
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60); s -= m * 60;
+    timer.textContent = d + (d === 1 ? ' day ' : ' days ') + pad(h) + ':' + pad(m) + ':' + pad(s);
+    setTimeout(tick, 1000);
+  }
+  tick();
+})();
 </script>
 </body>
 </html>

@@ -112,6 +112,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .slots {
     font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
   }
+  .slots-timer { font-variant-numeric: tabular-nums; letter-spacing: 0.1em; }
+  .slots-timer:not(:empty)::before { content: ' · '; }
 
   .wrap { max-width: 680px; margin: 0 auto; padding: 68px 24px 110px; }
 
@@ -249,7 +251,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
 <div class="bar">
   <a class="wordmark" href="/founding">New Terrain <span>Creative</span></a>
-  <span class="slots">Three founding slots</span>
+  <!-- Applications close at CLOSE_AT (script at the foot of the page), the same instant as assets/offer.js founding.applicationsCloseAt and /founding. -->
+  <span class="slots">Applications close October 24<span id="applyTimer" class="slots-timer"></span></span>
 </div>
 
 <div class="wrap">
@@ -856,6 +859,31 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   renderOptions();
   renderTerms();
+})();
+</script>
+<script>
+(function () {
+  // Applications close at one fixed moment for everyone. Mirrors
+  // assets/offer.js founding.applicationsCloseAt (scripts/check-claims.py).
+  var CLOSE_AT = '2026-10-24T23:59:59-07:00';
+  var end = new Date(CLOSE_AT).getTime();
+  var el = document.getElementById('applyTimer');
+  if (!el || isNaN(end)) return;
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  function tick() {
+    var left = end - Date.now();
+    if (left <= 0) {
+      el.parentNode.textContent = 'Applications closed October 24';
+      return;
+    }
+    var s = Math.floor(left / 1000);
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60); s -= m * 60;
+    el.textContent = d + (d === 1 ? ' day ' : ' days ') + pad(h) + ':' + pad(m) + ':' + pad(s);
+    setTimeout(tick, 1000);
+  }
+  tick();
 })();
 </script>
 </body>

@@ -40,6 +40,7 @@
     // ── Founding Three ────────────────────────────────────────────────
     founding: {
       slots: 3,
+      applicationsCloseAt: '2026-10-24T23:59:59-07:00',
       // Month one: our service fee is waived. The client still funds media.
       monthOneServiceFee: 0,
       // What the waived month actually covers. Bounded on purpose: the
@@ -68,6 +69,19 @@
       // it for server-side quoting and scripts/check-offer.py fails if
       // the two ever disagree.
       /* ── application window ─────────────────────────────────────
+         RESTORED 5 Oct 2026: applications close 24 Oct 2026, 11:59 PM
+         Pacific. Jadon's call, and a date he will hold: past it the
+         page says "Applications closed" and nothing is extended. The
+         "N of 3 open" slot counter came off /founding the same day; the
+         three-partner framing stays in the copy, the countdown is the
+         urgency. founding.html carries the same instant in CLOSE_AT and
+         scripts/check-claims.py fails if the two ever differ. The timer
+         counts down to this fixed moment for every visitor, never to the
+         visitor's own clock.
+
+         History, kept because the reasoning still applies to any future
+         extension:
+
          REMOVED 22 Sep 2026. There is no date, on purpose.
 
          applicationsCloseAt was '2026-09-30T23:59:59-07:00', eight days
@@ -394,10 +408,13 @@
       'guaranteed leads, revenue or ROAS',
       'a Founding Partner is a paying retainer client',
       'months two and three are required',
-      // Added 22 Sep 2026 with the removal of applicationsCloseAt.
-      // Three slots is the only scarcity this offer has. A date would
-      // have to be one we would actually hold.
+      // Added 22 Sep 2026 with the removal of applicationsCloseAt, kept
+      // when the date came back on 5 Oct 2026: 24 Oct 2026 is held, not
+      // extended. Past it the page says closed.
       'a closing date for applications that we would extend anyway',
+      // Added 5 Oct 2026 with the countdown. The counter is gone, and a
+      // made-up "N of 3 taken" must not come back in copy or ads.
+      'how many of the three places are taken',
       'the free month is unlimited',
       'results, testimonials or logos we do not have',
       // Withdrawn 13 Sep 2026. It was unbounded, its benchmark was

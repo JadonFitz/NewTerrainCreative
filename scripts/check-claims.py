@@ -117,6 +117,25 @@ for phrase in BANNED:
             if phrase in p.read_text(encoding='utf-8').lower()]
     check(f'"{phrase}"', not hits, f'found in {hits}')
 
+# The application window is one date in two files, and the counter is gone.
+print('\nFounding · application window (5 Oct 2026)')
+close_at = term(r"applicationsCloseAt:\s*'([^']+)'")
+page_close = re.search(r"var CLOSE_AT = '([^']+)'", (root / 'founding.html').read_text(encoding='utf-8'))
+check('applicationsCloseAt is set', bool(close_at), 'founding.applicationsCloseAt in assets/offer.js')
+check('founding.html counts down to the same instant',
+      bool(page_close) and page_close.group(1) == close_at,
+      'CLOSE_AT in founding.html must equal applicationsCloseAt')
+apply_close = re.search(r"var CLOSE_AT = '([^']+)'", (root / 'apply.html').read_text(encoding='utf-8'))
+check('apply.html counts down to the same instant',
+      bool(apply_close) and apply_close.group(1) == close_at,
+      'CLOSE_AT in apply.html must equal applicationsCloseAt')
+check('the closing date is written on the page', 'October 24' in FND,
+      'the countdown block names the date in words, not only as a timer')
+check('no open-slots counter', re.search(r'\b\d of \d open\b', FND) is None,
+      'the "N of 3 open" counter came off on 5 Oct 2026; the dated window is the urgency')
+check('no "spots are limited" hedge', 'spots are limited' not in FND.lower(),
+      'replaced by the date on 5 Oct 2026')
+
 # The canonical terms these checks read must themselves still exist.
 print('\nCanonical terms are present to check against')
 for name, pat in [('adSprintTerms', r'adSprintTerms:\s*\{'),
