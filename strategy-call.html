@@ -193,7 +193,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   /* ── Below the calendar: who it is for, results ── */
   .below { margin-top:56px; }
-  .proof { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  /* Five tiles: three across, then two, with the feature film taking the
+     wider slot in the second row. On a phone, two across and the same
+     last tile on a row of its own. */
+  .proof { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .proof > div:last-child { grid-column:span 2; }
   .proof > div { background:var(--black); padding:18px 16px 16px; }
   .proof-num { font-family:var(--display); font-weight:300; font-size:32px; line-height:1; color:var(--parchment); }
   .proof-label { margin-top:8px; font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); line-height:1.5; }
@@ -273,8 +277,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </ul>
   </section>
 
-  <!-- The same four figures /grow publishes under Proof. Change them
-       there first; nothing here may say more than that page does. -->
+  <!-- The four figures /grow publishes under Proof, plus the Off Rip
+       streaming figure from /signature. Change them there first; nothing
+       here may say more than those pages do. -->
   <section class="below" aria-labelledby="proof-h">
     <h2 id="proof-h">Results</h2>
     <div class="proof">
@@ -282,6 +287,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div><div class="proof-num">101K+</div><div class="proof-label">Combined following</div><div class="proof-client">Gina Zapanta</div></div>
       <div><div class="proof-num">338K+</div><div class="proof-label">Organic reach · 9 days</div><div class="proof-client">Bot or Not</div></div>
       <div><div class="proof-num">460K</div><div class="proof-label">Trailer views</div><div class="proof-client">FOUR</div></div>
+      <div><div class="proof-num">1M+</div><div class="proof-label">Streaming minutes · Amazon, Apple TV, Tubi</div><div class="proof-client">Off Rip · Feature film</div></div>
     </div>
   </section>
 
