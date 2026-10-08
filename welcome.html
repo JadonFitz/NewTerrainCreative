@@ -37,6 +37,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     The Anchor       /welcome?plan=anchor
     Growth Partner   /welcome?plan=growth
     Brand Builder    /welcome?plan=brand-builder
+    Brand Builder Pilot  /welcome?plan=brand-builder-pilot
     The Eight        /welcome?plan=eight
     The Fifteen      /welcome?plan=fifteen
 
@@ -398,6 +399,27 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     ];
   };
 
+  /* The Brand Builder Pilot (8 Oct 2026): one month of Brand Builder
+     production bought on its own, after a Story Session. Production
+     only, so no ad-account access, no CRM questionnaire and no Friday
+     recaps; the client books a kickoff call like a retainer. Scope lines
+     come from NTC_OFFER.brandBuilder.pilot, the same object the
+     /brand-builder pages render, so this page cannot promise more. */
+  var pilotSteps = [
+    ['Day 0 to 1', 'Your intake form',
+      'About ten minutes, linked at the top of this page. Meghan reads it before kickoff.'],
+    ['Day 1 to 3', 'Kickoff call',
+      'About an hour. What the brand should do for the business, the three story angles worth building on, and the episode plan.'],
+    ['By day 7', 'Production days scheduled, episodes planned',
+      'Your production days go on the calendar. The time between is where topics, formats and locations get planned, so the days run smoothly.'],
+    ['Weeks two and three', 'Production',
+      'About two full production days. Every episode shot in long blocks, with the short-form moments captured as we go.'],
+    ['Week four', 'The cut, then delivery',
+      'Ten episodes finished, fifty clips cut (five from each), with one revision round in Slack.'],
+    ['On delivery', 'Yours to run',
+      'The playbook and your 90-day gameplan land with the files. Hire us to run it, or run it without us.']
+  ];
+
   var sprintSteps = [
     ['Days 1 to 3', 'The Angle Call',
       'Forty-five minutes on what you sell, who says no and why, and what has already worked. You leave with a shot list and the hooks worth testing.'],
@@ -490,6 +512,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return { name: 'Brand Builder', label: t && t.label, intro: t && t.scope,
                steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'brand-builder' };
     },
+    'brand-builder-pilot': function () {
+      var p = (O.brandBuilder && O.brandBuilder.pilot) || {};
+      // No video of its own yet: the Brand Builder video sells the series, which this client did not buy.
+      return { name: 'The Brand Builder Pilot', label: 'Brand Builder · Pilot',
+               intro: 'One month of Brand Builder production, bought on its own. Here is how the month runs.',
+               steps: pilotSteps, incl: p.scope || [], crm: false };
+    },
     'eight': function () {
       var p = prod.adSprintEight;
       return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
@@ -515,7 +544,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
     'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen'
   };
 
