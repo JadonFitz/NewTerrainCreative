@@ -331,6 +331,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Reached here as:
        /founding           -> ?offer=founding-three
        /sprint             -> ?offer=ad-sprint
+       /brand-builder      -> ?offer=brand-builder, or ?offer=brand-pilot
        / and /signature    -> ?offer=signature
        /grow               -> no parameter
        ?offer=production-media -> kept although /production-media is
@@ -366,6 +367,27 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       ready: true,
       url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
       title: 'Book a Growth strategy consultation with New Terrain Creative'
+    },
+    /* /brand-builder. Brand Builder is a Growth retainer, so its
+       application books the Growth event with its own identifier, the
+       way the retired production-media slug does. The Pilot borrows the
+       same calendar ONLY until it has an iClosed event of its own: when
+       that exists, change the url on 'brand-pilot' and nothing else. */
+    'brand-builder': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+      title: 'Apply for Brand Builder with New Terrain Creative',
+      content: 'brand',
+      eyebrow: 'Brand Builder · application',
+      lede:    'Thirty minutes with Jadon and Meghan. <b>If it is not a fit, we say so on the call.</b>'
+    },
+    'brand-pilot': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+      title: 'Book a Brand Builder Pilot call with New Terrain Creative',
+      content: 'pilot',
+      eyebrow: 'Brand Builder · The Pilot',
+      lede:    'Thirty minutes. <b>Nothing is due to book this call.</b> If the Pilot is not the right first move, we say so on it.'
     },
     'ad-sprint': {
       ready: true,
@@ -493,6 +515,38 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         ['You run the campaign.', 'Managing it is not part of the Sprint']
       ],
       cta:   'Get my ad plan'
+    },
+    'brand': {
+      h1:    'Leave knowing whether your story carries a brand, <em>and how we would shoot it.</em>',
+      leave: [
+        ['A straight read', 'on where your personal brand stands today'],
+        ['Three story angles', 'worth building the show around'],
+        ['What we would make:', 'longform, short-form and ads'],
+        ['Pilot or Brand Builder,', 'and why'],
+        ['Scope and fee,', 'if we both want to move forward']
+      ],
+      fit: [
+        ['Los Angeles founders and owners', 'whose name is the business'],
+        ['Already selling,', 'with a record worth showing'],
+        ['Willing to be on camera,', 'and to say something real on it']
+      ],
+      cta:   'Apply for Brand Builder'
+    },
+    'pilot': {
+      h1:    'Leave knowing what your Pilot would be, <em>and whether it is the right first move.</em>',
+      leave: [
+        ['What your five episodes', 'would be about'],
+        ['Three story angles', 'worth leading with'],
+        ['How the Pilot runs,', 'from the shoot to the 90-day gameplan'],
+        ['The fixed price,', '$5,000, and the next open production window'],
+        ['Whether to start here', 'or go straight to Brand Builder']
+      ],
+      fit: [
+        ['Los Angeles founders and owners', 'whose name is the business'],
+        ['One production, one time:', 'fixed price, no retainer attached'],
+        ['Willing to be on camera,', 'and to say something real on it']
+      ],
+      cta:   'Book my Pilot call'
     },
     'founding': {
       h1:    'Leave with the campaign we would build <em>for your first 30 days.</em>',

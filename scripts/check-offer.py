@@ -114,6 +114,15 @@ m_spend = re.search(r'minMonthlyAdSpend:\s*(\d+)', offer)
 anywhere = {fmt(int(m_spend.group(1)))} if m_spend else set()
 FORM_PAGES = {'apply.html', 'project.html', 'strategy-call.html'}
 
+# The Brand Builder Pilot is the one price the site publishes (7 Oct
+# 2026, assets/offer.js brandBuilder.pilot). It may appear on its own
+# page and in the pricing line on /about, and nowhere else outside the
+# forms. If pilotFee is ever removed
+# from offer.js this set is empty and the page fails, which is correct.
+m_pilot = re.search(r'pilotFee:\s*(\d+)', offer)
+_pilot = {fmt(int(m_pilot.group(1)))} if m_pilot else set()
+PAGE_EXTRA = {'brand-builder.html': _pilot, 'about.html': _pilot}
+
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
 print(f'Allowed outside the form pages: ' + '  '.join('$' + a for a in sorted(anywhere)))
@@ -135,7 +144,8 @@ for f in sorted(root.glob('*.html')):
     text = re.sub(r'value="\$[^"]*"', '', text)
     text = re.sub(r'placeholder="[^"]*"', '', text)
     found = set(re.findall(r'\$(\d{1,3}(?:,\d{3})+)', text))
-    bad = sorted(found - (allowed if f.name in FORM_PAGES else anywhere))
+    bad = sorted(found - (allowed if f.name in FORM_PAGES
+                          else anywhere | PAGE_EXTRA.get(f.name, set())))
     counts = sorted(set(re.findall(r'\b\d+\s+deliverables\b', text)))
     if counts:
         fail.append((f.name, counts))
@@ -158,4 +168,4 @@ if fail:
     print('       may state a monthly deliverable count. To publish a')
     print('       price again, declare it in assets/offer.js first.')
     sys.exit(1)
-print('PASS · no page publishes a price, and every figure left traces back to assets/offer.js')
+print('PASS · no page publishes an undeclared price, and every figure traces back to assets/offer.js')

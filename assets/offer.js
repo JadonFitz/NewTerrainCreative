@@ -228,6 +228,47 @@
       ]
     },
 
+    /* ── Brand Builder page · the Pilot ───────────────────────────────
+       Added 7 Oct 2026 with /brand-builder, on Jadon's instruction.
+
+       THE ONE PUBLISHED PRICE. Pricing is still withdrawn from the site
+       (see the note at the top of this file): no retainer rate and no
+       Sprint price is declared, and Brand Builder itself is shown on
+       /brand-builder with no fee and no monthly counts, like every
+       retainer. The Pilot is the exception, on purpose. It is the
+       front-end offer a cold visitor can say yes to, and a front-end
+       offer with its price hidden is not one.
+
+       scripts/check-offer.py lets pilotFee appear on brand-builder.html
+       and on the form pages, and nowhere else. The scope lines below are
+       what the page states; change them here first.
+
+       Not a retainer and not a tier: one production, one time. The
+       90-day gameplan is the client's to keep and to run without us,
+       which is the risk reducer. No result is guaranteed.
+       ─────────────────────────────────────────────────────────────── */
+    brandBuilder: {
+      page: '/brand-builder',
+      geography: 'Los Angeles',
+      pilot: {
+        name: 'The Pilot',
+        pilotFee: 5000,
+        oneTime: true,
+        noRetainer: true,
+        longformEpisodes: 5,
+        shortFormClips: 100,
+        shortFormCutWith: 'our AI-assisted edit pipeline',
+        scope: [
+          '5 longform episodes, shot and finished',
+          '100 short-form clips, cut from those episodes with our AI-assisted edit pipeline',
+          'Premium playbook content: how we build hooks, formats and a posting rhythm',
+          'A 90-day gameplan the client can hire us to run, or run without us'
+        ],
+        gameplanIsClientsToKeep: true,
+        resultGuaranteed: false
+      }
+    },
+
     // ── One-time products ─────────────────────────────────────────────
     products: {
       /* Sprint packages are sold on OUTPUT, not on hours. No shoot
@@ -410,7 +451,10 @@
       // Retired page. The slug stays so a live ad still carrying it keeps
       // its offer identifier; /production-media now redirects to /grow.
       'production-media': 'production_media',
-      'ad-sprint':        'ad_sprint'
+      'ad-sprint':        'ad_sprint',
+      // /brand-builder. Two CTAs on one page, so two identifiers.
+      'brand-builder':    'brand_builder',
+      'brand-pilot':      'brand_pilot'
     },
 
     // ── Things we do not say ──────────────────────────────────────────

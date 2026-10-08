@@ -14,7 +14,8 @@ feature took the Grand Jury Award at the Gasparilla International Film
 Festival. The studio produces ad creative, runs paid media campaigns from that
 creative, and makes bespoke commercials, documentaries and brand films.
 
-Pricing is not published. The Ad Sprint is a one-time fixed price,
+Pricing is not published, with one exception: the Brand Builder
+Pilot, a one-time production at a fixed $5,000. The Ad Sprint is a one-time fixed price,
 quoted before anything is booked. Monthly retainers carry a three-month
 minimum and are scoped and quoted after a consultation. Advertising
 spend is separate and paid by the client directly to the platform. No
@@ -29,6 +30,7 @@ lead volume, revenue or return on ad spend is guaranteed.
 - [Growth retainers](https://www.newterraincreative.com/grow): monthly ad creative production with paid media management and funnel, tracking and automation support included, in three packages: The Anchor, Growth Partner and Brand Builder. The funnel support is a standard setup; custom systems work is scoped separately.
 - [Ad Sprint](https://www.newterraincreative.com/sprint): one-time fixed-price ad creative. The Eight is 8 creatives, The Fifteen is 15. Delivered in three weeks, no retainer, client owns the footage. Creative production only: running the media is not included.
 - [Signature Work](https://www.newterraincreative.com/signature): commercials, brand films, documentaries, launch films and podcast build-outs, scoped and priced per project.
+- [Brand Builder](https://www.newterraincreative.com/brand-builder): cinematic personal brands for Los Angeles founders. Brand Builder is the flagship monthly retainer, by application. The Pilot is its one-time entry point: 5 longform episodes, 100 short-form clips, playbook content and a 90-day gameplan the client keeps, at a fixed $5,000.
 - [Founding Three](https://www.newterraincreative.com/founding): a limited offer for three Los Angeles businesses. The service fee for the first 30 days is waived; the client funds a minimum of $1,500 in media.
 
 ## Policies
@@ -49,7 +51,8 @@ figures quoted across pages agree with each other. If a number here
 conflicts with a number on a page, the page is authoritative and this
 file is stale.
 
-No prices and no monthly deliverable counts are published on this site.
+Apart from the Brand Builder Pilot's fixed price, no prices and no
+monthly deliverable counts are published on this site.
 Retainer volume is agreed in the proposal. Any specific price or monthly
 deliverable count attributed to New Terrain Creative from an earlier
 version of it is out of date.

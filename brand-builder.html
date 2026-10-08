@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Builder · New Terrain Creative. Is your life a movie?</title>
+<meta name="description" content="Cinematic personal brands for Los Angeles founders, made by an award-winning filmmaker duo: longform, short-form and ads in one production.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="New Terrain Creative · Brand Builder">
+<meta property="og:description" content="Is your life a movie? Cinematic personal brands for Los Angeles founders.">
+<meta property="og:image" content="assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --line: #1e1e1e;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  section { padding: 110px 6vw; max-width: 1280px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-size: clamp(34px, 4.6vw, 58px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--parchment);
+  }
+
+  .title em { font-style: italic; color: var(--gold); }
+
+  .lede {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 580px;
+  }
+
+  .btn {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 34px;
+    transition: all 0.3s;
+  }
+
+  .btn--gold { background: var(--gold); color: var(--black); font-weight: 500; }
+  .btn--gold:hover { background: var(--parchment); }
+  .btn--ghost { color: var(--parchment); border: 1px solid #2c2c2c; }
+  .btn--ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 6vw;
+    border-bottom: 1px solid var(--line);
+    background: rgba(10, 10, 10, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .wordmark {
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+
+  .wordmark span { color: var(--gold); }
+
+  .header-cta {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(200,169,110,0.4);
+    padding: 11px 22px;
+    transition: all 0.3s;
+  }
+
+  .header-cta:hover { background: var(--gold); color: var(--black); }
+
+  .header-links { display: flex; align-items: center; gap: 28px; }
+
+  .header-side {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .header-side:hover { color: var(--gold); }
+
+  @media (max-width: 560px) {
+    .header-side { display: none; }
+    /* One line, always: the label must not stack beside the wordmark. */
+    .header-cta { white-space: nowrap; padding: 10px 14px; letter-spacing: 0.18em; }
+  }
+
+  /* ── HERO ── */
+  #hero { padding-top: 190px; padding-bottom: 90px; }
+
+  #hero .title { font-size: clamp(44px, 6.4vw, 86px); max-width: 800px; }
+
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 15px;
+    line-height: 1.9;
+    color: #A09890;
+    max-width: 540px;
+  }
+
+  .hero-ctas { margin-top: 44px; display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .hero-mail {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .hero-mail:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ── STAT BAR ── */
+  .statbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stat {
+    background: var(--black);
+    padding: 38px 28px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── ONE ROOF ── */
+  .roof-cols {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  .roof-num {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .roof-title { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--parchment); margin-bottom: 14px; }
+
+  .roof-body { font-size: 13px; line-height: 1.85; color: var(--muted); }
+
+  /* ── APPLE MAPS ── */
+  #wedge { border-top: 1px solid var(--line); }
+
+  .wedge-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: start; }
+
+  .wedge-points { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+
+  .wedge-point {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 1.8;
+    color: #A09890;
+  }
+
+  .wedge-point::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 9px;
+  }
+
+  /* ── PACKAGES ── */
+  #packages { border-top: 1px solid var(--line); }
+
+  .price-cards {
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .price-card {
+    background: var(--black);
+    padding: 46px 36px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .price-card:hover { background: #0d0d0d; }
+
+  .price-card--featured { background: #0f0d09; }
+
+  .chip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 8px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 6px 14px;
+  }
+
+  .chip--ghost { background: none; color: var(--gold); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+  .price-name {
+    font-family: var(--display);
+    font-size: 27px;
+    font-weight: 300;
+    color: var(--parchment);
+  }
+
+  .price-for {
+    margin-top: 10px;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .price-amount {
+    margin-top: 26px;
+    font-family: var(--display);
+    font-size: 44px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .price-amount small { font-family: var(--body); font-size: 11px; letter-spacing: 0.1em; color: var(--muted); }
+
+  .price-list {
+    list-style: none;
+    margin: 30px 0 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .price-list li {
+    display: flex;
+    gap: 13px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.65;
+    color: #A09890;
+  }
+
+  .price-list li::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .price-cta { margin-top: auto; text-align: center; }
+
+  .price-note {
+    margin-top: 16px;
+    font-size: 10.5px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* secondary offers */
+  .alt-rows { margin-top: 1px; display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); border-top: none; }
+
+  .alt-row {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    gap: 32px;
+    align-items: center;
+    padding: 32px 36px;
+    transition: background 0.3s;
+  }
+
+  .alt-row:hover { background: #0d0d0d; }
+  .alt-row--detail { align-items: start; }
+  .alt-row--detail .price-list { margin: 16px 0 0; gap: 9px; }
+  .alt-row--detail .prepay-note { margin-top: 14px; }
+  .alt-row--link { text-decoration: none; color: inherit; }
+  .alt-row--link .alt-name,
+  .alt-row--link .alt-price { transition: color 0.3s; }
+  .alt-row--link:hover .alt-name { color: var(--gold); }
+  .alt-row--link:focus-visible { outline: 1px solid var(--gold); outline-offset: -1px; }
+
+  .alt-name { font-family: var(--display); font-size: 21px; font-weight: 300; color: var(--parchment); }
+
+  .alt-tag { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.7; display: block; margin-bottom: 8px; }
+
+  .alt-body { font-size: 12px; line-height: 1.75; color: var(--muted); }
+
+  .alt-price { font-family: var(--display); font-size: 22px; color: var(--gold); white-space: nowrap; text-align: right; }
+
+  .alt-price small { font-family: var(--body); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 4px; }
+
+  /* ── INVESTMENT BAND ── replaces the old tier cards ── */
+  .invest-band {
+    margin-top: 46px; border: 1px solid var(--gold-dim, #8A7647);
+    background: #101010; padding: 32px 34px;
+    display: grid; grid-template-columns: minmax(0,300px) 1fr; gap: 34px; align-items: start;
+  }
+  .invest-label {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .invest-figure {
+    font-family: var(--display); font-size: clamp(26px,3.4vw,36px);
+    font-weight: 300; line-height: 1.1; color: var(--gold);
+  }
+  .invest-note { font-size: 13.5px; line-height: 1.85; color: #A09890; margin: 0; }
+
+
+  /* ── TIER CARDS · the public qualifier, not the full menu ──
+     Deliberately short. Exact deliverable composition and terms are
+     set in the proposal, which is sent after a call. */
+  .tiers {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  /* Three cards: three across, or one per row. Two across left an empty cell on iPad. */
+  @media (max-width: 900px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { background: var(--black); padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .tier--mid { background: #0f0d09; }
+  .tier-label {
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted);
+  }
+  .tier-name {
+    font-family: var(--display); font-weight: 300; font-size: 26px;
+    line-height: 1.1; color: var(--parchment);
+  }
+  .tier-line { font-size: 13px; line-height: 1.7; color: var(--soft); }
+  .tier-line b { color: var(--parchment); font-weight: 400; }
+  .tiers + .invest-note { margin-top: 22px; }
+  .invest-note--boutique { margin-top: 12px; color: var(--parchment); }
+  @media (max-width: 720px) { .tier { padding: 24px 20px; } }
+
+  .invest-fit {
+    margin-top: 1px; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line); border: 1px solid var(--line);
+  }
+  .invest-fit-col { background: var(--black); padding: 28px 30px 30px; }
+  .invest-fit-col h3 {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px; font-weight: 400;
+  }
+  .invest-fit-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .invest-fit-col li { display: flex; gap: 12px; font-size: 13px; line-height: 1.7; color: #A09890; }
+  .invest-fit-col li::before {
+    content: ''; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0; margin-top: 9px;
+  }
+
+  .invest-cta { margin-top: 46px; text-align: center; }
+  .invest-cta-note {
+    margin: 18px auto 0; max-width: 52ch; font-size: 12.5px;
+    font-style: italic; line-height: 1.8; color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .invest-band { grid-template-columns: 1fr; gap: 22px; padding: 26px 22px; }
+    .invest-fit { grid-template-columns: 1fr; }
+  }
+
+/* ── PREPAY ── */
+  .prepay-scroll { overflow-x: auto; margin-top: 56px; }
+
+  .prepay-table { width: 100%; border-collapse: collapse; min-width: 540px; }
+
+  .prepay-table th {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--gold);
+    opacity: 0.75;
+    text-align: left;
+    padding: 0 16px 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .prepay-table td {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: #A09890;
+    padding: 18px 16px 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .prepay-table td:first-child { color: var(--parchment); font-weight: 400; }
+  .prepay-table td:last-child { color: var(--gold); white-space: nowrap; }
+
+  .prepay-note { margin-top: 18px; font-size: 11px; font-style: italic; color: var(--muted); line-height: 1.7; }
+
+  /* ── PROOF ── */
+  #proof { border-top: 1px solid var(--line); }
+
+  .proof-rows { margin-top: 64px; border-top: 1px solid var(--line); }
+
+  .proof-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .proof-num { font-family: var(--display); font-size: 46px; font-weight: 300; color: var(--gold); line-height: 1; }
+
+  .proof-label { margin-top: 10px; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+
+  .proof-tier { display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); opacity: 0.75; margin-bottom: 8px; }
+  .proof-client { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--parchment); margin-bottom: 10px; }
+
+  .proof-desc { font-size: 13px; line-height: 1.85; color: var(--muted); max-width: 640px; }
+
+  /* ── FINAL CTA ── */
+  #close { text-align: center; padding-top: 140px; padding-bottom: 140px; }
+
+  #close .title { font-size: clamp(40px, 5.5vw, 72px); }
+
+  #close .lede { margin-left: auto; margin-right: auto; }
+
+  .close-ctas { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  .close-mail {
+    display: block;
+    margin-top: 28px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .close-mail:hover { color: var(--gold); }
+
+  .mail-row { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+  .mail-row a { margin-top: 0; }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 30px 6vw;
+    border-top: 1px solid var(--line);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  footer a:hover { color: var(--gold); }
+
+  /* ── VIDEO SLOT ── */
+  #video { padding-top: 0; padding-bottom: 90px; }
+  .video-frame {
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
+  .video-ph { text-align: center; padding: 30px; }
+  .video-ph-mark {
+    font-family: var(--display);
+    font-size: 40px;
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.45;
+  }
+  .video-ph-note {
+    margin-top: 16px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+  .video-ph-copy { margin: 14px auto 22px; max-width: 34ch; font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+  /* ── THE REEL · horizontal showcase of vertical work ──
+     One row of 9:16 cards that loop silently, gloss on the glass,
+     and open the full cut on click. Card copy lives in the markup. */
+  #reel { --reel-max: 1280px; max-width: none; padding-left: 0; padding-right: 0; }
+  .reel-head {
+    max-width: var(--reel-max);
+    margin: 0 auto;
+    padding: 0 6vw;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .reel-nav { display: flex; gap: 10px; flex-shrink: 0; padding-bottom: 6px; }
+  .reel-arrow {
+    width: 44px; height: 44px;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.4s cubic-bezier(0.16,1,0.3,1), color 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s;
+  }
+  .reel-arrow:hover { border-color: var(--gold); color: var(--gold); }
+  .reel-arrow[disabled] { opacity: 0.25; cursor: default; border-color: var(--line); color: var(--parchment); }
+
+  .reel-viewport { position: relative; margin-top: 44px; }
+  .reel-viewport::before,
+  .reel-viewport::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 10vw;
+    max-width: 150px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .reel-viewport::before {
+    left: 0;
+    background: linear-gradient(to left, rgba(10,10,10,0) 0%, var(--black) 88%);
+  }
+  .reel-viewport::after {
+    right: 0;
+    background: linear-gradient(to right, rgba(10,10,10,0) 0%, var(--black) 88%);
+  }
+  .reel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 2px max(6vw, calc((100vw - var(--reel-max)) / 2 + 6vw));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .reel-track::-webkit-scrollbar { display: none; }
+
+  .reel-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 258px;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #0f0f0f;
+    cursor: pointer;
+    transition: border-color 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover,
+  .reel-card:focus-visible { border-color: rgba(200,169,110,0.5); outline: none; }
+
+  .reel-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover .reel-media,
+  .reel-card:focus-visible .reel-media { transform: scale(1.04); }
+
+
+  /* Gloss · a fixed specular pass over the glass, plus a sweep on hover */
+  .reel-gloss,
+  .reel-shine,
+  .reel-scrim,
+  .reel-veil { position: absolute; inset: 0; pointer-events: none; }
+  .reel-gloss {
+    background:
+      linear-gradient(158deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0) 44%),
+      linear-gradient(to top, rgba(10,10,10,0.28) 0%, rgba(10,10,10,0) 34%);
+  }
+  /* A wide, soft leak that drifts once across the glass. It runs as a
+     keyframe rather than a transition so that pulling the cursor away
+     stops it where it is instead of racing it back the other way. */
+  .reel-shine {
+    background: linear-gradient(104deg,
+      rgba(255,255,255,0) 20%,
+      rgba(255,255,255,0.05) 38%,
+      rgba(255,255,255,0.12) 50%,
+      rgba(255,255,255,0.05) 62%,
+      rgba(255,255,255,0) 80%);
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  .reel-card:hover .reel-shine,
+  .reel-card:focus-visible .reel-shine {
+    animation: reelLeak 2.1s cubic-bezier(0.33,0,0.2,1) 0.12s both;
+  }
+  @keyframes reelLeak {
+    0%   { transform: translateX(-100%); opacity: 0; }
+    22%  { opacity: 1; }
+    78%  { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+  .reel-scrim {
+    background: linear-gradient(to top, rgba(6,6,6,0.98) 0%, rgba(6,6,6,0.94) 22%, rgba(6,6,6,0.72) 38%, rgba(6,6,6,0.3) 56%, rgba(6,6,6,0.06) 74%, rgba(6,6,6,0) 90%);
+    opacity: 1;
+    transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover .reel-scrim,
+  .reel-card:focus-visible .reel-scrim { opacity: 1; }
+  .reel-veil {
+    background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.76) 46%, rgba(8,8,8,0.36) 80%, rgba(8,8,8,0.12) 100%);
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reel-card:hover .reel-veil,
+  .reel-card:focus-visible .reel-veil { opacity: 1; }
+
+  .reel-body {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 22px 20px 20px;
+    pointer-events: none;
+  }
+  .reel-tag {
+    font-size: 8.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 9px;
+  }
+  .reel-name {
+    font-family: var(--display);
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--parchment);
+    margin: 0;
+  }
+  .reel-figure {
+    margin-top: 12px;
+    padding-top: 11px;
+    border-top: 1px solid rgba(200,169,110,0.28);
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    color: var(--parchment);
+    font-weight: 400;
+  }
+  .reel-figure small {
+    display: block;
+    margin-top: 4px;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #948C84;
+    font-weight: 300;
+  }
+
+  /* Hover panel · the story behind the number */
+  .reel-more {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
+  }
+  .reel-card:hover .reel-more,
+  .reel-card:focus-visible .reel-more { max-height: 220px; opacity: 1; }
+  .reel-note {
+    margin: 14px 0 0;
+    font-size: 11.5px;
+    line-height: 1.75;
+    color: #A09890;
+  }
+  .reel-card--noplay { cursor: default; }
+  .reel-play {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 9.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 3px;
+  }
+
+  .reel-fine {
+    max-width: var(--reel-max);
+    margin: 42px auto 0;
+    padding: 0 6vw;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* ── VERTICAL PLAYER ── */
+  .vmodal {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    background: rgba(10,10,10,0.94);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .vmodal.open { opacity: 1; pointer-events: all; }
+  .vmodal-inner {
+    position: relative;
+    transform: translateY(18px) scale(0.98);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .vmodal.open .vmodal-inner { transform: none; }
+  .vmodal-stage {
+    position: relative;
+    height: min(80vh, 880px);
+    max-width: 92vw;
+    aspect-ratio: 9 / 16;
+    background: #000;
+    border: 1px solid var(--line);
+  }
+
+  /* What the clip was, and how it did where it ran. Engagement sits here
+     rather than on the card so the row keeps one number per card. */
+  .vmodal-meta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 14px;
+  }
+  .vmodal-meta:empty { display: none; }
+  .vmodal-meta-name {
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.2;
+  }
+  .vmodal-meta-tag {
+    margin-top: 5px;
+    font-size: 8.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .vmodal-stats {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .vmodal-stats b {
+    font-weight: 500;
+    color: var(--parchment);
+    letter-spacing: 0;
+  }
+
+  .vmodal-stage video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+  /* A 9:16 player is narrow enough that the browser drops volume from its
+     own control bar, so the sound lives up here instead. */
+  .vmodal-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 12px;
+  }
+  .vmodal-btn {
+    background: none;
+    border: none;
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s, color 0.2s;
+    padding: 0;
+    white-space: nowrap;
+  }
+  .vmodal-btn:hover { opacity: 1; }
+  .vmodal-mute[data-muted="true"] { color: var(--muted); }
+  .vmodal-close { margin-left: auto; }
+
+  .vmodal-vol {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 92px;
+    height: 12px;
+    background: none;
+    cursor: pointer;
+  }
+  .vmodal-vol::-webkit-slider-runnable-track { height: 1px; background: #3a3733; }
+  .vmodal-vol::-moz-range-track { height: 1px; background: #3a3733; }
+  .vmodal-vol::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 9px; height: 9px;
+    margin-top: -4px;
+    background: var(--gold);
+    border: none;
+    border-radius: 0;
+  }
+  .vmodal-vol::-moz-range-thumb {
+    width: 9px; height: 9px;
+    background: var(--gold);
+    border: none;
+    border-radius: 0;
+  }
+  .vmodal-vol:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+
+  /* Touch has no hover to reveal with, and a card is far narrower here, so
+     the description stays shut until it is asked for. One tap opens it,
+     the next one plays. */
+  @media (hover: none) {
+    /* A tap on touch latches the :hover state and holds it until something
+       else is tapped. That left the poster scaled up 4% under a gloss and a
+       scrim that do not scale, so the card's dark wash sat a few pixels off
+       the image it was washing. None of the hover pass survives here. */
+    .reel-card:hover .reel-media { transform: none; }
+    .reel-card:hover .reel-veil { opacity: 0; }
+    .reel-card:hover:not(.is-open) { border-color: var(--line); }
+
+    .reel-more { max-height: 0; opacity: 0; }
+    .reel-card.is-open .reel-more { max-height: 190px; opacity: 1; }
+    .reel-card.is-open .reel-veil { opacity: 1; }
+    .reel-card.is-open { border-color: rgba(200,169,110,0.5); }
+    .reel-card.is-open .reel-note { font-size: 11px; line-height: 1.65; }
+    .reel-nav { display: none; }
+    .reel-shine { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reel-shine { display: none; animation: none; }
+    .reel-media, .reel-more, .reel-scrim { transition: none; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .price-cards { grid-template-columns: 1fr; }
+    .roof-cols, .promise-cols { grid-template-columns: 1fr; gap: 36px; }
+    .wedge-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 72px 24px; }
+    .reel-head { padding: 0 24px; }
+    .reel-track { padding-left: 24px; padding-right: 24px; }
+    .reel-fine { padding: 0 24px; }
+    .reel-nav { display: none; }
+    .reel-card { width: 212px; }
+    #hero { padding-top: 140px; }
+    .statbar { grid-template-columns: 1fr 1fr; }
+    .alt-row { grid-template-columns: 1fr; gap: 18px; padding: 30px 24px; }
+    .alt-price { text-align: left; }
+    .proof-row { grid-template-columns: 1fr; gap: 18px; }
+    .price-card { padding: 38px 24px; }
+
+    /* The player on a phone. Its height came from 80vh, which is a slice of
+       the tallest the viewport ever gets rather than of what is on screen
+       now, so the frame ran on under the browser chrome: the clip arrived
+       cropped and the close button sat off the bottom of the glass. The
+       column is pinned to the dynamic viewport instead and the stage takes
+       whatever the bar and the meta leave it. The video is object-fit:
+       contain, so it sits in that box whole at whatever size fits. */
+    .vmodal { height: 100vh; height: 100dvh; }
+    .vmodal-inner {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+    }
+    .vmodal-bar { flex: none; }
+    .vmodal-stage {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
+      width: 100%;
+      max-width: none;
+      aspect-ratio: auto;
+      border: none;
+      background: none;
+    }
+    .vmodal-stage video { object-fit: contain; }
+    .vmodal-meta {
+      flex: none;
+      display: block;
+      padding-top: 12px;
+    }
+    .vmodal-stats {
+      justify-content: flex-start;
+      margin-top: 8px;
+      gap: 14px;
+      font-size: 10.5px;
+    }
+    /* An 11px word held at 0.6 is not a target for a thumb. */
+    .vmodal-btn { padding: 15px 2px; opacity: 1; }
+    .vmodal-close { padding-left: 18px; }
+  }
+
+  /* Bold leads. These pages are bullets rather than paragraphs: a line
+     opens on the part worth reading and adds a few words at most. */
+  .hero-sub b, .lede b, .roof-body b, .contrast-list b, .deliver-body b,
+  .speed-body b, .fine b, .qa-a b, .derisk-item p b, .derisk-fine b,
+  .invest-note b, .invest-fit-col b, .invest-cta-note b, .prepay-list b,
+  .found-lede b, .alt-path-copy b, .proof-desc b {
+    color: var(--parchment); font-weight: 500;
+  }
+
+  /* The engagement terms, as a list. Was one italic paragraph. */
+  .prepay-list { list-style: none; margin-top: 26px; display: flex; flex-direction: column; gap: 7px; }
+  .prepay-list li { font-size: 12px; line-height: 1.7; color: var(--muted); padding-left: 16px; position: relative; }
+  .prepay-list li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 1px; background: var(--gold); }
+
+  /* ══ BRAND BUILDER PAGE ═════════════════════════════════════════════
+     Everything above is /grow's stylesheet, unchanged. These are the
+     only additions: the full-bleed film hero, the two case studies, the
+     two-card offer grid and the duo. No shadows, no glows, borders only. */
+
+  /* ── FILM HERO ──
+     One still, shown whole. On a wide screen it fills the hero at its
+     own 4:3 shape and the copy keeps to a column on the left, clear of
+     the figure. On a narrow or tall screen the copy stacks above and
+     the sky is extended upward in the picture's own colour, so the
+     words never sit on the subject at any width. */
+  .bb-hero {
+    --sky: #014586;
+    position: relative;
+    min-height: min(75vw, 135vh);
+    overflow: hidden;
+    background: var(--black);
+  }
+  .bb-hero-still {
+    position: absolute; left: 0; bottom: 0;
+    width: 100%; height: 75vw;
+    object-fit: cover;
+    object-position: 50% 100%;
+    z-index: 0;
+  }
+  .bb-hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(to right, rgba(10,10,10,0.62) 0%, rgba(10,10,10,0.30) 26%, rgba(10,10,10,0) 44%),
+      linear-gradient(to bottom,
+        rgba(10,10,10,0.82) 0%,
+        rgba(10,10,10,0.30) 20%,
+        rgba(10,10,10,0) 42%,
+        rgba(10,10,10,0) 86%,
+        rgba(10,10,10,0.80) 100%);
+  }
+  .bb-hero #hero {
+    position: relative; z-index: 2;
+    max-width: none; margin: 0;
+    padding: calc(60px + 6.2vw) 6vw 0;
+  }
+  .bb-hero-copy { width: 27vw; }
+  .bb-hero #hero .title { font-size: clamp(38px, 5.1vw, 84px); max-width: none; }
+  .bb-hero .hero-sub { color: #E4DDD2; margin-top: 1.4vw; max-width: none; font-size: clamp(13px, 1.04vw, 18px); }
+  .bb-hero .hero-ctas { margin-top: 2vw; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .bb-hero .btn--ghost { border-color: rgba(245,240,232,0.5); background: rgba(10,10,10,0.35); }
+
+  @media (max-width: 1180px), (max-aspect-ratio: 4/3) {
+    .bb-hero {
+      --still-h: min(125vw, 92vh);
+      min-height: 0;
+      background: linear-gradient(to bottom, var(--black) 0, var(--black) 64px, var(--sky) calc(100% - var(--still-h)), var(--sky) 100%);
+    }
+    /* Feather the top edge of the picture into the extended sky. */
+    .bb-hero-still {
+      height: var(--still-h); object-position: 43% 100%;
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 110px);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 110px);
+    }
+    .bb-hero-overlay {
+      background:
+        linear-gradient(to bottom, rgba(10,10,10,0.55) 0, rgba(10,10,10,0) 55%),
+        linear-gradient(to top, rgba(10,10,10,0.80) 0, rgba(10,10,10,0) 16%);
+    }
+    /* The figure's head sits 38% down the picture: keep the copy above it. */
+    .bb-hero #hero { padding: 104px 6vw calc(var(--still-h) * 0.66); }
+    .bb-hero .hero-sub { font-size: 15px; margin-top: 20px; }
+    .bb-hero .hero-ctas { margin-top: 30px; }
+    .bb-hero-copy { width: auto; min-width: 0; max-width: 520px; }
+    .bb-hero #hero .title { font-size: clamp(42px, 11vw, 64px); }
+  }
+
+  /* Credit line under the frame, like a billing block. */
+  .bb-billing {
+    padding: 18px 6vw;
+    border-bottom: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 8px 30px;
+    font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .bb-billing b { color: var(--parchment); font-weight: 400; }
+
+  /* ── WIDE STILLS ── */
+  .bb-still { margin-top: 60px; border: 1px solid var(--line); background: #0d0d0d; }
+  .bb-still img { width: 100%; height: auto; display: block; }
+  .bb-still figcaption {
+    padding: 14px 18px; border-top: 1px solid var(--line);
+    font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); line-height: 1.8;
+  }
+  .bb-still figcaption b { color: var(--parchment); font-weight: 400; }
+
+  /* ── SECTION RULES ── */
+  #problem, #show, #cases, #pilot, #duo { border-top: 1px solid var(--line); }
+
+  /* ── THE SHOW · four parts of the monthly production ── */
+  .show-rows { margin-top: 60px; border-top: 1px solid var(--line); }
+  .show-row {
+    display: grid; grid-template-columns: 220px 1fr; gap: 40px;
+    padding: 34px 0; border-bottom: 1px solid var(--line);
+  }
+  .show-part { font-family: var(--display); font-size: 30px; font-weight: 300; color: var(--parchment); line-height: 1.1; }
+  .show-part em { font-style: italic; color: var(--gold); }
+  .show-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
+  .show-body { font-size: 13.5px; line-height: 1.85; color: #A09890; max-width: 640px; }
+  .show-body b { color: var(--parchment); font-weight: 500; }
+
+  /* ── CASE STUDIES ── */
+  .case-grid {
+    margin-top: 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--line); border: 1px solid var(--line);
+  }
+  .case { background: var(--black); padding: 44px 38px 40px; display: flex; flex-direction: column; }
+  .case-tier { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
+  .case-name { margin-top: 12px; font-family: var(--display); font-size: 34px; font-weight: 300; color: var(--parchment); line-height: 1.1; }
+  .case-role { margin-top: 8px; font-size: 11px; font-style: italic; color: var(--muted); line-height: 1.7; }
+  .case-num { margin-top: 30px; font-family: var(--display); font-size: 64px; font-weight: 300; color: var(--gold); line-height: 1; }
+  .case-label { margin-top: 10px; font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .case-desc { margin-top: 24px; font-size: 13.5px; line-height: 1.85; color: #A09890; }
+  .case-desc b { color: var(--parchment); font-weight: 500; }
+  .case-list { list-style: none; margin: 22px 0 30px; display: flex; flex-direction: column; gap: 10px; }
+  .case-list li { display: flex; gap: 13px; font-size: 12.5px; line-height: 1.7; color: #A09890; }
+  .case-list li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 8px; }
+  .case-link {
+    margin-top: auto; align-self: flex-start;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--parchment); text-decoration: none;
+    border-bottom: 1px solid var(--gold); padding-bottom: 5px;
+    transition: color 0.4s;
+  }
+  .case-link:hover { color: var(--gold); }
+  #cases .proof-rows { margin-top: 0; border-top: none; }
+  .cases-sub { margin-top: 70px; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+
+  /* ── TWO WAYS IN ── */
+  #pilot .price-cards { grid-template-columns: 1fr 1fr; }
+  .price-amount--words { font-size: 30px; line-height: 1.15; }
+  .pilot-steps { margin-top: 70px; }
+
+  /* ── THE DUO ── */
+  .duo-grid { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .duo-frame { aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid var(--line); background: #0d0d0d; }
+  .duo-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .duo-name { margin-top: 0; font-family: var(--display); font-size: 28px; font-weight: 300; color: var(--parchment); }
+  .duo-role { margin-top: 6px; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .duo-body { margin-top: 16px; font-size: 13.5px; line-height: 1.85; color: #A09890; }
+  .duo-credits { list-style: none; margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .duo-credits li { font-size: 12px; line-height: 1.7; color: var(--muted); padding-left: 16px; position: relative; }
+  .duo-credits li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 1px; background: var(--gold); }
+  .duo-credits b { color: var(--parchment); font-weight: 500; }
+
+  @media (max-width: 860px) {
+    .case-grid, #pilot .price-cards, .duo-grid { grid-template-columns: 1fr; }
+    .show-row { grid-template-columns: 1fr; gap: 14px; padding: 28px 0; }
+    .case { padding: 34px 24px 32px; }
+    .case-num { font-size: 52px; }
+    .bb-billing { gap: 6px 18px; font-size: 8.5px; }
+  }
+</style>
+</head>
+<body>
+
+
+<header>
+  <a class="wordmark" href="#hero">New Terrain Creative <span>· Brand Builder</span></a>
+  <div class="header-links">
+    <a class="header-side" href="#pilot">The Pilot</a>
+    <a class="header-side" href="/grow">Social Growth</a>
+    <a class="header-cta" data-cta="header" href="/strategy-call?offer=brand-builder">Apply</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<!--
+  ════════════════════════════════════════════════════════════════
+  THE HERO PICTURE
+
+  One still, held like a frame from a film: assets/brand-builder-hero.jpg.
+  The copy keeps to the left column on a wide screen and stacks above
+  the picture on a narrow one, so it never sits on the figure. If the
+  still is ever swapped, re-check both, and re-sample --sky from the
+  new picture's top edge (the narrow layout extends the sky with it).
+  ════════════════════════════════════════════════════════════════
+-->
+<div class="bb-hero">
+  <img class="bb-hero-still" src="assets/brand-builder-hero.jpg" width="2000" height="1500" alt="A man leaning on a gold 1966 Mustang convertible in the desert" fetchpriority="high">
+  <div class="bb-hero-overlay"></div>
+  <section id="hero">
+    <div class="bb-hero-copy">
+      <div class="eyebrow reveal">Brand Builder · For Los Angeles Founders</div>
+      <h1 class="title reveal">Is your life<br>a <em>movie?</em></h1>
+      <p class="hero-sub reveal">We're Jadon and Meghan, an award-winning filmmaker duo. We turn founders into cinematic personal brands: <b>shot like film, built to grow the business.</b></p>
+      <div class="hero-ctas reveal">
+        <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Apply for Brand Builder</a>
+        <a class="btn btn--ghost" data-cta="hero-pilot" href="#pilot">Start with the Pilot</a>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="bb-billing">
+  <span><b>Grand Jury Award</b> · Gasparilla</span>
+  <span><b>Official Selections</b> · Tribeca · Telluride</span>
+  <span><b>Best Sci-Fi</b> · FilmQuest</span>
+  <span><b>Best Actress</b> · New York Movie Awards</span>
+</div>
+
+<!-- STAT BAR · every figure here is already published elsewhere on the
+     site. Do not add one that is not: see the proof rows on / and /grow. -->
+<div class="statbar">
+  <div class="stat reveal"><div class="stat-num">1M+</div><div class="stat-label">Streaming minutes<br>on our own feature</div></div>
+  <div class="stat reveal"><div class="stat-num">338K+</div><div class="stat-label">Organic reach<br>in 9 days · zero spend</div></div>
+  <div class="stat reveal"><div class="stat-num">101K+</div><div class="stat-label">Following built<br>around one founder</div></div>
+  <div class="stat reveal"><div class="stat-num">58K+</div><div class="stat-label">Followers built<br>for one attorney</div></div>
+</div>
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  HELD · the third-party statistic
+
+  The ad for this page opens on a consumer-trust statistic about
+  founders with a visible personal brand. It is NOT on the page yet,
+  because the article it was taken from could not be found again to
+  link. A statistic here needs its source beside it. When the link is
+  in hand, add a line under the stat bar in this form and nothing
+  looser:
+
+    <p class="invest-note">NN% of consumers ... <a href="SOURCE">Publication, month year</a></p>
+  ════════════════════════════════════════════════════════════════
+-->
+
+<!-- THE PROBLEM -->
+<section id="problem">
+  <div class="eyebrow reveal">The Problem</div>
+  <h2 class="title reveal">People buy the founder<br>before they buy <em>the firm.</em></h2>
+  <div class="roof-cols">
+    <div class="reveal">
+      <span class="roof-num">I</span>
+      <div class="roof-title">The best-kept secret</div>
+      <p class="roof-body">The work is excellent. Outside your referrals, almost nobody has watched you do it.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">II</span>
+      <div class="roof-title">Louder is winning</div>
+      <p class="roof-body">Competitors with half your record are on camera every week, and getting the calls.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">III</span>
+      <div class="roof-title">It all looks the same</div>
+      <p class="roof-body">Same podcast clips, same captions, same ring light. Nothing that looks like you.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">IV</span>
+      <div class="roof-title">No time to be a creator</div>
+      <p class="roof-body">You run a company. You show up for the shoot. We do everything after it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE SHOW · what Brand Builder is.
+     Qualitative on purpose, like the tier cards on /grow: no price and
+     no monthly counts, which are agreed in the proposal. Every line
+     here restates assets/offer.js retainer.publicGuideTiers 'Brand
+     Builder'. Do not add a scope item that is not in that list. -->
+<section id="show">
+  <div class="eyebrow reveal">Brand Builder</div>
+  <h2 class="title reveal">Your brand, run like<br>a <em>production.</em></h2>
+  <p class="lede reveal">Our flagship partnership, and our largest monthly production allocation. <b>One team writes it, shoots it, cuts it and runs the media behind it.</b></p>
+  <div class="show-rows">
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Longform</span>The <em>feature</em></div>
+      <p class="show-body"><b>The piece people sit down for.</b> Founder interviews, YouTube episodes, podcasts and case-study films, directed and graded like the films we make for ourselves.</p>
+    </div>
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Short-form</span>The <em>trailers</em></div>
+      <p class="show-body"><b>The moments that travel.</b> Cut for the feed and captioned in-house, so every episode keeps working after the day it posts.</p>
+    </div>
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Ads</span>The <em>campaign</em></div>
+      <p class="show-body"><b>Ad creative built as ad creative,</b> not recut brand footage, with paid media management, testing and iteration included.</p>
+    </div>
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Distribution</span>The <em>release</em></div>
+      <p class="show-body"><b>Somewhere for the attention to land.</b> Funnel, tracking and automation support, organic distribution of the campaign creative, and monthly analytics and creative direction.</p>
+    </div>
+  </div>
+  <p class="invest-note reveal" style="margin-top:26px"><b>Three month minimum.</b> Scope and fee are set on the call and confirmed in writing before anything starts. Your advertising spend stays on your own payment method.</p>
+</section>
+
+<!-- THE REEL -->
+<!--
+  ════════════════════════════════════════════════════════════════
+  HOW TO EDIT THIS SECTION
+
+  Each card is one <article class="reel-card">, and each one points at three
+  files in assets/reel. To add a card, copy an existing one and change:
+
+    • THE LOOP        <source src="assets/reel/loop-NAME.mp4">
+                      Silent, 6s, 540x960. Autoplays in the card.
+
+    • THE POSTER      poster="assets/reel/poster-NAME.jpg"
+                      540x960 still, held until the loop decodes. If the loop
+                      file is ever missing the poster stands in on its own.
+
+    • WHAT PLAYS      data-src="assets/reel/NAME.mp4"
+                      The full cut with audio, 720x1280. The player is 9:16
+                      only, on purpose: everything in this row is a social
+                      reel, so nothing horizontal belongs in it.
+
+                      assets/reel/README.md has the ffmpeg lines that
+                      produced all three from a master file.
+
+    • THE NUMBER      .reel-figure is the headline, <small> is the qualifier.
+                      The per-ad hooks are placeholders for real campaign
+                      numbers: swap in cost per lead, CAC, or cases signed
+                      as they land, but only ones you can stand behind, since
+                      the Founding Five terms put these in writing.
+
+    • THE HOVER       .reel-note is the line that opens on hover.
+
+    • HOW IT DID      Optional attributes on the <article>, shown in the
+                      player rather than on the card, so the row keeps one
+                      number per card:
+
+                        data-views="137000"
+                        data-likes="3400"
+                        data-comments="82"
+                        data-shares="294"
+
+                      Give raw numbers, not "3.4K" — they get formatted.
+                      Any you leave off are simply not shown, and a card
+                      with none of them still shows its title in the
+                      player. Nothing here links out: the point is to keep
+                      people on the page.
+
+                      Engagement rate is worked out for you: give a card
+                      data-views alongside any of likes, comments or
+                      shares and the player adds a percentage. Do not type
+                      it in, and note it only appears where data-views
+                      does. A rate without the view count beside it is the
+                      number that flatters a post nobody saw, and the
+                      people reading this page know that.
+
+                      data-ig records which post a card's numbers came
+                      from. It is never rendered, it is there so the
+                      figures can be checked and refreshed later.
+  ════════════════════════════════════════════════════════════════
+-->
+<section id="reel">
+  <div class="reel-head">
+    <div>
+      <div class="eyebrow reveal">The Reel</div>
+      <h2 class="title reveal">Founders, films,<br>and <em>the feed.</em></h2>
+    </div>
+    <div class="reel-nav reveal">
+      <button class="reel-arrow reel-arrow--prev" type="button" aria-label="Scroll the reel left">&#8592;</button>
+      <button class="reel-arrow reel-arrow--next" type="button" aria-label="Scroll the reel right">&#8594;</button>
+    </div>
+  </div>
+
+  <div class="reel-viewport reveal">
+    <div class="reel-track">
+      <!-- Off Script · Video Podcast &middot; Jack Tenney -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Script" data-src="assets/reel/off-script-jack-tenney.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-script-jack-tenney.jpg">
+          <source src="assets/reel/loop-off-script-jack-tenney.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Jack Tenney</div>
+          <h3 class="reel-name">Off Script</h3>
+          <div class="reel-figure">5.5M subscribers in the chair<small>NTC Original &middot; shot and cut in-house</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Our own show. The short-form format we build for clients, run on ourselves first so there is somewhere to point when we pitch it.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Empowered with Gina · Video Podcast &middot; Keesha Scott -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Empowered with Gina" data-src="assets/reel/ewg-keesha-scott.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-ewg-keesha-scott.jpg">
+          <source src="assets/reel/loop-ewg-keesha-scott.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Keesha Scott</div>
+          <h3 class="reel-name">Empowered with Gina</h3>
+          <div class="reel-figure">Full episode, cut to shorts<small>One session, a run of clips</small></div>
+          <div class="reel-more">
+            <p class="reel-note">An episode shot end to end and cut down off the same session. The longform and the short-form come out of one day, which is the only way the math works.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Left Hanging · Ad Sprint &middot; Personal Injury -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Left Hanging" data-src="assets/reel/left-hanging.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-left-hanging.jpg">
+          <source src="assets/reel/loop-left-hanging.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Ad Sprint &middot; Personal Injury</div>
+          <h3 class="reel-name">Left Hanging</h3>
+          <div class="reel-figure">Hook one &middot; Insurance<small>Mike Alder &middot; one shoot day</small></div>
+          <div class="reel-more">
+            <p class="reel-note">The insurance angle, opened cold off a ledge. First of the set, and the reason the other two exist: nobody knows which hook wins until all of them run.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Altadena · Documentary &middot; Fire Relief -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Altadena" data-src="assets/reel/altadena-fires.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-altadena-fires.jpg">
+          <source src="assets/reel/loop-altadena-fires.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Documentary &middot; Fire Relief</div>
+          <h3 class="reel-name">Altadena</h3>
+          <div class="reel-figure">Community helping community<small>Filmed on the ground</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Coverage of the relief effort after the Altadena fires, and of the room that turned out to honor the people behind it. Cut as a record rather than a promo.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Hamster Wheel · Ad Sprint &middot; Personal Injury -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hamster Wheel" data-src="assets/reel/hamster-wheel.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-hamster-wheel.jpg">
+          <source src="assets/reel/loop-hamster-wheel.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Ad Sprint &middot; Personal Injury</div>
+          <h3 class="reel-name">Hamster Wheel</h3>
+          <div class="reel-figure">Hook three &middot; Negotiating<small>Mike Alder &middot; one shoot day</small></div>
+          <div class="reel-more">
+            <p class="reel-note">The negotiating angle, shot back to back with the other two. Three ready-to-run creatives out of one shoot, captioned and cut for every placement.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Script · Video Podcast &middot; Meghan -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Script" data-src="assets/reel/off-script-meghan.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-script-meghan.jpg">
+          <source src="assets/reel/loop-off-script-meghan.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Meghan</div>
+          <h3 class="reel-name">Off Script</h3>
+          <div class="reel-figure">Full production, end to end<small>NTC Original &middot; booking to final cut</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Booked, shot, cut, captioned, and cut down to shorts by the same person. The episode and the clips come out of one pass, not two.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Kids Need Space · Event Film &middot; Empowered with Gina -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Kids Need Space" data-src="assets/reel/kids-need-space.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-kids-need-space.jpg">
+          <source src="assets/reel/loop-kids-need-space.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Event Film &middot; Empowered with Gina</div>
+          <h3 class="reel-name">Kids Need Space</h3>
+          <div class="reel-figure">The room and the mission<small>Gina guest speaking</small></div>
+          <div class="reel-more">
+            <p class="reel-note">A Kids Need Space event with Empowered with Gina, Gina guest speaking. Her talk is cut against launch and orbit footage so the idea lands as hard in the edit as it did in the room.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Ping Pong Crash · Ad Sprint &middot; Personal Injury -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Ping Pong Crash" data-src="assets/reel/ping-pong-crash.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-ping-pong-crash.jpg">
+          <source src="assets/reel/loop-ping-pong-crash.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Ad Sprint &middot; Personal Injury</div>
+          <h3 class="reel-name">Ping Pong Crash</h3>
+          <div class="reel-figure">Hook two &middot; The client call<small>Mike Alder &middot; one shoot day</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Same day, same office, a completely different way in. Written to be tested against Left Hanging rather than to replace it.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Rip · Feature Film &middot; Love Story -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip" data-src="assets/reel/off-rip-love-story.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-love-story.jpg">
+          <source src="assets/reel/loop-off-rip-love-story.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Feature Film &middot; Love Story</div>
+          <h3 class="reel-name">Off Rip</h3>
+          <div class="reel-figure">137K organic views<small>1M+ streaming minutes on the film</small></div>
+          <div class="reel-more">
+            <p class="reel-note">A vertical cut from the feature, posted organically and left to do its own work. The same footage carried the film from a festival win onto both major storefronts.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- AlderTalk · Video Podcast &middot; Mike Alder -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play AlderTalk" data-src="assets/reel/aldertalk-podcast.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-aldertalk-podcast.jpg">
+          <source src="assets/reel/loop-aldertalk-podcast.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Mike Alder</div>
+          <h3 class="reel-name">AlderTalk</h3>
+          <div class="reel-figure">Cut for the feed, captioned in-house<small>One session, a run of shorts</small></div>
+          <div class="reel-more">
+            <p class="reel-note">The podcast cut down to the moments that travel. Shot, edited and captioned under one roof, so the episode and the clips come out of the same pass.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Empowered with Gina · Video Podcast &middot; Tracy McCubbin -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Empowered with Gina" data-src="assets/reel/ewg-tracy-mccubbin.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-ewg-tracy-mccubbin.jpg">
+          <source src="assets/reel/loop-ewg-tracy-mccubbin.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Video Podcast &middot; Tracy McCubbin</div>
+          <h3 class="reel-name">Empowered with Gina</h3>
+          <div class="reel-figure">Guest booked, shot and cut<small>Episode plus the clips off it</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Same setup, same shoot day, a different guest and a fresh run of short-form out of it. The format is the point: it repeats without getting cheaper to look at.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- The Shoot Day · Behind the Ad Sprint -->
+      <article class="reel-card reel-card--noplay" aria-label="The Shoot Day">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-bts-ads.jpg">
+          <source src="assets/reel/loop-bts-ads.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Behind the Ad Sprint</div>
+          <h3 class="reel-name">The Shoot Day</h3>
+          <div class="reel-figure">One room, one afternoon<small>Three creatives &middot; no crew</small></div>
+          <div class="reel-more">
+            <p class="reel-note">A table, a fan, a light, and one person filming. No crew standing around is the whole point: it is why people stop performing and start sounding like themselves.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Off Rip · Feature Film &middot; Drama -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Off Rip"
+               data-src="assets/reel/off-rip-drama.mp4"
+               data-likes="3400" data-comments="82"
+               data-ig="https://www.instagram.com/reel/DbJqeimyNjQ/">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-off-rip-drama.jpg">
+          <source src="assets/reel/loop-off-rip-drama.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Feature Film &middot; Drama</div>
+          <h3 class="reel-name">Off Rip</h3>
+          <div class="reel-figure">1M+ streaming minutes<small>Grand Jury Award &middot; Gasparilla</small></div>
+          <div class="reel-more">
+            <p class="reel-note">Cut for the feed rather than for a trailer. The scene has to work cold, with no setup and nothing to click into first.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- AlderTalk Summit · Keynote &middot; AlderTalk Summit -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play AlderTalk Summit" data-src="assets/reel/aldertalk-summit-speech.mp4">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-aldertalk-summit-speech.jpg">
+          <source src="assets/reel/loop-aldertalk-summit-speech.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Keynote &middot; AlderTalk Summit</div>
+          <h3 class="reel-name">AlderTalk Summit</h3>
+          <div class="reel-figure">$650-a-ticket summit<small>Multi-camera, cut for vertical</small></div>
+          <div class="reel-more">
+            <p class="reel-note">The keynote pulled out of a paid summit and reframed for the feed. One stage, several cameras, and a run of clips that outlives the day itself.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Hey Leo · Instagram Reel &middot; Off Rip Promo -->
+      <article class="reel-card" tabindex="0" role="button" aria-label="Play Hey Leo"
+               data-src="assets/reel/hey-leo.mp4"
+               data-ig="https://www.instagram.com/reel/DbwsW7jhyr_/">
+        <video class="reel-media" muted loop playsinline preload="none" poster="assets/reel/poster-hey-leo.jpg">
+          <source src="assets/reel/loop-hey-leo.mp4" type="video/mp4">
+        </video>
+        <div class="reel-gloss"></div>
+        <div class="reel-shine"></div>
+        <div class="reel-veil"></div>
+        <div class="reel-scrim"></div>
+        <div class="reel-body">
+          <div class="reel-tag">Instagram Reel &middot; Off Rip Promo</div>
+          <h3 class="reel-name">Hey Leo</h3>
+          <div class="reel-figure">Shot to match the scene<small>Instagram promo for the film</small></div>
+          <div class="reel-more">
+            <p class="reel-note">An Instagram reel promoting the film, played as a bit. The tarmac scene from Inception sets it up, and the new footage was written, shot and graded to match closely enough that the joke lands.</p>
+            <span class="reel-play">Play &#8599;</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <p class="reel-fine reveal">Organic and paid, cut for the feed rather than trimmed down from a horizontal edit. Hover for what each one was for and what it moved. Click to watch the whole thing.</p>
+</section>
+
+<!-- REEL PLAYER -->
+<div class="vmodal" id="reelModal" role="dialog" aria-modal="true" aria-label="Video player">
+  <div class="vmodal-inner">
+    <div class="vmodal-bar">
+      <button class="vmodal-btn vmodal-mute" type="button" data-muted="false" aria-label="Mute">Sound</button>
+      <input class="vmodal-vol" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+      <button class="vmodal-btn vmodal-close" type="button">Close</button>
+    </div>
+    <div class="vmodal-stage"></div>
+    <div class="vmodal-meta"></div>
+  </div>
+</div>
+
+<!-- CASE STUDIES · the two founder brands, then the films.
+     Numbers and wording are the ones already published on / and /grow.
+     If one changes there, change it here in the same commit. -->
+<section id="cases">
+  <div class="eyebrow reveal">Proof</div>
+  <h2 class="title reveal">Two founders.<br>Two <em>followings.</em></h2>
+  <p class="lede reveal">Both are attorneys with a firm to run. <b>Neither one is a full-time creator.</b></p>
+
+  <div class="case-grid">
+    <article class="case reveal">
+      <span class="case-tier">Longform · Short-form · Documentary</span>
+      <h3 class="case-name">Mike Alder</h3>
+      <p class="case-role">Trial attorney · the name behind $3.1B+ in settlements</p>
+      <div class="case-num">58K+</div>
+      <div class="case-label">Followers built</div>
+      <p class="case-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into <b>a personal brand people actually follow.</b></p>
+      <ul class="case-list">
+        <li><span><b style="color:var(--parchment);font-weight:500">AlderTalk,</b> his video podcast, cut down to the moments that travel</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">The AlderTalk Summit keynote,</b> multi-camera at a $650-a-ticket event, reframed for the feed</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Scripted ads:</b> three hooks out of one shoot day</span></li>
+      </ul>
+      <a class="case-link" href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener">See his feed ↗</a>
+    </article>
+    <article class="case reveal">
+      <span class="case-tier">Podcast · Short-form</span>
+      <h3 class="case-name">Gina Zapanta</h3>
+      <p class="case-role">Attorney · host of Empowered with Gina</p>
+      <div class="case-num">101K+</div>
+      <div class="case-label">Combined following</div>
+      <p class="case-desc">A podcast and short-form engine across Instagram, YouTube and TikTok, <b>built episode by episode around her voice,</b> not a content calendar template.</p>
+      <ul class="case-list">
+        <li><span><b style="color:var(--parchment);font-weight:500">Empowered with Gina:</b> guests booked, shot and cut, with the clips off every episode</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">One setup that repeats</b> without getting cheaper to look at</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Event coverage</b> under the same brand</span></li>
+      </ul>
+      <a class="case-link" href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener">See her feed ↗</a>
+    </article>
+  </div>
+
+  <div class="cases-sub reveal">And what we do with our own stories</div>
+  <figure class="bb-still reveal" style="margin-top:0;border-top:none">
+    <img src="assets/brand-builder-giff.jpg" width="1800" height="1200" alt="Jadon Cal Fitzpatrick holding the Grand Jury Award on stage at the Gasparilla International Film Festival, the screen behind him reading Winner, Off Rip" loading="lazy">
+    <figcaption><b>Gasparilla International Film Festival</b> · Grand Jury Award · <i>Off Rip</i></figcaption>
+  </figure>
+  <div class="proof-rows">
+    <div class="proof-row reveal">
+      <div><div class="proof-num">1M+</div><div class="proof-label">Streaming Minutes</div></div>
+      <div><span class="proof-tier">Our Feature Film</span><div class="proof-client">Off Rip</div><p class="proof-desc"><b>Grand Jury Award at Gasparilla.</b> Made story-first on an independent budget, now streaming on Amazon, Apple TV and Tubi. One vertical cut from it reached 137K organic views.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">338K+</div><div class="proof-label">Organic Reach · 9 Days</div></div>
+      <div><span class="proof-tier">Our Short Film · Launch</span><div class="proof-client">Bot or Not</div><p class="proof-desc"><b>One upload, one share, zero paid spend.</b> 168K+ Reddit views in four days and the #2 post of the day on r/Filmmakers. Lois Weber Best Sci-Fi at FilmQuest.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">460K</div><div class="proof-label">Trailer Views</div></div>
+      <div><span class="proof-tier">Film · Trailer Campaign</span><div class="proof-client">FOUR</div><p class="proof-desc">Just under half a million views and <b>294 reshares</b> on a trailer cut in-house.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TWO WAYS IN
+     The Pilot's price and scope are declared in assets/offer.js
+     brandBuilder.pilot, and scripts/check-offer.py lets that one figure
+     onto this page and no other. Change it there first.
+
+     Brand Builder carries no price and no counts here, like every
+     retainer on the site. -->
+<section id="pilot">
+  <div class="eyebrow reveal">Two Ways In</div>
+  <h2 class="title reveal">Shoot the pilot.<br>Or greenlight <em>the series.</em></h2>
+  <p class="lede reveal">Every show starts with a pilot. <b>Ours is a real one: you keep the episodes and the plan, whether or not we make the series together.</b></p>
+
+  <div class="price-cards reveal">
+    <div class="price-card price-card--featured">
+      <span class="chip">Start here</span>
+      <div class="price-name">The Pilot</div>
+      <p class="price-for">One production, one time. No retainer attached.</p>
+      <div class="price-amount">$5,000 <small>one time · fixed</small></div>
+      <ul class="price-list">
+        <li><span><b style="color:var(--parchment);font-weight:500">5 longform episodes,</b> shot and finished</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">100 short-form clips,</b> cut from those episodes with our AI-assisted edit pipeline</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Premium playbook content:</b> how we build hooks, formats and a posting rhythm that holds</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Your 90-day gameplan.</b> Hire us to run it, or run it without us. It is yours either way</span></li>
+      </ul>
+      <div class="price-cta"><a class="btn btn--gold" data-cta="pilot" href="/strategy-call?offer=brand-pilot">Book my Pilot call</a></div>
+      <p class="price-note">Scope is confirmed on the call, before anything is due.</p>
+    </div>
+    <div class="price-card">
+      <span class="chip chip--ghost">Flagship</span>
+      <div class="price-name">Brand Builder</div>
+      <p class="price-for">The series. A monthly production, by application.</p>
+      <div class="price-amount price-amount--words">Scoped on<br>the call</div>
+      <ul class="price-list">
+        <li><span><b style="color:var(--parchment);font-weight:500">Our largest monthly production allocation</b></span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Longform, short-form and ads,</b> at our highest monthly volume</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Paid media management,</b> testing and iteration included</span></li>
+        <li><span><b style="color:var(--parchment);font-weight:500">Funnel, tracking and automation support,</b> plus monthly analytics and creative direction</span></li>
+      </ul>
+      <div class="price-cta"><a class="btn btn--ghost" data-cta="brand-builder" href="/strategy-call?offer=brand-builder">Apply for Brand Builder</a></div>
+      <p class="price-note">Three month minimum. A handful of retainers at a time, by design.</p>
+    </div>
+  </div>
+
+  <div class="roof-cols pilot-steps">
+    <div class="reveal">
+      <span class="roof-num">I</span>
+      <div class="roof-title">The story</div>
+      <p class="roof-body">A call to find what your episodes are about, and what only you can say.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">II</span>
+      <div class="roof-title">The shoot</div>
+      <p class="roof-body">Directed and lit like a film set, with no crew standing around.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">III</span>
+      <div class="roof-title">The cut</div>
+      <p class="roof-body">Five episodes finished, then a hundred clips pulled from them.</p>
+    </div>
+    <div class="reveal">
+      <span class="roof-num">IV</span>
+      <div class="roof-title">The gameplan</div>
+      <p class="roof-body">Your next 90 days, written down. Ours to run or yours to keep.</p>
+    </div>
+  </div>
+
+  <div class="invest-fit reveal" style="margin-top:70px">
+    <div class="invest-fit-col">
+      <h3>This fits</h3>
+      <ul>
+        <li><span><b>Los Angeles founders and owners</b> whose name is the business</span></li>
+        <li><span><b>Already selling,</b> with a record worth showing</span></li>
+        <li><span><b>Willing to be on camera,</b> and to say something real on it</span></li>
+        <li><span><b>A direct line</b> to the people making the work</span></li>
+      </ul>
+    </div>
+    <div class="invest-fit-col">
+      <h3>This does not</h3>
+      <ul>
+        <li>A brand with nobody willing to be the face of it</li>
+        <li>A guaranteed follower count or a promise to go viral. We do not sell those</li>
+        <li><span>A single video with nothing behind it. That is <a href="/signature" style="color:var(--gold)">Signature Work</a></span></li>
+        <li><span>Ads and leads without the personal brand. That is <a href="/grow" style="color:var(--gold)">Social Growth</a></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <ul class="prepay-list reveal">
+    <li><b>The Pilot is one time and fixed.</b> Nothing rolls into a monthly commitment</li>
+    <li><b>No result is guaranteed</b> on either. No follower count, no view count, no revenue figure</li>
+    <li><b>Brand Builder ad spend is always yours:</b> paid to the platforms directly, never marked up or held</li>
+    <li><b>Fees exclude</b> ad spend, paid placements, talent, and travel outside Los Angeles or Tampa</li>
+  </ul>
+</section>
+
+<!-- THE DUO -->
+<section id="duo">
+  <div class="eyebrow reveal">Who Makes It</div>
+  <h2 class="title reveal">Two filmmakers.<br>No account <em>manager.</em></h2>
+  <p class="lede reveal">The person who plans your shoot shoots it and cuts it. <b>You talk to Jadon and Meghan directly.</b></p>
+  <figure class="bb-still reveal">
+    <img src="assets/brand-builder-onset.jpg" width="1800" height="1200" alt="Meghan Carrasquillo framing a shot with her hands on set while Jadon Cal Fitzpatrick looks on" loading="lazy">
+    <figcaption><b>On set</b> · Meghan and Jadon</figcaption>
+  </figure>
+  <div class="duo-grid">
+    <div class="reveal">
+      <div class="duo-name">Jadon Cal Fitzpatrick</div>
+      <div class="duo-role">Director · Founder</div>
+      <p class="duo-body">A filmmaker and director whose work has screened at Tribeca, Telluride and Gasparilla, where his debut feature <i>Off Rip</i> took the Grand Jury Award.</p>
+      <ul class="duo-credits">
+        <li><b>Grand Jury Award</b> · Gasparilla · <i>Off Rip</i></li>
+        <li><b>Lois Weber Best Sci-Fi</b> · FilmQuest · <i>Bot or Not</i></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="duo-name">Meghan Carrasquillo</div>
+      <div class="duo-role">Producer · Client Relations</div>
+      <p class="duo-body">A performer of two decades who has spent the last seven years in film on both sides of the camera. She wrote and co-directed <i>Bot or Not</i>.</p>
+      <ul class="duo-credits">
+        <li><b>Best Actress</b> · New York Movie Awards</li>
+        <li><b>Writer / Co-Director</b> · <i>Bot or Not</i></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section id="close">
+  <div class="eyebrow reveal">New Terrain Creative · Brand Builder</div>
+  <h2 class="title reveal">Let's make<br>your <em>movie.</em></h2>
+  <p class="lede reveal">One call. <b>Leave knowing whether your story carries a brand,</b> and how we would shoot it.</p>
+  <div class="close-ctas reveal">
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=brand-builder">Apply for Brand Builder</a>
+    <a class="btn btn--ghost" data-cta="close-pilot" href="/strategy-call?offer=brand-pilot">Book my Pilot call</a>
+  </div>
+  <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
+    <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+    <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>
+  </div>
+</section>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="tel:+18182668213">(818) 266-8213</a>
+  <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
+  <a href="/grow">Social Growth →</a>
+  <a href="index.html">See the cinema side →</a>
+  <a href="/privacy">Privacy</a>
+</footer>
+
+<!-- THE REEL -->
+<script>
+(function () {
+  const track = document.querySelector('.reel-track');
+  if (!track) return;
+
+  const prev = document.querySelector('.reel-arrow--prev');
+  const next = document.querySelector('.reel-arrow--next');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Seamless loop ──
+  // Three copies of the row, parked on the middle one. Wrapping between
+  // identical copies is invisible, and it leaves a full row of runway in
+  // both directions before the next wrap, so dragging never hits a wall.
+  const originals = Array.prototype.slice.call(track.querySelectorAll('.reel-card'));
+  const SETS = 3;
+  for (let i = 1; i < SETS; i++) {
+    originals.forEach((c) => {
+      const clone = c.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.removeAttribute('tabindex');
+      track.appendChild(clone);
+    });
+  }
+  const cards = Array.prototype.slice.call(track.querySelectorAll('.reel-card'));
+
+  let loopW = 0;
+  let pos = 0;
+  function measure() {
+    loopW = originals.length ? cards[originals.length].offsetLeft - cards[0].offsetLeft : 0;
+    if (loopW && track.scrollLeft < loopW) track.scrollLeft = loopW;
+    pos = track.scrollLeft;
+  }
+  function wrap() {
+    if (!loopW) return;
+    if (track.scrollLeft >= loopW * 2) { track.scrollLeft -= loopW; pos -= loopW; }
+    else if (track.scrollLeft < loopW) { track.scrollLeft += loopW; pos += loopW; }
+  }
+  measure();
+  window.addEventListener('resize', measure);
+
+  // Loop only the cards actually on screen. Twenty-odd silent videos running
+  // at once is a tax nobody sees.
+  const watcher = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const v = e.target.querySelector('.reel-media');
+      if (!v || v.tagName !== 'VIDEO') return;
+      if (e.isIntersecting && !reduce) { v.play().catch(() => {}); }
+      else { v.pause(); }
+    });
+  }, { root: track, threshold: 0.15 });
+  cards.forEach((c) => watcher.observe(c));
+
+  // ── Drift ──
+  // Right to left, slow enough to read. Holds while you are hovering,
+  // dragging, or have just used an arrow, so nothing slides out from under you.
+  const SPEED = 26; // px per second
+  let hovering = false, dragging = false, holdUntil = 0, lastTs = 0;
+  // Touch gets a read step before the play step, so tapping to see what a
+  // clip is does not launch it.
+  const coarse = window.matchMedia('(hover: none)').matches;
+  let opened = null;
+
+  function frame(ts) {
+    const dt = lastTs ? Math.min(64, ts - lastTs) : 0;
+    lastTs = ts;
+    if (!reduce && !hovering && !dragging && !opened && ts > holdUntil && !document.hidden) {
+      // Carry the position as a float. At this speed a frame is well under a
+      // pixel, and handing scrollLeft a sub-pixel delta every frame rounds
+      // straight back to where it started, so the row never moves.
+      if (Math.abs(pos - track.scrollLeft) > 1.5) pos = track.scrollLeft;
+      pos += SPEED * dt / 1000;
+      track.scrollLeft = pos;
+    } else {
+      pos = track.scrollLeft;
+    }
+    wrap();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  if (!coarse) {
+    track.addEventListener('pointerenter', () => { hovering = true; });
+    track.addEventListener('pointerleave', () => { hovering = false; });
+  }
+  track.addEventListener('focusin', () => { hovering = true; });
+  track.addEventListener('focusout', () => { hovering = false; });
+
+  function step() {
+    return cards.length ? cards[0].getBoundingClientRect().width + 20 : 278;
+  }
+  function nudge(dir) {
+    holdUntil = performance.now() + 900;
+    track.scrollBy({ left: dir * step() * 2, behavior: 'smooth' });
+  }
+  if (prev) prev.addEventListener('click', () => nudge(-1));
+  if (next) next.addEventListener('click', () => nudge(1));
+
+  // Drag to pan. Deltas are taken frame to frame rather than from a fixed
+  // origin, so a wrap mid-drag does not yank the row.
+  let lastX = 0, moved = 0;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') return;
+    dragging = true; moved = 0; lastX = e.clientX;
+  });
+  track.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const d = e.clientX - lastX;
+    lastX = e.clientX;
+    moved += Math.abs(d);
+    if (moved > 4) track.scrollLeft -= d;
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => {
+    track.addEventListener(ev, () => { dragging = false; });
+  });
+
+  // Player
+  const modal = document.getElementById('reelModal');
+  const stage = modal.querySelector('.vmodal-stage');
+  const volEl = modal.querySelector('.vmodal-vol');
+  const muteEl = modal.querySelector('.vmodal-mute');
+  const metaEl = modal.querySelector('.vmodal-meta');
+  let vol = 1, muted = false, playing = null;
+
+  function applySound() {
+    if (playing) { playing.volume = vol; playing.muted = muted || vol === 0; }
+    volEl.value = muted ? 0 : vol;
+    muteEl.textContent = (muted || vol === 0) ? 'Muted' : 'Sound';
+    muteEl.dataset.muted = String(muted || vol === 0);
+    muteEl.setAttribute('aria-label', (muted || vol === 0) ? 'Unmute' : 'Mute');
+  }
+
+  volEl.addEventListener('input', () => {
+    vol = parseFloat(volEl.value);
+    muted = vol === 0;
+    applySound();
+  });
+  muteEl.addEventListener('click', () => {
+    muted = !(muted || vol === 0);
+    if (!muted && vol === 0) vol = 1;
+    applySound();
+  });
+
+  function tally(n) {
+    const x = parseFloat(n);
+    if (!isFinite(x)) return null;
+    if (x >= 1e6) return (x / 1e6).toFixed(x % 1e6 === 0 ? 0 : 1) + 'M';
+    if (x >= 1e4) return Math.round(x / 1e3) + 'K';
+    if (x >= 1e3) return (x / 1e3).toFixed(1) + 'K';
+    return String(Math.round(x));
+  }
+
+  // Everything here is optional. Give a card data-likes, data-comments,
+  // data-views or data-ig and it shows up; leave them off and the strip
+  // collapses to the title, or disappears entirely.
+  function fillMeta(card) {
+    const name = card.querySelector('.reel-name');
+    const tag = card.querySelector('.reel-tag');
+    const stats = [];
+    [['views', 'views'], ['likes', 'likes'], ['comments', 'comments'], ['shares', 'shares']]
+      .forEach(([key, label]) => {
+        const n = tally(card.dataset[key]);
+        if (n) stats.push('<span><b>' + n + '</b> ' + label + '</span>');
+      });
+    // Engagement as a share of plays, worked out rather than typed in, so it
+    // can never drift from the numbers beside it. Shown only next to the view
+    // count it came from: a percentage with its denominator hidden is exactly
+    // the number that flatters a post nobody saw.
+    const views = parseFloat(card.dataset.views);
+    const acted = ['likes', 'comments', 'shares']
+      .reduce((sum, k) => sum + (parseFloat(card.dataset[k]) || 0), 0);
+    if (views > 0 && acted > 0) {
+      const pct = (acted / views) * 100;
+      stats.push('<span><b>' + (pct >= 10 ? Math.round(pct) : pct.toFixed(1)) + '%</b> engagement</span>');
+    }
+
+    if (!name && !stats.length) { metaEl.innerHTML = ''; return; }
+    metaEl.innerHTML =
+      '<div>' +
+        (name ? '<div class="vmodal-meta-name">' + name.textContent + '</div>' : '') +
+        (tag ? '<div class="vmodal-meta-tag">' + tag.innerHTML + '</div>' : '') +
+      '</div>' +
+      (stats.length ? '<div class="vmodal-stats">' + stats.join('') + '</div>' : '');
+  }
+
+  function openPlayer(card) {
+    const src = card.dataset.src;
+    if (!src) return;
+    // Built and started by hand rather than with an autoplay attribute. A
+    // parser-started video does not inherit the click's user activation, so
+    // Chrome refuses to give it sound; an explicit play() inside the handler
+    // does inherit it and comes up with audio.
+    const v = document.createElement('video');
+    v.src = src;
+    v.controls = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+    stage.innerHTML = '';
+    stage.appendChild(v);
+    playing = v;
+    fillMeta(card);
+    applySound();
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    v.play().catch(() => {});
+  }
+  function closePlayer() {
+    modal.classList.remove('open');
+    stage.innerHTML = '';
+    metaEl.innerHTML = '';
+    playing = null;
+    document.body.style.overflow = '';
+    closeOpened();
+  }
+
+  function closeOpened() {
+    if (opened) { opened.classList.remove('is-open'); opened = null; }
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      if (moved > 4) return;
+      if (coarse && !card.classList.contains('is-open')) {
+        closeOpened();
+        card.classList.add('is-open');
+        opened = card;
+        return;
+      }
+      openPlayer(card);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPlayer(card); }
+    });
+  });
+
+  modal.querySelector('.vmodal-close').addEventListener('click', closePlayer);
+  // Anything that is not the clip or a control closes it. The frame leaves
+  // almost no backdrop to aim at on a phone, and the letterboxing beside a
+  // 9:16 clip is the part of the screen a thumb actually lands on.
+  modal.addEventListener('click', (e) => {
+    if (e.target.tagName === 'VIDEO') return;
+    if (e.target.closest('.vmodal-bar, .vmodal-meta')) return;
+    closePlayer();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closePlayer(); });
+  document.addEventListener('click', (e) => { if (opened && !e.target.closest('.reel-card')) closeOpened(); });
+})();
+</script>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+<script src="/assets/offer.js"></script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
+<script>
+
+  (function () {
+    if (!window.ntc) return;
+
+    ntc.track('ViewContent', {
+      content_name: document.title,
+      offer: 'brand_builder'
+    });
+
+    document.querySelectorAll('[data-cta]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        ntc.track('CTAClick', {
+          offer: 'brand_builder',
+          position: el.getAttribute('data-cta')
+        }, { once: false });
+      });
+    });
+
+    // No VSL on this page yet: when one is added, watch it here.
+  })();
+</script>
+
+
+</body>
+</html>
