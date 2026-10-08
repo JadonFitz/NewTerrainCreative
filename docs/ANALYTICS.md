@@ -32,7 +32,7 @@ Use this URL pattern for every ad:
 https://www.newterraincreative.com/grow?utm_source=meta&utm_medium=paid-social&utm_campaign=<campaign>&utm_content=<ad>
 ```
 
-Use `/founding` instead of `/grow` for the Founding Three campaign. Campaign
+Use `/founding` instead of `/grow` for the Founding Three campaign. Add `&v=contractor` or `&v=dental` to a Founding ad's URL parameters to open the page on that trade's wording; without it the page reads the trade from the ad name in `utm_content` (see the variants script in `founding.html`). `ViewContent` and `CTAClick` carry the variant. Campaign
 and ad names must match the values exported from Ads Manager, or spend and
 website outcomes will not join in `funnel_performance`.
 

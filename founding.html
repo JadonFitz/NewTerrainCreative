@@ -1097,11 +1097,63 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
 <!-- HERO -->
 <section id="hero">
-  <h1 class="title reveal">A complete campaign.<br>Set up and <em>live in month one.</em></h1>
-  <p class="hero-sub reveal"><b>For three selected businesses, our service fee for the first thirty days is waived.</b> A production day at your business, a batch of campaign creative, and the campaign built, launched and managed on Meta. You fund your own advertising spend. Months two and three are optional.</p>
+  <h1 class="title reveal" id="heroTitle">A complete campaign.<br>Set up and <em>live in month one.</em></h1>
+  <p class="hero-sub reveal" id="heroSub"><b>For three selected businesses, our service fee for the first thirty days is waived.</b> A production day at your business, a batch of campaign creative, and the campaign built, launched and managed on Meta. You fund your own advertising spend. Months two and three are optional.</p>
   <div class="hero-cta reveal"><a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=founding-three">Apply for a Founding Partner Spot</a><span class="hero-cta-note" id="heroCloseNote">Applications close October 24. We review every one personally.</span></div>
   <p class="hero-micro reveal">A defined thirty day scope, not unlimited production. Applying does not guarantee acceptance, and no result is guaranteed.</p>
 </section>
+
+<script>
+  /* ── Vertical variants ─────────────────────────────────────────────
+     The Founding ads speak to one trade at a time (contractors, dental
+     practices). A visitor from one of those ads lands on copy written
+     for that trade, so the page opens on the same idea the ad did.
+
+     Which variant: ?v=contractor or ?v=dental wins. Without it, the
+     variant is read from the ad name Meta passes in utm_content. Any
+     new ad should carry v= in its URL parameters instead of relying on
+     its name. No match means the page is unchanged.
+
+     Only the wording changes. The offer, the scope and every term are
+     the ones in assets/offer.js: no figure and no claim is added here.
+     ─────────────────────────────────────────────────────────────── */
+  (function () {
+    var V = {
+      contractor: {
+        title: 'Referrals built your business.<br>They also <em>set its ceiling.</em>',
+        sub: '<b>For three selected Los Angeles businesses, our service fee for the first thirty days is waived.</b> If you run an established contracting or construction company, this is built for you: a production day on your job site, a batch of campaign creative, and the campaign built, launched and managed on Meta. You fund your own advertising spend. Months two and three are optional.',
+        fit: 'We are looking for established <b>construction and contracting</b> businesses in Los Angeles with the crews and capacity to take on more projects. The same round is open to dental, legal, and health and wellness practices.',
+        shot: '<b>Shot on your job sites,</b> so it reads as real'
+      },
+      dental: {
+        title: 'Your work is better<br>than <em>your ads.</em>',
+        sub: '<b>For three selected Los Angeles businesses, our service fee for the first thirty days is waived.</b> If you own an established dental practice, this is built for you: a production day in your practice, a batch of campaign creative, and the campaign built, launched and managed on Meta. You fund your own advertising spend. Months two and three are optional.',
+        fit: 'We are looking for established <b>dental practices</b> in Los Angeles with room to take on more patients. The same round is open to legal, health and wellness, and construction or contracting businesses.',
+        shot: '<b>Shot in your practice,</b> so it reads as real'
+      }
+    };
+    var v = '';
+    try {
+      var q = new URLSearchParams(location.search);
+      v = (q.get('v') || '').toLowerCase();
+      if (!V[v]) {
+        var ad = ((q.get('utm_content') || '') + ' ' + (q.get('utm_term') || '')).toLowerCase();
+        if (/dental|dentist|trust gap|generic ads/.test(ad)) v = 'dental';
+        else if (/contractor|construction|referral/.test(ad)) v = 'contractor';
+        else v = '';
+      }
+      if (V[v]) sessionStorage.setItem('ntcFoundingVariant', v);
+      else v = sessionStorage.getItem('ntcFoundingVariant') || '';
+    } catch (e) { /* storage or URL parsing unavailable: default page */ }
+    if (!V[v]) { window.ntcFoundingVariant = 'default'; return; }
+    window.ntcFoundingVariant = v;
+    var copy = V[v];
+    function set(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+    function apply() { set('heroTitle', copy.title); set('heroSub', copy.sub); set('foundFit', copy.fit); set('contrastShot', copy.shot); }
+    apply();                                   // hero, before first paint
+    document.addEventListener('DOMContentLoaded', apply);   // the rest of the page
+  })();
+</script>
 
 <!-- VIDEO -->
 <section id="video">
@@ -1150,7 +1202,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
     <p class="found-lede"><b>It is a trade, not a trial.</b> We waive our service fee for a defined first month. You give us the performance data, an honest review and the right to publish a case study.</p>
 
-    <p class="found-lede" style="margin-top:18px">We are looking for established <b>health and wellness, legal, dental, and construction or contracting</b> businesses with capacity to take on more customers.</p>
+    <p class="found-lede" id="foundFit" style="margin-top:18px">We are looking for established <b>health and wellness, legal, dental, and construction or contracting</b> businesses with capacity to take on more customers.</p>
 
     <ol class="found-terms">
       <li><span class="found-n">1</span><div><b>Our service fee for the first thirty days is waived.</b> One offer session, one production day on location, one batch of campaign creative with a single revision round, the campaign launched in week three and managed through week four, and one written report. Not included: additional production days, unlimited revisions, organic posting.</div></li>
@@ -1211,7 +1263,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <div class="contrast-col contrast-col--new">
       <div class="contrast-head">The Founding Three</div>
       <ul class="contrast-list">
-        <li><span><b>Shot at your business,</b> so it reads as real</span></li>
+        <li><span id="contrastShot"><b>Shot at your business,</b> so it reads as real</span></li>
         <li><span><b>A full set of variants</b> built to be tested against each other</span></li>
         <li><span><b>Hooks written first.</b> The first two seconds decide the rest</span></li>
         <li><span><b>One person filming.</b> Nobody performs for a crew</span></li>
@@ -1933,7 +1985,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   document.querySelectorAll('[data-cta]').forEach(el => {
     el.addEventListener('click', () => {
       const where = el.getAttribute('data-cta');
-      if (window.ntc) ntc.track('CTAClick', { offer: 'founding_three', position: where }, { once: false });
+      if (window.ntc) ntc.track('CTAClick', { offer: 'founding_three', position: where, variant: window.ntcFoundingVariant || 'default' }, { once: false });
       if (window.gtag) gtag('event', 'cta_click', { cta_position: where, offer: 'founding_three' });
     });
   });
@@ -1945,7 +1997,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   // PageView already fired from the base pixel in the head.
   (function () {
     if (!window.ntc) return;
-    ntc.track('ViewContent', { content_name: document.title, offer: 'founding_three' });
+    ntc.track('ViewContent', { content_name: document.title, offer: 'founding_three', variant: window.ntcFoundingVariant || 'default' });
     // Every VSL play is a click with sound on, so the milestones attach at
     // the click. The frame carries the player's time (see the script below).
     var frame = document.querySelector('#video .video-frame');
