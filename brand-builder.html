@@ -1059,7 +1059,7 @@
   .bb-hero-copy { width: 27vw; }
   .bb-hero #hero .title { font-size: clamp(38px, 5.1vw, 84px); max-width: none; }
   .bb-hero .hero-sub { color: #E4DDD2; margin-top: 1.4vw; max-width: none; font-size: clamp(13px, 1.04vw, 18px); }
-  .bb-hero .hero-ctas { margin-top: 2vw; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .bb-hero .hero-ctas { margin-top: 2vw; }
   .bb-hero .btn--ghost { border-color: rgba(245,240,232,0.5); background: rgba(10,10,10,0.35); }
 
   @media (max-width: 1180px), (max-aspect-ratio: 4/3) {
@@ -1107,7 +1107,45 @@
   .bb-still figcaption b { color: var(--parchment); font-weight: 400; }
 
   /* ── SECTION RULES ── */
-  #problem, #show, #cases, #pilot, #duo { border-top: 1px solid var(--line); }
+  #cases, #method, #session, #questions { border-top: 1px solid var(--line); }
+  #cases { border-top: none; }
+
+  /* ── READABLE BODY ──
+     This page is read on a phone by someone who has never heard of us,
+     so the body copy is larger and brighter than the other pages'. */
+  .lede, .case-desc, .show-body, .qa-a, .bb-ps { font-size: 16px; line-height: 1.8; color: #BDB5AA; }
+  .invest-fit-col li { font-size: 15px; color: #BDB5AA; }
+  .invest-cta-note { font-size: 14px; color: #A09890; }
+  .stat-label, .case-label { color: #A09890; }
+  .bb-cta-note {
+    display: inline-block; margin-top: 14px; padding: 7px 12px;
+    font-size: 13px; line-height: 1.6; color: #F5F0E8;
+    background: rgba(10,10,10,0.62);
+  }
+
+  /* ── QUESTIONS (same pattern as /founding) ── */
+  .qa-list { margin-top: 40px; max-width: 860px; }
+  .qa-q { font-family: var(--display); font-size: 24px; font-weight: 300; color: var(--parchment); }
+  details.qa { border-top: 1px solid var(--line); padding: 0; }
+  details.qa:last-of-type { border-bottom: 1px solid var(--line); }
+  details.qa > summary { list-style: none; cursor: pointer; padding: 22px 34px 22px 0; position: relative; }
+  details.qa > summary::-webkit-details-marker { display: none; }
+  details.qa > summary::after {
+    content: '+'; position: absolute; right: 4px; top: 50%;
+    transform: translateY(-50%); color: var(--gold);
+    font-family: var(--body); font-size: 19px; font-weight: 300;
+  }
+  details.qa[open] > summary::after { content: '\2013'; }
+  details.qa > .qa-a { padding-bottom: 24px; max-width: 720px; }
+  details.qa > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .qa-a b, .bb-ps b, .show-body b, .case-desc b { color: var(--parchment); font-weight: 500; }
+
+  @media (max-width: 380px) { .wordmark { font-size: 10px; letter-spacing: 0.22em; } }
+
+  /* ── CLOSE ── */
+  #close { border-top: 1px solid var(--line); padding-top: 110px; }
+  #close .bb-still { margin-top: 0; text-align: left; }
+  .bb-ps { margin: 44px auto 0; max-width: 620px; text-align: left; padding: 22px 24px; border: 1px solid var(--line); }
 
   /* ── THE SHOW · four parts of the monthly production ── */
   .show-rows { margin-top: 60px; border-top: 1px solid var(--line); }
@@ -1131,7 +1169,7 @@
   .case-tier { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
   .case-name { margin-top: 12px; font-family: var(--display); font-size: 34px; font-weight: 300; color: var(--parchment); line-height: 1.1; }
   .case-role { margin-top: 8px; font-size: 11px; font-style: italic; color: var(--muted); line-height: 1.7; }
-  .case-num { margin-top: 30px; font-family: var(--display); font-size: 64px; font-weight: 300; color: var(--gold); line-height: 1; }
+  .case-num { margin-top: 26px; font-family: var(--display); font-size: 64px; font-weight: 300; color: var(--gold); line-height: 1; }
   .case-label { margin-top: 10px; font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
   .case-desc { margin-top: 24px; font-size: 13.5px; line-height: 1.85; color: #A09890; }
   .case-desc b { color: var(--parchment); font-weight: 500; }
@@ -1139,7 +1177,7 @@
   .case-list li { display: flex; gap: 13px; font-size: 12.5px; line-height: 1.7; color: #A09890; }
   .case-list li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 8px; }
   .case-link {
-    margin-top: auto; align-self: flex-start;
+    margin-top: 28px; align-self: flex-start;
     font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--parchment); text-decoration: none;
     border-bottom: 1px solid var(--gold); padding-bottom: 5px;
@@ -1150,7 +1188,7 @@
   .cases-sub { margin-top: 70px; font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); padding-bottom: 22px; border-bottom: 1px solid var(--line); }
 
   /* ── TWO WAYS IN ── */
-  #pilot .price-cards { grid-template-columns: 1fr 1fr; }
+  
   .price-amount--words { font-size: 30px; line-height: 1.15; }
   .pilot-steps { margin-top: 70px; }
 
@@ -1167,7 +1205,7 @@
   .duo-credits b { color: var(--parchment); font-weight: 500; }
 
   @media (max-width: 860px) {
-    .case-grid, #pilot .price-cards, .duo-grid { grid-template-columns: 1fr; }
+    .case-grid { grid-template-columns: 1fr; }
     .show-row { grid-template-columns: 1fr; gap: 14px; padding: 28px 0; }
     .case { padding: 34px 24px 32px; }
     .case-num { font-size: 52px; }
@@ -1181,22 +1219,34 @@
 <header>
   <a class="wordmark" href="#hero">New Terrain Creative <span>· Brand Builder</span></a>
   <div class="header-links">
-    <a class="header-side" href="#pilot">The Pilot</a>
-    <a class="header-side" href="/grow">Social Growth</a>
-    <a class="header-cta" data-cta="header" href="/strategy-call?offer=brand-builder">Apply</a>
+    <a class="header-cta" data-cta="header" href="/strategy-call?offer=brand-builder">Story Session</a>
   </div>
 </header>
 
 <!-- HERO -->
 <!--
   ════════════════════════════════════════════════════════════════
-  THE HERO PICTURE
+  ONE PAGE, ONE ASK
 
-  One still, held like a frame from a film: assets/brand-builder-hero.jpg.
-  The copy keeps to the left column on a wide screen and stacks above
-  the picture on a narrow one, so it never sits on the figure. If the
-  still is ever swapped, re-check both, and re-sample --sky from the
-  new picture's top edge (the narrow layout extends the sky with it).
+  Every button on this page books the same thing: the 30-minute Story
+  Session. The page sells the call, the call presents the offer. Do not
+  add a second kind of button.
+
+  THE HERO PICTURE is one still, assets/brand-builder-hero.jpg. The
+  copy keeps to the left column on a wide screen and stacks above the
+  picture on a narrow one, so it never sits on the figure. If the still
+  is ever swapped, re-check both, and re-sample --sky from the new
+  picture's top edge (the narrow layout extends the sky with it).
+
+  THE FILM. When the pitch video exists it goes directly under this
+  hero, before the numbers, as:
+
+    <section id="video"><div class="video-frame">
+      <video src="assets/vsl-brand-builder.mp4" poster="assets/brand-builder-hero.jpg" controls playsinline></video>
+    </div></section>
+
+  and the tracking script at the foot of the page should watch it with
+  ntc.watchVideo. Until then there is no empty slot on the page.
   ════════════════════════════════════════════════════════════════
 -->
 <div class="bb-hero">
@@ -1204,15 +1254,24 @@
   <div class="bb-hero-overlay"></div>
   <section id="hero">
     <div class="bb-hero-copy">
-      <div class="eyebrow reveal">Brand Builder · For Los Angeles Founders</div>
+      <div class="eyebrow reveal">Award-winning filmmakers · For Los Angeles founders</div>
       <h1 class="title reveal">Is your life<br>a <em>movie?</em></h1>
-      <p class="hero-sub reveal">We're Jadon and Meghan, an award-winning filmmaker duo. We turn founders into cinematic personal brands: <b>shot like film, built to grow the business.</b></p>
+      <p class="hero-sub reveal">We turn founders into personal brands people actually follow. <b>Shot like film, built to grow the business.</b></p>
       <div class="hero-ctas reveal">
-        <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Apply for Brand Builder</a>
-        <a class="btn btn--ghost" data-cta="hero-pilot" href="#pilot">Start with the Pilot</a>
+        <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
       </div>
+      <p class="bb-cta-note reveal">30 minutes with Jadon and Meghan. Nothing is due to book.</p>
     </div>
   </section>
+</div>
+
+<!-- STAT BAR · every figure here is already published elsewhere on the
+     site. Do not add one that is not: see the proof rows on / and /grow. -->
+<div class="statbar">
+  <div class="stat reveal"><div class="stat-num">101K+</div><div class="stat-label">Following built<br>around one founder</div></div>
+  <div class="stat reveal"><div class="stat-num">58K+</div><div class="stat-label">Followers built<br>for one attorney</div></div>
+  <div class="stat reveal"><div class="stat-num">1M+</div><div class="stat-label">Streaming minutes<br>on our own feature</div></div>
+  <div class="stat reveal"><div class="stat-num">338K+</div><div class="stat-label">Organic reach<br>in 9 days · zero spend</div></div>
 </div>
 <div class="bb-billing">
   <span><b>Grand Jury Award</b> · Gasparilla</span>
@@ -1221,86 +1280,41 @@
   <span><b>Best Actress</b> · New York Movie Awards</span>
 </div>
 
-<!-- STAT BAR · every figure here is already published elsewhere on the
-     site. Do not add one that is not: see the proof rows on / and /grow. -->
-<div class="statbar">
-  <div class="stat reveal"><div class="stat-num">1M+</div><div class="stat-label">Streaming minutes<br>on our own feature</div></div>
-  <div class="stat reveal"><div class="stat-num">338K+</div><div class="stat-label">Organic reach<br>in 9 days · zero spend</div></div>
-  <div class="stat reveal"><div class="stat-num">101K+</div><div class="stat-label">Following built<br>around one founder</div></div>
-  <div class="stat reveal"><div class="stat-num">58K+</div><div class="stat-label">Followers built<br>for one attorney</div></div>
-</div>
-
 <!--
-  ════════════════════════════════════════════════════════════════
-  HELD · the third-party statistic
-
-  The ad for this page opens on a consumer-trust statistic about
-  founders with a visible personal brand. It is NOT on the page yet,
-  because the article it was taken from could not be found again to
-  link. A statistic here needs its source beside it. When the link is
-  in hand, add a line under the stat bar in this form and nothing
-  looser:
+  HELD · the third-party statistic. The ad for this page opens on a
+  consumer-trust statistic about founders with a visible personal
+  brand. It is NOT on the page, because the article it was taken from
+  could not be found again to link. A statistic here needs its source
+  beside it. When the link is in hand, add one line under the stat bar:
 
     <p class="invest-note">NN% of consumers ... <a href="SOURCE">Publication, month year</a></p>
-  ════════════════════════════════════════════════════════════════
 -->
 
-<!-- THE PROBLEM -->
-<section id="problem">
-  <div class="eyebrow reveal">The Problem</div>
-  <h2 class="title reveal">People buy the founder<br>before they buy <em>the firm.</em></h2>
-  <div class="roof-cols">
-    <div class="reveal">
-      <span class="roof-num">I</span>
-      <div class="roof-title">The best-kept secret</div>
-      <p class="roof-body">The work is excellent. Outside your referrals, almost nobody has watched you do it.</p>
-    </div>
-    <div class="reveal">
-      <span class="roof-num">II</span>
-      <div class="roof-title">Louder is winning</div>
-      <p class="roof-body">Competitors with half your record are on camera every week, and getting the calls.</p>
-    </div>
-    <div class="reveal">
-      <span class="roof-num">III</span>
-      <div class="roof-title">It all looks the same</div>
-      <p class="roof-body">Same podcast clips, same captions, same ring light. Nothing that looks like you.</p>
-    </div>
-    <div class="reveal">
-      <span class="roof-num">IV</span>
-      <div class="roof-title">No time to be a creator</div>
-      <p class="roof-body">You run a company. You show up for the shoot. We do everything after it.</p>
-    </div>
-  </div>
-</section>
+<!-- PROOF · the two founder brands.
+     Numbers and wording are the ones already published on / and /grow.
+     If one changes there, change it here in the same commit. -->
+<section id="cases">
+  <div class="eyebrow reveal">Proof</div>
+  <h2 class="title reveal">Two attorneys with firms to run.<br>Two <em>followings.</em></h2>
 
-<!-- THE SHOW · what Brand Builder is.
-     Qualitative on purpose, like the tier cards on /grow: no price and
-     no monthly counts, which are agreed in the proposal. Every line
-     here restates assets/offer.js retainer.publicGuideTiers 'Brand
-     Builder'. Do not add a scope item that is not in that list. -->
-<section id="show">
-  <div class="eyebrow reveal">Brand Builder</div>
-  <h2 class="title reveal">Your brand, run like<br>a <em>production.</em></h2>
-  <p class="lede reveal">Our flagship partnership, and our largest monthly production allocation. <b>One team writes it, shoots it, cuts it and runs the media behind it.</b></p>
-  <div class="show-rows">
-    <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Longform</span>The <em>feature</em></div>
-      <p class="show-body"><b>The piece people sit down for.</b> Founder interviews, YouTube episodes, podcasts and case-study films, directed and graded like the films we make for ourselves.</p>
-    </div>
-    <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Short-form</span>The <em>trailers</em></div>
-      <p class="show-body"><b>The moments that travel.</b> Cut for the feed and captioned in-house, so every episode keeps working after the day it posts.</p>
-    </div>
-    <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Ads</span>The <em>campaign</em></div>
-      <p class="show-body"><b>Ad creative built as ad creative,</b> not recut brand footage, with paid media management, testing and iteration included.</p>
-    </div>
-    <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Distribution</span>The <em>release</em></div>
-      <p class="show-body"><b>Somewhere for the attention to land.</b> Funnel, tracking and automation support, organic distribution of the campaign creative, and monthly analytics and creative direction.</p>
-    </div>
+  <div class="case-grid">
+    <article class="case reveal">
+      <span class="case-tier">Longform · Short-form · Documentary</span>
+      <h3 class="case-name">Mike Alder</h3>
+      <div class="case-num">58K+</div>
+      <div class="case-label">Followers built</div>
+      <p class="case-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into <b>a personal brand people actually follow.</b></p>
+      <a class="case-link" href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener">See his feed ↗</a>
+    </article>
+    <article class="case reveal">
+      <span class="case-tier">Podcast · Short-form</span>
+      <h3 class="case-name">Gina Zapanta</h3>
+      <div class="case-num">101K+</div>
+      <div class="case-label">Combined following</div>
+      <p class="case-desc">A podcast and short-form engine across Instagram, YouTube and TikTok, <b>built episode by episode around her voice,</b> not a content calendar template.</p>
+      <a class="case-link" href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener">See her feed ↗</a>
+    </article>
   </div>
-  <p class="invest-note reveal" style="margin-top:26px"><b>Three month minimum.</b> Scope and fee are set on the call and confirmed in writing before anything starts. Your advertising spend stays on your own payment method.</p>
 </section>
 
 <!-- THE REEL -->
@@ -1699,201 +1713,106 @@
   </div>
 </div>
 
-<!-- CASE STUDIES · the two founder brands, then the films.
-     Numbers and wording are the ones already published on / and /grow.
-     If one changes there, change it here in the same commit. -->
-<section id="cases">
-  <div class="eyebrow reveal">Proof</div>
-  <h2 class="title reveal">Two founders.<br>Two <em>followings.</em></h2>
-  <p class="lede reveal">Both are attorneys with a firm to run. <b>Neither one is a full-time creator.</b></p>
+<!-- THE METHOD · Pilot, then Series.
+     The Pilot's price and scope are declared in assets/offer.js
+     brandBuilder.pilot, and scripts/check-offer.py lets that one figure
+     onto this page. Change it there first. It appears here ONCE, as a
+     filter before the call, and carries no button of its own.
 
-  <div class="case-grid">
-    <article class="case reveal">
-      <span class="case-tier">Longform · Short-form · Documentary</span>
-      <h3 class="case-name">Mike Alder</h3>
-      <p class="case-role">Trial attorney · the name behind $3.1B+ in settlements</p>
-      <div class="case-num">58K+</div>
-      <div class="case-label">Followers built</div>
-      <p class="case-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into <b>a personal brand people actually follow.</b></p>
-      <ul class="case-list">
-        <li><span><b style="color:var(--parchment);font-weight:500">AlderTalk,</b> his video podcast, cut down to the moments that travel</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">The AlderTalk Summit keynote,</b> multi-camera at a $650-a-ticket event, reframed for the feed</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Scripted ads:</b> three hooks out of one shoot day</span></li>
-      </ul>
-      <a class="case-link" href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener">See his feed ↗</a>
-    </article>
-    <article class="case reveal">
-      <span class="case-tier">Podcast · Short-form</span>
-      <h3 class="case-name">Gina Zapanta</h3>
-      <p class="case-role">Attorney · host of Empowered with Gina</p>
-      <div class="case-num">101K+</div>
-      <div class="case-label">Combined following</div>
-      <p class="case-desc">A podcast and short-form engine across Instagram, YouTube and TikTok, <b>built episode by episode around her voice,</b> not a content calendar template.</p>
-      <ul class="case-list">
-        <li><span><b style="color:var(--parchment);font-weight:500">Empowered with Gina:</b> guests booked, shot and cut, with the clips off every episode</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">One setup that repeats</b> without getting cheaper to look at</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Event coverage</b> under the same brand</span></li>
-      </ul>
-      <a class="case-link" href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener">See her feed ↗</a>
-    </article>
-  </div>
-
-  <div class="cases-sub reveal">And what we do with our own stories</div>
-  <figure class="bb-still reveal" style="margin-top:0;border-top:none">
-    <img src="assets/brand-builder-giff.jpg" width="1800" height="1200" alt="Jadon Cal Fitzpatrick holding the Grand Jury Award on stage at the Gasparilla International Film Festival, the screen behind him reading Winner, Off Rip" loading="lazy">
-    <figcaption><b>Gasparilla International Film Festival</b> · Grand Jury Award · <i>Off Rip</i></figcaption>
-  </figure>
-  <div class="proof-rows">
-    <div class="proof-row reveal">
-      <div><div class="proof-num">1M+</div><div class="proof-label">Streaming Minutes</div></div>
-      <div><span class="proof-tier">Our Feature Film</span><div class="proof-client">Off Rip</div><p class="proof-desc"><b>Grand Jury Award at Gasparilla.</b> Made story-first on an independent budget, now streaming on Amazon, Apple TV and Tubi. One vertical cut from it reached 137K organic views.</p></div>
+     Brand Builder carries no price and no counts, like every retainer
+     on the site, and every line restates offer.js publicGuideTiers
+     'Brand Builder'. -->
+<section id="method">
+  <div class="eyebrow reveal">How It Works</div>
+  <h2 class="title reveal">Pilot, then <em>series.</em></h2>
+  <p class="lede reveal">Nobody greenlights a show without a pilot. <b>You should not have to either.</b></p>
+  <div class="show-rows">
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Step one · 30 minutes</span>The <em>story</em></div>
+      <p class="show-body"><b>The Story Session.</b> We find what only you can say, and tell you straight whether it carries a brand.</p>
     </div>
-    <div class="proof-row reveal">
-      <div><div class="proof-num">338K+</div><div class="proof-label">Organic Reach · 9 Days</div></div>
-      <div><span class="proof-tier">Our Short Film · Launch</span><div class="proof-client">Bot or Not</div><p class="proof-desc"><b>One upload, one share, zero paid spend.</b> 168K+ Reddit views in four days and the #2 post of the day on r/Filmmakers. Lois Weber Best Sci-Fi at FilmQuest.</p></div>
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Step two · $5,000, one time</span>The <em>pilot</em></div>
+      <p class="show-body"><b>5 longform episodes and 100 short-form clips,</b> cut from those episodes with our AI-assisted edit pipeline. Plus premium playbook content and a 90-day gameplan. <b>Hire us to run it, or run it without us. It is yours either way.</b></p>
     </div>
-    <div class="proof-row reveal">
-      <div><div class="proof-num">460K</div><div class="proof-label">Trailer Views</div></div>
-      <div><span class="proof-tier">Film · Trailer Campaign</span><div class="proof-client">FOUR</div><p class="proof-desc">Just under half a million views and <b>294 reshares</b> on a trailer cut in-house.</p></div>
+    <div class="show-row reveal">
+      <div class="show-part"><span class="show-kicker">Step three · by application</span>The <em>series</em></div>
+      <p class="show-body"><b>Brand Builder,</b> our flagship monthly production: longform, short-form and ads, with paid media management included. Scoped on the call, three month minimum.</p>
     </div>
   </div>
 </section>
 
-<!-- TWO WAYS IN
-     The Pilot's price and scope are declared in assets/offer.js
-     brandBuilder.pilot, and scripts/check-offer.py lets that one figure
-     onto this page and no other. Change it there first.
-
-     Brand Builder carries no price and no counts here, like every
-     retainer on the site. -->
-<section id="pilot">
-  <div class="eyebrow reveal">Two Ways In</div>
-  <h2 class="title reveal">Shoot the pilot.<br>Or greenlight <em>the series.</em></h2>
-  <p class="lede reveal">Every show starts with a pilot. <b>Ours is a real one: you keep the episodes and the plan, whether or not we make the series together.</b></p>
-
-  <div class="price-cards reveal">
-    <div class="price-card price-card--featured">
-      <span class="chip">Start here</span>
-      <div class="price-name">The Pilot</div>
-      <p class="price-for">One production, one time. No retainer attached.</p>
-      <div class="price-amount">$5,000 <small>one time · fixed</small></div>
-      <ul class="price-list">
-        <li><span><b style="color:var(--parchment);font-weight:500">5 longform episodes,</b> shot and finished</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">100 short-form clips,</b> cut from those episodes with our AI-assisted edit pipeline</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Premium playbook content:</b> how we build hooks, formats and a posting rhythm that holds</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Your 90-day gameplan.</b> Hire us to run it, or run it without us. It is yours either way</span></li>
+<!-- THE CALL · what the one button buys.
+     Each line is delivered on every Story Session and matches the
+     'brand' content on /strategy-call. Cut a line before letting it go
+     unkept. -->
+<section id="session">
+  <div class="eyebrow reveal">The Story Session</div>
+  <h2 class="title reveal">Thirty minutes.<br>Worth having <em>either way.</em></h2>
+  <div class="invest-fit reveal" style="margin-top:50px">
+    <div class="invest-fit-col">
+      <h3>You leave with</h3>
+      <ul>
+        <li><span><b>A straight read</b> on where your personal brand stands today</span></li>
+        <li><span><b>Three story angles</b> worth building the show around</span></li>
+        <li><span><b>What we would make:</b> longform, short-form and ads</span></li>
+        <li><span><b>Pilot or series,</b> and why</span></li>
       </ul>
-      <div class="price-cta"><a class="btn btn--gold" data-cta="pilot" href="/strategy-call?offer=brand-pilot">Book my Pilot call</a></div>
-      <p class="price-note">Scope is confirmed on the call, before anything is due.</p>
     </div>
-    <div class="price-card">
-      <span class="chip chip--ghost">Flagship</span>
-      <div class="price-name">Brand Builder</div>
-      <p class="price-for">The series. A monthly production, by application.</p>
-      <div class="price-amount price-amount--words">Scoped on<br>the call</div>
-      <ul class="price-list">
-        <li><span><b style="color:var(--parchment);font-weight:500">Our largest monthly production allocation</b></span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Longform, short-form and ads,</b> at our highest monthly volume</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Paid media management,</b> testing and iteration included</span></li>
-        <li><span><b style="color:var(--parchment);font-weight:500">Funnel, tracking and automation support,</b> plus monthly analytics and creative direction</span></li>
-      </ul>
-      <div class="price-cta"><a class="btn btn--ghost" data-cta="brand-builder" href="/strategy-call?offer=brand-builder">Apply for Brand Builder</a></div>
-      <p class="price-note">Three month minimum. A handful of retainers at a time, by design.</p>
-    </div>
-  </div>
-
-  <div class="roof-cols pilot-steps">
-    <div class="reveal">
-      <span class="roof-num">I</span>
-      <div class="roof-title">The story</div>
-      <p class="roof-body">A call to find what your episodes are about, and what only you can say.</p>
-    </div>
-    <div class="reveal">
-      <span class="roof-num">II</span>
-      <div class="roof-title">The shoot</div>
-      <p class="roof-body">Directed and lit like a film set, with no crew standing around.</p>
-    </div>
-    <div class="reveal">
-      <span class="roof-num">III</span>
-      <div class="roof-title">The cut</div>
-      <p class="roof-body">Five episodes finished, then a hundred clips pulled from them.</p>
-    </div>
-    <div class="reveal">
-      <span class="roof-num">IV</span>
-      <div class="roof-title">The gameplan</div>
-      <p class="roof-body">Your next 90 days, written down. Ours to run or yours to keep.</p>
-    </div>
-  </div>
-
-  <div class="invest-fit reveal" style="margin-top:70px">
     <div class="invest-fit-col">
       <h3>This fits</h3>
       <ul>
         <li><span><b>Los Angeles founders and owners</b> whose name is the business</span></li>
         <li><span><b>Already selling,</b> with a record worth showing</span></li>
         <li><span><b>Willing to be on camera,</b> and to say something real on it</span></li>
-        <li><span><b>A direct line</b> to the people making the work</span></li>
-      </ul>
-    </div>
-    <div class="invest-fit-col">
-      <h3>This does not</h3>
-      <ul>
-        <li>A brand with nobody willing to be the face of it</li>
-        <li>A guaranteed follower count or a promise to go viral. We do not sell those</li>
-        <li><span>A single video with nothing behind it. That is <a href="/signature" style="color:var(--gold)">Signature Work</a></span></li>
-        <li><span>Ads and leads without the personal brand. That is <a href="/grow" style="color:var(--gold)">Social Growth</a></span></li>
       </ul>
     </div>
   </div>
-
-  <ul class="prepay-list reveal">
-    <li><b>The Pilot is one time and fixed.</b> Nothing rolls into a monthly commitment</li>
-    <li><b>No result is guaranteed</b> on either. No follower count, no view count, no revenue figure</li>
-    <li><b>Brand Builder ad spend is always yours:</b> paid to the platforms directly, never marked up or held</li>
-    <li><b>Fees exclude</b> ad spend, paid placements, talent, and travel outside Los Angeles or Tampa</li>
-  </ul>
+  <div class="invest-cta reveal">
+    <a class="btn btn--gold" data-cta="session" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
+    <p class="invest-cta-note">Click, answer a few questions, pick a time. <b>If it is not a fit, we say so on the call.</b></p>
+  </div>
 </section>
 
-<!-- THE DUO -->
-<section id="duo">
-  <div class="eyebrow reveal">Who Makes It</div>
-  <h2 class="title reveal">Two filmmakers.<br>No account <em>manager.</em></h2>
-  <p class="lede reveal">The person who plans your shoot shoots it and cuts it. <b>You talk to Jadon and Meghan directly.</b></p>
-  <figure class="bb-still reveal">
-    <img src="assets/brand-builder-onset.jpg" width="1800" height="1200" alt="Meghan Carrasquillo framing a shot with her hands on set while Jadon Cal Fitzpatrick looks on" loading="lazy">
-    <figcaption><b>On set</b> · Meghan and Jadon</figcaption>
-  </figure>
-  <div class="duo-grid">
-    <div class="reveal">
-      <div class="duo-name">Jadon Cal Fitzpatrick</div>
-      <div class="duo-role">Director · Founder</div>
-      <p class="duo-body">A filmmaker and director whose work has screened at Tribeca, Telluride and Gasparilla, where his debut feature <i>Off Rip</i> took the Grand Jury Award.</p>
-      <ul class="duo-credits">
-        <li><b>Grand Jury Award</b> · Gasparilla · <i>Off Rip</i></li>
-        <li><b>Lois Weber Best Sci-Fi</b> · FilmQuest · <i>Bot or Not</i></li>
-      </ul>
-    </div>
-    <div class="reveal">
-      <div class="duo-name">Meghan Carrasquillo</div>
-      <div class="duo-role">Producer · Client Relations</div>
-      <p class="duo-body">A performer of two decades who has spent the last seven years in film on both sides of the camera. She wrote and co-directed <i>Bot or Not</i>.</p>
-      <ul class="duo-credits">
-        <li><b>Best Actress</b> · New York Movie Awards</li>
-        <li><b>Writer / Co-Director</b> · <i>Bot or Not</i></li>
-      </ul>
-    </div>
+<!-- QUESTIONS
+     PLACEHOLDERS, written from the offer, not from buyers. Replace them
+     with the real objections once Mike, Gina and the first Pilot
+     clients have answered: what almost stopped you, what had you tried
+     before, what would you tell a friend. Biggest objection first. -->
+<section id="questions">
+  <div class="eyebrow reveal">Questions</div>
+  <h2 class="title reveal">Before you <em>book.</em></h2>
+  <div class="qa-list reveal">
+    <details class="qa">
+      <summary class="qa-q">I am not good on camera.</summary>
+      <p class="qa-a"><b>Almost nobody is on the first take.</b> That is what directing is for. Meghan has spent two decades performing and Jadon directs actors for a living. No crew stands around watching.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">I already post content.</summary>
+      <p class="qa-a"><b>Then you know how much of it looks like everyone else's.</b> This is built around your story and shot like a film, then cut into the longform, the clips and the ads from one production.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">What if I only want the Pilot?</summary>
+      <p class="qa-a"><b>Then that is all you buy.</b> It is one time and fixed, nothing rolls into a monthly commitment, and the 90-day gameplan is written so you can run it without us.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">Do you guarantee followers or leads?</summary>
+      <p class="qa-a"><b>No, and nobody honest can.</b> No result is guaranteed. What we can show you is what the same work did for Mike, for Gina and for our own films.</p>
+    </details>
   </div>
 </section>
 
 <!-- CLOSE -->
 <section id="close">
-  <div class="eyebrow reveal">New Terrain Creative · Brand Builder</div>
-  <h2 class="title reveal">Let's make<br>your <em>movie.</em></h2>
-  <p class="lede reveal">One call. <b>Leave knowing whether your story carries a brand,</b> and how we would shoot it.</p>
+  <figure class="bb-still reveal">
+    <img src="assets/brand-builder-onset.jpg" width="1800" height="1200" alt="Meghan Carrasquillo framing a shot with her hands on set while Jadon Cal Fitzpatrick looks on" loading="lazy">
+    <figcaption><b>Meghan Carrasquillo and Jadon Cal Fitzpatrick</b> · on set · you talk to them directly, not an account manager</figcaption>
+  </figure>
+  <h2 class="title reveal" style="margin-top:80px">Let's make<br>your <em>movie.</em></h2>
   <div class="close-ctas reveal">
-    <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=brand-builder">Apply for Brand Builder</a>
-    <a class="btn btn--ghost" data-cta="close-pilot" href="/strategy-call?offer=brand-pilot">Book my Pilot call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
   </div>
+  <p class="bb-ps reveal"><b>P.S.</b> The short version: thirty minutes with two award-winning filmmakers. You leave with a straight read on your brand and three story angles, whether or not we ever work together. If it fits, the Pilot is $5,000, one time, and the plan is yours to keep. Your competitors are on camera this week either way.</p>
   <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
     <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
     <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>

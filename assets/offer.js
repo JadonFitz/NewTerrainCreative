@@ -239,6 +239,11 @@
        front-end offer a cold visitor can say yes to, and a front-end
        offer with its price hidden is not one.
 
+       The page SELLS THE CALL, not the Pilot: every button books the
+       30-minute Story Session, and the Pilot is stated once, with its
+       price, as a filter before anyone books. It has no button of its
+       own and the offer is presented on the call.
+
        scripts/check-offer.py lets pilotFee appear on brand-builder.html
        and on the form pages, and nowhere else. The scope lines below are
        what the page states; change them here first.
@@ -452,9 +457,8 @@
       // its offer identifier; /production-media now redirects to /grow.
       'production-media': 'production_media',
       'ad-sprint':        'ad_sprint',
-      // /brand-builder. Two CTAs on one page, so two identifiers.
-      'brand-builder':    'brand_builder',
-      'brand-pilot':      'brand_pilot'
+      // /brand-builder. One CTA, the Story Session, so one identifier.
+      'brand-builder':    'brand_builder'
     },
 
     // ── Things we do not say ──────────────────────────────────────────
