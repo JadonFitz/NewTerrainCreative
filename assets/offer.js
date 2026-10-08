@@ -279,6 +279,7 @@
         scope: [
           '10 longform episodes, shot and finished',
           '50 short-form clips, five cut from each episode',
+          'One Signature Hero Ad',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
@@ -289,6 +290,8 @@
            Paid media management and the conversion setup (funnel,
            tracking, CRM and automation) are retainer only: they come
            with the Brand Builder retainer, never with the Pilot. */
+        /* 8 Oct 2026, Jadon: the Pilot includes one Signature Hero Ad. */
+        heroAdIncluded: true,
         organicPostingIncluded: true,
         resultGuaranteed: false
       }
@@ -350,7 +353,9 @@
        performance guarantee, no refund, no open-ended remedy.
 
        continuationPricePublicOnFoundingPage is false on purpose, and
-       stays false. $3,500 must not appear in the COPY of /founding.
+       stays false. The continuation figure (continuationMonthly, $5,000
+       since Oct 2026, previously $3,500) must not appear in the COPY of
+       /founding.
 
        What that rule is protecting has not changed: nobody should meet
        the continuation price before they understand what the waived
@@ -360,7 +365,7 @@
        spoken in the VSL, both before any commitment.
 
        SO: if the VSL is ever embedded on /founding, the page will state
-       $3,500 aloud while this flag says it must not appear. That is
+       the figure aloud while this flag says it must not appear. That is
        fine and it is deliberate. The flag governs the written copy,
        where a number with no context reads as a price list. A figure
        inside a two-minute explanation is the context. Do not "fix" the
