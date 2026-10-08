@@ -162,7 +162,9 @@
     // Also 2 Oct 2026. "Posting and scheduling" became "organic
     // distribution of the campaign creative": we post the ads we made,
     // we do not run the client's social presence. Community management
-    // left the offer. Longform is Brand Builder only. And the platform
+    // left the offer. Longform is Brand Builder only. EXCEPTION, 8 Oct
+    // 2026: Brand Builder includes organic social posting on the client's
+    // own channels; it is the one tier that does. And the platform
     // is not named in retainer copy: it is paid media, chosen for the
     // audience. The Founding Three scope above still names its platform
     // because that is a defined pilot with its own terms.
@@ -216,12 +218,18 @@
         {
           name: 'Brand Builder',
           label: 'Flagship partnership',
-          scope: 'Our largest production allocation, with broader testing and premium campaign creative.',
+          scope: 'Our largest production allocation, with organic posting, paid media and the conversion setup run for you.',
+          /* 8 Oct 2026: Brand Builder is the one tier that runs the
+             client's own channels. "Organic social posting" here means
+             exactly that, and it is a Brand Builder line only: the other
+             tiers keep "organic distribution of the campaign creative". */
           includes: [
             'Our largest monthly production allocation',
             'Our highest monthly volume across longform, short-form and ads',
-            'Everything in Growth Partner, including paid media management',
             'Longform: founder interviews, YouTube episodes, podcasts and case-study pieces',
+            'Short-form cut from every episode, and the ads built from the strongest',
+            'Organic social posting: we run the channels the content goes out on',
+            'Everything in Growth Partner, including paid media management',
             'Monthly analytics and creative direction'
           ]
         }
@@ -261,11 +269,11 @@
         oneTime: true,
         noRetainer: true,
         longformEpisodes: 10,
-        shortFormClips: 100,
-        shortFormClipsIsCeiling: true,
+        shortFormClips: 50,
+        shortFormClipsPerEpisode: 5,
         scope: [
           '10 longform episodes, shot and finished',
-          'Up to 100 short-form clips, cut from those episodes',
+          '50 short-form clips, five cut from each episode',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
