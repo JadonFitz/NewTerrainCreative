@@ -517,10 +517,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     'brand-builder-pilot': function () {
       var p = (O.brandBuilder && O.brandBuilder.pilot) || {};
-      // No video of its own yet: the Brand Builder video sells the series, which this client did not buy.
+      // Plays the Brand Builder welcome video (Jadon, 8 Oct 2026): the Pilot is a month of the same production.
       return { name: 'The Brand Builder Pilot', label: 'Brand Builder · Pilot',
                intro: 'One month of Brand Builder production, bought on its own. Here is how the month runs.',
-               steps: pilotSteps, incl: p.scope || [], crm: false };
+               steps: pilotSteps, incl: p.scope || [], crm: false, video: 'brand-builder' };
     },
     'eight': function () {
       var p = prod.adSprintEight;
