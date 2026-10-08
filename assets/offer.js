@@ -230,6 +230,7 @@
             'Our highest monthly volume across longform, short-form and ads',
             'Longform: founder interviews, YouTube episodes, podcasts and case-study pieces',
             'Short-form cut from every episode, and the ads built from the strongest',
+            'One Signature Hero Ad each month, captured within the included shoot days',
             'Organic social posting: we run the channels the content goes out on',
             'Everything in Growth Partner, including paid media management',
             'Monthly analytics and creative direction'
