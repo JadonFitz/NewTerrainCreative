@@ -73,6 +73,16 @@
       "source": "/brand-builder.html",
       "destination": "/brand-builder",
       "permanent": false
+    },
+    {
+      "source": "/brandbuilder-pro",
+      "destination": "/brand-builder-pro",
+      "permanent": false
+    },
+    {
+      "source": "/brand-builder-pro.html",
+      "destination": "/brand-builder-pro",
+      "permanent": false
     }
   ],
   "crons": [

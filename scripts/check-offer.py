@@ -121,7 +121,7 @@ FORM_PAGES = {'apply.html', 'project.html', 'strategy-call.html'}
 # from offer.js this set is empty and the page fails, which is correct.
 m_pilot = re.search(r'pilotFee:\s*(\d+)', offer)
 _pilot = {fmt(int(m_pilot.group(1)))} if m_pilot else set()
-PAGE_EXTRA = {'brand-builder.html': _pilot, 'about.html': _pilot}
+PAGE_EXTRA = {'brand-builder.html': _pilot, 'brand-builder-pro.html': _pilot, 'about.html': _pilot}
 
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
