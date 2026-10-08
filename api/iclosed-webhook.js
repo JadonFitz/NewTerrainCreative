@@ -119,7 +119,10 @@ function shapeOf(d) {
    (the event's URL, e.g. signature-project) is read too, because it is
    fixed in strategy-call.html while the display name can be renamed.
    Signature is checked before the generic growth/strategy match: until
-   it was, every Signature booking fell through to paid_retainer. */
+   it was, every Signature booking fell through to paid_retainer. Brand
+   Builder is matched on 'brand' or 'story' (the event is the Story
+   Session) for the same reason: until its own iClosed event exists it
+   books the Growth event and files as paid_retainer, which is correct. */
 function offerFrom(d) {
   const name = String(pick(d,
     'event_type.name', 'event_type.title', 'eventType.name',
@@ -130,6 +133,7 @@ function offerFrom(d) {
   if (key.includes('founding')) return 'founding_three';
   if (key.includes('sprint')) return 'ad_sprint';
   if (key.includes('signature')) return 'signature_work';
+  if (key.includes('brand') || key.includes('story session')) return 'brand_builder';
   if (key.includes('growth') || key.includes('strategy')) return 'paid_retainer';
   return 'paid_retainer';
 }

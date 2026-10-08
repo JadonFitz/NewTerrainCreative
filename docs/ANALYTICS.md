@@ -133,6 +133,12 @@ project funnels will optimise as one audience.
 `funnel_events.funnel` carries `paid_retainer`, `founding_three` or
 `signature_work` for the same reason on the first-party side.
 
+Brand Builder (`/brand-builder` and `/brand-builder-pro`) has no form of
+its own: its one action is the Story Session booking, written by
+`/api/iclosed-webhook` as `brand_builder` once the event in
+`docs/ICLOSED-BRAND-BUILDER.md` exists. Until then it books the Growth
+event and files as `paid_retainer`.
+
 ## No booking without qualification
 
 Every call now starts with a completed form. `/book` and the other

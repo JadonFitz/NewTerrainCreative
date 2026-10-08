@@ -255,6 +255,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Booked, browser and CAPI, on this dataset before this page loaded.
      See the note in <head>. */
   var NOTES = {
+    'brand-builder':  '<b>Before the Story Session:</b> have a link to anything you have ' +
+                      'already posted, and a sentence on what you want the brand to do for the ' +
+                      'business, whether that is sales, hiring or referrals.',
     'founding-three': '<b>Founding Three applicants:</b> we will read your application and look at ' +
                       'your business before the call, so the time goes on strategy rather than ' +
                       'rehashing the form.',
@@ -336,6 +339,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
              intro: 'Watch this short video before your call. It covers how the Founding Three works ' +
                     'so we can use the call on your business instead of the basics.' }
     },
+    /* BRAND BUILDER: the iClosed Story Session event redirects here with
+       ?offer=brand-builder. No pre-call video yet, so the slot stays
+       hidden; paste the player URL into src when one exists. */
+    'brand-builder':  { vsl: { src: '', poster: '', title: 'Brand Builder: watch before your Story Session' } },
     /* SIGNATURE VSL: replace src with final video */
     'signature':      { vsl: { src: '', poster: '', title: 'Signature Work: what happens after you book' } }
   };

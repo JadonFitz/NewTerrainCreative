@@ -137,6 +137,7 @@
     if (p === '/grow' || p === '/strategy-call') return 'paid_retainer';
     if (p === '/sprint' || p === '/booked') return 'ad_sprint';
     if (p === '/signature') return 'signature_work';
+    if (p === '/brand-builder' || p === '/brand-builder-pro') return 'brand_builder';
     if (p === '/growth-guide') return 'sales_enablement';
     return 'organic_site';
   }

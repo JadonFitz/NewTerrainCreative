@@ -51,6 +51,10 @@ const ALLOWED_FUNNELS = new Set([
   // separated from paid_retainer (which is /grow) so the ad-driven page
   // is reportable on its own while both sell the same retainer.
   'production_media',
+  // /brand-builder and /brand-builder-pro. The Story Session booking is
+  // written by /api/iclosed-webhook; browser events from either page
+  // carry the same name.
+  'brand_builder',
   // Written server side by /api/project. Listed here too so a browser
   // event fired from /project is not silently rejected.
   'signature_work',

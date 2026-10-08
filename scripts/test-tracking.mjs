@@ -57,6 +57,8 @@ check('assigns the Signature funnel from /signature',
 check('every offer page keeps its own funnel',
   funnelAt('/sprint') === 'ad_sprint' && funnelAt('/founding') === 'founding_three' &&
   funnelAt('/grow') === 'paid_retainer' && funnelAt('/') === 'organic_site');
+check('both Brand Builder pages share one funnel',
+  funnelAt('/brand-builder') === 'brand_builder' && funnelAt('/brand-builder-pro') === 'brand_builder');
 check('creates stable event ids', Boolean(viewId && clickId && viewId !== clickId));
 check('ViewContent uses a standard Meta event', pixel[0]?.[0] === 'track' && pixel[0]?.[1] === 'ViewContent');
 check('CTAClick uses a custom Meta event', pixel[1]?.[0] === 'trackCustom' && pixel[1]?.[1] === 'CTAClick');

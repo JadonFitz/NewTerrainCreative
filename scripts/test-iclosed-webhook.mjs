@@ -136,6 +136,27 @@ n = calls.length;
 res = await request({ hookType: 'CALL_BOOKED', event: {}, invitee: { email: 'person@example.com' } });
 check('a booking with no id writes nothing', res.payload.sent === false && calls.length === n);
 
+console.info('\n\x1b[1mBRAND BUILDER IS ITS OWN OFFER\x1b[0m');
+// The Story Session event (docs/ICLOSED-BRAND-BUILDER.md) must file under
+// brand_builder by name or slug, and never under paid_retainer.
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_brandBuild01', uuid: 2661140 },
+  event_type: { name: 'Brand Builder · Story Session', slug: 'brand-builder-story-session' }
+}));
+made = calls.slice(n);
+check('a Story Session booking files under brand_builder',
+  supa(made)[0]?.body?.funnel === 'brand_builder' && supa(made)[0]?.body?.metadata?.offer === 'brand_builder');
+check('and tells Meta it was Brand Builder', meta(made)[0]?.body.data[0].custom_data?.offer === 'brand_builder');
+
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_brandBuild02', uuid: 2661141 },
+  event_type: { name: 'Story Session', slug: 'brand-builder-story-session' }
+}));
+made = calls.slice(n);
+check('a renamed event still files by its slug', supa(made)[0]?.body?.funnel === 'brand_builder');
+
 console.info('\n\x1b[1mFAILURE ISOLATION\x1b[0m');
 supabaseStatus = 409;
 n = calls.length;
