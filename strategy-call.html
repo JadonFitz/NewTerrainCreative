@@ -368,15 +368,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
       title: 'Book a Growth strategy consultation with New Terrain Creative'
     },
-    /* /brand-builder. One call to action, the Story Session. Brand
-       Builder is a Growth retainer, so it books the Growth event with
-       its own identifier, the way the retired production-media slug
-       does. Its own event is specified in docs/ICLOSED-BRAND-BUILDER.md:
-       once it exists in iClosed, change only the url here to
-       https://app.iclosed.io/e/NewTerrain/brand-builder-story-session */
+    /* /brand-builder. One call to action, the Story Session, which has
+       its own iClosed event since 8 Oct 2026 (built from
+       docs/ICLOSED-BRAND-BUILDER.md): its own nine questions, no budget
+       question, and a redirect to /call-booked?offer=brand-builder. The
+       webhook files it as brand_builder on the event name. Before that
+       it booked the Growth event with this identifier. */
     'brand-builder': {
       ready: true,
-      url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+      url:   'https://app.iclosed.io/e/NewTerrain/brand-builder-story-session',
       title: 'Book a Brand Builder Story Session with New Terrain Creative',
       content: 'brand',
       eyebrow: 'Brand Builder · Story Session',

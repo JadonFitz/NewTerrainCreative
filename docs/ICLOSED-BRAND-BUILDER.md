@@ -3,10 +3,10 @@
 The booking form behind `/brand-builder` and `/brand-builder-pro`. Both
 pages have one call to action, "Claim your Story Session", which opens
 `/strategy-call?offer=brand-builder`. That page embeds whichever iClosed
-event its `SCHEDULERS['brand-builder'].url` names. Today that is the
-Growth event. This document is the event to create in iClosed so the
-Story Session has its own questions, its own calendar and its own line in
-the reporting.
+event its `SCHEDULERS['brand-builder'].url` names. Since 8 October 2026
+that is this event, built in iClosed as described below (it was
+duplicated from the Growth event, so availability, buffers and reminders
+are the Growth event's). Before that it was the Growth event.
 
 iClosed has no API for creating events, so this is built by hand in
 app.iclosed.io. Everything on the site side is already wired: the
