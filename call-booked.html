@@ -340,15 +340,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                     'so we can use the call on your business instead of the basics.' }
     },
     /* BRAND BUILDER: the iClosed Story Session event redirects here with
-       ?offer=brand-builder. Plays the Brand Builder video, the same Vimeo
-       link welcome.html uses for the Pilot and the series (re-cut 8 Oct
-       2026 to the current scope; new versions go to the same link). */
-    'brand-builder':  {
-      vsl: { src: 'https://player.vimeo.com/video/1232959732?badge=0&autopause=0&player_id=0&app_id=58479',
-             poster: '', title: 'Brand Builder: watch before your Story Session',
-             intro: 'Watch this short video before your Story Session. It covers what Brand Builder ' +
-                    'includes, so we can use the call on your brand instead of the basics.' }
-    },
+       ?offer=brand-builder. The pre-call VSL for the Story Session is
+       not shot yet (Jadon, 8 Oct 2026); it is a different video from the
+       Brand Builder welcome video, so the slot stays hidden until it
+       exists. Paste the player URL into src, and add an intro line, when
+       it does. */
+    'brand-builder':  { vsl: { src: '', poster: '', title: 'Brand Builder: watch before your Story Session' } },
     /* SIGNATURE VSL: replace src with final video */
     'signature':      { vsl: { src: '', poster: '', title: 'Signature Work: what happens after you book' } }
   };
