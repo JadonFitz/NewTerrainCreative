@@ -58,6 +58,21 @@
       "source": "/call",
       "destination": "/strategy-call",
       "permanent": false
+    },
+    {
+      "source": "/brandbuilder",
+      "destination": "/brand-builder",
+      "permanent": false
+    },
+    {
+      "source": "/brandbuilder.html",
+      "destination": "/brand-builder",
+      "permanent": false
+    },
+    {
+      "source": "/brand-builder.html",
+      "destination": "/brand-builder",
+      "permanent": false
     }
   ],
   "crons": [
