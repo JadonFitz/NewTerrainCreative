@@ -257,15 +257,15 @@
       geography: 'Los Angeles',
       pilot: {
         name: 'The Pilot',
-        pilotFee: 5000,
+        pilotFee: 7500,
         oneTime: true,
         noRetainer: true,
-        longformEpisodes: 5,
+        longformEpisodes: 10,
         shortFormClips: 100,
-        shortFormCutWith: 'our AI-assisted edit pipeline',
+        shortFormClipsIsCeiling: true,
         scope: [
-          '5 longform episodes, shot and finished',
-          '100 short-form clips, cut from those episodes with our AI-assisted edit pipeline',
+          '10 longform episodes, shot and finished',
+          'Up to 100 short-form clips, cut from those episodes',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
