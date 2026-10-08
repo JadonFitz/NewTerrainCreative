@@ -407,8 +407,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      come from NTC_OFFER.brandBuilder.pilot, the same object the
      /brand-builder pages render, so this page cannot promise more. */
   var pilotSteps = [
-    ['Day 0 to 1', 'Your intake form',
-      'About ten minutes, linked at the top of this page. Meghan reads it before kickoff.'],
+    ['Day 0 to 1', 'Your two forms',
+      'Client intake and the funnel and CRM questionnaire, both linked at the top of this page. Meghan reads them before kickoff.'],
     ['Day 1 to 3', 'Kickoff call',
       'About an hour. What the brand should do for the business, the three story angles worth building on, and the episode plan.'],
     ['By day 7', 'Production days scheduled, episodes planned',
@@ -520,7 +520,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       // Plays the Brand Builder welcome video (Jadon, 8 Oct 2026): the Pilot is a month of the same production.
       return { name: 'The Brand Builder Pilot', label: 'Brand Builder · Pilot',
                intro: 'One month of Brand Builder production, bought on its own. Here is how the month runs.',
-               steps: pilotSteps, incl: p.scope || [], crm: false, video: 'brand-builder' };
+               steps: pilotSteps, incl: p.scope || [], crm: true, video: 'brand-builder' };
     },
     'eight': function () {
       var p = prod.adSprintEight;
