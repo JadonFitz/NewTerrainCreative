@@ -164,7 +164,9 @@
     // we do not run the client's social presence. Community management
     // left the offer. Longform is Brand Builder only. EXCEPTION, 8 Oct
     // 2026: Brand Builder includes organic social posting on the client's
-    // own channels; it is the one tier that does. And the platform
+    // own channels; it is the one tier that does. The Brand Builder Pilot
+    // (not a tier) also posts on the client's channels, for its one
+    // month only: see brandBuilder.pilot below. And the platform
     // is not named in retainer copy: it is paid media, chosen for the
     // audience. The Founding Three scope above still names its platform
     // because that is a defined pilot with its own terms.
@@ -256,7 +258,9 @@
        and on the form pages, and nowhere else. The scope lines below are
        what the page states; change them here first.
 
-       Not a retainer and not a tier: one production, one time. The
+       Not a retainer and not a tier: one production, one time, with
+       organic posting on the client's own channels for that month (8
+       Oct 2026). Paid media and the conversion setup are retainer only. The
        90-day gameplan is the client's to keep and to run without us,
        which is the risk reducer. No result is guaranteed.
        ─────────────────────────────────────────────────────────────── */
@@ -275,9 +279,16 @@
           '10 longform episodes, shot and finished',
           '50 short-form clips, five cut from each episode',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
+          'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
         gameplanIsClientsToKeep: true,
+        /* 8 Oct 2026, Jadon's decision: the Pilot includes organic
+           posting on the client's own channels for the Pilot month.
+           Paid media management and the conversion setup (funnel,
+           tracking, CRM and automation) are retainer only: they come
+           with the Brand Builder retainer, never with the Pilot. */
+        organicPostingIncluded: true,
         resultGuaranteed: false
       }
     },
