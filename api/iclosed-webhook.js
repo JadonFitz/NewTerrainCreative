@@ -17,6 +17,23 @@
    server copy adds is reliability and hashed email, phone and name,
    which is what lifts match quality.
 
+   WHAT MAKES A BOOKING ATTRIBUTABLE TO AN AD
+   Hashed contact details let Meta match a booking to a person. They do
+   not let it match the booking to the click: for that Meta wants the
+   browser id (_fbp), the click id (_fbc, derived from fbclid) and the
+   booker's own IP. Until 10 Oct 2026 the server copy sent none of them,
+   and since almost every Schedule arrives server side (the browser copy
+   on /call-booked rarely fires), Ads Manager attributed one booking in
+   thirty days against five ad sets optimising for Schedule. Events
+   Manager said the same thing: "low fbc coverage from the Conversions
+   API".
+
+   The embed on /strategy-call hands iClosed the visitor's fbclid and
+   session, and iClosed's widget reads _fbp and _fbc from the browser on
+   its own. All of it comes back in the webhook's `tracking` object, and
+   the booker's IP comes back as invitee.ip_address, so this handler
+   forwards them. See metaIdsFrom().
+
    IF ICLOSED'S OWN INTEGRATION IS EVER FIXED, one of the two has to go.
    Three senders keyed on the same id still dedupe, but only if theirs
    uses the booking id too, and that is not worth assuming.
@@ -44,6 +61,7 @@
    funnel_events it carries no contact details: the offer, the booking id
    and whatever campaign parameters iClosed passed along, nothing else.
    ══════════════════════════════════════════════════════════════════════ */
+import { isIP } from 'node:net';
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, configured } from './_supabase.js';
 
@@ -140,9 +158,12 @@ function offerFrom(d) {
 
 /* The campaign a booking came from, if iClosed carried it through.
 
-   `tracking` is in the payload but its inner keys were never recorded, so
-   both spellings are tried and anything absent is simply left out. A
-   booking with no campaign still counts; it reports under (none). */
+   The shape log (10 Oct 2026) shows `tracking` carrying utm_source,
+   utm_medium, utm_campaign, utm_content and utm_term as we pass them,
+   plus iClosed's own first_utm_* copies, offer, ntc_session,
+   landing_page, _fbp, _fbc and fbclid. Both spellings are still tried
+   and anything absent is simply left out. A booking with no campaign
+   still counts; it reports under (none). */
 function attributionFrom(d) {
   const out = {};
   for (const [key, camel] of [
@@ -154,6 +175,51 @@ function attributionFrom(d) {
                       `contact.${key}`, `contact.${camel}`, key, camel);
     if (v !== undefined) out[key] = String(v).slice(0, 200);
   }
+  return out;
+}
+
+/* The three identifiers Meta needs to attribute a booking to a click.
+   Confirmed against the production shape log on 10 Oct 2026:
+
+     tracking._fbp         the pixel's browser id, read by iClosed's widget
+     tracking._fbc         the pixel's click id, when the pixel had set it
+     tracking.fbclid       the raw click id from the ad URL, passed by the
+                           embed on /strategy-call, present even when _fbc
+                           is not because the pixel had not written the
+                           cookie yet
+     invitee.ip_address    the booker's IP, as seen by iClosed
+     contact.ipAddress     the same, on the contact record
+
+   fbc is derived from fbclid when _fbc is absent, in the format Meta
+   documents (fb.1.<ms timestamp>.<fbclid>), exactly as track.js does in
+   the browser. Never invented for an organic booking: no fbclid, no fbc.
+
+   The IP is validated as an address rather than trusted, and the
+   webhook caller's own IP (iClosed's server) is never used, which is what
+   the 3 Oct 2026 commit stopped doing. The two values are only ever
+   compared, never logged. */
+const FB_ID = /^fb\.[0-9]+\.[0-9]+\.[A-Za-z0-9_-]+$/;
+const FBCLID = /^[A-Za-z0-9_-]{1,255}$/;
+
+function metaIdsFrom(d, callerIp) {
+  const out = {};
+
+  const fbp = String(pick(d, 'tracking._fbp', 'tracking.fbp', 'contact._fbp', 'contact.fbp') || '');
+  if (FB_ID.test(fbp)) out.fbp = fbp;
+
+  let fbc = String(pick(d, 'tracking._fbc', 'tracking.fbc', 'contact._fbc', 'contact.fbc') || '');
+  if (!FB_ID.test(fbc)) {
+    fbc = '';
+    const fbclid = String(pick(d, 'tracking.fbclid', 'contact.fbclid', 'fbclid') || '');
+    if (FBCLID.test(fbclid)) fbc = `fb.1.${Date.now()}.${fbclid}`;
+  }
+  if (fbc) out.fbc = fbc;
+
+  const ip = String(pick(d, 'invitee.ip_address', 'invitee.ipAddress',
+                            'contact.ipAddress', 'contact.ip_address',
+                            'tracking.ip_address', 'tracking.ipAddress') || '').trim();
+  if (isIP(ip) && ip !== callerIp) out.ip = ip;
+
   return out;
 }
 
@@ -265,13 +331,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    /* The caller here is iClosed's server, not the person who booked.
-       Its IP would be sent as client_ip_address and matched against
-       nobody, and Meta flags a server IP in Diagnostics, so it is left
-       out. The user agent stays only because Meta requires one on a
-       website event; it is not the booker's either and adds nothing to
-       the match. Email, phone and name carry that. */
-    const { userAgent } = requestIdentity(req);
+    /* The caller here is iClosed's server, not the person who booked, so
+       its IP is never sent: it would match nobody and Meta flags a
+       server IP in Diagnostics. The booker's IP, browser id and click id
+       come out of the payload instead (metaIdsFrom). The caller's user
+       agent stays only because Meta requires one on a website event; the
+       payload carries no better one. */
+    const { ip: callerIp, userAgent } = requestIdentity(req);
+    const { fbp, fbc, ip } = metaIdsFrom(d, callerIp);
     const result = await sendMetaConversion({
       eventName: 'Schedule',
       // The booking id, which is what /call-booked uses in the browser.
@@ -283,7 +350,7 @@ export default async function handler(req, res) {
         firstName: firstName || undefined,
         lastName: lastName || undefined,
         externalId: String(bookingId),
-        userAgent
+        ip, userAgent, fbp, fbc
       }),
       customData: {
         offer: offerFrom(d),
@@ -292,7 +359,10 @@ export default async function handler(req, res) {
         booking_id: String(bookingId)
       }
     });
-    console.log('iclosed-webhook: Schedule sent', bookingId, JSON.stringify(result));
+    // Which match keys went out, so attribution gaps are diagnosable
+    // from the logs. Flags only, never the values.
+    console.log('iclosed-webhook: Schedule sent', bookingId, JSON.stringify(result),
+      'ids', JSON.stringify({ fbp: !!fbp, fbc: !!fbc, ip: !!ip }));
     return res.status(200).json({ ok: true, sent: true, stored });
   } catch (e) {
     console.error('iclosed-webhook: Schedule failed', (e && e.message) || e);

@@ -36,9 +36,9 @@ function response() {
     setHeader(k, v) { this.headers[k] = v; }
   };
 }
-async function request(body, key = process.env.ICLOSED_WEBHOOK_SECRET) {
+async function request(body, key = process.env.ICLOSED_WEBHOOK_SECRET, headers = {}) {
   const res = response();
-  await handler({ method: 'POST', body, query: { key }, headers: {} }, res);
+  await handler({ method: 'POST', body, query: { key }, headers }, res);
   return res;
 }
 
@@ -156,6 +156,61 @@ res = await request(booking({
 }));
 made = calls.slice(n);
 check('a renamed event still files by its slug', supa(made)[0]?.body?.funnel === 'brand_builder');
+
+console.info('\n\x1b[1mATTRIBUTION · THE CLICK, NOT JUST THE PERSON\x1b[0m');
+// Regression: until 10 Oct 2026 the server Schedule carried only hashed
+// contact details, so Meta could match the booker but not the click, and
+// Ads Manager attributed one booking in thirty days. The shape log shows
+// iClosed returning _fbp, _fbc and fbclid under `tracking` and the
+// booker's IP as invitee.ip_address; all of it must reach user_data raw.
+const ICLOSED_IP = '203.0.113.9';
+const fromIclosed = { 'x-forwarded-for': `${ICLOSED_IP}, 10.0.0.1`, 'user-agent': 'iClosed-Webhook/1.0' };
+const adClick = (over = {}) => booking({
+  event: { callPreviewId: 'call_attrib0001', uuid: 2661150 },
+  invitee: { email: 'person@example.com', first_name: 'Ada', last_name: 'Lovelace',
+             text_reminder_number: '+13105550100', ip_address: '198.51.100.23' },
+  contact: { email: 'person@example.com', phoneNumber: '+13105550100', ipAddress: '198.51.100.23' },
+  tracking: { utm_source: 'meta', utm_campaign: 'sprint-la', ntc_session: 's_abc',
+              _fbp: 'fb.1.1759900000000.1234567890', fbclid: 'IwAR0abc-DEF_ghi',
+              _fbc: 'fb.1.1759900000001.IwAR0abc-DEF_ghi' },
+  ...over
+});
+n = calls.length;
+res = await request(adClick(), undefined, fromIclosed);
+made = calls.slice(n);
+let ud = meta(made)[0]?.body.data[0].user_data || {};
+check('fbp goes out raw', ud.fbp === 'fb.1.1759900000000.1234567890');
+check('fbc goes out raw when the pixel had set it', ud.fbc === 'fb.1.1759900000001.IwAR0abc-DEF_ghi');
+check("the booker's IP goes out, not iClosed's", ud.client_ip_address === '198.51.100.23');
+check('contact details are still hashed', Array.isArray(ud.em) && /^[0-9a-f]{64}$/.test(ud.em[0]) && ud.ph && ud.fn && ud.ln);
+check('the event id is still the booking id', meta(made)[0]?.body.data[0].event_id === 'call_attrib0001');
+check('the first-party row still holds none of it',
+  !/198\.51\.100\.23|fb\.1\.|IwAR0/.test(JSON.stringify(supa(made)[0]?.body || {})));
+
+n = calls.length;
+res = await request(adClick({ tracking: { _fbp: 'fb.1.1759900000000.1234567890', fbclid: 'IwAR0abc-DEF_ghi' } }), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check('fbc is derived from fbclid when the pixel had not written _fbc',
+  /^fb\.1\.[0-9]{13}\.IwAR0abc-DEF_ghi$/.test(ud.fbc || ''), ud.fbc);
+
+n = calls.length;
+res = await request(adClick({ tracking: { utm_source: 'instagram' } }), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check('an organic booking gets no invented fbc or fbp', ud.fbc === undefined && ud.fbp === undefined);
+check('but still carries the booker IP', ud.client_ip_address === '198.51.100.23');
+
+n = calls.length;
+res = await request(adClick({
+  invitee: { email: 'person@example.com', ip_address: ICLOSED_IP },
+  contact: { email: 'person@example.com', ipAddress: 'not-an-ip' }
+}), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check("iClosed's own IP or junk is never sent as the booker's", ud.client_ip_address === undefined);
+
+n = calls.length;
+res = await request(adClick({ tracking: { _fbp: 'javascript:alert(1)', _fbc: '<script>', fbclid: 'bad id with spaces' } }), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check('malformed ids are dropped rather than forwarded', ud.fbp === undefined && ud.fbc === undefined);
 
 console.info('\n\x1b[1mFAILURE ISOLATION\x1b[0m');
 supabaseStatus = 409;

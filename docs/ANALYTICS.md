@@ -100,10 +100,20 @@ tracker, and is signed in to with `OWNER_DASHBOARD_PASSWORD`.
 - Days are Pacific time, both ends inclusive.
 
 Bookings carry a campaign only if iClosed passes the UTM values through in
-the webhook's `tracking` object. Its inner keys were never recorded, so
-check the first stored `schedule` row: if `utm_campaign` is missing from
-its metadata, read the key names from the `iclosed-webhook shape` log line
-and add them to `attributionFrom()`.
+the webhook's `tracking` object. The production shape log (10 Oct 2026)
+shows it does, with the keys as we send them (`utm_source` and so on),
+plus iClosed's own `first_utm_*` copies, `offer`, `ntc_session`,
+`landing_page`, `_fbp`, `_fbc` and `fbclid`. The booker's IP arrives as
+`invitee.ip_address`.
+
+The Meta ids and the IP are what make a booking attributable to an ad
+rather than just to a person. The webhook forwards `_fbp` as `fbp`, `_fbc`
+as `fbc` (derived from `fbclid` when the pixel had not written the cookie
+yet, the same way `track.js` does) and `invitee.ip_address` as the client
+IP. Until 10 Oct 2026 it sent none of them, and Ads Manager attributed one
+booking in thirty days while Events Manager warned of low fbc coverage
+from the Conversions API. Bookings from before that date stay
+unattributed; judge the fix on a 7-day click window after it.
 
 ## Remaining live verification
 
