@@ -158,6 +158,25 @@ export async function rpc(fn, args = {}) {
   return res.json();
 }
 
+/**
+ * Delete one row by primary key. The caller validates the id.
+ *
+ * Used by the owner dashboard to take back a call logged by mistake.
+ *
+ * @returns {Promise<number>} rows deleted, 0 or 1
+ */
+export async function remove(table, id) {
+  if (!configured) throw new Error('supabase not configured');
+
+  const res = await fetch(
+    `${URL_BASE}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`,
+    { method: 'DELETE', headers: headers({ Prefer: 'return=representation' }) }
+  );
+  if (!res.ok) throw new Error(`supabase delete ${res.status} ${await res.text()}`);
+  const body = await res.json().catch(() => []);
+  return Array.isArray(body) ? body.length : 0;
+}
+
 /** Attach previously anonymous events to a lead once they identify themselves. */
 export async function linkSessionToLead(sessionId, leadId) {
   if (!configured || !sessionId || !leadId) return 0;
