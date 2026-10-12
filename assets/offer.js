@@ -210,6 +210,7 @@
             'More shoot time each month than The Anchor',
             'A higher monthly volume across brand content and ad creative',
             'Dedicated ad concepts and hook variations, not repurposed brand cuts',
+            'One Signature Hero Ad each month, captured within the included shoot days',
             'Event, product and brand-identity coverage within the included shoot days',
             'Organic distribution of the campaign creative',
             'Paid media setup and weekly management',
