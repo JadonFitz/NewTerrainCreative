@@ -44,7 +44,7 @@ if m_charged and m_given:
 
 # Survey band boundaries: the applicant's spend, not our price
 for key in ('adSpendBands', 'budgetBands', 'founding90DayBudgetBands',
-            'projectBudgetBands'):
+            'projectBudgetBands', 'productionInquiryBudgetBands'):
     bands = re.search(key + r':\s*\[([^\]]+)\]', offer)
     if bands:
         declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
@@ -122,6 +122,12 @@ FORM_PAGES = {'apply.html', 'project.html', 'strategy-call.html'}
 m_pilot = re.search(r'pilotFee:\s*(\d+)', offer)
 _pilot = {fmt(int(m_pilot.group(1)))} if m_pilot else set()
 PAGE_EXTRA = {'brand-builder.html': _pilot, 'brand-builder-pro.html': _pilot, 'about.html': _pilot}
+
+# /production-inquiry asks for a one-off project budget, so it may show
+# its own survey bands and nothing else: no retainer or pilot figure.
+_pib = re.search(r'productionInquiryBudgetBands:\s*\[([^\]]+)\]', offer)
+PAGE_EXTRA['production-inquiry.html'] = (
+    {fmt(int(x)) for x in re.findall(r'\d+', _pib.group(1))} if _pib else set())
 
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))

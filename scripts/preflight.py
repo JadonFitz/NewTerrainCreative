@@ -282,7 +282,9 @@ for page in PARKED:
 # the moment someone adds one and forgets.
 # /call-booked is reached only by an iClosed redirect after a booking, so
 # nothing on the site should link it and nothing should index it.
-UNLISTED = ['call-booked', 'owner']
+# /production-inquiry is reached only by the Brand Builder application's
+# budget redirect in iClosed.
+UNLISTED = ['call-booked', 'owner', 'production-inquiry']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     # Strip comments first. The sitemap documents which pages are left
@@ -302,6 +304,21 @@ for u in UNLISTED:
                if f.stem != u and f'href="/{u}"' in f.read_text(encoding='utf-8')]
     bad(f'/{u} is linked from ' + ', '.join(linkers)) if linkers \
         else ok(f'/{u} is not linked from any public page')
+
+# /production-inquiry takes leads the Brand Builder application turned
+# away. A standard Lead from there would feed them back into that
+# campaign, and a booking link would skip the manual review.
+_pi = ROOT / 'production-inquiry.html'
+if _pi.exists():
+    _t = _pi.read_text(encoding='utf-8')
+    _t_code = re.sub(r'<!--[\s\S]*?-->', '', _t)
+    problems = [label for label, pat in (
+        ('a standard Lead event', r"fbq\(\s*'track'\s*,\s*'Lead'|track\(\s*'Lead'"),
+        ('a booking link',
+         r'href="[^"]*(iclosed|calendar\.app\.google|calendly|/strategy-call|/booked)'),
+    ) if re.search(pat, _t_code, re.I)]
+    bad('production-inquiry.html carries ' + ', '.join(problems)) if problems \
+        else ok('/production-inquiry fires no Lead and links no booking')
 
 
 # Retired pages. A page we stopped publishing must be gone from the tree

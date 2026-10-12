@@ -199,7 +199,11 @@
 
     if (typeof w.fbq === 'function') {
       try {
-        var custom = eventName === 'CTAClick' || /^VSL/.test(eventName);
+        // ProductionInquiry is custom on purpose: /production-inquiry takes
+        // leads the Brand Builder application turned away, and a standard
+        // Lead from there would teach that campaign to find more of them.
+        var custom = eventName === 'CTAClick' || eventName === 'ProductionInquiry' ||
+                     /^VSL/.test(eventName);
         w.fbq(custom ? 'trackCustom' : 'track', eventName, payload, { eventID: eventId });
         log('fbq', eventName, eventId, payload);
       } catch (e) {
