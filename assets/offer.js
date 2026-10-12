@@ -210,7 +210,7 @@
             'More shoot time each month than The Anchor',
             'A higher monthly volume across brand content and ad creative',
             'Dedicated ad concepts and hook variations, not repurposed brand cuts',
-            'One Signature Hero Ad each month, captured within the included shoot days',
+            'One Signature Hero Ad each month, its own directed shoot within the included shoot days',
             'Event, product and brand-identity coverage within the included shoot days',
             'Organic distribution of the campaign creative',
             'Paid media setup and weekly management',
@@ -231,7 +231,7 @@
             'Our highest monthly volume across longform, short-form and ads',
             'Longform: founder interviews, YouTube episodes, podcasts and case-study pieces',
             'Short-form cut from every episode, and the ads built from the strongest',
-            'One Signature Hero Ad each month, captured within the included shoot days',
+            'Two Signature Hero Ads each month, each its own directed shoot within the included shoot days',
             'Organic social posting: we run the channels the content goes out on',
             'Everything in Growth Partner, including paid media management',
             'Monthly analytics and creative direction'
