@@ -363,6 +363,7 @@ for test, label in (
     ('test-apply.mjs', 'Founding application'),
     ('test-strategy-call.mjs', 'strategy-call retirement'),
     ('test-project.mjs', 'Signature Work enquiry'),
+    ('test-production-inquiry.mjs', 'production inquiry'),
     ('test-tracking.mjs', 'browser attribution'),
     ('test-track-api.mjs', 'first-party event ingestion'),
     ('test-owner.mjs', 'owner dashboard access'),

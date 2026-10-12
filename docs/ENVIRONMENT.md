@@ -13,7 +13,7 @@ it should ever contain.
 |---|---|---|
 | `SUPABASE_URL` | `api/_supabase.js` | Provided by the Vercel Supabase integration, possibly prefixed (`sbdata_SUPABASE_URL`). The resolver matches on suffix. |
 | `SUPABASE_SERVICE_ROLE_KEY` | `api/_supabase.js` | Server only. Bypasses row level security. Never expose to a browser and never use it as a signing key. |
-| `SENDGRID_API_KEY` | `api/apply.js`, `api/project.js` | Mail Send permission only. **Keep.** For `/apply` this is the second capture path, not a courtesy email: a submission fails only when Supabase *and* email both fail. Removing it makes Supabase a single point of failure for a record carrying contractual acknowledgements. |
+| `SENDGRID_API_KEY` | `api/apply.js`, `api/project.js`, `api/production-inquiry.js` | Mail Send permission only. **Keep.** For `/apply` this is the second capture path, not a courtesy email: a submission fails only when Supabase *and* email both fail. Removing it makes Supabase a single point of failure for a record carrying contractual acknowledgements. |
 | `META_CAPI_TOKEN` | `api/_meta.js` | Conversions API access token. |
 | `META_ADS_TOKEN` | `api/meta-sync.js` | System user token with `ads_read` on the NTC ad account. Reads spend; it cannot send conversions, and `META_CAPI_TOKEN` cannot read spend. Keep them separate. Production only. |
 | `META_AD_ACCOUNT_ID` | `api/meta-sync.js` | The ad account number, with or without `act_`. Not a secret. For more than one account use `META_AD_ACCOUNT_IDS`, comma separated, which takes precedence. An account can have its own token in `META_ADS_TOKEN_<digits>`; otherwise `META_ADS_TOKEN` is used. Before adding a second account, give `owner_funnel_report()` an account filter: it sums every account. |
