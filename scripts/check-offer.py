@@ -44,7 +44,7 @@ if m_charged and m_given:
 
 # Survey band boundaries: the applicant's spend, not our price
 for key in ('adSpendBands', 'budgetBands', 'founding90DayBudgetBands',
-            'projectBudgetBands', 'productionInquiryBudgetBands'):
+            'projectBudgetBands'):
     bands = re.search(key + r':\s*\[([^\]]+)\]', offer)
     if bands:
         declared.update(int(x) for x in re.findall(r'\d+', bands.group(1)))
@@ -125,6 +125,8 @@ PAGE_EXTRA = {'brand-builder.html': _pilot, 'brand-builder-pro.html': _pilot, 'a
 
 # /production-inquiry asks for a one-off project budget, so it may show
 # its own survey bands and nothing else: no retainer or pilot figure.
+# Deliberately NOT added to the survey band loop above, which would make
+# these figures legal on every form page too.
 _pib = re.search(r'productionInquiryBudgetBands:\s*\[([^\]]+)\]', offer)
 PAGE_EXTRA['production-inquiry.html'] = (
     {fmt(int(x)) for x in re.findall(r'\d+', _pib.group(1))} if _pib else set())
