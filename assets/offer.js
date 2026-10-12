@@ -275,11 +275,14 @@
         oneTime: true,
         noRetainer: true,
         longformEpisodes: 10,
-        shortFormClips: 50,
-        shortFormClipsPerEpisode: 5,
+        /* 11 Oct 2026, Handbook v1.31: 49 clips, cut from the episodes
+           with no fixed number per episode, so the per-episode figure is
+           gone. 10 episodes, 49 clips and the one Signature Hero Ad make
+           the Pilot's 60 assets. */
+        shortFormClips: 49,
         scope: [
           '10 longform episodes, shot and finished',
-          '50 short-form clips, five cut from each episode',
+          '49 short-form clips, cut from the episodes',
           'One Signature Hero Ad',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'Organic posting on your own channels for the Pilot month',
