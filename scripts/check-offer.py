@@ -123,6 +123,14 @@ m_pilot = re.search(r'pilotFee:\s*(\d+)', offer)
 _pilot = {fmt(int(m_pilot.group(1)))} if m_pilot else set()
 PAGE_EXTRA = {'brand-builder.html': _pilot, 'brand-builder-pro.html': _pilot, 'about.html': _pilot}
 
+# /production-inquiry asks for a one-off project budget, so it may show
+# its own survey bands and nothing else: no retainer or pilot figure.
+# Deliberately NOT added to the survey band loop above, which would make
+# these figures legal on every form page too.
+_pib = re.search(r'productionInquiryBudgetBands:\s*\[([^\]]+)\]', offer)
+PAGE_EXTRA['production-inquiry.html'] = (
+    {fmt(int(x)) for x in re.findall(r'\d+', _pib.group(1))} if _pib else set())
+
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
 print(f'Allowed outside the form pages: ' + '  '.join('$' + a for a in sorted(anywhere)))

@@ -452,6 +452,12 @@
     // retainer's. Do not reuse budgetBands here: a $10,000 month and a
     // $10,000 film are not the same conversation.
     projectBudgetBands: [10000, 25000, 50000],
+
+    // /production-inquiry, where the Brand Builder application sends
+    // anyone under its monthly floor. One-off project totals, the
+    // visitor's budget and not our price. Declared here so check-offer.py
+    // can trace the figures that page shows.
+    productionInquiryBudgetBands: [3000, 5000, 10000],
     projectTypes: [
       // First, because /sprint routes here and an Ad Sprint is the most
       // common single thing this form is asked for.

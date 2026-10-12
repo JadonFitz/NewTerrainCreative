@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One-Time Production Inquiry · New Terrain Creative</title>
+<meta name="description" content="Have a specific video or content project in mind? Tell New Terrain Creative about it and our team will review the opportunity.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  UNLISTED · reached from the Brand Builder application in iClosed
+  ──────────────────────────────────────────────────────────────────────
+  iClosed redirects here when an applicant's monthly budget is under the
+  Brand Builder floor. Nothing in the navigation links here, and the
+  page carries no booking link or calendar: good projects are invited
+  to a call by hand.
+
+  The page states no price, deliverable count or package. The budget
+  options are the visitor's own project budget, declared in
+  assets/offer.js as productionInquiryBudgetBands.
+
+  No standard Lead fires from here. These are leads the retainer
+  application turned away, and a Lead would teach the Brand Builder
+  campaign to find more of them. Success fires the custom
+  ProductionInquiry event instead.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --black:#0A0A0A; --raised:#101010;
+    --gold:#C8A96E;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D;
+    --line:#1e1e1e; --edge:#2c2c2c; --bad:#B4655A;
+    --display:'Cormorant Garamond',Georgia,serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  html, body { min-height:100%; }
+  body {
+    background:var(--black); color:var(--soft);
+    font-family:var(--body); font-weight:300; font-size:14px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; min-height:100vh;
+  }
+
+  .bar {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px; border-bottom:1px solid var(--line);
+  }
+  .wordmark { font-size:11px; letter-spacing:.34em; text-transform:uppercase; color:var(--parchment); text-decoration:none; }
+  .wordmark span { color:var(--gold); }
+  .bar-link { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .3s; }
+  .bar-link:hover { color:var(--gold); }
+
+  /* Mobile first: one column, intro then form. */
+  .inquiry { flex:1; width:100%; max-width:1180px; margin:0 auto; padding:40px 20px 64px; }
+  .inquiry__intro { margin-bottom:36px; }
+
+  h1 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(40px,10vw,64px); line-height:1.02;
+    color:var(--parchment); margin-bottom:20px; text-wrap:balance;
+  }
+  h1 em { font-style:italic; color:var(--gold); }
+  .lede { font-size:15px; line-height:1.85; color:var(--soft); max-width:46ch; }
+
+  form { display:flex; flex-direction:column; gap:22px; }
+  .row { display:grid; grid-template-columns:1fr; gap:22px; }
+  .q { display:flex; flex-direction:column; gap:8px; min-width:0; border:0; }
+  .q > label, .q legend { font-size:12.5px; color:var(--parchment); font-weight:400; letter-spacing:.02em; }
+  .q legend { margin-bottom:8px; }
+  .opt-tag { color:var(--muted); font-weight:300; }
+
+  /* 16px on mobile so iOS does not zoom the page on focus. */
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    background:var(--raised); border:1px solid var(--line); color:var(--parchment);
+    font-family:var(--body); font-size:16px; font-weight:300;
+    padding:12px 14px; width:100%; border-radius:0; transition:border-color .25s;
+  }
+  textarea { resize:vertical; min-height:110px; line-height:1.6; }
+  input:focus, textarea:focus { outline:none; border-color:var(--gold); }
+  input::placeholder, textarea::placeholder { color:#4a4540; }
+  input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color:var(--bad); }
+
+  /* Single selects as tappable chips. The radio stays in the DOM for
+     keyboard and screen readers, it is only visually hidden. */
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { position:relative; }
+  .chip input { position:absolute; opacity:0; width:1px; height:1px; }
+  .chip span {
+    display:block; padding:10px 14px; border:1px solid var(--edge);
+    font-size:13px; color:var(--soft); cursor:pointer; transition:border-color .2s, color .2s;
+  }
+  .chip span:hover { border-color:var(--muted); color:var(--parchment); }
+  .chip input:checked + span { border-color:var(--gold); color:var(--parchment); }
+  .chip input:focus-visible + span { outline:1px solid var(--gold); outline-offset:2px; }
+  .chips[aria-invalid="true"] .chip span { border-color:var(--bad); }
+
+  .meta { display:flex; justify-content:space-between; gap:12px; }
+  .count { font-size:11px; color:var(--muted); margin-left:auto; white-space:nowrap; }
+  .field-err { font-size:12px; color:var(--bad); }
+  .field-err:empty { display:none; }
+
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+  .btn {
+    appearance:none; cursor:pointer; border:0;
+    background:var(--gold); color:var(--black); font-weight:500;
+    font-family:var(--body); font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; padding:17px 34px; width:100%;
+    transition:background .3s;
+  }
+  .btn:hover { background:var(--parchment); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .btn:disabled:hover { background:var(--gold); }
+
+  .form-err { font-size:13px; color:var(--bad); line-height:1.7; }
+  .form-err a { color:var(--parchment); }
+
+  .done h2 {
+    font-family:var(--display); font-weight:300; font-size:clamp(40px,8vw,58px);
+    line-height:1.05; color:var(--parchment); margin-bottom:16px;
+  }
+  .done h2 em { font-style:italic; color:var(--gold); }
+  .done p { font-size:15px; line-height:1.85; color:var(--soft); max-width:42ch; }
+
+  footer {
+    border-top:1px solid var(--line); padding:22px 20px;
+    display:flex; justify-content:space-between; gap:12px 18px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  footer a { color:var(--muted); text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+
+  @media (min-width:640px) {
+    .row--2 { grid-template-columns:1fr 1fr; }
+    .btn { width:auto; align-self:flex-start; }
+  }
+
+  /* Desktop: intro left, form right, so the whole thing fits one screen. */
+  @media (min-width:980px) {
+    .bar, footer { padding-left:6vw; padding-right:6vw; }
+    .inquiry {
+      display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+      gap:72px; align-items:start; padding:40px 6vw 40px;
+    }
+    .inquiry__intro { position:sticky; top:40px; margin-bottom:0; padding-top:4px; }
+    input[type="text"], input[type="email"], input[type="tel"], textarea { font-size:14px; padding:10px 14px; }
+    textarea { min-height:84px; }
+    .chip span { padding:9px 14px; }
+    form { gap:14px; }
+    .row { gap:14px; }
+    .q { gap:6px; }
+    .q legend { margin-bottom:6px; }
+  }
+
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="wordmark" href="/">New Terrain <span>Creative</span></a>
+  <a class="bar-link" href="mailto:business@newterraincreative.com">Contact</a>
+</div>
+
+<main class="inquiry">
+  <div class="inquiry__intro">
+    <h1>One-Time <em>Production Inquiry</em></h1>
+    <p class="lede">Our ongoing creative partnerships may not be the right fit for your current budget. But if you have a specific video or content project in mind, we'd love to hear about it. Tell us a little about it and our team will review the opportunity.</p>
+  </div>
+
+  <div id="state-form">
+    <noscript><p class="form-err">This form needs JavaScript. Email <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a> with your project instead.</p></noscript>
+
+    <form id="pi" novalidate>
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="company_url_confirm" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="row row--2">
+        <div class="q">
+          <label for="full_name">Full name</label>
+          <input type="text" id="full_name" name="full_name" autocomplete="name" required aria-describedby="full_name-err">
+          <p class="field-err" id="full_name-err"></p>
+        </div>
+        <div class="q">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required aria-describedby="email-err">
+          <p class="field-err" id="email-err"></p>
+        </div>
+      </div>
+
+      <div class="row row--2">
+        <div class="q">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" required aria-describedby="phone-err">
+          <p class="field-err" id="phone-err"></p>
+        </div>
+        <div class="q">
+          <label for="business_name">Business or project name</label>
+          <input type="text" id="business_name" name="business_name" autocomplete="organization" required aria-describedby="business_name-err">
+          <p class="field-err" id="business_name-err"></p>
+        </div>
+      </div>
+
+      <div class="q">
+        <label for="website_or_instagram">Website or Instagram <span class="opt-tag">(optional)</span></label>
+        <input type="text" id="website_or_instagram" name="website_or_instagram" placeholder="yoursite.com or @handle" autocapitalize="off" spellcheck="false">
+      </div>
+
+      <fieldset class="q">
+        <legend>What do you need produced?</legend>
+        <div class="chips" data-group="production_type" aria-describedby="production_type-err">
+          <label class="chip"><input type="radio" name="production_type" value="Commercial or brand video"><span>Commercial or brand video</span></label>
+          <label class="chip"><input type="radio" name="production_type" value="Social media content"><span>Social media content</span></label>
+          <label class="chip"><input type="radio" name="production_type" value="Podcast or interview"><span>Podcast or interview</span></label>
+          <label class="chip"><input type="radio" name="production_type" value="Other production"><span>Other production</span></label>
+        </div>
+        <p class="field-err" id="production_type-err"></p>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Estimated project budget</legend>
+        <div class="chips" data-group="budget_range" aria-describedby="budget_range-err">
+          <label class="chip"><input type="radio" name="budget_range" value="Under $3,000"><span>Under $3,000</span></label>
+          <label class="chip"><input type="radio" name="budget_range" value="$3,000 to $5,000"><span>$3,000 to $5,000</span></label>
+          <label class="chip"><input type="radio" name="budget_range" value="$5,000 to $10,000"><span>$5,000 to $10,000</span></label>
+          <label class="chip"><input type="radio" name="budget_range" value="$10,000+"><span>$10,000+</span></label>
+        </div>
+        <p class="field-err" id="budget_range-err"></p>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>When do you need it?</legend>
+        <div class="chips" data-group="timeline" aria-describedby="timeline-err">
+          <label class="chip"><input type="radio" name="timeline" value="Within 30 days"><span>Within 30 days</span></label>
+          <label class="chip"><input type="radio" name="timeline" value="1 to 3 months"><span>1 to 3 months</span></label>
+          <label class="chip"><input type="radio" name="timeline" value="Flexible"><span>Flexible</span></label>
+        </div>
+        <p class="field-err" id="timeline-err"></p>
+      </fieldset>
+
+      <div class="q">
+        <label for="project_description">Tell us about the project</label>
+        <textarea id="project_description" name="project_description" maxlength="600" required aria-describedby="project_description-err project_description-count" placeholder="What it is, who it is for, and anything you already know you want."></textarea>
+        <div class="meta">
+          <p class="field-err" id="project_description-err"></p>
+          <span class="count" id="project_description-count" aria-live="polite">0 / 600</span>
+        </div>
+      </div>
+
+      <div class="q">
+        <button class="btn" type="submit" id="submit">Send inquiry</button>
+        <p class="form-err" id="form-err" role="alert" hidden></p>
+      </div>
+    </form>
+  </div>
+
+  <div class="done" id="state-done" hidden>
+    <h2>Got <em>it.</em></h2>
+    <p>We review every inquiry and will reach out if the project is a fit.</p>
+  </div>
+</main>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="/privacy">Privacy</a>
+</footer>
+
+<script>
+/* ── CONFIG ──────────────────────────────────────────────────────────
+   Where the inquiry is POSTed, as JSON. Same origin, so no CORS: the
+   handler is api/production-inquiry.js in this repo.
+   ─────────────────────────────────────────────────────────────────── */
+var PRODUCTION_INQUIRY_ENDPOINT = '/api/production-inquiry';
+
+(function () {
+  var MAX_DESCRIPTION = 600;
+  var FALLBACK_EMAIL = 'business@newterraincreative.com';
+
+  // Captured on load so the values survive to submit even if the visitor
+  // edits the address bar or the page rewrites the URL. iClosed may drop
+  // UTMs on its redirect, so a missing one falls back to the first-touch
+  // attribution track.js stored when this visitor first arrived.
+  var params = new URLSearchParams(window.location.search);
+  var firstTouch = window.ntc ? ntc.attribution() : {};
+  var landing = { source: params.get('from') || 'direct' };
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) {
+    landing[k] = params.get(k) || firstTouch[k] || '';
+  });
+
+  var form = document.getElementById('pi');
+  var btn = document.getElementById('submit');
+  var formErr = document.getElementById('form-err');
+  var desc = document.getElementById('project_description');
+  var count = document.getElementById('project_description-count');
+  var attempted = false;
+  var sending = false;
+
+  function val(name) {
+    var el = form.elements[name];
+    return el ? String(el.value || '').trim() : '';
+  }
+
+  // Each rule returns an error message, or '' when the field is fine.
+  var RULES = {
+    full_name: function (v) { return v ? '' : 'Please enter your full name.'; },
+    email: function (v) {
+      if (!v) return 'Please enter your email.';
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'That email does not look right.';
+    },
+    phone: function (v) {
+      if (!v) return 'Please enter your phone number.';
+      return v.replace(/\D/g, '').length >= 7 ? '' : 'That phone number looks too short.';
+    },
+    business_name: function (v) { return v ? '' : 'Please enter the business or project name.'; },
+    production_type: function (v) { return v ? '' : 'Pick what you need produced.'; },
+    budget_range: function (v) { return v ? '' : 'Pick an estimated budget.'; },
+    timeline: function (v) { return v ? '' : 'Pick when you need it.'; },
+    project_description: function (v) {
+      if (!v) return 'Tell us a little about the project.';
+      return v.length <= MAX_DESCRIPTION ? '' : 'Please keep it under ' + MAX_DESCRIPTION + ' characters.';
+    }
+  };
+
+  function target(name) {
+    return form.querySelector('[data-group="' + name + '"]') || form.elements[name];
+  }
+
+  function check(name) {
+    var msg = RULES[name](val(name));
+    var el = target(name);
+    document.getElementById(name + '-err').textContent = msg;
+    if (msg) el.setAttribute('aria-invalid', 'true');
+    else el.removeAttribute('aria-invalid');
+    return !msg;
+  }
+
+  function focusField(name) {
+    var el = form.elements[name];
+    // A radio group comes back as a list. Focus its first option.
+    if (el && !el.focus && el[0]) el = el[0];
+    if (el && el.focus) el.focus();
+  }
+
+  // Errors appear on submit, then clear live as each field is fixed.
+  Object.keys(RULES).forEach(function (name) {
+    var els = form.querySelectorAll('[name="' + name + '"]');
+    Array.prototype.forEach.call(els, function (el) {
+      el.addEventListener(el.type === 'radio' ? 'change' : 'input', function () {
+        if (attempted) check(name);
+      });
+    });
+  });
+
+  desc.addEventListener('input', function () {
+    count.textContent = desc.value.length + ' / ' + MAX_DESCRIPTION;
+  });
+
+  function showError() {
+    formErr.innerHTML = 'Something went wrong sending that, and your answers are still here. ' +
+      'Try again, or email <a href="mailto:' + FALLBACK_EMAIL + '">' + FALLBACK_EMAIL + '</a> ' +
+      'with your project and we will pick it up there.';
+    formErr.hidden = false;
+  }
+
+  function showDone() {
+    document.getElementById('state-form').hidden = true;
+    document.getElementById('state-done').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (sending) return;
+    formErr.hidden = true;
+    attempted = true;
+
+    // Honeypot: a bot fills every field. Show it the confirmation so it
+    // has no reason to retry, and send nothing.
+    if (val('company_url_confirm')) { showDone(); return; }
+
+    var names = Object.keys(RULES);
+    var bad = names.filter(function (n) { return !check(n); });
+    if (bad.length) { focusField(bad[0]); return; }
+
+    var payload = {
+      form: 'production-inquiry',
+      full_name: val('full_name'),
+      email: val('email'),
+      phone: val('phone'),
+      business_name: val('business_name'),
+      website_or_instagram: val('website_or_instagram'),
+      production_type: val('production_type'),
+      budget_range: val('budget_range'),
+      timeline: val('timeline'),
+      project_description: val('project_description'),
+      source: landing.source,
+      utm_source: landing.utm_source,
+      utm_medium: landing.utm_medium,
+      utm_campaign: landing.utm_campaign,
+      utm_content: landing.utm_content,
+      page_url: window.location.href,
+      referrer: document.referrer || '',
+      submitted_at: new Date().toISOString()
+    };
+
+    sending = true;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    var send = fetch(PRODUCTION_INQUIRY_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (!r.ok) throw new Error('bad status ' + r.status);
+    });
+
+    send.then(function () {
+      // Custom event only. Never the standard Lead: see the note in <head>.
+      var data = {
+        content_name: 'Production inquiry',
+        production_type: payload.production_type,
+        source: payload.source
+      };
+      if (window.ntc) {
+        ntc.track('ProductionInquiry', data);
+      } else if (typeof fbq === 'function') {
+        fbq('trackCustom', 'ProductionInquiry', data);
+      }
+      showDone();
+    }).catch(function (err) {
+      console.error('production-inquiry:', err && err.message);
+      showError();
+      sending = false;
+      btn.disabled = false;
+      btn.textContent = 'Send inquiry';
+    });
+  });
+})();
+</script>
+</body>
+</html>
