@@ -159,6 +159,17 @@ function offerFrom(d) {
   return 'paid_retainer';
 }
 
+/* A booking of the Rescheduled Call event, matched on its name or its
+   slug (rescheduled-call) the same loose way offerFrom matches. */
+function isRebooking(d) {
+  const name = String(pick(d,
+    'event_type.name', 'event_type.title', 'eventType.name',
+    'eventTypeName', 'event_type_name', 'eventName',
+    'call.eventTypeName', 'data.eventTypeName') || '').toLowerCase();
+  const slug = String(pick(d, 'event_type.slug', 'eventType.slug') || '').toLowerCase();
+  return name.includes('rescheduled call') || slug.includes('rescheduled-call');
+}
+
 /* The campaign a booking came from, if iClosed carried it through.
 
    The shape log (10 Oct 2026) shows `tracking` carrying utm_source,
@@ -295,6 +306,15 @@ export default async function handler(req, res) {
   if (!trigger.includes('book')) {
     console.log('iclosed-webhook: noted', trigger || '(unnamed)', bookingId || '(no id)');
     return res.status(200).json({ ok: true, noted: trigger || null });
+  }
+
+  /* The Rescheduled Call event (13 Oct 2026, booked from /reschedule) is
+     a lead who missed their first call picking a new time. That lead and
+     its Schedule were already counted on the first booking, so a rebooking
+     is neither stored again nor sent to Meta. */
+  if (isRebooking(d)) {
+    console.log('iclosed-webhook: rebooking noted', bookingId || '(no id)');
+    return res.status(200).json({ ok: true, noted: 'rebooking' });
   }
 
   if (!bookingId) {
