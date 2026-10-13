@@ -116,6 +116,7 @@ REQUIRED = {
     'SUPABASE_SERVICE_ROLE_KEY': 'database, server only',
     'SENDGRID_API_KEY': 'the /apply second capture path, and project enquiries',
     'META_CAPI_TOKEN': 'server-side conversions',
+    'STRIPE_CHECKOUT_READ_KEY': '/welcome shows the booking link only for a paid checkout',
 }
 
 head('3 · Configuration (this shell only, not Vercel)')
@@ -193,11 +194,10 @@ for md in ROOT.glob('*.md'):
 # conversion fires. This guard exists because two homepage CTAs once did
 # exactly that in production.
 #
-# /welcome is exempt: it is only reached after payment, so its calendar
-# link is a client booking their kickoff call, not a prospect skipping
-# qualification. There is no lead to qualify or attribute.
+# /welcome is no exception: it is public, so it never carries the link.
+# api/welcome.js hands the kickoff link out only for a paid checkout.
 CALENDAR = 'calendar.app.google'
-MAY_LINK_CALENDAR = {'apply.html', 'welcome.html'}
+MAY_LINK_CALENDAR = {'apply.html'}
 leaks = [f.name for f in ROOT.glob('*.html')
          if f.name not in MAY_LINK_CALENDAR
          and CALENDAR in f.read_text(encoding='utf-8')]
@@ -386,6 +386,7 @@ for test, label in (
     ('test-owner.mjs', 'owner dashboard access'),
     ('test-iclosed-webhook.mjs', 'booking webhook'),
     ('test-meta-sync.mjs', 'Meta spend sync'),
+    ('test-welcome.mjs', 'welcome booking link'),
 ):
     r = subprocess.run(['node', str(ROOT / 'scripts' / test)],
                        capture_output=True, text=True)

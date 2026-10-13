@@ -27,19 +27,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   ════════════════════════════════════════════════════════════════
   CHECKOUT SUCCESS · /welcome
 
-  Where Stripe sends a client after they pay. Unlinked and noindex:
-  the only way in is a completed checkout.
+  Where Stripe sends a client after they pay. Unlinked and noindex,
+  but anyone can open it, so the booking link is not in this file: the
+  page asks /api/welcome for it, and that answers only for a Stripe
+  Checkout Session that was paid (or completed into a free trial).
 
   STRIPE SETUP · each Payment Link, After payment → "Don't show
-  confirmation page" → redirect to this page with its plan:
+  confirmation page" → redirect to this page with its plan AND the
+  session, which Stripe fills in:
 
-    Founding Three   /welcome?plan=founding
-    The Anchor       /welcome?plan=anchor
-    Growth Partner   /welcome?plan=growth
-    Brand Builder    /welcome?plan=brand-builder
-    Brand Builder Pilot  /welcome?plan=brand-builder-pilot
-    The Eight        /welcome?plan=eight
-    The Fifteen      /welcome?plan=fifteen
+    Founding Three   /welcome?plan=founding&session_id={CHECKOUT_SESSION_ID}
+    The Anchor       /welcome?plan=anchor&session_id={CHECKOUT_SESSION_ID}
+    Growth Partner   /welcome?plan=growth&session_id={CHECKOUT_SESSION_ID}
+    Brand Builder    /welcome?plan=brand-builder&session_id={CHECKOUT_SESSION_ID}
+    Brand Builder Pilot  /welcome?plan=brand-builder-pilot&session_id={CHECKOUT_SESSION_ID}
+    The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
+    The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
+    5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
+
+  A link without session_id still lands on a complete page; only the
+  "book your call" step is missing, and the welcome email carries it.
 
   Anything else, or no plan at all, still gets a complete page: the
   welcome, the next steps and the contact block. Only the "what we
@@ -364,13 +371,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     phone: '(818) 266-8213',
     packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0',
     intake: 'https://docs.google.com/forms/d/e/1FAIpQLSc9olRsWj6QBLaG5430pFgxAGKeKgmIzuaWeI0rTDDBJQLcRw/viewform',
-    kickoff: 'https://calendar.app.google/iz1Zwnv9WcLYQg6p8',
-    /* The 5-Day Trial's intake call: the same link as Railway's
-       TRIAL_INTAKE_BOOKING_LINK in ntc-speed-to-lead. Not the kickoff
-       calendar, whose "Kickoff" title books a shoot card. Empty hides the
-       booking step on /welcome?plan=trial, and the welcome email still
-       carries the link. */
-    trialIntake: '',
+    /* No booking link here: /api/welcome hands it out only for a paid
+       checkout (see the end of this script). */
     crm: 'https://docs.google.com/forms/d/e/1FAIpQLSemCWXxyc1SI0G8fyCm1f9BHG2vbDAgvTjDfmPJWN_96Uo9ow/viewform'
   };
 
@@ -565,7 +567,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                       'Launched on Meta in your own ad account',
                       'A day-5 review of what we made and the early numbers'],
                note: '<b>Media spend is yours.</b> You fund it and pay Meta directly. The minimum for the 5-day test is $' + (t.minTestAdSpend || 500) + '.',
-               call: 'intake call', callUrl: WELCOME.trialIntake, noIntakeForm: true };
+               call: 'intake call', noIntakeForm: true };
     },
     'eight': function () {
       var p = prod.adSprintEight;
@@ -664,9 +666,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
 
   /* The trial has no intake form: its intake is the call, the footage
-     and a reply with the offer. Its call is the trial intake call, never
-     the kickoff calendar; with no link set the step hides and the
-     welcome email's link stands. */
+     and a reply with the offer. Its call is the intake call, booked on
+     the kickoff calendar. */
+  var call = null;
   if (plan && plan.noIntakeForm) {
     $('intakeLink').closest('.first-row').hidden = true;
     $('crmRow').hidden = true;
@@ -675,29 +677,45 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     $('packetText').textContent = 'Who\u2019s who, how we work together, and what we\u2019ll ask access to.';
     $('afterFirst').textContent = 'Three emails are on their way to the address you checked out with, and should already be there. ' +
       'The welcome email carries the link to book your intake call and the footage upload. Check spam if one is missing.';
-    var callUrl = plan.callUrl || '';
-    if (callUrl) {
-      $('kickoffLink').href = callUrl;
+    // Nothing else to do first, so the block waits for the booking link.
+    $('firstWhen').closest('.first').hidden = true;
+    call = function () {
       $('kickoffName').textContent = plan.call;
       $('kickoffN').textContent = '';
       $('kickoffText').textContent = 'It\u2019s short: we confirm where your ads will send homeowners, start your five days, and book your day-5 review.';
       $('firstWhen').textContent = 'Do this first · book your intake call';
-      $('kickoffRow').hidden = false;
-    } else {
-      $('firstWhen').closest('.first').hidden = true;
-    }
-  } else
-  // The first call, booked after the forms so we have read them by then.
-  if (WELCOME.kickoff) {
-    $('kickoffLink').href = WELCOME.kickoff;
-    if (plan && plan.call) $('kickoffName').textContent = plan.call;
-    $('kickoffN').textContent = (crm ? '3' : '2') + ' · ';
-    $('intakeN').hidden = false;
-    if (crm) $('kickoffText').textContent = $('kickoffText').textContent.replace('Send the form first', 'Send both forms first');
-    $('firstWhen').textContent = crm
-      ? 'Do these first · two forms, about 10 minutes each, then book your call'
-      : 'Do these first · a 10 minute form, then book your call';
-    $('kickoffRow').hidden = false;
+      $('firstWhen').closest('.first').hidden = false;
+    };
+  } else {
+    // The first call, booked after the forms so we have read them by then.
+    call = function () {
+      if (plan && plan.call) $('kickoffName').textContent = plan.call;
+      $('kickoffN').textContent = (crm ? '3' : '2') + ' · ';
+      $('intakeN').hidden = false;
+      if (crm) $('kickoffText').textContent = $('kickoffText').textContent.replace('Send the form first', 'Send both forms first');
+      $('firstWhen').textContent = crm
+        ? 'Do these first · two forms, about 10 minutes each, then book your call'
+        : 'Do these first · a 10 minute form, then book your call';
+    };
+  }
+
+  /* Only a paid checkout sees the booking link. Stripe sends the client
+     here with ?session_id=, /api/welcome confirms with Stripe that the
+     session was paid and answers with the link, which is not in this
+     file. No session, an unpaid one, or any error: the step stays hidden
+     and the welcome email's link stands. The agent also cancels any
+     kickoff booking that matches no paying client. */
+  var sid = q.get('session_id') || '';
+  if (/^cs_(live|test)_[A-Za-z0-9]+$/.test(sid) && window.fetch) {
+    fetch('/api/welcome?session_id=' + encodeURIComponent(sid), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.paid || !/^https:\/\//.test(d.booking || '')) return;
+        call();
+        $('kickoffLink').href = d.booking;
+        $('kickoffRow').hidden = false;
+      })
+      .catch(function () {});
   }
 
   if (WELCOME.phone) {
