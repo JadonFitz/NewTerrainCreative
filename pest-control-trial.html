@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Noindexed until the trial terms are confirmed: assets/offer.js
-     trial.confirmed. Remove this tag when they are, and only then. -->
+<!-- Noindexed until the trial goes live: assets/offer.js trial.live.
+     Remove this tag then, and only then. scripts/preflight.py fails if
+     it comes off while live is false. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Pest Control Ads in 5 Days · New Terrain Creative</title>
-<meta name="description" content="Pest control ads cut from footage you already have. Five days, no shoot day, no retainer: we edit, launch and review them with you.">
+<meta name="description" content="A five-day pilot for pest control operators in Los Angeles and Tampa: ten ads cut from footage you already have, launched and reviewed with you. No shoot day, no retainer.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="New Terrain Creative · The 5-Day Trial">
 <meta property="og:description" content="Pest control ads that stop the scroll, from footage you already have.">
@@ -283,15 +284,22 @@
   Built 12 Oct 2026 from the trial brief. Every term on this page is in
   assets/offer.js `trial`; change it there first.
 
-  NOT LIVE YET. Noindexed, out of the sitemap, linked from nowhere.
-  Before it takes traffic:
-    • Jadon confirms the fee, the goal sentence, the media minimum and
-      the monthly slot count (offer.js trial.confirmed)
-    • a Handbook entry for the trial
-    • an iClosed trial event (or an application form) for the button.
-      Until then /strategy-call?offer=pest-control-trial falls through
-      to the Growth calendar, because strategy-call.html has no entry
-      for the slug. Add one with the event URL when it exists.
+  TERMS CONFIRMED 12 Oct 2026: $1,500, 6 video ads and 4 statics, $500
+  test spend, Los Angeles and Tampa, Anchor credit within 14 days, 4
+  slots a month. No website or CRM needed: the ads point at a DM or a
+  Meta instant form (offer.js trial.adDestination).
+
+  NOT LIVE YET (offer.js trial.live). Noindexed, out of the sitemap,
+  linked from nowhere. Before it takes a single click:
+    • the iClosed "5-Day Trial Call" event exists and strategy-call.html
+      has an entry for ?offer=pest-control-trial. Until then the button
+      falls through to the Growth calendar, which is the wrong promise
+    • the Handbook entry, the Stripe link and the order form exist in
+      ntc-speed-to-lead
+  Then set trial.live, remove the noindex and the UNLISTED entry.
+
+  POSITIONING: a pilot program, not a deal. Structured, limited, a
+  professional intake. Never sold as cheaper than the Ad Sprint.
 
   ONE BUTTON. Every CTA is the same "Start my 5-day trial".
 
@@ -313,12 +321,12 @@
 
 <!-- HERO -->
 <section id="hero">
-  <div class="eyebrow reveal">For pest control operators · The 5-day trial</div>
+  <div class="eyebrow reveal">For pest control operators in Los Angeles and Tampa</div>
   <h1 class="title reveal">Pest control ads that stop the <em>scroll.</em><br>From footage you already have.</h1>
-  <p class="hero-sub reveal">Send us your truck, your techs, your jobs. <b>In 5 days they are ads, live and spending.</b> No shoot day, no retainer.</p>
+  <p class="hero-sub reveal">Send us your truck, your techs, your jobs. <b>In 5 days they are ads, live and spending.</b> A five-day pilot of working with us. No shoot day, no retainer.</p>
   <div class="hero-ctas reveal">
     <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=pest-control-trial">Start my 5-day trial</a>
-    <p class="cta-note">Limited trial slots per month. One crew.</p>
+    <p class="cta-note">Four trial slots a month. One crew.</p>
   </div>
 </section>
 
@@ -331,29 +339,28 @@
 
 <!-- THE FIVE DAYS -->
 <section id="days">
-  <div class="eyebrow reveal">What this is</div>
+  <div class="eyebrow reveal">The pilot</div>
   <h2 class="title reveal">Five days.<br>Your footage, <em>our edit.</em></h2>
-  <p class="lede reveal">You send what you have. We turn it into ads and launch them. <b>By day 5 you know exactly what it is like to have New Terrain Creative running your content.</b></p>
+  <p class="lede reveal">You send what you have. <b>We turn it into 6 video ads and 4 statics, and launch them in your ad account.</b> By day 5 you know exactly what it is like to have New Terrain Creative running your content.</p>
   <div class="day-rows">
     <div class="day-row reveal">
       <div class="day-part"><span class="day-kicker">Day 1</span><em>Intake</em></div>
-      <p class="day-body"><b>You send your footage.</b> We confirm access to your ad account before the clock starts.</p>
+      <p class="day-body"><b>You send your footage and your offer.</b> We confirm access to your ad account. The five days start once both are in.</p>
     </div>
     <div class="day-row reveal">
       <div class="day-part"><span class="day-kicker">Days 2 and 3</span><em>Edit</em></div>
-      <p class="day-body"><b>We cut, caption and build motion graphics and statics</b> from your footage. You see the cuts as they land.</p>
+      <p class="day-body"><b>We cut, caption and build 6 video ads and 4 statics</b> from your footage. You see the cuts as they land.</p>
     </div>
     <div class="day-row reveal">
       <div class="day-part"><span class="day-kicker">Day 4</span><em>Launch</em></div>
-      <p class="day-body"><b>Your first ads go live.</b> Real spend, real market, real data.</p>
+      <p class="day-body"><b>Your first ads go live.</b> Homeowners message you or fill in a quote form right inside Facebook and Instagram. No website needed. Real spend, real market, real data.</p>
     </div>
     <div class="day-row reveal">
       <div class="day-part"><span class="day-kicker">Day 5</span><em>Review</em></div>
-      <p class="day-body"><b>We walk you through what we made and what it is doing,</b> and what the monthly version looks like. Then you decide.</p>
+      <p class="day-body"><b>We walk you through what we made and the early numbers,</b> and what the monthly version looks like. Then you decide.</p>
     </div>
   </div>
-  <!-- THE GOAL · one verifiable sentence. PENDING Jadon's pick between
-       the brief's two drafts; this is the second. -->
+  <!-- THE GOAL · one verifiable sentence. Confirmed 12 Oct 2026. -->
   <div class="goal reveal">
     <span class="day-kicker">The goal</span>
     Your first ads live and spending by day 5, cut from footage you already had.
@@ -407,22 +414,25 @@
   <p class="lede reveal">Illustrative is fine. Impersonating your business is not: it misrepresents you, and it gets ads rejected.</p>
 </section>
 
-<!-- THE PRICE · offer.js trial.trialFee and trial.minTestAdSpend,
-     both PENDING confirmation. check-offer.py allows the fee here only.
+<!-- THE PRICE · offer.js trial.trialFee and trial.minTestAdSpend.
+     check-offer.py allows the fee here only.
      RISK REVERSAL: the work, not a result. offer.js
-     trial.paidOnlyIfDelivered and trial.resultGuaranteed. -->
+     trial.refundIfNotDelivered and trial.resultGuaranteed. The
+     exclusions (client delays, Meta's ad review) are in the order form
+     and the Handbook; the clock starting at intake is on the page. -->
 <section id="price">
   <div class="eyebrow reveal">The price</div>
   <h2 class="title reveal">One payment.<br>Five <em>days.</em></h2>
   <div class="price-band reveal">
     <div>
       <div class="price-label">The 5-day trial</div>
-      <div class="price-figure">$1,247</div>
-      <div class="price-terms">Flat. Not a deposit, not monthly.</div>
+      <div class="price-figure">$1,500</div>
+      <div class="price-terms">6 video ads, 4 statics, launched and reviewed. Flat. Not a deposit, not monthly.</div>
     </div>
     <div>
       <p class="price-note"><b>Media spend is separate and yours.</b> You fund it and pay the platform directly. The minimum for the 5-day test is $500.</p>
-      <p class="price-note"><b>We do not guarantee leads in five days.</b> What we guarantee is the work: the edit gets delivered and the ads go live. If we do not deliver, you do not pay.</p>
+      <p class="price-note"><b>We do not guarantee leads in five days.</b> What we guarantee is the work: the edit gets delivered and the ads go live. If we do not deliver, you get your money back.</p>
+      <p class="price-note"><b>Keep going within 14 days of your review</b> and the $1,500 comes off your first month.</p>
     </div>
   </div>
 </section>
@@ -435,7 +445,7 @@
     <div class="fit-col">
       <h3>This fits</h3>
       <ul>
-        <li><span><b>Pest control operators</b> with a defined service area</span></li>
+        <li><span><b>Pest control operators</b> serving Los Angeles or Tampa</span></li>
         <li><span><b>Recurring plans</b> to sell</span></li>
         <li><span><b>Ad budget ready</b> to spend this week</span></li>
         <li><span><b>Want to see the work</b> before signing up for anything monthly</span></li>
@@ -468,7 +478,11 @@
     </details>
     <details class="qa">
       <summary class="qa-q">What happens after day 5?</summary>
-      <p class="qa-a"><b>You decide.</b> We show you what we made, what it is doing, and what the monthly version looks like. Nothing rolls into a retainer.</p>
+      <p class="qa-a"><b>You decide.</b> We show you what we made, the early numbers, and what the monthly version looks like. Nothing rolls into a retainer. If you stop there, the ads keep running in your account without us managing them, and we show you how to pause them before we hang up.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">Do I need a website or a CRM?</summary>
+      <p class="qa-a"><b>No.</b> The ads send homeowners straight to a message with you, or to a quote form inside Facebook and Instagram. <b>What matters is who answers and how fast,</b> so we ask that before we start and pick the one that fits how you work.</p>
     </details>
     <details class="qa">
       <summary class="qa-q">Will this get me more calls?</summary>
@@ -480,10 +494,10 @@
 <!-- CLOSE -->
 <section id="close">
   <h2 class="title reveal">Your footage.<br>Live in <em>five days.</em></h2>
-  <p class="lede reveal">$1,247, one time. No shoot day, no retainer.</p>
+  <p class="lede reveal">$1,500, one time. Four slots a month. No shoot day, no retainer.</p>
   <div class="close-ctas reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=pest-control-trial">Start my 5-day trial</a>
-    <p class="cta-note">Limited trial slots per month. One crew.</p>
+    <p class="cta-note">Four trial slots a month. One crew.</p>
   </div>
   <div class="mail-row reveal">
     <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>

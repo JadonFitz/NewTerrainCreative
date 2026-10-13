@@ -304,15 +304,22 @@
     /* ── 5-Day Trial · first niche, pest control ──────────────────────
        Added 12 Oct 2026 from the trial brief. /pest-control-trial.
 
-       NOT CONFIRMED. The fee, the media minimum and the goal sentence
-       are the brief's suggestions, pending Jadon against COGS, and there
-       is no Handbook entry yet. Until both exist the page is noindexed,
-       left out of the sitemap and linked from nowhere, and no ad points
-       at it. Confirm here first; the page reads from nothing else.
+       TERMS CONFIRMED 12 Oct 2026 (Jadon): $1,500 rather than the brief's
+       $1,247, which read as a course launch; 6 video ads and 4 statics;
+       Los Angeles and Tampa first; the fee credited to a first Anchor
+       month started within 14 days; 4 slots a month.
 
-       The cheap opt-in: no shoot day, the client sends footage, we edit
-       and launch in five days with an AI-assisted workflow. Day 5 is the
-       review. The retainer is set up by the page, never pitched on it.
+       NOT LIVE. `live` stays false until the iClosed trial event exists
+       and the button points at it, and the Handbook entry, the Stripe
+       link and the order form exist in ntc-speed-to-lead. Until then the
+       page is noindexed, left out of the sitemap and linked from nowhere,
+       and no ad points at it.
+
+       Positioned as a pilot program, not a deal: structured, limited,
+       a professional intake. The trial is the audition for the Anchor
+       and the number that matters is the upgrade rate, not trial revenue.
+       It is offered to pest control only: the four priority industries'
+       front end is the Ad Sprint, which the trial must not undercut.
 
        The second published price, after the Brand Builder Pilot, and
        the same reasoning: a front-end offer with its price hidden is not
@@ -326,15 +333,19 @@
     trial: {
       page: '/pest-control-trial',
       niche: 'Pest control',
-      confirmed: false,
+      geography: ['Los Angeles', 'Tampa'],
+      termsConfirmed: true,
+      live: false,
       days: 5,
-      trialFee: 1247,
+      trialFee: 1500,
       oneTime: true,
       isDeposit: false,
       noRetainer: true,
       noShootDay: true,
-      // Client-funded, paid to the platform, never to us. For the five
-      // days of the test, not monthly.
+      videoAds: 6,
+      statics: 4,
+      // Client-funded, paid to the platform, never to us. For the test,
+      // not monthly.
       minTestAdSpend: 500,
       // Stated on the page, not in fine print. Either one qualifies.
       intakeMinimum: {
@@ -343,12 +354,30 @@
         plus: 'the offer: service area, recurring plans, price point'
       },
       intakeFallback: 'A one-hour remote recording session on our shot list',
-      // What we guarantee is the work, not a result: the edit is
-      // delivered and the ads go live once ad account access is
-      // confirmed. If we do not deliver, the client does not pay.
+      // No landing page or CRM is required, and none is built in the
+      // trial: that is scope creep and the margin. The ads point at a
+      // native Meta destination, picked from the client's answer to "if a
+      // homeowner messages you today, who responds and how fast?". Fast
+      // responders get click-to-message, everyone else instant lead forms.
+      // A website that loses the clicks is day-5 material for the Anchor.
+      adDestination: ['click-to-message', 'instant lead form'],
+      landingPageIncluded: false,
+      // The five days start once footage and ad account access are in.
+      clockStartsOnIntake: true,
+      // What we guarantee is the work, not a result. If we do not deliver
+      // the edit and launch by day 5, the fee is refunded. Excluded: the
+      // client's own delays and Meta's ad review, which we do not control.
       workGuaranteed: true,
-      paidOnlyIfDelivered: true,
+      refundIfNotDelivered: true,
       resultGuaranteed: false,
+      // After day 5 the ads keep running, unmanaged, in the client's own
+      // account unless they upgrade. Said on the day-5 call, every time:
+      // an ad spending their money without them knowing is the fastest
+      // way to lose the trust the trial exists to build.
+      afterDay5: 'ads keep running unmanaged in the client account; told on the call',
+      // Same mechanics as the Sprint credit in the Handbook. One per
+      // client, no cash value, does not shorten the 3-month minimum.
+      anchorCredit: { creditsFee: true, windowDays: 14 },
       // AI is used for cutting, captions, motion graphics, statics,
       // voiceover and generic illustrative b-roll. Never for imagery
       // that passes as the client's real operation.
@@ -358,8 +387,7 @@
         'generated before and afters',
         'invented reviews'
       ],
-      // Monthly slot count: undecided. Do not print a number until set.
-      monthlySlots: null
+      monthlySlots: 4
     },
 
     // ── One-time products ─────────────────────────────────────────────
@@ -590,7 +618,7 @@
       'the 90-Day Production Promise, on any page, until its terms and eligibility are decided',
       // Added 12 Oct 2026 with the trial.
       'leads, booked jobs or "more jobs" from the 5-day trial',
-      'a trial slot count we have not set'
+      'the 5-day trial to anyone outside pest control, or as cheaper than the Ad Sprint'
     ]
   };
 
