@@ -284,7 +284,9 @@ for page in PARKED:
 # nothing on the site should link it and nothing should index it.
 # /production-inquiry is reached only by the Brand Builder application's
 # budget redirect in iClosed.
-UNLISTED = ['call-booked', 'owner', 'production-inquiry']
+# /pest-control-trial stays unlisted until its terms are confirmed:
+# assets/offer.js trial.confirmed.
+UNLISTED = ['call-booked', 'owner', 'production-inquiry', 'pest-control-trial']
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     # Strip comments first. The sitemap documents which pages are left

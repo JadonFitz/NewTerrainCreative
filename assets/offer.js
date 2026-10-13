@@ -301,6 +301,67 @@
       }
     },
 
+    /* ── 5-Day Trial · first niche, pest control ──────────────────────
+       Added 12 Oct 2026 from the trial brief. /pest-control-trial.
+
+       NOT CONFIRMED. The fee, the media minimum and the goal sentence
+       are the brief's suggestions, pending Jadon against COGS, and there
+       is no Handbook entry yet. Until both exist the page is noindexed,
+       left out of the sitemap and linked from nowhere, and no ad points
+       at it. Confirm here first; the page reads from nothing else.
+
+       The cheap opt-in: no shoot day, the client sends footage, we edit
+       and launch in five days with an AI-assisted workflow. Day 5 is the
+       review. The retainer is set up by the page, never pitched on it.
+
+       The second published price, after the Brand Builder Pilot, and
+       the same reasoning: a front-end offer with its price hidden is not
+       one. scripts/check-offer.py lets trialFee onto the trial page and
+       nowhere else.
+
+       Template for the next niche: swap the trade, the problem
+       paragraph, the intake examples and the "not for" line. These
+       mechanics stay identical.
+       ─────────────────────────────────────────────────────────────── */
+    trial: {
+      page: '/pest-control-trial',
+      niche: 'Pest control',
+      confirmed: false,
+      days: 5,
+      trialFee: 1247,
+      oneTime: true,
+      isDeposit: false,
+      noRetainer: true,
+      noShootDay: true,
+      // Client-funded, paid to the platform, never to us. For the five
+      // days of the test, not monthly.
+      minTestAdSpend: 500,
+      // Stated on the page, not in fine print. Either one qualifies.
+      intakeMinimum: {
+        videoMinutes: 10,
+        photos: 20,
+        plus: 'the offer: service area, recurring plans, price point'
+      },
+      intakeFallback: 'A one-hour remote recording session on our shot list',
+      // What we guarantee is the work, not a result: the edit is
+      // delivered and the ads go live once ad account access is
+      // confirmed. If we do not deliver, the client does not pay.
+      workGuaranteed: true,
+      paidOnlyIfDelivered: true,
+      resultGuaranteed: false,
+      // AI is used for cutting, captions, motion graphics, statics,
+      // voiceover and generic illustrative b-roll. Never for imagery
+      // that passes as the client's real operation.
+      aiNever: [
+        "the client's name or logo on generated imagery of a real-looking operation",
+        'generated technicians presented as their team',
+        'generated before and afters',
+        'invented reviews'
+      ],
+      // Monthly slot count: undecided. Do not print a number until set.
+      monthlySlots: null
+    },
+
     // ── One-time products ─────────────────────────────────────────────
     products: {
       /* Sprint packages are sold on OUTPUT, not on hours. No shoot
@@ -493,7 +554,10 @@
       'production-media': 'production_media',
       'ad-sprint':        'ad_sprint',
       // /brand-builder. One CTA, the Story Session, so one identifier.
-      'brand-builder':    'brand_builder'
+      'brand-builder':    'brand_builder',
+      // /pest-control-trial. Falls through to the Growth calendar on
+      // /strategy-call until its own iClosed event exists.
+      'pest-control-trial': 'trial_pest_control'
     },
 
     // ── Things we do not say ──────────────────────────────────────────
@@ -523,7 +587,10 @@
       'a production-only retainer, or ad management as an optional add-on to one',
       'full organic social management or community management as part of a retainer',
       'unlimited or custom systems development as part of a retainer',
-      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided'
+      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided',
+      // Added 12 Oct 2026 with the trial.
+      'leads, booked jobs or "more jobs" from the 5-day trial',
+      'a trial slot count we have not set'
     ]
   };
 
