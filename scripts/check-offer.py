@@ -131,6 +131,12 @@ _pib = re.search(r'productionInquiryBudgetBands:\s*\[([^\]]+)\]', offer)
 PAGE_EXTRA['production-inquiry.html'] = (
     {fmt(int(x)) for x in re.findall(r'\d+', _pib.group(1))} if _pib else set())
 
+# The 5-day trial fee (12 Oct 2026, assets/offer.js trial) may appear on
+# the trial page only. Its media minimum is under $1,000 and so is never
+# caught by the figure pattern below.
+m_trial = re.search(r'trialFee:\s*(\d+)', offer)
+PAGE_EXTRA['pest-control-trial.html'] = {fmt(int(m_trial.group(1)))} if m_trial else set()
+
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
 print(f'Allowed outside the form pages: ' + '  '.join('$' + a for a in sorted(anywhere)))

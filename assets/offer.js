@@ -301,6 +301,104 @@
       }
     },
 
+    /* ── 5-Day Trial · first niche, pest control ──────────────────────
+       Added 12 Oct 2026 from the trial brief. /pest-control-trial.
+
+       TERMS CONFIRMED 12 Oct 2026 (Jadon): $1,500 rather than the brief's
+       $1,247, which read as a course launch; 6 video ads and 4 statics;
+       Los Angeles and Tampa first; the fee credited to a first Anchor
+       month started within 14 days; 4 slots a month.
+
+       LIVE 12 Oct 2026, once the iClosed trial event, the Stripe link
+       and the order form existed in ntc-speed-to-lead. Indexed and in
+       the sitemap, still linked from no other page: pest control only.
+
+       Positioned as a pilot program, not a deal: structured, limited,
+       a professional intake. The trial is the audition for the Anchor
+       and the number that matters is the upgrade rate, not trial revenue.
+       It is offered to pest control only: the four priority industries'
+       front end is the Ad Sprint, which the trial must not undercut.
+
+       The second published price, after the Brand Builder Pilot, and
+       the same reasoning: a front-end offer with its price hidden is not
+       one. scripts/check-offer.py lets trialFee onto the trial page and
+       nowhere else.
+
+       Template for the next niche: swap the trade, the problem
+       paragraph, the intake examples and the "not for" line. These
+       mechanics stay identical.
+       ─────────────────────────────────────────────────────────────── */
+    trial: {
+      page: '/pest-control-trial',
+      niche: 'Pest control',
+      geography: ['Los Angeles', 'Tampa'],
+      termsConfirmed: true,
+      live: true,
+      /* Wired 12 Oct 2026 in ntc-speed-to-lead. The button books a call,
+         not checkout: /strategy-call?offer=pest-control-trial loads this
+         iClosed event, and payment follows the call. The Stripe link is
+         recorded for reference only and never appears on a page: the
+         agent sends it after the call. Its redirect lands on
+         /welcome?plan=trial, and payments carry offer_key
+         trial_pest_control. */
+      iclosedUrl: 'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
+      stripePaymentLink: 'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+      offerKey: 'trial_pest_control',
+      welcomePlan: 'trial',
+      days: 5,
+      trialFee: 1500,
+      oneTime: true,
+      isDeposit: false,
+      noRetainer: true,
+      noShootDay: true,
+      videoAds: 6,
+      statics: 4,
+      // Client-funded, paid to the platform, never to us. For the test,
+      // not monthly.
+      minTestAdSpend: 500,
+      // Stated on the page, not in fine print. Either one qualifies.
+      intakeMinimum: {
+        videoMinutes: 10,
+        photos: 20,
+        plus: 'the offer: service area, recurring plans, price point'
+      },
+      intakeFallback: 'A one-hour remote recording session on our shot list',
+      // No landing page or CRM is required, and none is built in the
+      // trial: that is scope creep and the margin. The ads point at a
+      // native Meta destination, picked from the client's answer to "if a
+      // homeowner messages you today, who responds and how fast?". Fast
+      // responders get click-to-message, everyone else instant lead forms.
+      // A website that loses the clicks is day-5 material for the Anchor.
+      adDestination: ['click-to-message', 'instant lead form'],
+      landingPageIncluded: false,
+      // The five days start once footage and ad account access are in.
+      clockStartsOnIntake: true,
+      // What we guarantee is the work, not a result. If we do not deliver
+      // the edit and launch by day 5, the fee is refunded. Excluded: the
+      // client's own delays and Meta's ad review, which we do not control.
+      workGuaranteed: true,
+      refundIfNotDelivered: true,
+      resultGuaranteed: false,
+      // After day 5 the ads keep running, unmanaged, in the client's own
+      // account unless they upgrade. Said on the day-5 call, every time:
+      // an ad spending their money without them knowing is the fastest
+      // way to lose the trust the trial exists to build.
+      afterDay5: 'ads keep running unmanaged in the client account; told on the call',
+      // Same mechanics as the Sprint credit in the Handbook. One per
+      // client, no cash value, does not shorten the 3-month minimum.
+      anchorCredit: { creditsFee: true, windowDays: 14 },
+      // AI is used for cutting, captions, motion graphics, statics,
+      // voiceover and generic illustrative b-roll. Never for imagery
+      // that passes as the client's real operation.
+      aiNever: [
+        "the client's name or logo on generated imagery of a real-looking operation",
+        'generated technicians presented as their team',
+        'generated before and afters',
+        'invented reviews'
+      ],
+      monthlySlots: 4
+    },
+
     // ── One-time products ─────────────────────────────────────────────
     products: {
       /* Sprint packages are sold on OUTPUT, not on hours. No shoot
@@ -493,7 +591,9 @@
       'production-media': 'production_media',
       'ad-sprint':        'ad_sprint',
       // /brand-builder. One CTA, the Story Session, so one identifier.
-      'brand-builder':    'brand_builder'
+      'brand-builder':    'brand_builder',
+      // /pest-control-trial. Its own iClosed event, the 5-Day Trial Call.
+      'pest-control-trial': 'trial_pest_control'
     },
 
     // ── Things we do not say ──────────────────────────────────────────
@@ -523,7 +623,10 @@
       'a production-only retainer, or ad management as an optional add-on to one',
       'full organic social management or community management as part of a retainer',
       'unlimited or custom systems development as part of a retainer',
-      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided'
+      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided',
+      // Added 12 Oct 2026 with the trial.
+      'leads, booked jobs or "more jobs" from the 5-day trial',
+      'the 5-day trial to anyone outside pest control, or as cheaper than the Ad Sprint'
     ]
   };
 

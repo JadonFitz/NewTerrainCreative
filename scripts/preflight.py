@@ -284,7 +284,11 @@ for page in PARKED:
 # nothing on the site should link it and nothing should index it.
 # /production-inquiry is reached only by the Brand Builder application's
 # budget redirect in iClosed.
-UNLISTED = ['call-booked', 'owner', 'production-inquiry']
+# /pest-control-trial is live (assets/offer.js trial.live) and in the
+# sitemap, but no other page links it: it is offered to pest control
+# only, so it stays on the link check and off the sitemap check.
+UNLISTED = ['call-booked', 'owner', 'production-inquiry', 'pest-control-trial']
+IN_SITEMAP_OK = {'pest-control-trial'}
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     # Strip comments first. The sitemap documents which pages are left
@@ -292,7 +296,8 @@ if sitemap.exists():
     # file exists to exclude and fails on correct content.
     body = re.sub(r'<!--[\s\S]*?-->', '', sitemap.read_text(encoding='utf-8'))
     leaked = [u for u in UNLISTED + PARKED + ['strategy-call', 'booked']
-              if f'/{u}<' in body or f'/{u}/' in body]
+              if u not in IN_SITEMAP_OK
+              and (f'/{u}<' in body or f'/{u}/' in body)]
     bad('sitemap.xml lists unlisted page(s): ' + ', '.join(leaked)) if leaked \
         else ok('sitemap.xml excludes every unlisted page')
 else:
@@ -319,6 +324,18 @@ if _pi.exists():
     ) if re.search(pat, _t_code, re.I)]
     bad('production-inquiry.html carries ' + ', '.join(problems)) if problems \
         else ok('/production-inquiry fires no Lead and links no booking')
+
+
+# The 5-day trial must stay noindexed until assets/offer.js trial.live.
+# Its button books a call that does not exist yet, so a search visitor
+# would land on the wrong promise.
+_trial = ROOT / 'pest-control-trial.html'
+_off = (ROOT / 'assets' / 'offer.js').read_text(encoding='utf-8')
+_trial_live = re.search(r'trial:\s*\{.*?\blive:\s*true', _off, re.S) is not None
+if _trial.exists() and not _trial_live:
+    _noindex = re.search(r'<meta name="robots" content="noindex', _trial.read_text(encoding='utf-8'))
+    ok('/pest-control-trial is noindexed until trial.live') if _noindex \
+        else bad('pest-control-trial.html lost its noindex while offer.js trial.live is false')
 
 
 # Retired pages. A page we stopped publishing must be gone from the tree

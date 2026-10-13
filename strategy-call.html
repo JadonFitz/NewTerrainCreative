@@ -332,6 +332,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        /founding           -> ?offer=founding-three
        /sprint             -> ?offer=ad-sprint
        /brand-builder      -> ?offer=brand-builder
+       /pest-control-trial -> ?offer=pest-control-trial
        / and /signature    -> ?offer=signature
        /grow               -> no parameter
        ?offer=production-media -> kept although /production-media is
@@ -395,6 +396,20 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
          follows it, and only then is a shoot booked. */
       eyebrow: 'Ad Sprint',
       lede:    'Thirty minutes. <b>Nothing is due to book this call.</b> If the Sprint is not the right move, we say so on it.'
+    },
+    /* /pest-control-trial. Its own iClosed event since 12 Oct 2026, the
+       5-Day Trial Call: 20 minutes, ten questions, one disqualifier ("not
+       ready to fund a test yet" goes back to /pest-control-trial
+       ?from=trial-unfunded), and a redirect to
+       /call-booked?offer=pest-control-trial. Payment follows the call:
+       nothing on this page or the trial page links checkout. */
+    'pest-control-trial': {
+      ready: true,
+      url:   'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
+      title: 'Book a 5-Day Trial call with New Terrain Creative',
+      content: 'trial',
+      eyebrow: '5-Day Trial · pest control',
+      lede:    'Twenty minutes with Jadon and Meghan. <b>Nothing is due to book this call.</b> If the trial is not the right start, we say so on it.'
     }
   };
 
@@ -508,6 +523,25 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         ['You run the campaign.', 'Managing it is not part of the Sprint']
       ],
       cta:   'Get my ad plan'
+    },
+    /* The trial call confirms fit and where the ads will send
+       homeowners. No price talk beyond what the page already says, and
+       no promised result: offer.js neverClaim. */
+    'trial': {
+      h1:    'Leave knowing whether your footage is ready, <em>and where your ads would send homeowners.</em>',
+      leave: [
+        ['A straight read', 'on whether what you have meets the minimum'],
+        ['Message or quote form:', 'which one fits how fast you answer'],
+        ['What the five days look like', 'for your business'],
+        ['Whether the trial is the right start,', 'and if not, why']
+      ],
+      fit: [
+        ['Pest control operators', 'serving Los Angeles or Tampa'],
+        ['Recurring plans', 'to sell'],
+        ['A $500 test budget,', 'paid to Meta directly'],
+        ['Footage you already have:', '10 minutes of video or 20 photos']
+      ],
+      cta:   'Start my 5-day trial'
     },
     'brand': {
       h1:    'Leave knowing whether your story carries a brand, <em>and how we would shoot it.</em>',

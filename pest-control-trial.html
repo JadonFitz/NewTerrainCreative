@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pest Control Ads in 5 Days · New Terrain Creative</title>
+<meta name="description" content="A five-day pilot for pest control operators in Los Angeles and Tampa: ten ads cut from footage you already have, launched and reviewed with you. No shoot day, no retainer.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="New Terrain Creative · The 5-Day Trial">
+<meta property="og:description" content="Pest control ads that stop the scroll, from footage you already have.">
+<meta property="og:image" content="assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --gold: #C8A96E;
+    --parchment: #F5F0E8;
+    --muted: #6B6560;
+    --soft: #A09890;
+    --line: #1e1e1e;
+    --display: 'Cormorant Garamond', Georgia, serif;
+    --body: 'Inter', -apple-system, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  section { padding: 110px 6vw; max-width: 1280px; margin: 0 auto; }
+  section + section { border-top: 1px solid var(--line); }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-size: clamp(34px, 4.6vw, 58px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--parchment);
+  }
+
+  .title em { font-style: italic; color: var(--gold); }
+
+  .lede {
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--soft);
+    max-width: 600px;
+  }
+
+  .lede b, .hero-sub b, .day-body b, .fit-col b, .qa-a b, .price-note b, .intake-body b, .cta-note b {
+    color: var(--parchment);
+    font-weight: 500;
+  }
+
+  .btn {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 34px;
+    transition: all 0.3s;
+  }
+
+  .btn--gold { background: var(--gold); color: var(--black); font-weight: 500; }
+  .btn--gold:hover { background: var(--parchment); }
+
+  .cta-note {
+    margin-top: 16px;
+    font-size: 12.5px;
+    font-style: italic;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 6vw;
+    border-bottom: 1px solid var(--line);
+    background: rgba(10, 10, 10, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .wordmark {
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+
+  .wordmark span { color: var(--gold); }
+
+  .header-cta {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(200,169,110,0.4);
+    padding: 11px 22px;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .header-cta:hover { background: var(--gold); color: var(--black); }
+
+  @media (max-width: 560px) {
+    .wordmark span { display: none; }
+    .header-cta { padding: 10px 14px; letter-spacing: 0.18em; }
+  }
+
+  /* ── HERO ── */
+  #hero { padding-top: 190px; padding-bottom: 100px; }
+  #hero .title { font-size: clamp(42px, 6.2vw, 84px); max-width: 900px; }
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--soft);
+    max-width: 560px;
+  }
+  .hero-ctas { margin-top: 44px; }
+  /* ?from=trial-unfunded: iClosed sends people back here when they
+     answer that they are not ready to fund the test. */
+  .unfunded {
+    margin-bottom: 48px;
+    padding: 18px 22px;
+    border-left: 2px solid var(--gold);
+    max-width: 620px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--soft);
+  }
+  .unfunded b { color: var(--parchment); font-weight: 400; }
+
+  /* ── THE FIVE DAYS ── */
+  .day-rows { margin-top: 60px; border-top: 1px solid var(--line); }
+  .day-row {
+    display: grid; grid-template-columns: 220px 1fr; gap: 40px;
+    padding: 34px 0; border-bottom: 1px solid var(--line);
+  }
+  .day-part { font-family: var(--display); font-size: 30px; font-weight: 300; color: var(--parchment); line-height: 1.1; }
+  .day-part em { font-style: italic; color: var(--gold); }
+  .day-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
+  .day-body { font-size: 14px; line-height: 1.85; color: var(--soft); max-width: 640px; }
+  .goal {
+    margin-top: 50px; padding: 26px 30px;
+    border: 1px solid #8A7647; background: #101010;
+    font-family: var(--display); font-size: clamp(22px, 2.6vw, 30px);
+    font-weight: 300; line-height: 1.3; color: var(--parchment);
+  }
+  .goal .day-kicker { margin-bottom: 12px; }
+
+  /* ── INTAKE ── */
+  .intake {
+    margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line); border: 1px solid var(--line);
+  }
+  .intake-col { background: var(--black); padding: 30px 30px 32px; }
+  .intake-col h3, .fit-col h3 {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px; font-weight: 400;
+  }
+  .intake-body { font-size: 15px; line-height: 1.85; color: var(--soft); }
+  .intake-or {
+    display: block; margin: 12px 0; font-family: var(--display);
+    font-style: italic; font-size: 22px; color: var(--gold);
+  }
+
+  /* ── LISTS (AI, fit) ── */
+  .fit {
+    margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line); border: 1px solid var(--line);
+  }
+  .fit-col { background: var(--black); padding: 28px 30px 30px; }
+  .fit-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .fit-col li { display: flex; gap: 12px; font-size: 15px; line-height: 1.7; color: #BDB5AA; }
+  .fit-col li::before {
+    content: ''; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0; margin-top: 11px;
+  }
+  .fit-col--no li::before { background: var(--muted); }
+
+  /* ── PRICE ── */
+  .price-band {
+    margin-top: 50px; border: 1px solid #8A7647;
+    background: #101010; padding: 34px;
+    display: grid; grid-template-columns: minmax(0, 320px) 1fr; gap: 40px; align-items: start;
+  }
+  .price-label {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .price-figure {
+    font-family: var(--display); font-size: clamp(44px, 5.4vw, 64px);
+    font-weight: 300; line-height: 1; color: var(--gold);
+  }
+  .price-terms { margin-top: 12px; font-size: 13px; letter-spacing: 0.04em; color: var(--soft); }
+  .price-note { font-size: 14px; line-height: 1.85; color: var(--soft); }
+  .price-note + .price-note { margin-top: 14px; }
+
+  /* ── QUESTIONS ── */
+  .qa-list { margin-top: 40px; max-width: 860px; }
+  .qa-q { font-family: var(--display); font-size: 24px; font-weight: 300; color: var(--parchment); }
+  details.qa { border-top: 1px solid var(--line); padding: 0; }
+  details.qa:last-of-type { border-bottom: 1px solid var(--line); }
+  details.qa > summary { list-style: none; cursor: pointer; padding: 22px 34px 22px 0; position: relative; }
+  details.qa > summary::-webkit-details-marker { display: none; }
+  details.qa > summary::after {
+    content: '+'; position: absolute; right: 4px; top: 50%;
+    transform: translateY(-50%); color: var(--gold);
+    font-family: var(--body); font-size: 19px; font-weight: 300;
+  }
+  details.qa[open] > summary::after { content: '\2013'; }
+  details.qa > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .qa-a { padding-bottom: 24px; max-width: 720px; font-size: 14px; line-height: 1.85; color: var(--soft); }
+
+  /* ── CLOSE ── */
+  #close { text-align: center; padding-top: 130px; padding-bottom: 130px; }
+  #close .title { font-size: clamp(40px, 5.5vw, 72px); }
+  #close .lede { margin-left: auto; margin-right: auto; }
+  .close-ctas { margin-top: 44px; }
+  .mail-row { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px 26px; justify-content: center; }
+  .mail-row a {
+    font-size: 12px; letter-spacing: 0.08em; color: var(--muted);
+    text-decoration: none; transition: color 0.3s;
+  }
+  .mail-row a:hover { color: var(--gold); }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 30px 6vw;
+    border-top: 1px solid var(--line);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  footer a:hover { color: var(--gold); }
+
+  @media (max-width: 860px) {
+    section { padding-top: 84px; padding-bottom: 84px; }
+    #hero { padding-top: 150px; }
+    .day-row { grid-template-columns: 1fr; gap: 14px; padding: 28px 0; }
+    .intake, .fit, .price-band { grid-template-columns: 1fr; }
+    .price-band { gap: 24px; padding: 26px 22px; }
+    .intake-col, .fit-col { padding: 26px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  THE 5-DAY TRIAL · pest control, the first niche
+
+  Built 12 Oct 2026 from the trial brief. Every term on this page is in
+  assets/offer.js `trial`; change it there first.
+
+  TERMS CONFIRMED 12 Oct 2026: $1,500, 6 video ads and 4 statics, $500
+  test spend, Los Angeles and Tampa, Anchor credit within 14 days, 4
+  slots a month. No website or CRM needed: the ads point at a DM or a
+  Meta instant form (offer.js trial.adDestination).
+
+  LIVE since 12 Oct 2026 (offer.js trial.live). Indexed and in the
+  sitemap, but still linked from no other page: it is offered to pest
+  control only, so it is reached by ads and direct links. Every button
+  goes to /strategy-call?offer=pest-control-trial, which loads the
+  iClosed 5-Day Trial Call. Payment follows the call; no checkout link
+  belongs on this page.
+
+  POSITIONING: a pilot program, not a deal. Structured, limited, a
+  professional intake. Never sold as cheaper than the Ad Sprint.
+
+  ONE BUTTON. Every CTA is the same "Start my 5-day trial".
+
+  COPY RULES from the brief: no em dashes, no promised results, no
+  "more jobs", no invented timelines or scarcity, and nothing that
+  positions the trial against the Ad Sprint. The day-5 retainer
+  conversation is set up here, never pitched.
+
+  NEXT NICHE: copy this file and swap the trade in the headline, the
+  problem paragraph (one problem only), the intake examples and the
+  "not for" line. The mechanics stay identical.
+  ════════════════════════════════════════════════════════════════
+-->
+
+<header>
+  <a class="wordmark" href="#hero">New Terrain Creative <span>· 5-Day Trial</span></a>
+  <a class="header-cta" data-cta="header" href="/strategy-call?offer=pest-control-trial">Start my trial</a>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <!-- Shown only on ?from=trial-unfunded, the 5-Day Trial Call's one
+       disqualifier. Kind, short, and no other offer pitched. -->
+  <p class="unfunded" id="unfunded" hidden><b>Thanks for being straight with us.</b> The trial needs a $500 ad budget for the test, paid to Meta directly, never to us. It is what puts your ads in front of real homeowners in five days. When it is ready, come back and book your call. This page will be here.</p>
+  <div class="eyebrow reveal">For pest control operators in Los Angeles and Tampa</div>
+  <h1 class="title reveal">Pest control ads that stop the <em>scroll.</em><br>From footage you already have.</h1>
+  <p class="hero-sub reveal">Send us your truck, your techs, your jobs. <b>In 5 days they are ads, live and spending.</b> A five-day pilot of working with us. No shoot day, no retainer.</p>
+  <div class="hero-ctas reveal">
+    <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=pest-control-trial">Start my 5-day trial</a>
+    <p class="cta-note">Four trial slots a month. One crew.</p>
+  </div>
+</section>
+
+<!-- THE PROBLEM · one problem only. Swap this paragraph per niche. -->
+<section id="problem">
+  <div class="eyebrow reveal">The problem</div>
+  <h2 class="title reveal">Not a traffic problem.<br>A <em>creative</em> problem.</h2>
+  <p class="lede reveal">The national chains outspend you, and your ads look like everyone else's: stock bug photos, clip art, "call now." <b>Homeowners scroll past in half a second,</b> and summer is make or break.</p>
+</section>
+
+<!-- THE FIVE DAYS -->
+<section id="days">
+  <div class="eyebrow reveal">The pilot</div>
+  <h2 class="title reveal">Five days.<br>Your footage, <em>our edit.</em></h2>
+  <p class="lede reveal">You send what you have. <b>We turn it into 6 video ads and 4 statics, and launch them in your ad account.</b> By day 5 you know exactly what it is like to have New Terrain Creative running your content.</p>
+  <div class="day-rows">
+    <div class="day-row reveal">
+      <div class="day-part"><span class="day-kicker">Day 1</span><em>Intake</em></div>
+      <p class="day-body"><b>You send your footage and your offer.</b> We confirm access to your ad account. The five days start once both are in.</p>
+    </div>
+    <div class="day-row reveal">
+      <div class="day-part"><span class="day-kicker">Days 2 and 3</span><em>Edit</em></div>
+      <p class="day-body"><b>We cut, caption and build 6 video ads and 4 statics</b> from your footage. You see the cuts as they land.</p>
+    </div>
+    <div class="day-row reveal">
+      <div class="day-part"><span class="day-kicker">Day 4</span><em>Launch</em></div>
+      <p class="day-body"><b>Your first ads go live.</b> Homeowners message you or fill in a quote form right inside Facebook and Instagram. No website needed. Real spend, real market, real data.</p>
+    </div>
+    <div class="day-row reveal">
+      <div class="day-part"><span class="day-kicker">Day 5</span><em>Review</em></div>
+      <p class="day-body"><b>We walk you through what we made and the early numbers,</b> and what the monthly version looks like. Then you decide.</p>
+    </div>
+  </div>
+  <!-- THE GOAL · one verifiable sentence. Confirmed 12 Oct 2026. -->
+  <div class="goal reveal">
+    <span class="day-kicker">The goal</span>
+    Your first ads live and spending by day 5, cut from footage you already had.
+  </div>
+</section>
+
+<!-- WHAT WE NEED · the intake minimum, stated here and not in fine
+     print. offer.js trial.intakeMinimum and trial.intakeFallback. -->
+<section id="intake">
+  <div class="eyebrow reveal">What we need from you</div>
+  <h2 class="title reveal">The <em>minimum.</em></h2>
+  <div class="intake reveal">
+    <div class="intake-col">
+      <h3>Your footage</h3>
+      <p class="intake-body"><b>10 minutes of video</b><span class="intake-or">or</span><b>20 photos:</b> trucks, techs on jobs, before and afters.</p>
+    </div>
+    <div class="intake-col">
+      <h3>Plus your offer</h3>
+      <p class="intake-body"><b>Service area, recurring plans and price point,</b> so the ads sell what you actually sell.</p>
+    </div>
+  </div>
+  <p class="lede reveal"><b>Not enough footage?</b> We run a one-hour remote recording session on our shot list. Still no shoot day. If neither works yet, the trial is not the right start, and we will tell you so on the call.</p>
+</section>
+
+<!-- WHAT IS AI · both fulfilment tracks. offer.js trial.aiNever. Cut a
+     line before letting it go unkept. -->
+<section id="ai">
+  <div class="eyebrow reveal">How we keep it fast</div>
+  <h2 class="title reveal">What's AI.<br>What <em>isn't.</em></h2>
+  <p class="lede reveal">An AI-assisted workflow is how five days and a flat rate are possible. <b>It never pretends to be your business.</b></p>
+  <div class="fit reveal">
+    <div class="fit-col">
+      <h3>AI helps with</h3>
+      <ul>
+        <li><span><b>Cutting and captions</b></span></li>
+        <li><span><b>Motion graphics and statics</b></span></li>
+        <li><span><b>Voiceover</b></span></li>
+        <li><span><b>Generic illustrative b-roll</b> to fill gaps</span></li>
+      </ul>
+    </div>
+    <div class="fit-col fit-col--no">
+      <h3>AI never makes</h3>
+      <ul>
+        <li><span><b>Your name or logo</b> on generated imagery that passes as your real operation</span></li>
+        <li><span><b>Fake techs</b> presented as your team</span></li>
+        <li><span><b>Fake before and afters</b></span></li>
+        <li><span><b>Invented reviews</b></span></li>
+      </ul>
+    </div>
+  </div>
+  <p class="lede reveal">Illustrative is fine. Impersonating your business is not: it misrepresents you, and it gets ads rejected.</p>
+</section>
+
+<!-- THE PRICE · offer.js trial.trialFee and trial.minTestAdSpend.
+     check-offer.py allows the fee here only.
+     RISK REVERSAL: the work, not a result. offer.js
+     trial.refundIfNotDelivered and trial.resultGuaranteed. The
+     exclusions (client delays, Meta's ad review) are in the order form
+     and the Handbook; the clock starting at intake is on the page. -->
+<section id="price">
+  <div class="eyebrow reveal">The price</div>
+  <h2 class="title reveal">One payment.<br>Five <em>days.</em></h2>
+  <div class="price-band reveal">
+    <div>
+      <div class="price-label">The 5-day trial</div>
+      <div class="price-figure">$1,500</div>
+      <div class="price-terms">6 video ads, 4 statics, launched and reviewed. Flat. Not a deposit, not monthly.</div>
+    </div>
+    <div>
+      <p class="price-note"><b>Media spend is separate and yours.</b> You fund it and pay the platform directly. The minimum for the 5-day test is $500.</p>
+      <p class="price-note"><b>We do not guarantee leads in five days.</b> What we guarantee is the work: the edit gets delivered and the ads go live. If we do not deliver, you get your money back.</p>
+      <p class="price-note"><b>Keep going within 14 days of your review</b> and the $1,500 comes off your first month.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT IS FOR · swap the "not for" line per niche. -->
+<section id="fit">
+  <div class="eyebrow reveal">Who it is for</div>
+  <h2 class="title reveal">Proof before <em>commitment.</em></h2>
+  <div class="fit reveal">
+    <div class="fit-col">
+      <h3>This fits</h3>
+      <ul>
+        <li><span><b>Pest control operators</b> serving Los Angeles or Tampa</span></li>
+        <li><span><b>Recurring plans</b> to sell</span></li>
+        <li><span><b>Ad budget ready</b> to spend this week</span></li>
+        <li><span><b>Want to see the work</b> before signing up for anything monthly</span></li>
+      </ul>
+    </div>
+    <div class="fit-col fit-col--no">
+      <h3>This is not for</h3>
+      <ul>
+        <li><span>Anyone who needs a <b>guaranteed outcome</b> in five days</span></li>
+        <li><span>Anyone with <b>no ad budget</b></span></li>
+        <li><span>Anyone who needs us to <b>shoot.</b> That is a different engagement.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTIONS · written from the offer, not from buyers. Replace with
+     real objections once the first trials have run. -->
+<section id="questions">
+  <div class="eyebrow reveal">Questions</div>
+  <h2 class="title reveal">Before you <em>start.</em></h2>
+  <div class="qa-list reveal">
+    <details class="qa">
+      <summary class="qa-q">My footage is just phone clips.</summary>
+      <p class="qa-a"><b>That is what this is built for.</b> Phone footage of real trucks, real techs and real jobs beats a stock photo of a cockroach. If it does not meet the minimum, we run a one-hour remote session on our shot list.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">Do I need an ad account?</summary>
+      <p class="qa-a"><b>Yes, and we confirm access on day 1</b> before the clock starts. The ads run in your account and the spend goes from you to the platform, never through us.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">What happens after day 5?</summary>
+      <p class="qa-a"><b>You decide.</b> We show you what we made, the early numbers, and what the monthly version looks like. Nothing rolls into a retainer. If you stop there, the ads keep running in your account without us managing them, and we show you how to pause them before we hang up.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">Do I need a website or a CRM?</summary>
+      <p class="qa-a"><b>No.</b> The ads send homeowners straight to a message with you, or to a quote form inside Facebook and Instagram. <b>What matters is who answers and how fast,</b> so we ask that before we start and pick the one that fits how you work.</p>
+    </details>
+    <details class="qa">
+      <summary class="qa-q">Will this get me more calls?</summary>
+      <p class="qa-a"><b>We do not promise that, and nobody honest can in five days.</b> What we promise is the work: your ads edited, launched and reviewed with you, with real data from a real market.</p>
+    </details>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section id="close">
+  <h2 class="title reveal">Your footage.<br>Live in <em>five days.</em></h2>
+  <p class="lede reveal">$1,500, one time. Four slots a month. No shoot day, no retainer.</p>
+  <div class="close-ctas reveal">
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=pest-control-trial">Start my 5-day trial</a>
+    <p class="cta-note">Four trial slots a month. One crew.</p>
+  </div>
+  <div class="mail-row reveal">
+    <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+    <a href="tel:+18182668213">Call or text (818) 266-8213</a>
+  </div>
+</section>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="tel:+18182668213">(818) 266-8213</a>
+  <span>Los Angeles, CA · Tampa, FL · Available worldwide</span>
+  <a href="/privacy">Privacy</a>
+</footer>
+
+<script>
+  if (new URLSearchParams(location.search).get('from') === 'trial-unfunded') {
+    document.getElementById('unfunded').hidden = false;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+<script src="/assets/offer.js"></script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
+<script>
+  (function () {
+    if (!window.ntc) return;
+
+    ntc.track('ViewContent', {
+      content_name: document.title,
+      offer: 'trial_pest_control'
+    });
+
+    document.querySelectorAll('[data-cta]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        ntc.track('CTAClick', {
+          offer: 'trial_pest_control',
+          position: el.getAttribute('data-cta')
+        }, { once: false });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
