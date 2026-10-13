@@ -1306,6 +1306,22 @@
     <div class="bb-hero-copy">
       <div class="eyebrow reveal">Professional personal brands · Los Angeles</div>
       <h1 class="title reveal">Nobody buys<br>from <em>a logo.</em></h1>
+      <script>
+        /* Ad match: an ad can ask for its own headline with ?utm_content=.
+           Runs inline, before first paint, so there is no flash of the
+           default. Any other value keeps "Nobody buys from a logo.". The same table is on
+           /brand-builder and /brand-builder-pro. */
+        (function () {
+          var heads = {
+            bb17: 'Does your business<br>have <em>a face?</em>'
+          };
+          try {
+            var k = new URLSearchParams(location.search).get('utm_content');
+            var h = k && heads[k.toLowerCase()];
+            if (h) document.currentScript.previousElementSibling.innerHTML = h;
+          } catch (e) {}
+        })();
+      </script>
       <p class="hero-sub reveal"><b>They buy from the person behind it.</b> Longform, short-form and ads for founders whose name is the business. Produced to a film standard. Built to be used.</p>
       <div class="hero-ctas reveal">
         <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
