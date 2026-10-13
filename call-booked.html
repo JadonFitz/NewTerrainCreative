@@ -106,6 +106,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .offer-note b { color:var(--parchment); font-weight:400; }
 
+  /* Reserve before the call. Shown only for an offer whose OFFERS entry
+     names a reserve block (the 5-day trial). Secondary to the
+     confirmation above it: an outlined box, one button. */
+  .reserve { margin-top:40px; border:1px solid var(--gold-dim); padding:clamp(22px,3vw,30px); }
+  .reserve h2 {
+    font-family:var(--display); font-weight:300; font-size:clamp(26px,3.6vw,34px);
+    line-height:1.1; color:var(--parchment); margin-bottom:12px;
+  }
+  .reserve h2 em { font-style:italic; color:var(--gold); }
+  .reserve p { font-size:14.5px; line-height:1.75; max-width:54ch; }
+  .reserve p b { color:var(--parchment); font-weight:400; }
+  .reserve .btn {
+    display:inline-block; margin-top:20px; padding:15px 26px; background:var(--gold); color:var(--black);
+    font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; text-decoration:none;
+  }
+  .reserve .btn:hover { background:var(--parchment); }
+  .reserve .fine { margin-top:16px; font-size:12.5px; color:var(--muted); }
+
   /* Post-booking video, one per offer. Hidden until OFFERS below names a
      src for the offer on the URL, so the generic page never shows it. */
   .vsl { margin-top:34px; }
@@ -206,6 +224,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        reads correctly as the generic confirmation, so nothing depends on
        the round trip working. -->
   <p class="offer-note" id="offer-note" hidden></p>
+
+  <!-- RESERVE BEFORE THE CALL · filled by OFFERS in the script at the
+       foot of this page, and only for an offer that names a reserve
+       block. Hidden for every other offer and for the generic page.
+       iClosed only redirects here after a qualified booking, so this is
+       the one place a checkout link may appear. -->
+  <section class="reserve" id="reserve" hidden aria-label="Reserve before the call">
+    <h2 id="reserve-title"></h2>
+    <p id="reserve-body"></p>
+    <a class="btn" id="reserve-btn" href="#" rel="noopener"></a>
+    <p class="fine" id="reserve-fine"></p>
+  </section>
 
   <!-- ══════════════════════════════════════════════════════════════
        iCLOSED BOOKING CONFIRMATION · DISPLAY ONLY
@@ -326,7 +356,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         ] }
       ],
       after: '',
-      note: false
+      note: false,
+      reserve: {
+        title: 'Ready now? <em>Reserve your slot.</em>',
+        body:  'We take four trials a month. If you already know you want one, you can reserve it today: ' +
+               '<b>$1,500, one time.</b> Your call stays on the calendar and becomes your kickoff. ' +
+               'Not sure yet? Do nothing. Come to the call and decide there.',
+        label: 'Reserve my trial slot',
+        href:  'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+        fine:  'Same terms as the trial page. Ad spend is separate and paid to Meta. ' +
+               'If we do not deliver your edit and launch by day 5, the fee is refunded.'
+      }
     },
     'growth': {
       vsl: { src: 'https://player.vimeo.com/video/1233201171?badge=0&autopause=0&player_id=0&app_id=58479',
@@ -348,9 +388,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        it does. */
     'brand-builder':  { vsl: { src: '', poster: '', title: 'Brand Builder: watch before your Story Session' } },
     /* 5-DAY TRIAL: the iClosed 5-Day Trial Call redirects here with
-       ?offer=pest-control-trial. No video. No price and no promised
-       result here: the page confirms, says what to have handy, and
-       stops. Payment follows the call. */
+       ?offer=pest-control-trial. No video and no promised result here:
+       the page confirms and says what to have handy.
+
+       RESERVE (13 Oct 2026): a qualified booker who is ready can pay
+       before the call. The link is assets/offer.js
+       trial.stripePaymentLink, mirrored here because this page does not
+       load offer.js; scripts/check-offer.py fails if the two differ. The
+       fine print restates the guarantee already on the trial page and
+       promises nothing new. */
     'pest-control-trial': {
       h1: 'You\'re <em>booked.</em> Twenty minutes, then you decide.',
       lede: 'Your 5-Day Trial call with Jadon and Meghan is confirmed. <b>Check your inbox for the ' +
@@ -368,7 +414,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         ] }
       ],
       after: '',
-      note: false
+      note: false,
+      reserve: {
+        title: 'Ready now? <em>Reserve your slot.</em>',
+        body:  'We take four trials a month. If you already know you want one, you can reserve it today: ' +
+               '<b>$1,500, one time.</b> Your call stays on the calendar and becomes your kickoff. ' +
+               'Not sure yet? Do nothing. Come to the call and decide there.',
+        label: 'Reserve my trial slot',
+        href:  'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+        fine:  'Same terms as the trial page. Ad spend is separate and paid to Meta. ' +
+               'If we do not deliver your edit and launch by day 5, the fee is refunded.'
+      }
     },
     /* SIGNATURE VSL: replace src with final video */
     'signature':      { vsl: { src: '', poster: '', title: 'Signature Work: what happens after you book' } }
@@ -404,6 +460,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     if (after && block.after === '') after.hidden = true;
     else set('main .after', block.after);
     if (note && block.note === false) note.hidden = true;
+
+    // Reserve before the call: only when the offer names every part.
+    var rs = block.reserve, box = document.getElementById('reserve');
+    if (box && rs && rs.href && rs.label) {
+      document.getElementById('reserve-title').innerHTML = rs.title;
+      document.getElementById('reserve-body').innerHTML = rs.body;
+      var rb = document.getElementById('reserve-btn');
+      rb.textContent = rs.label;
+      rb.href = rs.href;
+      document.getElementById('reserve-fine').textContent = rs.fine || '';
+      box.hidden = false;
+    }
 
     var vsl = document.getElementById('vsl');
     var frame = document.getElementById('vsl-frame');

@@ -336,13 +336,19 @@
       live: true,
       /* Wired 12 Oct 2026 in ntc-speed-to-lead. The button books a call,
          not checkout: /strategy-call?offer=pest-control-trial loads this
-         iClosed event, and payment follows the call. The Stripe link is
-         recorded for reference only and never appears on a page: the
-         agent sends it after the call. Its redirect lands on
+         iClosed event. The Stripe link appears on ONE page only,
+         /call-booked?offer=pest-control-trial, which iClosed shows after
+         a qualified booking (13 Oct 2026, reserveOnConfirmation below):
+         someone who is ready can reserve before the call. Everyone else
+         gets it from the agent after the call. It never appears on the
+         trial page or /strategy-call, which anyone can reach unqualified.
+         scripts/check-offer.py fails if the link on /call-booked differs
+         from this one or turns up on any other page. Its redirect lands on
          /welcome?plan=trial, and payments carry offer_key
          trial_pest_control. */
       iclosedUrl: 'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
       stripePaymentLink: 'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+      reserveOnConfirmation: true,
       offerKey: 'trial_pest_control',
       welcomePlan: 'trial',
       days: 5,

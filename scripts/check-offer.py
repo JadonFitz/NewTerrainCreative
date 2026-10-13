@@ -136,6 +136,21 @@ PAGE_EXTRA['production-inquiry.html'] = (
 # caught by the figure pattern below.
 m_trial = re.search(r'trialFee:\s*(\d+)', offer)
 PAGE_EXTRA['pest-control-trial.html'] = {fmt(int(m_trial.group(1)))} if m_trial else set()
+# 13 Oct 2026: /call-booked may also name the fee, in the reserve block a
+# qualified trial booker sees (assets/offer.js trial.reserveOnConfirmation).
+PAGE_EXTRA['call-booked.html'] = {fmt(int(m_trial.group(1)))} if m_trial else set()
+
+# The trial's Stripe link may appear on /call-booked only, and must be
+# the one declared in assets/offer.js.
+_stripe = re.search(r"trial:\s*\{.*?stripePaymentLink:\s*'([^']+)'", offer, re.S)
+_trial_link = _stripe.group(1) if _stripe else None
+for _f in sorted(root.glob('*.html')):
+    _links = set(re.findall(r'https://buy\.stripe\.com/[A-Za-z0-9]+', _f.read_text(encoding='utf-8')))
+    if _f.name == 'call-booked.html':
+        if _links and _links != {_trial_link}:
+            mirror_fail.append('call-booked.html carries a Stripe link that is not offer.js trial.stripePaymentLink')
+    elif _trial_link in _links:
+        mirror_fail.append(f'{_f.name} links the trial checkout; only /call-booked may')
 
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))
