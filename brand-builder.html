@@ -1298,6 +1298,22 @@
     <div class="bb-hero-copy">
       <div class="eyebrow reveal">Award-winning filmmakers · For Los Angeles founders</div>
       <h1 class="title reveal">Is your life<br>a <em>movie?</em></h1>
+      <script>
+        /* Ad match: an ad can ask for its own headline with ?utm_content=.
+           Runs inline, before first paint, so there is no flash of the
+           default. Any other value keeps "Is your life a movie?". The same table is on
+           /brand-builder and /brand-builder-pro. */
+        (function () {
+          var heads = {
+            bb17: 'Does your business<br>have <em>a face?</em>'
+          };
+          try {
+            var k = new URLSearchParams(location.search).get('utm_content');
+            var h = k && heads[k.toLowerCase()];
+            if (h) document.currentScript.previousElementSibling.innerHTML = h;
+          } catch (e) {}
+        })();
+      </script>
       <p class="hero-sub reveal">We turn founders into personal brands people actually follow. <b>Shot like film, built to grow the business.</b></p>
       <div class="hero-ctas reveal">
         <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
