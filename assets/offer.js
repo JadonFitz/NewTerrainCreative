@@ -309,11 +309,9 @@
        Los Angeles and Tampa first; the fee credited to a first Anchor
        month started within 14 days; 4 slots a month.
 
-       NOT LIVE. `live` stays false until the iClosed trial event exists
-       and the button points at it, and the Handbook entry, the Stripe
-       link and the order form exist in ntc-speed-to-lead. Until then the
-       page is noindexed, left out of the sitemap and linked from nowhere,
-       and no ad points at it.
+       LIVE 12 Oct 2026, once the iClosed trial event, the Stripe link
+       and the order form existed in ntc-speed-to-lead. Indexed and in
+       the sitemap, still linked from no other page: pest control only.
 
        Positioned as a pilot program, not a deal: structured, limited,
        a professional intake. The trial is the audition for the Anchor
@@ -335,7 +333,7 @@
       niche: 'Pest control',
       geography: ['Los Angeles', 'Tampa'],
       termsConfirmed: true,
-      live: false,
+      live: true,
       /* Wired 12 Oct 2026 in ntc-speed-to-lead. The button books a call,
          not checkout: /strategy-call?offer=pest-control-trial loads this
          iClosed event, and payment follows the call. The Stripe link is

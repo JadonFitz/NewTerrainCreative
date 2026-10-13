@@ -284,9 +284,11 @@ for page in PARKED:
 # nothing on the site should link it and nothing should index it.
 # /production-inquiry is reached only by the Brand Builder application's
 # budget redirect in iClosed.
-# /pest-control-trial stays unlisted until it goes live: assets/offer.js
-# trial.live, which waits on the iClosed trial event.
+# /pest-control-trial is live (assets/offer.js trial.live) and in the
+# sitemap, but no other page links it: it is offered to pest control
+# only, so it stays on the link check and off the sitemap check.
 UNLISTED = ['call-booked', 'owner', 'production-inquiry', 'pest-control-trial']
+IN_SITEMAP_OK = {'pest-control-trial'}
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
     # Strip comments first. The sitemap documents which pages are left
@@ -294,7 +296,8 @@ if sitemap.exists():
     # file exists to exclude and fails on correct content.
     body = re.sub(r'<!--[\s\S]*?-->', '', sitemap.read_text(encoding='utf-8'))
     leaked = [u for u in UNLISTED + PARKED + ['strategy-call', 'booked']
-              if f'/{u}<' in body or f'/{u}/' in body]
+              if u not in IN_SITEMAP_OK
+              and (f'/{u}<' in body or f'/{u}/' in body)]
     bad('sitemap.xml lists unlisted page(s): ' + ', '.join(leaked)) if leaked \
         else ok('sitemap.xml excludes every unlisted page')
 else:
