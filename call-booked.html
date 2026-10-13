@@ -278,7 +278,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      so a redirect set to either one shows the right line. */
   var ALIAS = { 'ad-sprint': 'sprint', 'production-media': 'growth',
                 'paid_retainer': 'growth', 'founding_three': 'founding-three',
-                'signature-project': 'signature', 'signature_work': 'signature' };
+                'signature-project': 'signature', 'signature_work': 'signature',
+                'trial_pest_control': 'pest-control-trial', 'trial': 'pest-control-trial' };
 
   var params = new URLSearchParams(window.location.search);
   var offer = (params.get('offer') || '').trim().toLowerCase();
@@ -346,6 +347,29 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        exists. Paste the player URL into src, and add an intro line, when
        it does. */
     'brand-builder':  { vsl: { src: '', poster: '', title: 'Brand Builder: watch before your Story Session' } },
+    /* 5-DAY TRIAL: the iClosed 5-Day Trial Call redirects here with
+       ?offer=pest-control-trial. No video. No price and no promised
+       result here: the page confirms, says what to have handy, and
+       stops. Payment follows the call. */
+    'pest-control-trial': {
+      h1: 'You\'re <em>booked.</em> Twenty minutes, then you decide.',
+      lede: 'Your 5-Day Trial call with Jadon and Meghan is confirmed. <b>Check your inbox for the ' +
+            'calendar invitation and the video link.</b> If it has not arrived in a few minutes, look in spam.',
+      sections: [
+        { title: 'Have these handy', items: [
+          'Your footage: 10 minutes of video or 20 photos. Trucks, techs on jobs, before and afters. Phone footage is fine.',
+          'Access to your Meta ad account, or the name of whoever has it.',
+          'Your offer: service area, recurring plans and price point.'
+        ] },
+        { title: 'On the call', items: [
+          'We check your footage against the minimum.',
+          'We work out whether your ads should send homeowners to a message or a quote form, based on who answers and how fast.',
+          'If the trial is not the right start, we say so.'
+        ] }
+      ],
+      after: '',
+      note: false
+    },
     /* SIGNATURE VSL: replace src with final video */
     'signature':      { vsl: { src: '', poster: '', title: 'Signature Work: what happens after you book' } }
   };
@@ -572,7 +596,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                        'sprint': 'ad_sprint',
                        'signature': 'signature_work',
                        // The Story Session, same name the webhook files it under.
-                       'brand-builder': 'brand_builder' };
+                       'brand-builder': 'brand_builder',
+                       // The 5-Day Trial Call, same name the webhook files it under.
+                       'pest-control-trial': 'trial_pest_control' };
 
       ntc.track('Schedule', {
         offer: OFFER_ID[offer] || 'paid_retainer',

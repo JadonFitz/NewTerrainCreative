@@ -251,7 +251,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <a class="btn btn--solid" id="kickoffLink" href="#" target="_blank" rel="noopener">Pick a time &#8599;</a>
       </div>
     </div>
-    <p style="margin-top:34px">Three emails are on their way to the address you checked out with, and should already be there. The welcome email carries the same form links and the link to book your call. Check spam if one is missing.</p>
+    <p style="margin-top:34px" id="afterFirst">Three emails are on their way to the address you checked out with, and should already be there. The welcome email carries the same form links and the link to book your call. Check spam if one is missing.</p>
     <div class="next">
       <div class="next-card">
         <div class="next-when">In your inbox now</div>
@@ -261,7 +261,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div class="next-card">
         <div class="next-when">In your inbox now</div>
         <h3>The welcome packet</h3>
-        <p>Who's who, your first week, how shoot days and revisions work, and what we'll ask access to.</p>
+        <p id="packetText">Who's who, your first week, how shoot days and revisions work, and what we'll ask access to.</p>
         <a class="btn" id="packetLink" href="#" target="_blank" rel="noopener">Open the packet &#8599;</a>
       </div>
       <div class="next-card">
@@ -365,6 +365,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0',
     intake: 'https://docs.google.com/forms/d/e/1FAIpQLSc9olRsWj6QBLaG5430pFgxAGKeKgmIzuaWeI0rTDDBJQLcRw/viewform',
     kickoff: 'https://calendar.app.google/iz1Zwnv9WcLYQg6p8',
+    /* The 5-Day Trial's intake call: the same link as Railway's
+       TRIAL_INTAKE_BOOKING_LINK in ntc-speed-to-lead. Not the kickoff
+       calendar, whose "Kickoff" title books a shoot card. Empty hides the
+       booking step on /welcome?plan=trial, and the welcome email still
+       carries the link. */
+    trialIntake: '',
     crm: 'https://docs.google.com/forms/d/e/1FAIpQLSemCWXxyc1SI0G8fyCm1f9BHG2vbDAgvTjDfmPJWN_96Uo9ow/viewform'
   };
 
@@ -422,6 +428,34 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     ['On delivery', 'Yours to run',
       'The playbook and your 90-day gameplan land with the files. Hire us to run it, or run it without us.']
   ];
+
+  /* The 5-Day Trial (12 Oct 2026, pest control). No video, no intake
+     form, no CRM questionnaire: the same steps as the trial welcome email
+     (ntc-speed-to-lead migration 051), then the five days as
+     /pest-control-trial shows them. Scope lines come from
+     NTC_OFFER.trial, so this page cannot promise more than the page. */
+  var trialSteps = function (t) {
+    var m = t.intakeMinimum || {};
+    var v = t.videoAds || 6, st = t.statics || 4;
+    return [
+      ['Step 1', 'Book your intake call',
+        'It\u2019s short: we confirm where your ads will send homeowners, start your five days, and book your day-5 review.'],
+      ['Step 2', 'Upload your footage',
+        (m.videoMinutes || 10) + ' minutes of video or ' + (m.photos || 20) + ' photos is enough: trucks, techs on jobs, before and afters. Phone footage is fine. The upload link is in your welcome email.'],
+      ['Step 3', 'Reply with your offer',
+        'Reply to the welcome email with your service area, your recurring plans and your price point, so the ads sell what you actually sell.'],
+      ['Step 4', 'Add us in Meta Business Manager',
+        'Add New Terrain Creative as a partner on your ad account. The ads run in your account and the spend goes from you to Meta, never through us.'],
+      ['Day 1', 'Intake',
+        'Your footage and your offer are in and we confirm access to your ad account. The five days start once both are in.'],
+      ['Days 2 and 3', 'Edit',
+        'We cut, caption and build ' + v + ' video ads and ' + st + ' statics from your footage. You see the cuts as they land.'],
+      ['Day 4', 'Launch',
+        'Your first ads go live. Homeowners message you or fill in a quote form right inside Facebook and Instagram. No website needed.'],
+      ['Day 5', 'Review',
+        'We walk you through what we made and the early numbers, and what the monthly version looks like. Then you decide.']
+    ];
+  };
 
   var sprintSteps = [
     ['Days 1 to 3', 'The Angle Call',
@@ -522,6 +556,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                intro: 'One month of Brand Builder production, bought on its own. Here is how the month runs.',
                steps: pilotSteps, incl: p.scope || [], crm: true, video: 'brand-builder' };
     },
+    'trial': function () {
+      var t = O.trial || {};
+      return { name: 'Your 5-Day Trial', label: '5-Day Trial',
+               intro: 'Here\u2019s what your five days look like. The five days start once your footage and ad account access are in.',
+               steps: trialSteps(t),
+               incl: [(t.videoAds || 6) + ' video ads and ' + (t.statics || 4) + ' statics, cut from your footage',
+                      'Launched on Meta in your own ad account',
+                      'A day-5 review of what we made and the early numbers'],
+               note: '<b>Media spend is yours.</b> You fund it and pay Meta directly. The minimum for the 5-day test is $' + (t.minTestAdSpend || 500) + '.',
+               call: 'intake call', callUrl: WELCOME.trialIntake, noIntakeForm: true };
+    },
     'eight': function () {
       var p = prod.adSprintEight;
       return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
@@ -548,7 +593,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
     'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
-    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen'
+    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen',
+    '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };
 
   var q = new URLSearchParams(location.search);
@@ -617,6 +663,30 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     $('firstWhen').textContent = 'Do these first · two forms, about 10 minutes each';
   }
 
+  /* The trial has no intake form: its intake is the call, the footage
+     and a reply with the offer. Its call is the trial intake call, never
+     the kickoff calendar; with no link set the step hides and the
+     welcome email's link stands. */
+  if (plan && plan.noIntakeForm) {
+    $('intakeLink').closest('.first-row').hidden = true;
+    $('crmRow').hidden = true;
+    crm = false;
+    // No shoot day in the trial, so the packet card does not promise one.
+    $('packetText').textContent = 'Who\u2019s who, how we work together, and what we\u2019ll ask access to.';
+    $('afterFirst').textContent = 'Three emails are on their way to the address you checked out with, and should already be there. ' +
+      'The welcome email carries the link to book your intake call and the footage upload. Check spam if one is missing.';
+    var callUrl = plan.callUrl || '';
+    if (callUrl) {
+      $('kickoffLink').href = callUrl;
+      $('kickoffName').textContent = plan.call;
+      $('kickoffN').textContent = '';
+      $('kickoffText').textContent = 'It\u2019s short: we confirm where your ads will send homeowners, start your five days, and book your day-5 review.';
+      $('firstWhen').textContent = 'Do this first · book your intake call';
+      $('kickoffRow').hidden = false;
+    } else {
+      $('firstWhen').closest('.first').hidden = true;
+    }
+  } else
   // The first call, booked after the forms so we have read them by then.
   if (WELCOME.kickoff) {
     $('kickoffLink').href = WELCOME.kickoff;

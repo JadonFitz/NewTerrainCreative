@@ -55,6 +55,9 @@ const ALLOWED_FUNNELS = new Set([
   // written by /api/iclosed-webhook; browser events from either page
   // carry the same name.
   'brand_builder',
+  // /pest-control-trial. The 5-Day Trial Call booking is written by
+  // /api/iclosed-webhook.
+  'trial_pest_control',
   // Written server side by /api/project. Listed here too so a browser
   // event fired from /project is not silently rejected.
   'signature_work',

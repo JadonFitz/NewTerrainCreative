@@ -336,6 +336,17 @@
       geography: ['Los Angeles', 'Tampa'],
       termsConfirmed: true,
       live: false,
+      /* Wired 12 Oct 2026 in ntc-speed-to-lead. The button books a call,
+         not checkout: /strategy-call?offer=pest-control-trial loads this
+         iClosed event, and payment follows the call. The Stripe link is
+         recorded for reference only and never appears on a page: the
+         agent sends it after the call. Its redirect lands on
+         /welcome?plan=trial, and payments carry offer_key
+         trial_pest_control. */
+      iclosedUrl: 'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
+      stripePaymentLink: 'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+      offerKey: 'trial_pest_control',
+      welcomePlan: 'trial',
       days: 5,
       trialFee: 1500,
       oneTime: true,
@@ -583,8 +594,7 @@
       'ad-sprint':        'ad_sprint',
       // /brand-builder. One CTA, the Story Session, so one identifier.
       'brand-builder':    'brand_builder',
-      // /pest-control-trial. Falls through to the Growth calendar on
-      // /strategy-call until its own iClosed event exists.
+      // /pest-control-trial. Its own iClosed event, the 5-Day Trial Call.
       'pest-control-trial': 'trial_pest_control'
     },
 

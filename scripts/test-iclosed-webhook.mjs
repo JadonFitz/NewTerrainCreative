@@ -157,6 +157,19 @@ res = await request(booking({
 made = calls.slice(n);
 check('a renamed event still files by its slug', supa(made)[0]?.body?.funnel === 'brand_builder');
 
+console.info('\n\x1b[1mTHE 5-DAY TRIAL IS ITS OWN OFFER\x1b[0m');
+// "5-Day Trial Call" names neither growth nor strategy, and fell through
+// to paid_retainer before it had its own case.
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_trialPest01', uuid: 2661142 },
+  event_type: { name: '5-Day Trial Call', slug: 'pest-control-trial' }
+}));
+made = calls.slice(n);
+check('a 5-Day Trial Call booking files under trial_pest_control',
+  supa(made)[0]?.body?.funnel === 'trial_pest_control' && supa(made)[0]?.body?.metadata?.offer === 'trial_pest_control');
+check('and tells Meta it was the trial', meta(made)[0]?.body.data[0].custom_data?.offer === 'trial_pest_control');
+
 console.info('\n\x1b[1mATTRIBUTION · THE CLICK, NOT JUST THE PERSON\x1b[0m');
 // Regression: until 10 Oct 2026 the server Schedule carried only hashed
 // contact details, so Meta could match the booker but not the click, and

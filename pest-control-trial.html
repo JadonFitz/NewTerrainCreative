@@ -154,6 +154,18 @@
     max-width: 560px;
   }
   .hero-ctas { margin-top: 44px; }
+  /* ?from=trial-unfunded: iClosed sends people back here when they
+     answer that they are not ready to fund the test. */
+  .unfunded {
+    margin-bottom: 48px;
+    padding: 18px 22px;
+    border-left: 2px solid var(--gold);
+    max-width: 620px;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--soft);
+  }
+  .unfunded b { color: var(--parchment); font-weight: 400; }
 
   /* ── THE FIVE DAYS ── */
   .day-rows { margin-top: 60px; border-top: 1px solid var(--line); }
@@ -321,6 +333,9 @@
 
 <!-- HERO -->
 <section id="hero">
+  <!-- Shown only on ?from=trial-unfunded, the 5-Day Trial Call's one
+       disqualifier. Kind, short, and no other offer pitched. -->
+  <p class="unfunded" id="unfunded" hidden><b>Thanks for being straight with us.</b> The trial needs a $500 ad budget for the test, paid to Meta directly, never to us. It is what puts your ads in front of real homeowners in five days. When it is ready, come back and book your call. This page will be here.</p>
   <div class="eyebrow reveal">For pest control operators in Los Angeles and Tampa</div>
   <h1 class="title reveal">Pest control ads that stop the <em>scroll.</em><br>From footage you already have.</h1>
   <p class="hero-sub reveal">Send us your truck, your techs, your jobs. <b>In 5 days they are ads, live and spending.</b> A five-day pilot of working with us. No shoot day, no retainer.</p>
@@ -514,6 +529,9 @@
 </footer>
 
 <script>
+  if (new URLSearchParams(location.search).get('from') === 'trial-unfunded') {
+    document.getElementById('unfunded').hidden = false;
+  }
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });

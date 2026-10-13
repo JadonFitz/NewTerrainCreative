@@ -152,6 +152,9 @@ function offerFrom(d) {
   if (key.includes('sprint')) return 'ad_sprint';
   if (key.includes('signature')) return 'signature_work';
   if (key.includes('brand') || key.includes('story session')) return 'brand_builder';
+  // The 5-Day Trial Call (slug pest-control-trial). Before the growth
+  // match: its name says neither, so it fell through to paid_retainer.
+  if (key.includes('trial')) return 'trial_pest_control';
   if (key.includes('growth') || key.includes('strategy')) return 'paid_retainer';
   return 'paid_retainer';
 }
