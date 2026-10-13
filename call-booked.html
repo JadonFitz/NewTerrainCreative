@@ -649,6 +649,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        it does not, turn one of them off rather than counting both. */
     setTimeout(function () {
       if (booking.hidden) return;
+      // A rebooking from /reschedule (iClosed's Rescheduled Call redirects
+      // here with ?offer=reschedule) is the same lead as the call they
+      // missed, which was already counted. Never a second Schedule.
+      if (offer === 'reschedule') return;
       if (getComputedStyle(widget).display === 'none') return;
       if (!window.ntc) return;
 

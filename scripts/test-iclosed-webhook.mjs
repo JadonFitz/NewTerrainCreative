@@ -240,6 +240,18 @@ made = calls.slice(n);
 check('a database failure still answers 200', res.statusCode === 200 && res.payload.stored === false);
 check('and does not cost the Meta conversion', meta(made).length === 1 && res.payload.sent === true);
 
+supabaseStatus = 201;
+console.info('\n\x1b[1mREBOOKING · RESCHEDULED CALL\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_rebook1234' }, event_type: { name: 'Rescheduled Call' } }));
+made = calls.slice(n);
+check('a rebooking answers 200', res.statusCode === 200 && res.payload.noted === 'rebooking');
+check('it stores no second row', supa(made).length === 0);
+check('it sends Meta no second Schedule', meta(made).length === 0);
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_rebook5678' }, event_type: { name: 'Renamed', slug: 'rescheduled-call' } }));
+check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
+
 // The public endpoint must still refuse the name this handler now writes.
 const trackSource = await (await import('node:fs/promises')).readFile(
   new URL('../api/track.js', import.meta.url), 'utf8');
