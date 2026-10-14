@@ -221,7 +221,7 @@
         {
           name: 'Brand Builder',
           label: 'Flagship partnership',
-          scope: 'Our largest production allocation, with organic posting, paid media and the conversion setup run for you.',
+          scope: 'Our largest production allocation, in Studio or Field, with organic posting, paid media and the conversion setup run for you.',
           /* 8 Oct 2026: Brand Builder is the one tier that runs the
              client's own channels. "Organic social posting" here means
              exactly that, and it is a Brand Builder line only: the other
@@ -229,8 +229,8 @@
           includes: [
             'Our largest monthly production allocation',
             'Our highest monthly volume across longform, short-form and ads',
-            'Longform: founder interviews, YouTube episodes, podcasts and case-study pieces',
-            'Short-form cut from every episode, and the ads built from the strongest',
+            'Longform in one of two formats, chosen at kickoff: Studio (sit-down and podcast episodes, recorded in batches) or Field (hands-on, vlog-style episodes shot where the work happens, plus sit-downs)',
+            'Short-form cut from every episode, hero-ad cutdowns and promotional ad content, and the ads built from the strongest',
             'Two Signature Hero Ads each month, each its own directed shoot within the included shoot days',
             'Organic social posting: we run the channels the content goes out on',
             'Everything in Growth Partner, including paid media management',
@@ -374,6 +374,32 @@
          figure off every page. The pages mention Monthly in one line
          under the series, with no price. Scope matches the Pilot of the
          same format, every month. */
+      /* 13 Oct 2026, Jadon: Brand Builder: Premium (offer key
+         brand_builder, the series with paid media) in two formats, the
+         client choosing at kickoff. Replaces 10 episodes, 48 clips and 2
+         to 4 days. Counts live here for the /welcome page, which a client
+         sees after paying. The public pages keep the series unpriced and
+         uncounted, like every retainer: they read publicGuideTiers
+         'Brand Builder', not this object. Existing signed series clients
+         keep their signed scope. */
+      premium: {
+        heroAdsPerMonth: 2,
+        studio: {
+          name: 'Brand Builder: Premium · Studio',
+          longformEpisodes: 8,
+          shortFormClips: 40,
+          shootDaysMax: 3,
+          summary: '8 sit-down or podcast episodes a month (up to 30 minutes), 40 short-form clips (episode cuts, hero-ad cutdowns and promotional ad content), 2 Signature Hero Ads, up to 3 shoot days (2 recording days and a hero ad day)'
+        },
+        field: {
+          name: 'Brand Builder: Premium · Field',
+          longformEpisodes: 4,
+          vlogEpisodes: 2,
+          shortFormClips: 40,
+          shootDaysMax: 4,
+          summary: '4 episodes a month (2 vlog-style episodes of 15 to 25 minutes and 2 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 2 Signature Hero Ads, up to 4 shoot days (2 vlog days, a sit-down day and a hero ad day)'
+        }
+      },
       monthlyPlans: {
         noPaidMedia: true,
         minimumMonths: 3,
