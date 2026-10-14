@@ -282,7 +282,7 @@
          Anyone who bought the Pilot before 13 Oct keeps what they
          signed. */
       pilot: {
-        name: 'The Studio Pilot',
+        name: 'Brand Builder Studio Pilot',
         format: 'studio',
         pilotFee: 7500,
         oneTime: true,
@@ -330,7 +330,7 @@
          yet. Nothing on the site links checkout for either Pilot, and
          nothing should: the offer is made on the call. */
       fieldPilot: {
-        name: 'The Field Pilot',
+        name: 'Brand Builder Field Pilot',
         format: 'field',
         fieldPilotFee: 8500,
         oneTime: true,
@@ -359,7 +359,8 @@
         organicPostingIncluded: true,
         resultGuaranteed: false
       },
-      /* 13 Oct 2026, Jadon: Brand Builder Monthly, the Pilot as a
+      /* 13 Oct 2026, Jadon: Brand Builder: Studio and Brand Builder: Field
+         (offer keys still say monthly; client-facing names never do), the Pilot as a
          recurring plan with no paid media. Offer keys
          brand_builder_monthly_studio and brand_builder_monthly_field.
          The one production-only plan: no paid media management, no
@@ -380,7 +381,7 @@
         gameplanIncluded: false,
         heroAdEveryMonths: 3,
         studio: {
-          name: 'Brand Builder Monthly · Studio',
+          name: 'Brand Builder: Studio',
           format: 'studio',
           longformEpisodes: 6,
           shortFormClips: 24,
@@ -394,7 +395,7 @@
           ]
         },
         field: {
-          name: 'Brand Builder Monthly · Field',
+          name: 'Brand Builder: Field',
           format: 'field',
           longformEpisodes: 3,
           vlogEpisodesMax: 2,
