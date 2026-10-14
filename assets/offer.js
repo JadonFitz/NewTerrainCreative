@@ -340,12 +340,12 @@
         vlogEpisodesMax: 2,
         vlogMinutes: [15, 25],
         episodeMinutesMax: 30,
-        shortFormClips: 12,
-        handFinishedClips: 3,
+        shortFormClips: 30,
+        handFinishedClips: 6,
         shootDaysMax: 3,
         scope: [
           '4 episodes, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
-          '12 short-form clips cut from the episodes, 3 of them finished by hand',
+          '30 short-form clips, 6 of them finished by hand: cut from the episodes and sit-downs, plus highlight edits from the shoot days and events',
           'One Signature Hero Ad, its own directed shoot',
           'Up to 3 shoot days: the hero ad day and up to 2 episode days',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
@@ -353,6 +353,10 @@
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
         quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
+        /* Extra shoot days, event days and edits are sold at set rates
+           from the add-on card in the Field Pilot order form
+           (ntc-speed-to-lead). No add-on price is published here. */
+        addOnsAtSetRates: true,
         gameplanIsClientsToKeep: true,
         heroAdIncluded: true,
         organicPostingIncluded: true,

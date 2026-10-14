@@ -423,7 +423,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      their counts from the offer object. */
   var pilotSteps = function (p, field) {
     var eps = p.longformEpisodes || (field ? 4 : 6);
-    var clips = p.shortFormClips || (field ? 12 : 24);
+    var clips = p.shortFormClips || (field ? 30 : 24);
     var days = p.shootDaysMax || (field ? 3 : 2);
     return [
       ['Day 0 to 1', 'Your two forms',
@@ -580,7 +580,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'brand-builder-pilot-field': function () {
       var p = (O.brandBuilder && O.brandBuilder.fieldPilot) || {};
       return { name: 'The Field Pilot', label: 'Brand Builder · Field Pilot',
-               intro: 'One month of Brand Builder production, shot where your work happens and bought on its own. Here is how the month runs.',
+               intro: 'One month of Brand Builder production, shot where your work happens and bought on its own. Here is how the month runs. Extra shoot days, event days and edits are available at set rates, agreed in writing first.',
                steps: pilotSteps(p, true), incl: p.scope || [], crm: true, video: 'brand-builder' };
     },
     'trial': function () {
