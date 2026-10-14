@@ -42,6 +42,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     Brand Builder    /welcome?plan=brand-builder&session_id={CHECKOUT_SESSION_ID}
     Studio Pilot     /welcome?plan=brand-builder-pilot&session_id={CHECKOUT_SESSION_ID}
     Field Pilot      /welcome?plan=brand-builder-pilot-field&session_id={CHECKOUT_SESSION_ID}
+    BB Monthly Studio  /welcome?plan=brand-builder-monthly-studio&session_id={CHECKOUT_SESSION_ID}
+    BB Monthly Field   /welcome?plan=brand-builder-monthly-field&session_id={CHECKOUT_SESSION_ID}
     The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
     The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
     5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
@@ -577,6 +579,27 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                intro: 'One month of Brand Builder production, recorded in the studio and bought on its own. Here is how the month runs.',
                steps: pilotSteps(p, false), incl: p.scope || [], crm: true, video: 'brand-builder' };
     },
+    /* Brand Builder Monthly (13 Oct 2026): the Pilot's production every
+       month with no paid media. Retainer-style welcome with role-based
+       access to the channels we post to, no ad account, no funnel or CRM
+       questionnaire and no gameplan. Scope from
+       NTC_OFFER.brandBuilder.monthlyPlans, which carries no price. */
+    'brand-builder-monthly-studio': function () {
+      var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
+      var p = m.studio || {};
+      return { name: 'Brand Builder Monthly', label: 'Brand Builder · Monthly · Studio',
+               intro: 'Sit-down episodes and the clips around them, recorded in the studio and posted on your channels, every month. Here is how the first weeks run.',
+               steps: retainerSteps(false, false), incl: p.scope || [], video: 'brand-builder' };
+    },
+    'brand-builder-monthly-field': function () {
+      var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
+      var p = m.field || {};
+      return { name: 'Brand Builder Monthly', label: 'Brand Builder · Monthly · Field',
+               intro: 'Episodes shot where your work happens, one a week, with the clips around them, posted on your channels every month. Here is how the first weeks run.',
+               steps: retainerSteps(false, false), incl: p.scope || [],
+               note: '<b>Need more in a month?</b> Extra shoot days, event days and edits are available at set rates, agreed in writing first.',
+               video: 'brand-builder' };
+    },
     'brand-builder-pilot-field': function () {
       var p = (O.brandBuilder && O.brandBuilder.fieldPilot) || {};
       return { name: 'The Field Pilot', label: 'Brand Builder · Field Pilot',
@@ -619,7 +642,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
     'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen',
     '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };

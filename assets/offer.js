@@ -356,6 +356,57 @@
         heroAdIncluded: true,
         organicPostingIncluded: true,
         resultGuaranteed: false
+      },
+      /* 13 Oct 2026, Jadon: Brand Builder Monthly, the Pilot as a
+         recurring plan with no paid media. Offer keys
+         brand_builder_monthly_studio and brand_builder_monthly_field.
+         The one production-only plan: no paid media management, no
+         funnel, tracking, CRM or automation work, and no 90-day gameplan
+         (that is the Pilot's). Adding paid media means moving up to the
+         Brand Builder series at its standard fee, never adding ads here.
+
+         NO PRICE IS DECLARED HERE, on purpose. Monthly is a retainer and
+         retainer pricing is withdrawn from the site, so this object
+         carries scope only and scripts/check-offer.py keeps any monthly
+         figure off every page. The pages mention Monthly in one line
+         under the series, with no price. Scope matches the Pilot of the
+         same format, every month. */
+      monthlyPlans: {
+        noPaidMedia: true,
+        minimumMonths: 3,
+        noticeDays: 30,
+        gameplanIncluded: false,
+        studio: {
+          name: 'Brand Builder Monthly · Studio',
+          format: 'studio',
+          longformEpisodes: 6,
+          shortFormClips: 24,
+          shootDaysMax: 2,
+          scope: [
+            '6 sit-down or podcast-style episodes a month, up to 30 minutes each, recorded in batches across two days',
+            '24 short-form clips a month: the best moments from every episode, plus promotional ad content',
+            'One Signature Hero Ad a month, its own directed shoot',
+            'Up to 2 shoot days a month: the episodes are recorded across both, and the hero ad is shot within them',
+            'Organic posting on your own channels every month'
+          ]
+        },
+        field: {
+          name: 'Brand Builder Monthly · Field',
+          format: 'field',
+          longformEpisodes: 4,
+          vlogEpisodesMax: 2,
+          shortFormClips: 30,
+          shootDaysMax: 3,
+          scope: [
+            '4 episodes a month, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
+            '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
+            'One Signature Hero Ad a month, its own directed shoot',
+            'Up to 3 shoot days a month: the hero ad day and up to 2 episode days',
+            'Organic posting on your own channels every month'
+          ],
+          quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
+          addOnsAtSetRates: true
+        }
       }
     },
 
