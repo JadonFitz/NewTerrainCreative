@@ -377,6 +377,7 @@
         minimumMonths: 3,
         noticeDays: 30,
         gameplanIncluded: false,
+        heroAdEveryMonths: 3,
         studio: {
           name: 'Brand Builder Monthly · Studio',
           format: 'studio',
@@ -386,8 +387,8 @@
           scope: [
             '6 sit-down or podcast-style episodes a month, up to 30 minutes each, recorded in batches across two days',
             '24 short-form clips a month: the best moments from every episode, plus promotional ad content',
-            'One Signature Hero Ad a month, its own directed shoot',
-            'Up to 2 shoot days a month: the episodes are recorded across both, and the hero ad is shot within them',
+            'One Signature Hero Ad every three months, its own directed shoot',
+            'Up to 2 shoot days a month for the episodes, recorded across both, plus the hero ad day in hero months',
             'Organic posting on your own channels every month'
           ]
         },
@@ -397,12 +398,12 @@
           longformEpisodes: 4,
           vlogEpisodesMax: 2,
           shortFormClips: 30,
-          shootDaysMax: 4,
+          shootDaysMax: 2,
           scope: [
             '4 episodes a month, one a week: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 2 sit-down or podcast-style',
             '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
-            'One Signature Hero Ad a month, its own directed shoot',
-            'Up to 4 shoot days a month: two vlog days, a sit-down day and the hero ad day',
+            'One Signature Hero Ad every three months, its own directed shoot',
+            'Up to 2 shoot days a month: the vlog days, with the sit-downs recorded on a vlog day, plus the hero ad day in hero months',
             'Organic posting on your own channels every month'
           ],
           quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
