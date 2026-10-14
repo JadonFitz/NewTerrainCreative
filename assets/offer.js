@@ -296,7 +296,6 @@
           '24 short-form clips: the best moments from every episode, plus promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
           'Up to 2 shoot days: the episodes are recorded across both, and the hero ad is shot within them',
-          'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
@@ -345,7 +344,6 @@
           '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
           'Up to 3 shoot days: the hero ad day and up to 2 episode days',
-          'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
