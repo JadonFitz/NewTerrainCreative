@@ -569,8 +569,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     'brand-builder': function () {
       var t = tier('Brand Builder');
+      // 13 Oct 2026: Premium comes in Studio or Field, chosen at kickoff.
+      // The counts for each format come from NTC_OFFER.brandBuilder.premium.
+      var pr = (O.brandBuilder && O.brandBuilder.premium) || {};
+      var fmt = (pr.studio && pr.field)
+        ? '<b>Your format is set at kickoff.</b> Studio: ' + pr.studio.summary + '. Field: ' + pr.field.summary + '.'
+        : '';
       return { name: 'Brand Builder: Premium', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'brand-builder' };
+               steps: retainerSteps(true, true), incl: fromTier(t), note: fmt || undefined, crm: true, video: 'brand-builder' };
     },
     'brand-builder-pilot': function () {
       var p = (O.brandBuilder && O.brandBuilder.pilot) || {};
