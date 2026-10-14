@@ -91,8 +91,11 @@ export const RETAINER = {
     {
       name: 'Growth Partner', monthly: 9000, from: false,
       label: 'More volume, deeper testing',
-      totalAssets: 20, coreConcepts: 5, productionDays: 2,
-      heroAds: 1, longform: false,
+      // 14 Oct 2026: 30 short-form assets (was 20), a Signature Hero Ad
+      // every 3 months (was monthly), and a posting rhythm of 4 posts a
+      // week on the client's channels. heroAds stays per month: 1/3.
+      totalAssets: 30, coreConcepts: 5, productionDays: 2,
+      heroAds: 1 / 3, heroAdEveryMonths: 3, postsPerWeek: 4, longform: false,
       includesCampaignManagement: true,
       includesConversionInfrastructure: true,
       productionPromiseEligible: false
@@ -100,8 +103,11 @@ export const RETAINER = {
     {
       name: 'Brand Builder', monthly: 15000, from: false,
       label: 'Flagship partnership',
-      totalAssets: 30, productionDays: 2,
-      heroAds: 2, longform: true,
+      // 14 Oct 2026, Premium: Studio 10 episodes or Field 6 (2 vlogs, 4
+      // sit-downs), 40 clips, 1 Signature Hero Ad a month (was 2), up to 3
+      // (Studio) or 4 (Field) shoot days. Never fewer than 6 episodes.
+      totalAssets: 51, totalAssetsField: 47, productionDays: 3,
+      heroAds: 1, longform: true,
       includesCampaignManagement: true,
       includesConversionInfrastructure: true,
       productionPromiseEligible: false
