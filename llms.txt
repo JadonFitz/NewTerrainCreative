@@ -15,7 +15,7 @@ Festival. The studio produces ad creative, runs paid media campaigns from that
 creative, and makes bespoke commercials, documentaries and brand films.
 
 Pricing is not published, with one exception: the Brand Builder
-Pilot, a one-time production at a fixed $7,500. The Ad Sprint is a one-time fixed price,
+Pilot, a one-time production at a fixed $7,500 (Studio) or $8,500 (Field). The Ad Sprint is a one-time fixed price,
 quoted before anything is booked. Monthly retainers carry a three-month
 minimum and are scoped and quoted after a consultation. Advertising
 spend is separate and paid by the client directly to the platform. No
@@ -30,7 +30,7 @@ lead volume, revenue or return on ad spend is guaranteed.
 - [Growth retainers](https://www.newterraincreative.com/grow): monthly ad creative production with paid media management and funnel, tracking and automation support included, in three packages: The Anchor, Growth Partner and Brand Builder. The funnel support is a standard setup; custom systems work is scoped separately.
 - [Ad Sprint](https://www.newterraincreative.com/sprint): one-time fixed-price ad creative. The Eight is 8 creatives, The Fifteen is 15. Delivered in three weeks, no retainer, client owns the footage. Creative production only: running the media is not included.
 - [Signature Work](https://www.newterraincreative.com/signature): commercials, brand films, documentaries, launch films and podcast build-outs, scoped and priced per project.
-- [Brand Builder](https://www.newterraincreative.com/brand-builder): cinematic personal brands for Los Angeles founders. Brand Builder is the flagship monthly retainer, by application. The Pilot is its one-time entry point: 10 longform episodes, 49 short-form clips cut from the episodes, playbook content, organic posting on the client's channels for the month and a 90-day gameplan the client keeps, at a fixed $7,500. Paid media management and the conversion setup are not part of the Pilot. The series is the Brand Builder retainer: the same production monthly, plus ads, paid media management and the conversion setup, and it keeps posting on the client's channels every month, scoped on the call.
+- [Brand Builder](https://www.newterraincreative.com/brand-builder): cinematic personal brands for Los Angeles founders. Brand Builder is the flagship monthly retainer, by application, produced in one of two formats: Studio (sit-down or podcast-style episodes recorded in batches) or Field (longer, hands-on, documentary or vlog-style episodes shot where the work happens). The Pilot is its one-time entry point, in either format. The Studio Pilot, at a fixed $7,500: 6 episodes of up to 30 minutes recorded in one batch, 24 short-form clips, one Signature Hero Ad and up to 2 shoot days. The Field Pilot, at a fixed $8,500: 4 episodes, one a week, up to 2 of them vlog-style at 15 to 25 minutes, 12 short-form clips, one Signature Hero Ad and up to 3 shoot days, with travel and multi-day events quoted separately. Both include playbook content, organic posting on the client's channels for the month and a 90-day gameplan the client keeps. Paid media management and the conversion setup are not part of either Pilot. The series is the Brand Builder retainer: production every month, plus ads, paid media management and the conversion setup, and it keeps posting on the client's channels every month, scoped on the call.
 - [Founding Three](https://www.newterraincreative.com/founding): a limited offer for three Los Angeles businesses. The service fee for the first 30 days is waived; the client funds a minimum of $1,500 in media.
 
 ## Policies
@@ -51,7 +51,7 @@ figures quoted across pages agree with each other. If a number here
 conflicts with a number on a page, the page is authoritative and this
 file is stale.
 
-Apart from the Brand Builder Pilot's fixed price, no prices and no
+Apart from the Brand Builder Pilot's two fixed prices, no prices and no
 monthly deliverable counts are published on this site.
 Retainer volume is agreed in the proposal. Any specific price or monthly
 deliverable count attributed to New Terrain Creative from an earlier

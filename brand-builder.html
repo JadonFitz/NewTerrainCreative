@@ -1200,6 +1200,19 @@
   .show-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
   .show-body { font-size: 13.5px; line-height: 1.85; color: #A09890; max-width: 640px; }
   .show-body b { color: var(--parchment); font-weight: 500; }
+  div.show-body p + p, div.show-body p + .pilot-cards, div.show-body .pilot-cards + p { margin-top: 18px; }
+  /* ── THE PILOT · two formats, studio and field (13 Oct 2026) ── */
+  .pilot-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pilot-card { border: 1px solid var(--line); padding: 24px 22px 22px; }
+  .pilot-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
+  .pilot-name { font-family: var(--display); font-size: 24px; font-weight: 300; color: var(--parchment); line-height: 1.15; margin: 0 0 10px; }
+  .pilot-name em { font-style: italic; color: var(--gold); }
+  .pilot-fit { font-size: 13px; line-height: 1.75; color: #A09890; margin: 0 0 14px; }
+  .pilot-list { list-style: none; padding: 0; margin: 0; }
+  .pilot-list li { font-size: 13px; line-height: 1.7; color: #A09890; padding: 7px 0 7px 16px; position: relative; border-top: 1px solid var(--line); }
+  .pilot-list li::before { content: ''; position: absolute; left: 0; top: 17px; width: 6px; height: 1px; background: var(--gold); }
+  .pilot-list b { color: var(--parchment); font-weight: 500; }
+  @media (max-width: 700px) { .pilot-cards { grid-template-columns: 1fr; } }
 
   /* ── CASE STUDIES ── */
   .case-grid {
@@ -1318,7 +1331,7 @@
       <div class="hero-ctas reveal">
         <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
       </div>
-      <p class="bb-cta-note reveal">30 minutes with Jadon and Meghan. Nothing is due to book.</p>
+      <p class="bb-cta-note reveal">30 minutes with our team. Nothing is due to book.</p>
     </div>
   </section>
 </div>
@@ -1794,7 +1807,7 @@
   <h2 class="title reveal">One team.<br>Not five <em>freelancers.</em></h2>
   <p class="lede reveal">Everybody knows content is king. What wins now is the mix: <b>film-level polish and raw, real moments,</b> from the same team, to the same standard.</p>
   <div class="crew-grid">
-    <div class="crew-item reveal"><span class="crew-kicker">Cinema</span><p><b>Founder films and longform.</b> Interviews, episodes and the story behind the business.</p></div>
+    <div class="crew-item reveal"><span class="crew-kicker">Cinema</span><p><b>Founder films and longform.</b> Interviews, sit-down and on-location episodes, and the story behind the business.</p></div>
     <div class="crew-item reveal"><span class="crew-kicker">Ads</span><p><b>Short cuts built to sell.</b> Cut from your strongest moments, with paid media run for you on the retainer.</p></div>
     <div class="crew-item reveal"><span class="crew-kicker">Raw</span><p><b>Day in the life.</b> The unpolished, real content that makes people feel like they know you.</p></div>
     <div class="crew-item reveal"><span class="crew-kicker">Posted</span><p><b>We run your channels.</b> The content goes out on your own accounts, every month, so nothing sits in a folder.</p></div>
@@ -1805,8 +1818,9 @@
 
 <!-- THE METHOD · Pilot, then Series.
      The Pilot's price and scope are declared in assets/offer.js
-     brandBuilder.pilot, and scripts/check-offer.py lets that one figure
-     onto this page. Change it there first. It appears here ONCE, as a
+     brandBuilder.pilot (Studio) and brandBuilder.fieldPilot (Field, 13
+     Oct 2026), and scripts/check-offer.py lets those two figures onto
+     this page. Change them there first. It appears here ONCE, as a
      filter before the call, and carries no button of its own.
 
      Brand Builder carries no price and no counts, like every retainer
@@ -1822,12 +1836,39 @@
       <p class="show-body"><b>The Story Session.</b> We find what only you can say, and tell you straight whether it carries a brand.</p>
     </div>
     <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Step two · $7,500, one time</span>The <em>pilot</em></div>
-      <p class="show-body"><b>10 longform episodes and 49 short-form clips</b> cut from them. Plus one Signature Hero Ad, premium playbook content, organic posting on your channels for the month, and a 90-day gameplan. <b>Hire us to run it, or run it without us. It is yours either way.</b></p>
+      <div class="show-part"><span class="show-kicker">Step two · one time</span>The <em>pilot</em></div>
+      <div class="show-body">
+        <p>One month of the show, in the format your story lives in. <b>Two ways to shoot it.</b></p>
+        <div class="pilot-cards">
+          <div class="pilot-card">
+            <span class="pilot-kicker">Studio · $7,500, one time</span>
+            <h3 class="pilot-name">The Studio <em>Pilot</em></h3>
+            <p class="pilot-fit">For founders who are at their best across a table. Sit-down or podcast-style episodes, recorded in one batch.</p>
+            <ul class="pilot-list">
+              <li><b>6 episodes,</b> up to 30 minutes each</li>
+              <li><b>24 short-form clips</b> cut from them, 4 finished by hand</li>
+              <li><b>One Signature Hero Ad,</b> its own directed shoot</li>
+              <li><b>Up to 2 shoot days:</b> the recording day and the hero ad day</li>
+            </ul>
+          </div>
+          <div class="pilot-card">
+            <span class="pilot-kicker">Field · $8,500, one time</span>
+            <h3 class="pilot-name">The Field <em>Pilot</em></h3>
+            <p class="pilot-fit">For makers whose story happens on location: the shop, the build, the kitchen, the studio, the training floor, the event. Longer, hands-on, documentary or vlog-style episodes.</p>
+            <ul class="pilot-list">
+              <li><b>4 episodes, one a week:</b> up to 2 vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down</li>
+              <li><b>12 short-form clips</b> cut from them, 3 finished by hand</li>
+              <li><b>One Signature Hero Ad,</b> its own directed shoot</li>
+              <li><b>Up to 3 shoot days.</b> Travel and multi-day events are quoted separately.</li>
+            </ul>
+          </div>
+        </div>
+        <p>Both include premium playbook content, organic posting on your channels for the month, and a 90-day gameplan. A vlog episode can always become a sit-down if a week calls for it. <b>Hire us to run it, or run it without us. It is yours either way.</b></p>
+      </div>
     </div>
     <div class="show-row reveal">
       <div class="show-part"><span class="show-kicker">Step three · by application</span>The <em>series</em></div>
-      <p class="show-body"><b>Brand Builder,</b> our flagship monthly production: the same episodes and clips every month, plus the ads, with paid media management and the conversion setup run for you, and your channels posted every month. Scoped on the call, three month minimum.</p>
+      <p class="show-body"><b>Brand Builder,</b> our flagship monthly production: episodes and clips every month, in the studio or in the field, plus the ads, with paid media management and the conversion setup run for you, and your channels posted every month. Scoped on the call, three month minimum.</p>
     </div>
   </div>
 </section>
@@ -1875,7 +1916,7 @@
   <div class="qa-list reveal">
     <details class="qa">
       <summary class="qa-q">I am not good on camera.</summary>
-      <p class="qa-a"><b>Almost nobody is on the first take.</b> That is what directing is for. Meghan has spent two decades performing and Jadon directs actors for a living. No crew stands around watching.</p>
+      <p class="qa-a"><b>Almost nobody is on the first take.</b> That is what directing is for. The people directing you have spent decades on both sides of the camera. No crew stands around watching.</p>
     </details>
     <details class="qa">
       <summary class="qa-q">I already post content.</summary>
@@ -1896,13 +1937,13 @@
 <section id="close">
   <figure class="bb-still reveal">
     <img src="assets/brand-builder-onset.jpg" width="1800" height="1200" alt="Meghan Carrasquillo framing a shot with her hands on set while Jadon Cal Fitzpatrick looks on" loading="lazy">
-    <figcaption><b>Meghan Carrasquillo and Jadon Cal Fitzpatrick</b> · on set · you talk to them directly, not an account manager</figcaption>
+    <figcaption><b>Our team on set</b> · you work with the filmmakers, not an account manager</figcaption>
   </figure>
   <h2 class="title reveal" style="margin-top:80px">Let's make<br>your <em>movie.</em></h2>
   <div class="close-ctas reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
   </div>
-  <p class="bb-ps reveal"><b>P.S.</b> The short version: thirty minutes with two award-winning filmmakers. You leave with a straight read on your brand and three story angles, whether or not we ever work together. If it fits, the Pilot is $7,500, one time, and the plan is yours to keep. Your competitors are on camera this week either way.</p>
+  <p class="bb-ps reveal"><b>P.S.</b> The short version: thirty minutes with our team. You leave with a straight read on your brand and three story angles, whether or not we ever work together. If it fits, the Pilot is $7,500 in the studio or $8,500 in the field, one time, and the plan is yours to keep. Your competitors are on camera this week either way.</p>
   <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
     <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
     <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>
