@@ -282,7 +282,7 @@
          Anyone who bought the Pilot before 13 Oct keeps what they
          signed. */
       pilot: {
-        name: 'The Studio Pilot',
+        name: 'Brand Builder Studio Pilot',
         format: 'studio',
         pilotFee: 7500,
         oneTime: true,
@@ -315,7 +315,9 @@
          happens on location rather than at a desk: longer, hands-on,
          documentary or vlog-style episodes. Vlog episodes cost more to
          edit than sit-downs (the shooting is about the same), so there are
-         four of them, one a week, and the fee is higher. The copy stays
+         fewer of them, and the fee is higher. Final numbers,
+         13 Oct 2026: 2 vlogs plus 1 sit-down, up to 3 shoot days. Studio
+         is volume, Field is depth. The copy stays
          broad: no single niche. Travel outside the local area, multi-day
          events and extra days are quoted separately.
 
@@ -328,22 +330,22 @@
          yet. Nothing on the site links checkout for either Pilot, and
          nothing should: the offer is made on the call. */
       fieldPilot: {
-        name: 'The Field Pilot',
+        name: 'Brand Builder Field Pilot',
         format: 'field',
         fieldPilotFee: 8500,
         oneTime: true,
         noRetainer: true,
-        longformEpisodes: 4,
+        longformEpisodes: 3,
         vlogEpisodesMax: 2,
         vlogMinutes: [15, 25],
         episodeMinutesMax: 30,
         shortFormClips: 30,
         shootDaysMax: 3,
         scope: [
-          '4 episodes, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
+          '3 episodes: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
           '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
-          'Up to 3 shoot days: the hero ad day and up to 2 episode days',
+          'Up to 3 shoot days: two vlog days and the hero ad day, with the sit-down recorded on a vlog day',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
@@ -356,6 +358,59 @@
         heroAdIncluded: true,
         organicPostingIncluded: true,
         resultGuaranteed: false
+      },
+      /* 13 Oct 2026, Jadon: Brand Builder: Studio and Brand Builder: Field
+         (offer keys still say monthly; client-facing names never do), the Pilot as a
+         recurring plan with no paid media. Offer keys
+         brand_builder_monthly_studio and brand_builder_monthly_field.
+         The one production-only plan: no paid media management, no
+         funnel, tracking, CRM or automation work, and no 90-day gameplan
+         (that is the Pilot's). Adding paid media means moving up to the
+         Brand Builder series at its standard fee, never adding ads here.
+
+         NO PRICE IS DECLARED HERE, on purpose. Monthly is a retainer and
+         retainer pricing is withdrawn from the site, so this object
+         carries scope only and scripts/check-offer.py keeps any monthly
+         figure off every page. The pages mention Monthly in one line
+         under the series, with no price. Scope matches the Pilot of the
+         same format, every month. */
+      monthlyPlans: {
+        noPaidMedia: true,
+        minimumMonths: 3,
+        noticeDays: 30,
+        gameplanIncluded: false,
+        heroAdEveryMonths: 3,
+        studio: {
+          name: 'Brand Builder: Studio',
+          format: 'studio',
+          longformEpisodes: 6,
+          shortFormClips: 24,
+          shootDaysMax: 2,
+          scope: [
+            '6 sit-down or podcast-style episodes a month, up to 30 minutes each, recorded in batches across two days',
+            '24 short-form clips a month: the best moments from every episode, plus promotional ad content',
+            'One Signature Hero Ad every three months, its own directed shoot',
+            'Up to 2 shoot days a month for the episodes, recorded across both, plus the hero ad day in hero months',
+            'Organic posting on your own channels every month'
+          ]
+        },
+        field: {
+          name: 'Brand Builder: Field',
+          format: 'field',
+          longformEpisodes: 3,
+          vlogEpisodesMax: 2,
+          shortFormClips: 30,
+          shootDaysMax: 2,
+          scope: [
+            '3 episodes a month: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
+            '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
+            'One Signature Hero Ad every three months, its own directed shoot',
+            'Up to 2 shoot days a month: the vlog days, with the sit-down recorded on a vlog day, plus the hero ad day in hero months',
+            'Organic posting on your own channels every month'
+          ],
+          quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
+          addOnsAtSetRates: true
+        }
       }
     },
 

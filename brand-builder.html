@@ -1200,6 +1200,8 @@
   .show-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
   .show-body { font-size: 13.5px; line-height: 1.85; color: #A09890; max-width: 640px; }
   .show-body b { color: var(--parchment); font-weight: 500; }
+  .show-note { margin-top: 12px; grid-column: 2; }
+  @media (max-width: 860px) { .show-note { grid-column: auto; margin-top: 0; } }
   div.show-body p + p, div.show-body p + .pilot-cards, div.show-body .pilot-cards + p { margin-top: 18px; }
   /* ── THE PILOT · two formats, studio and field (13 Oct 2026) ── */
   .pilot-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -1839,11 +1841,11 @@
     <div class="show-row reveal">
       <div class="show-part"><span class="show-kicker">Step two · one time</span>The <em>pilot</em></div>
       <div class="show-body">
-        <p>One month of the show, in the format your story lives in. <b>Two ways to shoot it.</b></p>
+        <p>One month of the show, in the format your story lives in. <b>Studio is volume. Field is depth.</b></p>
         <div class="pilot-cards">
           <div class="pilot-card">
             <span class="pilot-kicker">Studio · $7,500, one time</span>
-            <h3 class="pilot-name">The Studio <em>Pilot</em></h3>
+            <h3 class="pilot-name">Brand Builder Studio <em>Pilot</em></h3>
             <p class="pilot-fit">For founders who are at their best across a table. Sit-down or podcast-style episodes, recorded in batches across two days.</p>
             <ul class="pilot-list">
               <li><b>6 episodes,</b> up to 30 minutes each</li>
@@ -1854,13 +1856,13 @@
           </div>
           <div class="pilot-card">
             <span class="pilot-kicker">Field · $8,500, one time</span>
-            <h3 class="pilot-name">The Field <em>Pilot</em></h3>
+            <h3 class="pilot-name">Brand Builder Field <em>Pilot</em></h3>
             <p class="pilot-fit">For makers whose story happens on location: the shop, the build, the kitchen, the studio, the training floor, the event. Longer, hands-on, documentary or vlog-style episodes.</p>
             <ul class="pilot-list">
-              <li><b>4 episodes, one a week:</b> up to 2 vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down</li>
+              <li><b>3 episodes:</b> 2 vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down</li>
               <li><b>30 short-form clips:</b> podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content</li>
               <li><b>One Signature Hero Ad,</b> its own directed shoot</li>
-              <li><b>Up to 3 shoot days.</b> Travel and multi-day events are quoted separately.</li>
+              <li><b>Up to 3 shoot days:</b> two vlog days and the hero ad day, with the sit-down recorded on a vlog day. Travel and multi-day events are quoted separately.</li>
             </ul>
             <p class="pilot-more">Need more? Extra shoot days, event days and edits are available at set rates.</p>
           </div>
@@ -1870,7 +1872,8 @@
     </div>
     <div class="show-row reveal">
       <div class="show-part"><span class="show-kicker">Step three · by application</span>The <em>series</em></div>
-      <p class="show-body"><b>Brand Builder,</b> our flagship monthly production: episodes and clips every month, in the studio or in the field, plus the ads, with paid media management and the conversion setup run for you, and your channels posted every month. Scoped on the call, three month minimum.</p>
+      <p class="show-body"><b>Brand Builder: Premium,</b> our flagship monthly production: episodes and clips every month, in the studio or in the field, plus the ads, with paid media management and the conversion setup run for you, and your channels posted every month. Scoped on the call, three month minimum.</p>
+      <p class="show-body show-note">Prefer to run it without paid media? <b>Brand Builder: Studio and Brand Builder: Field</b> keep the same production going as an ongoing monthly plan, three-month minimum.</p>
     </div>
   </div>
 </section>

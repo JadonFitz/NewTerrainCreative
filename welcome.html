@@ -39,9 +39,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     Founding Three   /welcome?plan=founding&session_id={CHECKOUT_SESSION_ID}
     The Anchor       /welcome?plan=anchor&session_id={CHECKOUT_SESSION_ID}
     Growth Partner   /welcome?plan=growth&session_id={CHECKOUT_SESSION_ID}
-    Brand Builder    /welcome?plan=brand-builder&session_id={CHECKOUT_SESSION_ID}
+    BB: Premium      /welcome?plan=brand-builder&session_id={CHECKOUT_SESSION_ID}
     Studio Pilot     /welcome?plan=brand-builder-pilot&session_id={CHECKOUT_SESSION_ID}
     Field Pilot      /welcome?plan=brand-builder-pilot-field&session_id={CHECKOUT_SESSION_ID}
+    BB: Studio       /welcome?plan=brand-builder-monthly-studio&session_id={CHECKOUT_SESSION_ID}
+    BB: Field        /welcome?plan=brand-builder-monthly-field&session_id={CHECKOUT_SESSION_ID}
     The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
     The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
     5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
@@ -419,10 +421,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      13 Oct 2026: two formats. The Studio Pilot (plan brand-builder-pilot)
      records its sit-down episodes in batches across up to two shoot days, with the hero ad shot within them. The Field Pilot (plan
      brand-builder-pilot-field, NTC_OFFER.brandBuilder.fieldPilot) shoots
-     longer, hands-on episodes on location, one a week. The steps read
+     longer, hands-on episodes on location. The steps read
      their counts from the offer object. */
   var pilotSteps = function (p, field) {
-    var eps = p.longformEpisodes || (field ? 4 : 6);
+    var eps = p.longformEpisodes || (field ? 3 : 6);
     var clips = p.shortFormClips || (field ? 30 : 24);
     var days = p.shootDaysMax || (field ? 3 : 2);
     return [
@@ -441,7 +443,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
             'Up to ' + days + ' shoot days: the episodes are recorded in batches across them and the hero ad is shot within them, with the short-form moments captured as we go.'],
       ['Through the month', 'Posted on your channels',
         field
-          ? 'One episode a week, posted on your own channels with the clips around it. Paid media and the conversion setup come with the series.'
+          ? 'Each episode posted on your own channels as it is finished, with the clips around it. Paid media and the conversion setup come with the series.'
           : 'We post the finished content on your own channels through the Pilot month. Paid media and the conversion setup come with the series.'],
       ['Week four', 'The cut, then delivery',
         eps + ' episodes finished and ' + clips + ' short-form clips' + (field ? ': podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content' : ', the best moments from every episode, plus promotional ad content') + ', with one revision round in Slack.'],
@@ -567,19 +569,41 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     'brand-builder': function () {
       var t = tier('Brand Builder');
-      return { name: 'Brand Builder', label: t && t.label, intro: t && t.scope,
+      return { name: 'Brand Builder: Premium', label: t && t.label, intro: t && t.scope,
                steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'brand-builder' };
     },
     'brand-builder-pilot': function () {
       var p = (O.brandBuilder && O.brandBuilder.pilot) || {};
       // Plays the Brand Builder welcome video (Jadon, 8 Oct 2026): the Pilot is a month of the same production.
-      return { name: 'The Studio Pilot', label: 'Brand Builder · Studio Pilot',
+      return { name: 'Brand Builder Studio Pilot', label: 'Brand Builder · Studio Pilot',
                intro: 'One month of Brand Builder production, recorded in the studio and bought on its own. Here is how the month runs.',
                steps: pilotSteps(p, false), incl: p.scope || [], crm: true, video: 'brand-builder' };
     },
+    /* Brand Builder: Studio and Brand Builder: Field (13 Oct 2026; plan
+       slugs say monthly, display names never do): the Pilot's production every
+       month with no paid media. Retainer-style welcome with role-based
+       access to the channels we post to, no ad account, no funnel or CRM
+       questionnaire and no gameplan. Scope from
+       NTC_OFFER.brandBuilder.monthlyPlans, which carries no price. */
+    'brand-builder-monthly-studio': function () {
+      var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
+      var p = m.studio || {};
+      return { name: 'Brand Builder: Studio', label: 'Brand Builder · Studio',
+               intro: 'Sit-down episodes and the clips around them, recorded in the studio and posted on your channels every month, with a Signature Hero Ad every three months. Here is how the first weeks run.',
+               steps: retainerSteps(false, false), incl: p.scope || [], video: 'brand-builder' };
+    },
+    'brand-builder-monthly-field': function () {
+      var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
+      var p = m.field || {};
+      return { name: 'Brand Builder: Field', label: 'Brand Builder · Field',
+               intro: 'Three episodes a month, shot where your work happens, with the clips around them, posted on your channels every month, with a Signature Hero Ad every three months. Here is how the first weeks run.',
+               steps: retainerSteps(false, false), incl: p.scope || [],
+               note: '<b>Need more in a month?</b> Extra shoot days, event days and edits are available at set rates, agreed in writing first.',
+               video: 'brand-builder' };
+    },
     'brand-builder-pilot-field': function () {
       var p = (O.brandBuilder && O.brandBuilder.fieldPilot) || {};
-      return { name: 'The Field Pilot', label: 'Brand Builder · Field Pilot',
+      return { name: 'Brand Builder Field Pilot', label: 'Brand Builder · Field Pilot',
                intro: 'One month of Brand Builder production, shot where your work happens and bought on its own. Here is how the month runs. Extra shoot days, event days and edits are available at set rates, agreed in writing first.',
                steps: pilotSteps(p, true), incl: p.scope || [], crm: true, video: 'brand-builder' };
     },
@@ -619,7 +643,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
     'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen',
     '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };
