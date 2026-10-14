@@ -315,8 +315,9 @@
          happens on location rather than at a desk: longer, hands-on,
          documentary or vlog-style episodes. Vlog episodes cost more to
          edit than sit-downs (the shooting is about the same), so there are
-         four of them, one a week, and the fee is higher. Final numbers,
-         13 Oct 2026: 2 vlogs plus 2 sit-downs, up to 3 shoot days. The copy stays
+         fewer of them, and the fee is higher. Final numbers,
+         13 Oct 2026: 2 vlogs plus 1 sit-down, up to 3 shoot days. Studio
+         is volume, Field is depth. The copy stays
          broad: no single niche. Travel outside the local area, multi-day
          events and extra days are quoted separately.
 
@@ -334,17 +335,17 @@
         fieldPilotFee: 8500,
         oneTime: true,
         noRetainer: true,
-        longformEpisodes: 4,
+        longformEpisodes: 3,
         vlogEpisodesMax: 2,
         vlogMinutes: [15, 25],
         episodeMinutesMax: 30,
         shortFormClips: 30,
         shootDaysMax: 3,
         scope: [
-          '4 episodes, one a week: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 2 sit-down or podcast-style',
+          '3 episodes: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
           '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
-          'Up to 3 shoot days: two vlog days and the hero ad day, with the sit-downs recorded on a vlog day',
+          'Up to 3 shoot days: two vlog days and the hero ad day, with the sit-down recorded on a vlog day',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
@@ -395,15 +396,15 @@
         field: {
           name: 'Brand Builder Monthly · Field',
           format: 'field',
-          longformEpisodes: 4,
+          longformEpisodes: 3,
           vlogEpisodesMax: 2,
           shortFormClips: 30,
           shootDaysMax: 2,
           scope: [
-            '4 episodes a month, one a week: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 2 sit-down or podcast-style',
+            '3 episodes a month: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
             '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
             'One Signature Hero Ad every three months, its own directed shoot',
-            'Up to 2 shoot days a month: the vlog days, with the sit-downs recorded on a vlog day, plus the hero ad day in hero months',
+            'Up to 2 shoot days a month: the vlog days, with the sit-down recorded on a vlog day, plus the hero ad day in hero months',
             'Organic posting on your own channels every month'
           ],
           quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],

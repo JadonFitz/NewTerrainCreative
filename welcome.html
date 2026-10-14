@@ -421,10 +421,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      13 Oct 2026: two formats. The Studio Pilot (plan brand-builder-pilot)
      records its sit-down episodes in batches across up to two shoot days, with the hero ad shot within them. The Field Pilot (plan
      brand-builder-pilot-field, NTC_OFFER.brandBuilder.fieldPilot) shoots
-     longer, hands-on episodes on location, one a week. The steps read
+     longer, hands-on episodes on location. The steps read
      their counts from the offer object. */
   var pilotSteps = function (p, field) {
-    var eps = p.longformEpisodes || (field ? 4 : 6);
+    var eps = p.longformEpisodes || (field ? 3 : 6);
     var clips = p.shortFormClips || (field ? 30 : 24);
     var days = p.shootDaysMax || (field ? 3 : 2);
     return [
@@ -443,7 +443,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
             'Up to ' + days + ' shoot days: the episodes are recorded in batches across them and the hero ad is shot within them, with the short-form moments captured as we go.'],
       ['Through the month', 'Posted on your channels',
         field
-          ? 'One episode a week, posted on your own channels with the clips around it. Paid media and the conversion setup come with the series.'
+          ? 'Each episode posted on your own channels as it is finished, with the clips around it. Paid media and the conversion setup come with the series.'
           : 'We post the finished content on your own channels through the Pilot month. Paid media and the conversion setup come with the series.'],
       ['Week four', 'The cut, then delivery',
         eps + ' episodes finished and ' + clips + ' short-form clips' + (field ? ': podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content' : ', the best moments from every episode, plus promotional ad content') + ', with one revision round in Slack.'],
@@ -595,7 +595,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
       var p = m.field || {};
       return { name: 'Brand Builder Monthly', label: 'Brand Builder · Monthly · Field',
-               intro: 'Episodes shot where your work happens, one a week, with the clips around them, posted on your channels every month, with a Signature Hero Ad every three months. Here is how the first weeks run.',
+               intro: 'Three episodes a month, shot where your work happens, with the clips around them, posted on your channels every month, with a Signature Hero Ad every three months. Here is how the first weeks run.',
                steps: retainerSteps(false, false), incl: p.scope || [],
                note: '<b>Need more in a month?</b> Extra shoot days, event days and edits are available at set rates, agreed in writing first.',
                video: 'brand-builder' };
