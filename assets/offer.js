@@ -276,11 +276,10 @@
          cost more to serve than the fee allows. The Field Pilot (below)
          is the second format, for episodes shot on location.
 
-         The ladder rule, both Pilots only: a piece higher up the ladder
-         may be traded one for one for a piece lower down, never the other
-         way. A vlog-style episode can become a sit-down, a hand-finished
-         clip can become a workflow clip. The Signature Hero Ad is never
-         traded. Anyone who bought the Pilot before 13 Oct keeps what they
+         The ladder rule, both Pilots only: a vlog-style episode can
+         become a sit-down, never the other way. The Signature Hero Ad is
+         never traded. Clips are stated as one total, never split.
+         Anyone who bought the Pilot before 13 Oct keeps what they
          signed. */
       pilot: {
         name: 'The Studio Pilot',
@@ -291,13 +290,12 @@
         longformEpisodes: 6,
         episodeMinutesMax: 30,
         shortFormClips: 24,
-        handFinishedClips: 4,
         shootDaysMax: 2,
         scope: [
-          '6 sit-down or podcast-style episodes, up to 30 minutes each, recorded in one batch',
-          '24 short-form clips cut from the episodes, 4 of them finished by hand',
+          '6 sit-down or podcast-style episodes, up to 30 minutes each, recorded in batches across two days',
+          '24 short-form clips cut from the episodes',
           'One Signature Hero Ad, its own directed shoot',
-          'Up to 2 shoot days: the batch recording day and the hero ad day',
+          'Up to 2 shoot days: the episodes are recorded across both, and the hero ad is shot within them',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
@@ -341,11 +339,10 @@
         vlogMinutes: [15, 25],
         episodeMinutesMax: 30,
         shortFormClips: 30,
-        handFinishedClips: 6,
         shootDaysMax: 3,
         scope: [
           '4 episodes, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
-          '30 short-form clips, 6 of them finished by hand: cut from the episodes and sit-downs, plus highlight edits from the shoot days and events',
+          '30 short-form clips, cut from the episodes and sit-downs, plus highlight edits from the shoot days and events',
           'One Signature Hero Ad, its own directed shoot',
           'Up to 3 shoot days: the hero ad day and up to 2 episode days',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
