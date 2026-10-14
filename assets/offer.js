@@ -293,7 +293,7 @@
         shootDaysMax: 2,
         scope: [
           '6 sit-down or podcast-style episodes, up to 30 minutes each, recorded in batches across two days',
-          '24 short-form clips: the best moments cut from every episode',
+          '24 short-form clips: the best moments from every episode, plus promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
           'Up to 2 shoot days: the episodes are recorded across both, and the hero ad is shot within them',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
@@ -342,7 +342,7 @@
         shootDaysMax: 3,
         scope: [
           '4 episodes, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
-          '30 short-form clips: podcast and sit-down cuts, moments from the episodes, and highlights from shoot days and events',
+          '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
           'Up to 3 shoot days: the hero ad day and up to 2 episode days',
           'Premium playbook content: how we build hooks, formats and a posting rhythm',
