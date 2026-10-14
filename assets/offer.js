@@ -164,7 +164,10 @@
     // we do not run the client's social presence. Community management
     // left the offer. Longform is Brand Builder only. EXCEPTION, 8 Oct
     // 2026: Brand Builder includes organic social posting on the client's
-    // own channels; it is the one tier that does. The Brand Builder Pilot
+    // own channels. 14 Oct 2026: Growth Partner gains a weekly posting
+    // rhythm on the client's channels too, planned and scheduled from the
+    // month's short-form; Brand Builder's difference is the longform and
+    // the show. The Anchor still posts nothing of its own. The Brand Builder Pilot
     // (not a tier) also posts on the client's channels, for its one
     // month only: see brandBuilder.pilot below. And the platform
     // is not named in retainer copy: it is paid media, chosen for the
@@ -208,11 +211,11 @@
           scope: 'Higher creative volume, deeper testing and more ambitious campaign concepts, for a business ready to scale what is working.',
           includes: [
             'More shoot time each month than The Anchor',
-            'A higher monthly volume across brand content and ad creative',
+            'A higher monthly volume of short-form ad creative and variants, cut for Instagram, Facebook, TikTok and YouTube Shorts',
             'Dedicated ad concepts and hook variations, not repurposed brand cuts',
-            'One Signature Hero Ad each month, its own directed shoot within the included shoot days',
+            'A Signature Hero Ad every three months, its own directed shoot within the included shoot days',
             'Event, product and brand-identity coverage within the included shoot days',
-            'Organic distribution of the campaign creative',
+            'A weekly posting rhythm on your own channels, planned and scheduled from the month\u2019s creative',
             'Paid media setup and weekly management',
             'Funnel, tracking and automation support: lead routing, conversion tracking and core automations',
             'Monthly analytics and creative direction'
@@ -222,18 +225,19 @@
           name: 'Brand Builder',
           label: 'Flagship partnership',
           scope: 'Our largest production allocation, in Studio or Field, with organic posting, paid media and the conversion setup run for you.',
-          /* 8 Oct 2026: Brand Builder is the one tier that runs the
-             client's own channels. "Organic social posting" here means
-             exactly that, and it is a Brand Builder line only: the other
-             tiers keep "organic distribution of the campaign creative". */
+          /* 8 Oct 2026: Brand Builder runs the client's own channels.
+             14 Oct 2026: Growth Partner now has a weekly posting rhythm
+             too, so the difference is the longform and the show, and one
+             Signature Hero Ad every month against Growth Partner's one
+             every three. No counts here: the public cards carry none. */
           includes: [
             'Our largest monthly production allocation',
             'Our highest monthly volume across longform, short-form and ads',
             'Longform in one of two formats, chosen at kickoff: Studio (sit-down and podcast episodes, recorded in batches) or Field (hands-on, vlog-style episodes shot where the work happens, plus sit-downs)',
             'Short-form cut from every episode, hero-ad cutdowns and promotional ad content, and the ads built from the strongest',
-            'Two Signature Hero Ads each month, each its own directed shoot within the included shoot days',
+            'A Signature Hero Ad every month, its own directed shoot within the included shoot days',
             'Organic social posting: we run the channels the content goes out on',
-            'Everything in Growth Partner, including paid media management',
+            'Everything in Growth Partner, plus the episodes and a Signature Hero Ad every month',
             'Monthly analytics and creative direction'
           ]
         }
@@ -377,27 +381,29 @@
       /* 13 Oct 2026, Jadon: Brand Builder: Premium (offer key
          brand_builder, the series with paid media) in two formats, the
          client choosing at kickoff. Replaces 10 episodes, 48 clips and 2
-         to 4 days. Counts live here for the /welcome page, which a client
+         to 4 days. 14 Oct 2026: Studio 10 episodes, Field 6 (2 vlogs and 4
+         sit-downs), one Signature Hero Ad a month (was 2). Never fewer
+         than 6 episodes a month. Counts live here for the /welcome page, which a client
          sees after paying. The public pages keep the series unpriced and
          uncounted, like every retainer: they read publicGuideTiers
          'Brand Builder', not this object. Existing signed series clients
          keep their signed scope. */
       premium: {
-        heroAdsPerMonth: 2,
+        heroAdsPerMonth: 1,
         studio: {
           name: 'Brand Builder: Premium · Studio',
-          longformEpisodes: 8,
+          longformEpisodes: 10,
           shortFormClips: 40,
           shootDaysMax: 3,
-          summary: '8 sit-down or podcast episodes a month (up to 30 minutes), 40 short-form clips (episode cuts, hero-ad cutdowns and promotional ad content), 2 Signature Hero Ads, up to 3 shoot days (2 recording days and a hero ad day)'
+          summary: '10 sit-down or podcast episodes a month (up to 30 minutes), 40 short-form clips (episode cuts, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 3 shoot days (2 recording days and a hero ad day)'
         },
         field: {
           name: 'Brand Builder: Premium · Field',
-          longformEpisodes: 4,
+          longformEpisodes: 6,
           vlogEpisodes: 2,
           shortFormClips: 40,
           shootDaysMax: 4,
-          summary: '4 episodes a month (2 vlog-style episodes of 15 to 25 minutes and 2 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 2 Signature Hero Ads, up to 4 shoot days (2 vlog days, a sit-down day and a hero ad day)'
+          summary: '6 episodes a month (2 vlog-style episodes of 15 to 25 minutes and 4 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 4 shoot days (2 vlog days, a sit-down day and a hero ad day)'
         }
       },
       monthlyPlans: {
