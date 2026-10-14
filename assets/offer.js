@@ -269,22 +269,33 @@
     brandBuilder: {
       page: '/brand-builder',
       geography: 'Los Angeles',
+      /* 13 Oct 2026, Jadon: one Brand Builder, two production formats.
+         The Studio Pilot (this object, offer key brand_builder_pilot) is
+         the original Pilot, slimmed from 10 episodes and 49 clips: batch
+         recorded sit-down episodes are cheap per episode, but ten of them
+         cost more to serve than the fee allows. The Field Pilot (below)
+         is the second format, for episodes shot on location.
+
+         The ladder rule, both Pilots only: a vlog-style episode can
+         become a sit-down, never the other way. The Signature Hero Ad is
+         never traded. Clips are stated as one total, never split.
+         Anyone who bought the Pilot before 13 Oct keeps what they
+         signed. */
       pilot: {
-        name: 'The Pilot',
+        name: 'The Studio Pilot',
+        format: 'studio',
         pilotFee: 7500,
         oneTime: true,
         noRetainer: true,
-        longformEpisodes: 10,
-        /* 11 Oct 2026, Handbook v1.31: 49 clips, cut from the episodes
-           with no fixed number per episode, so the per-episode figure is
-           gone. 10 episodes, 49 clips and the one Signature Hero Ad make
-           the Pilot's 60 assets. */
-        shortFormClips: 49,
+        longformEpisodes: 6,
+        episodeMinutesMax: 30,
+        shortFormClips: 24,
+        shootDaysMax: 2,
         scope: [
-          '10 longform episodes, shot and finished',
-          '49 short-form clips, cut from the episodes',
-          'One Signature Hero Ad',
-          'Premium playbook content: how we build hooks, formats and a posting rhythm',
+          '6 sit-down or podcast-style episodes, up to 30 minutes each, recorded in batches across two days',
+          '24 short-form clips: the best moments from every episode, plus promotional ad content',
+          'One Signature Hero Ad, its own directed shoot',
+          'Up to 2 shoot days: the episodes are recorded across both, and the hero ad is shot within them',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
@@ -295,6 +306,53 @@
            tracking, CRM and automation) are retainer only: they come
            with the Brand Builder retainer, never with the Pilot. */
         /* 8 Oct 2026, Jadon: the Pilot includes one Signature Hero Ad. */
+        heroAdIncluded: true,
+        organicPostingIncluded: true,
+        resultGuaranteed: false
+      },
+      /* 13 Oct 2026, Jadon: the Field Pilot, offer key
+         brand_builder_pilot_field. For founders and makers whose story
+         happens on location rather than at a desk: longer, hands-on,
+         documentary or vlog-style episodes. Vlog episodes cost more to
+         edit than sit-downs (the shooting is about the same), so there are
+         four of them, one a week, and the fee is higher. The copy stays
+         broad: no single niche. Travel outside the local area, multi-day
+         events and extra days are quoted separately.
+
+         Second published price, under the same rule as the Studio Pilot:
+         scripts/check-offer.py lets fieldPilotFee onto the two Brand
+         Builder pages and /about only. The page still sells the Story
+         Session, never the Pilot.
+
+         TODO: the Stripe Payment Link for the Field Pilot does not exist
+         yet. Nothing on the site links checkout for either Pilot, and
+         nothing should: the offer is made on the call. */
+      fieldPilot: {
+        name: 'The Field Pilot',
+        format: 'field',
+        fieldPilotFee: 8500,
+        oneTime: true,
+        noRetainer: true,
+        longformEpisodes: 4,
+        vlogEpisodesMax: 2,
+        vlogMinutes: [15, 25],
+        episodeMinutesMax: 30,
+        shortFormClips: 30,
+        shootDaysMax: 3,
+        scope: [
+          '4 episodes, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
+          '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
+          'One Signature Hero Ad, its own directed shoot',
+          'Up to 3 shoot days: the hero ad day and up to 2 episode days',
+          'Organic posting on your own channels for the Pilot month',
+          'A 90-day gameplan the client can hire us to run, or run without us'
+        ],
+        quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
+        /* Extra shoot days, event days and edits are sold at set rates
+           from the add-on card in the Field Pilot order form
+           (ntc-speed-to-lead). No add-on price is published here. */
+        addOnsAtSetRates: true,
+        gameplanIsClientsToKeep: true,
         heroAdIncluded: true,
         organicPostingIncluded: true,
         resultGuaranteed: false

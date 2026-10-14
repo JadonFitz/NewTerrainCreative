@@ -121,6 +121,12 @@ FORM_PAGES = {'apply.html', 'project.html', 'strategy-call.html'}
 # from offer.js this set is empty and the page fails, which is correct.
 m_pilot = re.search(r'pilotFee:\s*(\d+)', offer)
 _pilot = {fmt(int(m_pilot.group(1)))} if m_pilot else set()
+# 13 Oct 2026: the Field Pilot (brandBuilder.fieldPilot) is the second
+# Brand Builder Pilot format, published on the same pages under the same
+# rule as the Studio Pilot.
+m_field = re.search(r'fieldPilotFee:\s*(\d+)', offer)
+if m_field:
+    _pilot = _pilot | {fmt(int(m_field.group(1)))}
 PAGE_EXTRA = {'brand-builder.html': _pilot, 'brand-builder-pro.html': _pilot, 'about.html': _pilot}
 
 # /production-inquiry asks for a one-off project budget, so it may show
