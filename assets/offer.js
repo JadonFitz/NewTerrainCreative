@@ -315,7 +315,8 @@
          happens on location rather than at a desk: longer, hands-on,
          documentary or vlog-style episodes. Vlog episodes cost more to
          edit than sit-downs (the shooting is about the same), so there are
-         four of them, one a week, and the fee is higher. The copy stays
+         four of them, one a week, and the fee is higher. Final numbers,
+         13 Oct 2026: 2 vlogs plus 2 sit-downs, up to 3 shoot days. The copy stays
          broad: no single niche. Travel outside the local area, multi-day
          events and extra days are quoted separately.
 
@@ -340,10 +341,10 @@
         shortFormClips: 30,
         shootDaysMax: 3,
         scope: [
-          '4 episodes, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
+          '4 episodes, one a week: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 2 sit-down or podcast-style',
           '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
-          'Up to 3 shoot days: the hero ad day and up to 2 episode days',
+          'Up to 3 shoot days: two vlog days and the hero ad day, with the sit-downs recorded on a vlog day',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
@@ -396,12 +397,12 @@
           longformEpisodes: 4,
           vlogEpisodesMax: 2,
           shortFormClips: 30,
-          shootDaysMax: 3,
+          shootDaysMax: 4,
           scope: [
-            '4 episodes a month, one a week: up to 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and the rest sit-down or podcast-style',
+            '4 episodes a month, one a week: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 2 sit-down or podcast-style',
             '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
             'One Signature Hero Ad a month, its own directed shoot',
-            'Up to 3 shoot days a month: the hero ad day and up to 2 episode days',
+            'Up to 4 shoot days a month: two vlog days, a sit-down day and the hero ad day',
             'Organic posting on your own channels every month'
           ],
           quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
