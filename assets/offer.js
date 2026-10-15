@@ -194,11 +194,15 @@
         {
           name: 'The Anchor',
           label: 'Creative + paid media',
+          /* 14 Oct 2026, Jadon: statics on top of the video. Shown on
+             /welcome after payment only; public cards carry no counts. */
+          staticAdsPerMonth: 5,
           scope: 'A focused monthly ad creative and paid media system: recurring campaign concepts, production, testing and management under one roof.',
           includes: [
             'A recurring monthly media day',
             'A steady monthly volume of ad creative, built as ad creative',
             'Directed setups, finished with b-roll, sound design and color',
+            'Static ads and carousels for paid placements, designed from photos taken on the production day',
             'Organic distribution of the campaign creative',
             'Monthly analytics and creative direction',
             'Paid media management, testing and iteration',
@@ -208,11 +212,13 @@
         {
           name: 'Growth Partner',
           label: 'More volume, deeper testing',
+          staticAdsPerMonth: 10,
           scope: 'Higher creative volume, deeper testing and more ambitious campaign concepts, for a business ready to scale what is working.',
           includes: [
             'More shoot time each month than The Anchor',
             'A higher monthly volume of short-form ad creative and variants, cut for Instagram, Facebook, TikTok and YouTube Shorts',
             'Dedicated ad concepts and hook variations, not repurposed brand cuts',
+            'Single-image and carousel static ads for paid placements, designed from photos taken on the production days',
             'A Signature Hero Ad every three months, its own directed shoot within the included shoot days',
             'Event, product and brand-identity coverage within the included shoot days',
             'A weekly posting rhythm on your own channels, planned and scheduled from the month\u2019s creative',
@@ -224,6 +230,7 @@
         {
           name: 'Brand Builder',
           label: 'Flagship partnership',
+          staticAdsPerMonth: 10,
           scope: 'Our largest production allocation, in Studio or Field, with organic posting, paid media and the conversion setup run for you.',
           /* 8 Oct 2026: Brand Builder runs the client's own channels.
              14 Oct 2026: Growth Partner now has a weekly posting rhythm
@@ -235,6 +242,7 @@
             'Our highest monthly volume across longform, short-form and ads',
             'Longform in one of two formats, chosen at kickoff: Studio (sit-down and podcast episodes, recorded in batches) or Field (hands-on, vlog-style episodes shot where the work happens, plus sit-downs)',
             'Short-form cut from every episode, hero-ad cutdowns and promotional ad content, and the ads built from the strongest',
+            'Static ads and carousels for paid placements, designed from photos taken on the production days',
             'A Signature Hero Ad every month, its own directed shoot within the included shoot days',
             'Organic social posting: we run the channels the content goes out on',
             'Everything in Growth Partner, plus the episodes and a Signature Hero Ad every month',

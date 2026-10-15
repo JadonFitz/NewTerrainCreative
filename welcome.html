@@ -535,7 +535,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var fromTier = function (t) {
     // Drop add-on price lines: a price list after checkout reads as an upsell.
-    return t ? t.includes.filter(function (s) { return s.indexOf('$') === -1; }) : [];
+    var lines = t ? t.includes.filter(function (s) { return s.indexOf('$') === -1; }) : [];
+    // 14 Oct 2026: the paying client sees the monthly statics count.
+    if (t && t.staticAdsPerMonth) {
+      lines = lines.map(function (s) {
+        return /^(Static ads|Single-image and carousel static ads)/.test(s)
+          ? '+ ' + t.staticAdsPerMonth + ' statics and carousels a month for paid placements, designed from photos taken on the production day'
+          : s;
+      });
+    }
+    return lines;
   };
 
   var foundingSteps = [
