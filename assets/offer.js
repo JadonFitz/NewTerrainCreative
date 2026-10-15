@@ -183,6 +183,10 @@
     // separately and no page may suggest otherwise. The line is the
     // same on every tier in public; depth per tier is internal.
     retainer: {
+      /* 14 Oct 2026, Jadon: outcome-first framing. Each tier leads with
+         a headline and subhead (a direction, never a number), and the
+         includes below stay word for word as "What's included". */
+      companyLine: 'We make video ads that book calls, and we run them.',
       /* No rate and no capacity signal, on purpose. Both were removed
          2 Oct 2026 with the rest of the pricing: the per-tier monthly
          figure, and the single-line signal the homepage engage card and
@@ -193,6 +197,8 @@
       publicGuideTiers: [
         {
           name: 'The Anchor',
+          headline: 'A steady flow of booked calls, with ads made and run for you.',
+          subhead: 'Built to lower your cost per booked call, every month.',
           label: 'Creative + paid media',
           /* 14 Oct 2026, Jadon: statics on top of the video. Shown on
              /welcome after payment only; public cards carry no counts. */
@@ -211,6 +217,8 @@
         },
         {
           name: 'Growth Partner',
+          headline: 'Become the obvious choice in your market.',
+          subhead: 'Video ads that book calls, and a presence that earns trust when buyers look you up.',
           label: 'More volume, deeper testing',
           staticAdsPerMonth: 10,
           scope: 'Higher creative volume, deeper testing and more ambitious campaign concepts, for a business ready to scale what is working.',
@@ -229,6 +237,8 @@
         },
         {
           name: 'Brand Builder',
+          headline: 'Your own show, built to bring in clients.',
+          subhead: 'It makes you the go-to name, and ads turn that attention into booked calls.',
           label: 'Flagship partnership',
           staticAdsPerMonth: 10,
           scope: 'Our largest production allocation, in Studio or Field, with organic posting, paid media and the conversion setup run for you.',
