@@ -167,7 +167,10 @@ function isRebooking(d) {
     'eventTypeName', 'event_type_name', 'eventName',
     'call.eventTypeName', 'data.eventTypeName') || '').toLowerCase();
   const slug = String(pick(d, 'event_type.slug', 'eventType.slug') || '').toLowerCase();
-  return name.includes('rescheduled call') || slug.includes('rescheduled-call');
+  return name.includes('rescheduled call') || slug.includes('rescheduled-call') ||
+    // The Quick Follow-Up event (15 Oct 2026, booked from /follow-up) is a
+    // lead we already spoke with, counted on their first booking.
+    name.includes('quick follow-up') || slug.includes('quick-follow-up');
 }
 
 /* The campaign a booking came from, if iClosed carried it through.

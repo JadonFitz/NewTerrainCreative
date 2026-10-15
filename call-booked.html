@@ -653,6 +653,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       // here with ?offer=reschedule) is the same lead as the call they
       // missed, which was already counted. Never a second Schedule.
       if (offer === 'reschedule') return;
+      // A Quick Follow-Up from /follow-up (?offer=follow-up, 15 Oct 2026)
+      // is a lead we already spoke with, already counted. Same rule.
+      if (offer === 'follow-up') return;
       if (getComputedStyle(widget).display === 'none') return;
       if (!window.ntc) return;
 

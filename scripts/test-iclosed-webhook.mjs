@@ -252,6 +252,14 @@ n = calls.length;
 res = await request(booking({ event: { callPreviewId: 'call_rebook5678' }, event_type: { name: 'Renamed', slug: 'rescheduled-call' } }));
 check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
 
+console.info('\n\x1b[1mQUICK FOLLOW-UP\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_follow1234' }, event_type: { name: 'Quick Follow-Up' } }));
+check('a follow-up is noted, not counted', res.payload.noted === 'rebooking' && calls.length === n);
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_follow5678' }, event_type: { name: 'Renamed', slug: 'quick-follow-up' } }));
+check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
+
 // The public endpoint must still refuse the name this handler now writes.
 const trackSource = await (await import('node:fs/promises')).readFile(
   new URL('../api/track.js', import.meta.url), 'utf8');
