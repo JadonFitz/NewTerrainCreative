@@ -400,8 +400,9 @@
          brand_builder, the series with paid media) in two formats, the
          client choosing at kickoff. Replaces 10 episodes, 48 clips and 2
          to 4 days. 14 Oct 2026: Studio 10 episodes, Field 6 (2 vlogs and 4
-         sit-downs), one Signature Hero Ad a month (was 2). Never fewer
-         than 6 episodes a month. Counts live here for the /welcome page, which a client
+         sit-downs), one Signature Hero Ad a month (was 2). 15 Oct 2026:
+         Field 7 (3 vlogs and 4 sit-downs), up to 5 shoot days, so it stays
+         ahead of Brand Builder: Field. Never fewer than 6 episodes a month. Counts live here for the /welcome page, which a client
          sees after paying. The public pages keep the series unpriced and
          uncounted, like every retainer: they read publicGuideTiers
          'Brand Builder', not this object. Existing signed series clients
@@ -417,11 +418,11 @@
         },
         field: {
           name: 'Brand Builder: Premium · Field',
-          longformEpisodes: 6,
-          vlogEpisodes: 2,
+          longformEpisodes: 7,
+          vlogEpisodes: 3,
           shortFormClips: 40,
-          shootDaysMax: 4,
-          summary: '6 episodes a month (2 vlog-style episodes of 15 to 25 minutes and 4 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 4 shoot days (2 vlog days, a sit-down day and a hero ad day)'
+          shootDaysMax: 5,
+          summary: '7 episodes a month (3 vlog-style episodes of 15 to 25 minutes and 4 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 5 shoot days (3 vlog days, a sit-down day and a hero ad day)'
         }
       },
       monthlyPlans: {
@@ -447,15 +448,16 @@
         field: {
           name: 'Brand Builder: Field',
           format: 'field',
-          longformEpisodes: 3,
-          vlogEpisodesMax: 2,
+          // 15 Oct 2026, Jadon: a weekly episode, one more vlog than the Field Pilot.
+          longformEpisodes: 4,
+          vlogEpisodesMax: 3,
           shortFormClips: 30,
-          shootDaysMax: 2,
+          shootDaysMax: 3,
           scope: [
-            '3 episodes a month: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
+            '4 episodes a month, one a week: 3 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
             '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
             'One Signature Hero Ad every three months, its own directed shoot',
-            'Up to 2 shoot days a month: the vlog days, with the sit-down recorded on a vlog day, plus the hero ad day in hero months',
+            'Up to 3 shoot days a month: the vlog days, with the sit-down recorded on a vlog day, plus the hero ad day in hero months',
             'Organic posting on your own channels every month'
           ],
           quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
