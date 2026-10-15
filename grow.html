@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Growth · New Terrain Creative. Content that gets you leads.</title>
-<meta name="description" content="Production Media for established businesses: strategy, production, campaign management, optimisation and reporting under one roof.">
+<meta name="description" content="We make video ads that book calls, and we run them. Monthly plans for established businesses: production, paid media management and conversion support under one roof.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="New Terrain Creative · Social Growth">
 <meta property="og:description" content="Content that gets you leads, not just likes. Creative and paid media under one roof.">
@@ -422,6 +422,9 @@
     font-family: var(--display); font-weight: 300; font-size: 26px;
     line-height: 1.1; color: var(--parchment);
   }
+  .tier-headline { font-family: var(--display); font-size: 21px; font-weight: 300; line-height: 1.25; color: var(--parchment); margin: 0; }
+  .tier-sub { font-size: 13.5px; line-height: 1.7; color: var(--soft); margin: 0; }
+  .tier-incl { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
   .tier-line { font-size: 13px; line-height: 1.7; color: var(--soft); }
   .tier-line b { color: var(--parchment); font-weight: 400; }
   .tiers + .invest-note { margin-top: 22px; }
@@ -1447,6 +1450,7 @@
 <section id="packages">
   <div class="eyebrow reveal">The packages</div>
   <h2 class="title reveal">Three ways to <em>work together.</em></h2>
+  <p class="lede reveal"><b>We make video ads that book calls, and we run them.</b> Three jobs behind every plan: get seen, with ads in front of the right buyers; get trusted, with real people filmed well; and get the call, with fast follow-up so leads become booked calls.</p>
   <p class="lede reveal">Creative, paid media and conversion infrastructure, run as one system. Scope and fee are set on the call. <b>The exact scope is confirmed in writing before anything starts.</b></p>
 
   <!-- Cards render from assets/offer.js retainer.publicGuideTiers.
@@ -1455,6 +1459,11 @@
        monthly deliverable count is rendered here, and none is declared
        in offer.js to render. Do not hard-code a figure here. -->
   <div class="tiers reveal" id="tiers"></div>
+
+  <!-- 14 Oct 2026: the one proof line near the plans. NTC's own
+       campaign, never a client result, and never "we will do the same
+       for you". -->
+  <p class="invest-note reveal"><b>Our own campaign, not a client's:</b> our own ads booked 10 calls on $266 in ad spend.</p>
 
   <p class="invest-note reveal"><b>Three month minimum.</b> Your advertising spend stays on your own payment method, never marked up or held by us.</p>
 
@@ -1900,6 +1909,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return '<div class="tier' + (i === 1 ? ' tier--mid' : '') + '">' +
                '<div class="tier-label">' + (t.label || '') + '</div>' +
                '<div class="tier-name">' + t.name + '</div>' +
+               (t.headline ? '<p class="tier-headline">' + t.headline + '</p>' : '') +
+               (t.subhead ? '<p class="tier-sub">' + t.subhead + '</p>' : '') +
+               (t.headline ? '<div class="tier-incl">What\u2019s included</div>' : '') +
                lines +
              '</div>';
     }).join('');
