@@ -372,7 +372,8 @@
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
         quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
-        /* Extra shoot days, event days and edits are sold at set rates
+        /* 15 Oct 2026, Jadon: no add-on prices in any order form; extras are
+           quoted on request. Was: extra shoot days, event days and edits sold at set rates
            from the add-on card in the Field Pilot order form
            (ntc-speed-to-lead). No add-on price is published here. */
         addOnsAtSetRates: true,
