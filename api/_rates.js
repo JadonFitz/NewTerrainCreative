@@ -106,7 +106,8 @@ export const RETAINER = {
       // 14 Oct 2026, Premium: Studio 10 episodes or Field 6 (2 vlogs, 4
       // sit-downs), 40 clips, 1 Signature Hero Ad a month (was 2), up to 3
       // (Studio) or 4 (Field) shoot days. Never fewer than 6 episodes.
-      totalAssets: 51, totalAssetsField: 47, productionDays: 3,
+      // 15 Oct 2026: Field 7 (3 vlogs, 4 sit-downs), up to 5 shoot days.
+      totalAssets: 51, totalAssetsField: 48, productionDays: 3,
       heroAds: 1, longform: true,
       includesCampaignManagement: true,
       includesConversionInfrastructure: true,
