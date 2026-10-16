@@ -357,17 +357,18 @@
         fieldPilotFee: 8500,
         oneTime: true,
         noRetainer: true,
-        longformEpisodes: 3,
-        vlogEpisodesMax: 2,
+        // 16 Oct 2026, Jadon: 4 episodes (3 vlog-style, 1 sit-down), same 3 shoot days.
+        longformEpisodes: 4,
+        vlogEpisodesMax: 3,
         vlogMinutes: [15, 25],
         episodeMinutesMax: 30,
         shortFormClips: 30,
         shootDaysMax: 3,
         scope: [
-          '3 episodes: 2 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
+          '4 episodes: 3 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
           '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
           'One Signature Hero Ad, its own directed shoot',
-          'Up to 3 shoot days: two vlog days and the hero ad day, with the sit-down recorded on a vlog day',
+          'Up to 3 shoot days: the vlog days and the hero ad day, with the sit-down recorded on a vlog day',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
