@@ -1218,6 +1218,9 @@
   .pilot-list li::before { content: ''; position: absolute; left: 0; top: 17px; width: 6px; height: 1px; background: var(--gold); }
   .pilot-list b { color: var(--parchment); font-weight: 500; }
   .pilot-alt a { color: var(--gold); }
+  .pilot-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pilot-cards .pilot-card { max-width: none; }
+  @media (max-width: 700px) { .pilot-cards { grid-template-columns: 1fr; } }
 
   /* ── CASE STUDIES ── */
   .case-grid {
@@ -1384,32 +1387,6 @@
   <p class="bb-cite-line reveal"><b>82%</b> of people are more likely to trust a company whose CEO and leadership are active on social media, and 77% are more likely to buy from it. <a href="https://csrwire.com/press-release/brandfog-survey-reveals-that-ceo-engagement-on-social-media-positively-impacts-brand-image-trust-and-purchase-intent/" target="_blank" rel="noopener">BRANDfog survey, 2014</a></p>
 </div>
 
-<!-- PROOF · the two founder brands.
-     Numbers and wording are the ones already published on / and /grow.
-     If one changes there, change it here in the same commit. -->
-<section id="cases">
-  <div class="eyebrow reveal">Proof</div>
-  <h2 class="title reveal">Two attorneys with firms to run.<br>Two brands that <em>work.</em></h2>
-
-  <div class="case-grid">
-    <article class="case reveal">
-      <span class="case-tier">Longform · Short-form · Documentary</span>
-      <h3 class="case-name">Mike Alder</h3>
-      <div class="case-num">58K+</div>
-      <div class="case-label">Followers on his feed</div>
-      <p class="case-desc"><b>We shot and edited the high-end content behind an attorney's personal brand:</b> educational short-form and documentary-style work for the lawyer behind $3.1B+ in settlements.</p>
-      <a class="case-link" href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener">See his feed ↗</a>
-    </article>
-    <article class="case reveal">
-      <span class="case-tier">Podcast · Short-form</span>
-      <h3 class="case-name">Gina Zapanta</h3>
-      <div class="case-num">101K+</div>
-      <div class="case-label">Combined following</div>
-      <p class="case-desc">A podcast and short-form engine across Instagram, YouTube and TikTok, <b>built episode by episode around her voice,</b> not a content calendar template.</p>
-      <a class="case-link" href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener">See her feed ↗</a>
-    </article>
-  </div>
-</section>
 
 <!-- THE REEL -->
 <!--
@@ -1816,59 +1793,50 @@
   <div class="eyebrow reveal">Why One Team</div>
   <h2 class="title reveal">One team.<br>Not five <em>freelancers.</em></h2>
   <p class="lede reveal">Everybody knows content is king. What wins now is the mix: <b>film-level polish and raw, real moments,</b> from the same team, to the same standard.</p>
-  <div class="crew-grid">
-    <div class="crew-item reveal"><span class="crew-kicker">Cinema</span><p><b>Founder films and longform.</b> Interviews, episodes and the story behind the business.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Ads</span><p><b>Short cuts built to sell.</b> Cut from your strongest moments, with paid media run for you on the retainer.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Raw</span><p><b>Day in the life.</b> The unpolished, real content that makes people feel like they know you.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Posted</span><p><b>We run your channels.</b> The content goes out on your own accounts, every month, so nothing sits in a folder.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Behind it</span><p><b>The conversion setup.</b> Landing-page flow, lead routing into your CRM and conversion tracking, built and managed with the retainer.</p></div>
-  </div>
   <p class="crew-note reveal">One crew, one standard, one point of contact. <b>Not a videographer, an editor, a social media person and an ads guy who never talk to each other.</b></p>
 </section>
 
-<!-- THE METHOD · Pilot, then Series.
-     The Pilot's price and scope are declared in assets/offer.js
-     brandBuilder.pilot (Studio) and brandBuilder.fieldPilot (Field, 13
-     Oct 2026), and scripts/check-offer.py lets those two figures onto
-     this page. Change them there first. It appears here ONCE, as a
-     filter before the call, and carries no button of its own.
-
-     Brand Builder carries no price and no counts, like every retainer
-     on the site, and every line restates offer.js publicGuideTiers
-     'Brand Builder'. -->
+<!-- THE METHOD · Pilot, then Series. Slimmed Oct 16, 2026 (Jadon): no
+     prices on the page, short cards, the call does the rest. Counts restate
+     assets/offer.js brandBuilder.pilot and brandBuilder.fieldPilot. -->
 <section id="method">
   <div class="eyebrow reveal">How It Works</div>
   <h2 class="title reveal">Pilot, then <em>series.</em></h2>
-  <p class="lede reveal">A fixed first project before any monthly commitment. <b>You see the work before you sign for more.</b></p>
   <div class="show-rows">
     <div class="show-row reveal">
       <div class="show-part"><span class="show-kicker">Step one · 30 minutes</span>The <em>story</em></div>
-      <p class="show-body"><b>The Story Session.</b> We map what you are known for and who needs to hear it, and tell you straight whether it carries a brand.</p>
+      <p class="show-body"><b>The Story Session.</b> We find what only you can say, and tell you straight whether it carries a brand.</p>
     </div>
     <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Step two · $7,500, one time</span>The <em>pilot</em></div>
+      <div class="show-part"><span class="show-kicker">Step two · one month</span>The <em>pilot</em></div>
       <div class="show-body">
         <p><b>Try a month of your show before you commit.</b></p>
-        <div class="pilot-card">
-          <span class="pilot-kicker">Studio · $7,500, one time</span>
-          <h3 class="pilot-name">Brand Builder Studio <em>Pilot</em></h3>
-          <p class="pilot-fit">Sit-down or podcast-style episodes, recorded in batches across two days, so a month of content takes two days of your calendar.</p>
-          <ul class="pilot-list">
-            <li><b>6 episodes,</b> up to 30 minutes each</li>
-            <li><b>24 short-form clips:</b> the best moments from every episode, plus promotional ad content</li>
-            <li><b>One Signature Hero Ad,</b> its own directed shoot</li>
-            <li><b>Up to 2 shoot days:</b> the episodes are recorded across both, and the hero ad is shot within them</li>
-          </ul>
+        <div class="pilot-cards">
+          <div class="pilot-card">
+            <span class="pilot-kicker">Studio</span>
+            <h3 class="pilot-name">Across a <em>table</em></h3>
+            <ul class="pilot-list">
+              <li><b>6 sit-down or podcast episodes</b></li>
+              <li><b>24 short-form clips</b></li>
+              <li><b>1 Signature Hero Ad</b></li>
+            </ul>
+          </div>
+          <div class="pilot-card">
+            <span class="pilot-kicker">Field</span>
+            <h3 class="pilot-name">Where the <em>work</em> happens</h3>
+            <ul class="pilot-list">
+              <li><b>4 episodes:</b> 3 vlog-style, 1 sit-down</li>
+              <li><b>30 short-form clips</b></li>
+              <li><b>1 Signature Hero Ad</b></li>
+            </ul>
+          </div>
         </div>
-        <p class="pilot-alt">Work that is better watched than described? <b>The Brand Builder Field Pilot, $8,500,</b> shoots 3 episodes: 2 longer, hands-on vlog-style episodes where the work happens and 1 sit-down, with 30 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content) and up to 3 shoot days. Extra days, events and edits are quoted on request. <a href="/brand-builder#method">See both formats</a>.</p>
-        <p>Both include organic posting on your channels for the month and a 90-day gameplan. <b>Hire us to run it, or run it without us. It is yours either way.</b></p>
+        <p>Both include posting on your channels and a 90-day gameplan you keep either way.</p>
       </div>
     </div>
     <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Step three · by application</span>The <em>series</em></div>
-      <p class="show-body show-lead"><b>Your own show, built to bring in clients.</b> It makes you the go-to name, and ads turn that attention into booked calls.</p>
-      <p class="show-body"><b>Brand Builder: Premium,</b> our flagship monthly production, in Studio or Field, chosen at kickoff: episodes and clips every month, a Signature Hero Ad every month and the ads built from it, statics and carousels for paid placements, with paid media management and the conversion setup run for you, and your channels posted every month. Scoped on the call, three month minimum.</p>
-      <p class="show-body show-note">Prefer to run it without paid media? <b>Brand Builder: Studio and Brand Builder: Field</b> make you the trusted face of your industry, so clients come to you already sold. They keep the same production going as an ongoing monthly plan, three-month minimum.</p>
+      <div class="show-part"><span class="show-kicker">Step three · monthly</span>The <em>series</em></div>
+      <p class="show-body"><b>Your own show, every month,</b> with or without ads run for you. Scoped on the call.</p>
     </div>
   </div>
 </section>
@@ -1947,7 +1915,7 @@
   <div class="close-ctas reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
   </div>
-  <p class="bb-ps reveal"><b>P.S.</b> The short version: thirty minutes with our team. You leave with a straight read on your brand and three story angles, whether or not we ever work together. If it fits, the Pilot is $7,500, one time (or $8,500 shot in the field), and the plan is yours to keep. The founders you compete with are on camera this week either way.</p>
+  <p class="bb-ps reveal"><b>P.S.</b> Thirty minutes with our team. You leave with a straight read on your brand and three story angles, whether or not we ever work together.</p>
   <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
     <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
     <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>
