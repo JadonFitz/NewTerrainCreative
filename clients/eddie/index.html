@@ -229,12 +229,18 @@
     position: absolute; inset: 0;
     display: flex; align-items: flex-end; justify-content: space-between;
     padding: 10px 12px;
-    background: var(--art, linear-gradient(135deg, #1a1d2b, #05060b));
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    background: linear-gradient(180deg, rgba(4,5,10,0.55) 0%, rgba(4,5,10,0) 38%, rgba(4,5,10,0) 55%, rgba(4,5,10,0.8) 100%);
   }
-  .thumb .art i { font-style: normal; font-family: var(--race); font-size: 30px; line-height: 1; color: rgba(244, 246, 255, 0.9); }
+  .thumb .hook {
+    position: absolute; z-index: 1; top: 9px; left: 12px; right: 12px;
+    font-family: var(--race); font-weight: 400; text-transform: uppercase;
+    font-size: clamp(20px, 2.4vw, 28px); line-height: 0.95; color: var(--star);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+  }
+  .thumb .art, .thumb .hook { pointer-events: none; }
+  .thumb .art i { font-style: normal; font-family: var(--cond); font-weight: 800; font-size: 12px; letter-spacing: 0.2em; line-height: 1; color: var(--redline); }
   .thumb .art em { font-style: normal; font-family: var(--cond); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(244, 246, 255, 0.6); }
-  .ep:hover .thumb img, .ep:hover .thumb .art, .ep:focus-visible .thumb .art { transform: scale(1.05); }
+  .ep:hover .thumb img, .ep:focus-visible .thumb img { transform: scale(1.05); }
   .ep h3 { margin: 0; font-family: var(--cond); font-weight: 600; font-size: 16px; letter-spacing: 0.02em; line-height: 1.3; text-wrap: balance; }
   .ep span { font-family: var(--cond); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
 
@@ -287,7 +293,7 @@
     .film .corner.tl { display: none; }
     .play { width: 56px; height: 56px; }
     .slot small { display: none; }
-    .thumb .art i { font-size: 22px; }
+    .thumb .hook { font-size: 18px; top: 7px; left: 9px; }
     .thumb .art em { font-size: 10px; letter-spacing: 0.14em; }
   }
   .thumb .art i, .thumb .art em { white-space: nowrap; }
@@ -369,10 +375,10 @@
 <script>
   /* ---------- Episodes: fill in real YouTube video IDs to show live thumbnails ---------- */
   const VIDEOS = [
-    { id: '', title: 'Inside the 310 MPH roadster', tag: 'Sit-down', art: 'linear-gradient(135deg,#2a1a17 0%,#0b0708 70%)' },
-    { id: '', title: 'Race day at Orange Show Speedway', tag: 'Track', art: 'linear-gradient(135deg,#141c2e 0%,#05070d 70%)' },
-    { id: '', title: 'Shop build: classic body, modern bones', tag: 'Build', art: 'linear-gradient(135deg,#1d1f24 0%,#060608 70%)' },
-    { id: '', title: 'Bonneville: chasing the salt', tag: 'Records', art: 'linear-gradient(135deg,#2b2a26 0%,#09090a 70%)' }
+    { id: '', title: 'Inside the 310 MPH roadster', tag: 'Sit-down', hook: 'The sit-down', thumb: 'ep1.jpg' },
+    { id: '', title: 'Race day at Orange Show Speedway', tag: 'Track', hook: 'Race day', thumb: 'ep2.jpg' },
+    { id: '', title: 'Shop build: classic body, modern bones', tag: 'Build', hook: 'The build', thumb: 'ep3.jpg' },
+    { id: '', title: 'Road to 310: life on the big tracks', tag: 'Racing', hook: 'Big track', thumb: 'ep4.jpg' }
   ];
   const CHANNEL = document.getElementById('yt-link').href;
   const wrap = document.getElementById('episodes');
@@ -383,17 +389,15 @@
     a.target = '_blank';
     a.rel = 'noopener';
     const n = String(i + 1).padStart(2, '0');
+    const src = v.id ? 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg' : v.thumb;
     a.innerHTML =
-      '<div class="thumb"><div class="art" style="--art:' + v.art + '"><i>EP ' + n + '</i><em>' + v.tag + '</em></div></div>' +
+      '<div class="thumb"><img alt="" loading="lazy"><b class="hook"></b>' +
+      '<div class="art"><i>EP ' + n + '</i><em></em></div></div>' +
       '<h3></h3><span>Watch on YouTube</span>';
+    a.querySelector('img').src = src;
+    a.querySelector('.hook').textContent = v.hook;
+    a.querySelector('em').textContent = v.tag;
     a.querySelector('h3').textContent = v.title;
-    if (v.id) {
-      const img = new Image();
-      img.alt = '';
-      img.loading = 'lazy';
-      img.onload = () => a.querySelector('.thumb').appendChild(img);
-      img.src = 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg';
-    }
     wrap.appendChild(a);
   });
 
