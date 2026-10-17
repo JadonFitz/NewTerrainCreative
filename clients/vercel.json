@@ -6,15 +6,35 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "eddie.newterraincreative.com" }],
-      "destination": "/eddie/:path*"
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "eddie.newterraincreative.com"
+        }
+      ],
+      "destination": "/eddie"
+    },
+    {
+      "source": "/:path((?!eddie/).+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "eddie.newterraincreative.com"
+        }
+      ],
+      "destination": "/eddie/:path"
     }
   ],
   "headers": [
     {
       "source": "/(.*)",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ]
 }
