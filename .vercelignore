@@ -6,3 +6,12 @@ scripts/
 supabase/
 README.md
 cursorrules
+
+# Claude design toolkit: skills, hooks, brand files and tool state.
+# Working files only, never part of the public site.
+.claude/
+.impeccable/
+.playwright/
+.playwright-cli/
+PRODUCT.md
+DESIGN.md

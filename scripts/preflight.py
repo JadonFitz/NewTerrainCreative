@@ -170,20 +170,29 @@ else:
 # ── 5 · what ships ────────────────────────────────────────────────────
 head('5 · Deployment surface')
 vi = ROOT / '.vercelignore'
+listed = set()
 if not vi.exists():
     bad('.vercelignore is missing. The repo root is the deployed directory, '
         'so docs/, scripts/ and supabase/ would be publicly reachable.')
 else:
     listed = {l.strip().rstrip('/') for l in vi.read_text().splitlines()
               if l.strip() and not l.startswith('#')}
-    for d in ('docs', 'scripts', 'supabase'):
+    # .claude/ and .impeccable/ hold the Claude design toolkit (skills,
+    # hooks, tool state). Working files, never part of the public site.
+    for d in ('docs', 'scripts', 'supabase', '.claude', '.impeccable'):
         if (ROOT / d).exists():
             ok(f'{d}/ excluded from deploy') if d in listed \
                 else bad(f'{d}/ exists but is NOT in .vercelignore, so it would ship')
 
 # Working documents must not be reachable, whatever their extension.
+# PRODUCT.md and DESIGN.md must sit in the root for the design skills to
+# find them, so they are allowed there only while .vercelignore covers them.
 for md in ROOT.glob('*.md'):
-    if md.name != 'README.md':
+    if md.name == 'README.md':
+        continue
+    if md.name in listed:
+        ok(f'{md.name} excluded from deploy')
+    else:
         warn(f'{md.name} sits in the deployed root')
 
 # ── no page may link a raw calendar ───────────────────────────────────
