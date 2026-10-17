@@ -90,6 +90,13 @@
   ],
   "headers": [
     {
+      "source": "/d/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
+    },
+    {
       "source": "/owner(\\.html)?",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
@@ -99,6 +106,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/d/:path*",
+      "destination": "https://ntc-agent-production.up.railway.app/d/:path*"
+    },
     {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
