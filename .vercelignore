@@ -15,3 +15,6 @@ cursorrules
 .playwright-cli/
 PRODUCT.md
 DESIGN.md
+
+# Client sample pages deploy from their own Vercel project (ntc-clients).
+clients/
