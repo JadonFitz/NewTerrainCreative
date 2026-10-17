@@ -150,6 +150,8 @@
   .slot small { font-family: var(--cond); font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
   .corner {
     position: absolute;
+    z-index: 1;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
     font-family: var(--cond);
     font-size: 11px;
     letter-spacing: 0.22em;
@@ -308,13 +310,9 @@
   </header>
 
   <section class="film" aria-label="Signature hero film">
-    <!-- Drop the Signature Hero Ad here: <video src="hero.mp4" poster="hero.jpg" autoplay muted loop playsinline></video> -->
+    <!-- Sample loop. Swap in the Signature Hero Ad once it is cut. -->
+    <video src="hero.mp4" poster="hero-poster.jpg" autoplay muted loop playsinline preload="auto" aria-label="Racing highlight reel"></video>
     <span class="corner tl">Signature Hero Ad</span>
-    <div class="slot">
-      <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></div>
-      <b>The Road to 310</b>
-      <small>Film drops this season</small>
-    </div>
     <span class="corner br">● REC</span>
   </section>
 
@@ -364,7 +362,6 @@
     </nav>
     <footer>
       <span>Eddie Marlen · Carreteras</span>
-      <span>Built by New Terrain Creative</span>
     </footer>
   </section>
 </main>
