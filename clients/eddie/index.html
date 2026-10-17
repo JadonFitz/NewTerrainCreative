@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Eddie Marlen: builder, racer, and holder of the world's fastest roadster record at 310.5 mph.">
+<title>Eddie Marlen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Saira+Condensed:wght@400;600;800&family=Saira:wght@300;400;500&display=swap">
+<style>
+  /* Layout: one centered column over a fixed 3D starfield. Name, hero film, record stats, latest episodes, socials. About two scrolls. */
+  :root {
+    --space: #04050a;
+    --space-2: #0a0c14;
+    --star: #f4f6ff;
+    --dust: #9aa0b4;
+    --faint: #80869b;
+    --line: rgba(244, 246, 255, 0.12);
+    --redline: #ff3b2a;
+    --race: 'Racing Sans One', 'Impact', 'Arial Black', sans-serif;
+    --cond: 'Saira Condensed', 'Arial Narrow', sans-serif;
+    --body: 'Saira', 'Helvetica Neue', Arial, sans-serif;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--space); }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  body {
+    background: var(--space);
+    color: var(--star);
+    font-family: var(--body);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  #stars {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(4, 5, 10, 0.75) 100%);
+  }
+  main {
+    position: relative;
+    z-index: 2;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: clamp(40px, 8vh, 88px) 56px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(56px, 9vw, 104px);
+  }
+
+  /* ---------- Name ---------- */
+  .masthead { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .kicker {
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--dust);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--redline); box-shadow: 0 0 10px var(--redline); }
+  h1 {
+    margin: 0;
+    font-family: var(--race);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.86;
+    font-size: clamp(64px, 15vw, 172px);
+    letter-spacing: 0.01em;
+    color: var(--star);
+    text-shadow:
+      0 0 6px rgba(255, 255, 255, 0.35),
+      0 0 18px rgba(255, 255, 255, 0.18),
+      0 0 42px rgba(160, 180, 255, 0.12);
+    animation: flicker 4.2s linear infinite;
+  }
+  h1 span { display: block; }
+  h1 span + span { animation: flicker 5.3s linear infinite 0.7s; }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; filter: brightness(1); }
+    3% { opacity: 0.86; filter: brightness(0.9); }
+    4% { opacity: 1; }
+    9% { opacity: 0.93; }
+    10% { opacity: 1; }
+    41% { opacity: 1; }
+    42% { opacity: 0.55; filter: brightness(0.7); }
+    43% { opacity: 1; filter: brightness(1.08); }
+    44% { opacity: 0.78; }
+    45% { opacity: 1; }
+    72% { opacity: 0.96; }
+    73% { opacity: 1; }
+  }
+  .tagline {
+    margin: 0;
+    font-family: var(--cond);
+    font-weight: 400;
+    font-size: clamp(17px, 2.2vw, 21px);
+    letter-spacing: 0.03em;
+    color: var(--dust);
+    max-width: 34ch;
+    text-wrap: balance;
+  }
+
+  /* ---------- Hero film ---------- */
+  .film {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(10, 12, 20, 0.35), rgba(4, 5, 10, 0.85)),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 80px);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    margin-top: -24px;
+  }
+  .film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .film .slot { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 16px; }
+  .play {
+    width: 76px; height: 76px; border-radius: 50%;
+    border: 1.5px solid rgba(244, 246, 255, 0.7);
+    display: grid; place-items: center;
+    background: rgba(4, 5, 10, 0.4);
+  }
+  .play svg { width: 24px; height: 24px; margin-left: 4px; fill: var(--star); }
+  .slot b { font-family: var(--cond); font-weight: 800; font-size: 15px; letter-spacing: 0.28em; text-transform: uppercase; }
+  .slot small { font-family: var(--cond); font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+  .corner {
+    position: absolute;
+    font-family: var(--cond);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .corner.tl { top: 14px; left: 16px; }
+  .corner.br { bottom: 14px; right: 16px; color: var(--redline); }
+
+  /* ---------- Stats ---------- */
+  .label {
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dust);
+    margin: 0 0 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .record {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: end;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .speed { font-family: var(--race); line-height: 0.85; font-size: clamp(88px, 17vw, 196px); color: var(--star); font-variant-numeric: tabular-nums; }
+  .speed sup { font-family: var(--cond); font-weight: 800; font-size: 0.17em; letter-spacing: 0.2em; vertical-align: top; position: relative; top: 0.5em; margin-left: 0.25em; color: var(--redline); }
+  .record p { margin: 0; font-size: 17px; color: var(--dust); max-width: 36ch; }
+  .record p strong { display: block; font-family: var(--cond); font-weight: 800; font-size: clamp(22px, 2.6vw, 28px); letter-spacing: 0.04em; text-transform: uppercase; color: var(--star); line-height: 1.15; margin-bottom: 8px; }
+  .stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .stats li { padding: 22px 18px 6px 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .stats li + li { padding-left: 18px; border-left: 1px solid var(--line); }
+  .stats .n { font-family: var(--race); font-size: clamp(34px, 4.6vw, 48px); line-height: 1; font-variant-numeric: tabular-nums; }
+  .stats .t { font-family: var(--cond); font-weight: 600; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dust); line-height: 1.35; }
+  .stats .s { font-size: 13px; color: var(--faint); line-height: 1.4; }
+
+  .disciplines { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .disciplines span {
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    color: var(--star);
+  }
+  .disciplines span.next { border-color: rgba(255, 59, 42, 0.55); color: var(--redline); }
+
+  /* ---------- Episodes ---------- */
+  .episodes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .ep { display: flex; flex-direction: column; gap: 10px; color: inherit; text-decoration: none; min-width: 0; }
+  .thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    max-width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--space-2);
+  }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+  .thumb .art {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--art, linear-gradient(135deg, #1a1d2b, #05060b));
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .thumb .art i { font-style: normal; font-family: var(--race); font-size: 30px; line-height: 1; color: rgba(244, 246, 255, 0.9); }
+  .thumb .art em { font-style: normal; font-family: var(--cond); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(244, 246, 255, 0.6); }
+  .ep:hover .thumb img, .ep:hover .thumb .art, .ep:focus-visible .thumb .art { transform: scale(1.05); }
+  .ep h3 { margin: 0; font-family: var(--cond); font-weight: 600; font-size: 16px; letter-spacing: 0.02em; line-height: 1.3; text-wrap: balance; }
+  .ep span { font-family: var(--cond); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+
+  /* ---------- Socials + footer ---------- */
+  .outro { display: flex; flex-direction: column; align-items: center; gap: 26px; text-align: center; padding-top: 8px; }
+  .outro h2 { margin: 0; font-family: var(--race); font-weight: 400; font-size: clamp(34px, 6vw, 56px); line-height: 1; text-transform: uppercase; }
+  .outro p { margin: 0; color: var(--dust); max-width: 40ch; }
+  .socials { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .socials a {
+    width: 52px; height: 52px;
+    display: grid; place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--star);
+    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  }
+  .socials a:hover, .socials a:focus-visible { border-color: var(--star); background: rgba(244, 246, 255, 0.06); transform: translateY(-2px); }
+  .socials svg { width: 21px; height: 21px; fill: currentColor; }
+  a:focus-visible { outline: 2px solid var(--redline); outline-offset: 4px; }
+  footer {
+    margin-top: 12px;
+    width: 100%;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: var(--cond);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .checker {
+    height: 10px;
+    width: 100%;
+    opacity: 0.18;
+    background:
+      conic-gradient(var(--star) 25%, transparent 0 50%, var(--star) 0 75%, transparent 0) 0 0 / 10px 10px;
+  }
+
+  @media (max-width: 760px) {
+    .record { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats li:nth-child(3) { padding-left: 0; border-left: 0; }
+    .stats li:nth-child(n+3) { border-top: 1px solid var(--line); margin-top: 6px; }
+    .episodes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .film { margin-top: -12px; }
+    .film .corner.tl { display: none; }
+    .play { width: 56px; height: 56px; }
+    .slot small { display: none; }
+    .thumb .art i { font-size: 22px; }
+    .thumb .art em { font-size: 10px; letter-spacing: 0.14em; }
+  }
+  .thumb .art i, .thumb .art em { white-space: nowrap; }
+  @media (prefers-reduced-motion: reduce) {
+    h1, h1 span + span { animation: none; }
+    .thumb img, .thumb .art, .socials a { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<main>
+  <header class="masthead">
+    <div class="kicker"><span class="dot" aria-hidden="true"></span>Carreteras · Corona, California</div>
+    <h1><span>Eddie</span><span>Marlen</span></h1>
+    <p class="tagline">Builder. Racer. The fastest roadster on Earth.</p>
+  </header>
+
+  <section class="film" aria-label="Signature hero film">
+    <!-- Drop the Signature Hero Ad here: <video src="hero.mp4" poster="hero.jpg" autoplay muted loop playsinline></video> -->
+    <span class="corner tl">Signature Hero Ad</span>
+    <div class="slot">
+      <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></div>
+      <b>The Road to 310</b>
+      <small>Film drops this season</small>
+    </div>
+    <span class="corner br">● REC</span>
+  </section>
+
+  <section aria-labelledby="rec-label">
+    <h2 class="label" id="rec-label">On the record</h2>
+    <div class="record">
+      <div class="speed">310.5<sup>MPH</sup></div>
+      <p><strong>World's fastest roadster</strong>Eighteen years of building and racing to get there. One of one.</p>
+    </div>
+    <ul class="stats">
+      <li><span class="n">5+</span><span class="t">Land speed records</span><span class="s">SCTA sanctioned</span></li>
+      <li><span class="n">300</span><span class="t">MPH Club</span><span class="s">Bonneville Salt Flats</span></li>
+      <li><span class="n">200</span><span class="t">Dirty 2 Club</span><span class="s">El Mirage dry lake</span></li>
+      <li><span class="n">4</span><span class="t">Builds in the shop</span><span class="s">Classics, made modern</span></li>
+    </ul>
+    <div class="disciplines" aria-label="Disciplines">
+      <span>Land speed</span>
+      <span>NHRA Competition Eliminator</span>
+      <span>Circle track</span>
+      <span>Dirt and asphalt</span>
+      <span class="next">Next: Nov 7 · Orange Show, San Bernardino</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="ep-label">
+    <h2 class="label" id="ep-label">Latest episodes</h2>
+    <div class="episodes" id="episodes"></div>
+  </section>
+
+  <section class="outro" aria-labelledby="follow-label">
+    <div class="checker" aria-hidden="true"></div>
+    <h2 id="follow-label">Ride along</h2>
+    <p>Sponsors and partners: send a message on Instagram and Eddie's team will get back to you.</p>
+    <nav class="socials" aria-label="Eddie Marlen on social media">
+      <a href="https://www.instagram.com/carreteraracing/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 7.2A4.8 4.8 0 1 0 12 16.8 4.8 4.8 0 0 0 12 7.2zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zM17.1 5.7a1.1 1.1 0 1 0 0 2.3 1.1 1.1 0 0 0 0-2.3zM12 2.2c-2.7 0-3 0-4 .1-1 0-1.8.2-2.4.5-.7.3-1.2.6-1.8 1.2S2.9 5.1 2.6 5.8c-.3.6-.4 1.3-.5 2.4 0 1-.1 1.4-.1 4s0 3 .1 4c0 1 .2 1.8.5 2.4.3.7.6 1.2 1.2 1.8s1.1.9 1.8 1.2c.6.3 1.4.4 2.4.5 1 0 1.4.1 4 .1s3 0 4-.1c1 0 1.8-.2 2.4-.5.7-.3 1.2-.6 1.8-1.2s.9-1.1 1.2-1.8c.3-.6.4-1.4.5-2.4 0-1 .1-1.4.1-4s0-3-.1-4c0-1-.2-1.8-.5-2.4-.3-.7-.6-1.2-1.2-1.8S18.9 2.9 18.2 2.6c-.6-.3-1.4-.4-2.4-.5-1 0-1.3-.1-3.8-.1zm0 1.7c2.6 0 2.9 0 4 .1.9 0 1.5.2 1.8.3.5.2.8.4 1.1.7.4.4.6.7.7 1.1.1.3.3.9.3 1.8.1 1 .1 1.4.1 4s0 2.9-.1 4c0 .9-.2 1.5-.3 1.8-.2.5-.4.8-.7 1.1-.4.4-.7.6-1.1.7-.3.1-.9.3-1.8.3-1 .1-1.4.1-4 .1s-2.9 0-4-.1c-.9 0-1.5-.2-1.8-.3-.5-.2-.8-.4-1.1-.7-.4-.4-.6-.7-.7-1.1-.1-.3-.3-.9-.3-1.8-.1-1-.1-1.4-.1-4s0-2.9.1-4c0-.9.2-1.5.3-1.8.2-.5.4-.8.7-1.1.4-.4.7-.6 1.1-.7.3-.1.9-.3 1.8-.3 1-.1 1.4-.1 4-.1z"/></svg>
+      </a>
+      <a id="yt-link" href="https://www.youtube.com/results?search_query=Eddie+Marlen+Carreteras" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2C.5 9.1.5 12 .5 12s0 2.9.5 4.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.8.5-4.8s0-2.9-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/eddie.marlen" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8h2.7l.4-3.2h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V4.3c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.6v3.2h2.7v8h3.2z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@carreteraracing" target="_blank" rel="noopener" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M16.6 2.5h-3.2v13.1a2.8 2.8 0 1 1-2-2.7V9.6a6 6 0 1 0 5.2 6V9a7.6 7.6 0 0 0 4.4 1.4V7.2a4.4 4.4 0 0 1-4.4-4.4v-.3z"/></svg>
+      </a>
+    </nav>
+    <footer>
+      <span>Eddie Marlen · Carreteras</span>
+      <span>Built by New Terrain Creative</span>
+    </footer>
+  </section>
+</main>
+
+<script>
+  /* ---------- Episodes: fill in real YouTube video IDs to show live thumbnails ---------- */
+  const VIDEOS = [
+    { id: '', title: 'Inside the 310 MPH roadster', tag: 'Sit-down', art: 'linear-gradient(135deg,#2a1a17 0%,#0b0708 70%)' },
+    { id: '', title: 'Race day at Orange Show Speedway', tag: 'Track', art: 'linear-gradient(135deg,#141c2e 0%,#05070d 70%)' },
+    { id: '', title: 'Shop build: classic body, modern bones', tag: 'Build', art: 'linear-gradient(135deg,#1d1f24 0%,#060608 70%)' },
+    { id: '', title: 'Bonneville: chasing the salt', tag: 'Records', art: 'linear-gradient(135deg,#2b2a26 0%,#09090a 70%)' }
+  ];
+  const CHANNEL = document.getElementById('yt-link').href;
+  const wrap = document.getElementById('episodes');
+  VIDEOS.forEach((v, i) => {
+    const a = document.createElement('a');
+    a.className = 'ep';
+    a.href = v.id ? 'https://www.youtube.com/watch?v=' + v.id : CHANNEL;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    const n = String(i + 1).padStart(2, '0');
+    a.innerHTML =
+      '<div class="thumb"><div class="art" style="--art:' + v.art + '"><i>EP ' + n + '</i><em>' + v.tag + '</em></div></div>' +
+      '<h3></h3><span>Watch on YouTube</span>';
+    a.querySelector('h3').textContent = v.title;
+    if (v.id) {
+      const img = new Image();
+      img.alt = '';
+      img.loading = 'lazy';
+      img.onload = () => a.querySelector('.thumb').appendChild(img);
+      img.src = 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg';
+    }
+    wrap.appendChild(a);
+  });
+
+  /* ---------- 3D starfield: drifts forward, warps with scroll, tilts with the pointer ---------- */
+  (function () {
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const COUNT = 900, DEPTH = 1600, FOV = 320;
+    let w = 0, h = 0, dpr = 1, stars = [];
+    let speed = 1.2, target = 1.2, lastY = window.scrollY;
+    let tiltX = 0, tiltY = 0, mx = 0, my = 0;
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function spawn(s, fresh) {
+      s.x = (Math.random() - 0.5) * 2400;
+      s.y = (Math.random() - 0.5) * 2400;
+      s.z = fresh ? Math.random() * DEPTH : DEPTH;
+      s.pz = s.z;
+      s.b = 0.4 + Math.random() * 0.6;
+      return s;
+    }
+    for (let i = 0; i < COUNT; i++) stars.push(spawn({}, true));
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', (e) => {
+      mx = (e.clientX / w - 0.5) * 2;
+      my = (e.clientY / h - 0.5) * 2;
+    }, { passive: true });
+    window.addEventListener('scroll', () => {
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      target = Math.min(40, 1.2 + Math.abs(dy) * 1.6);
+    }, { passive: true });
+
+    function frame() {
+      speed += (target - speed) * 0.08;
+      target += (1.2 - target) * 0.04;
+      tiltX += (mx - tiltX) * 0.04;
+      tiltY += (my - tiltY) * 0.04;
+      const cx = w / 2 - tiltX * 60;
+      const cy = h / 2 - tiltY * 40 - window.scrollY * 0.05;
+
+      ctx.fillStyle = 'rgba(4,5,10,' + (speed > 6 ? 0.35 : 0.9) + ')';
+      ctx.fillRect(0, 0, w, h);
+
+      for (const s of stars) {
+        s.pz = s.z;
+        s.z -= speed;
+        if (s.z < 1) { spawn(s, false); continue; }
+        const k = FOV / s.z, pk = FOV / s.pz;
+        const x = s.x * k + cx, y = s.y * k + cy;
+        if (x < -50 || x > w + 50 || y < -50 || y > h + 50) { spawn(s, false); continue; }
+        const near = 1 - s.z / DEPTH;
+        const alpha = Math.min(1, near * 1.4) * s.b;
+        const r = Math.max(0.3, near * 1.9);
+        if (speed > 3) {
+          const px = s.x * pk + cx, py = s.y * pk + cy;
+          ctx.strokeStyle = 'rgba(244,246,255,' + alpha + ')';
+          ctx.lineWidth = r;
+          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x, y); ctx.stroke();
+        } else {
+          ctx.fillStyle = 'rgba(244,246,255,' + alpha + ')';
+          ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      if (!reduce) requestAnimationFrame(frame);
+    }
+    resize();
+    ctx.fillStyle = '#04050a'; ctx.fillRect(0, 0, w, h);
+    frame();
+  })();
+</script>
+</body>
+</html>
