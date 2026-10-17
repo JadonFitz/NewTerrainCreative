@@ -179,7 +179,7 @@ else:
               if l.strip() and not l.startswith('#')}
     # .claude/ and .impeccable/ hold the Claude design toolkit (skills,
     # hooks, tool state). Working files, never part of the public site.
-    for d in ('docs', 'scripts', 'supabase', '.claude', '.impeccable'):
+    for d in ('docs', 'scripts', 'supabase', '.claude', '.impeccable', 'clients'):
         if (ROOT / d).exists():
             ok(f'{d}/ excluded from deploy') if d in listed \
                 else bad(f'{d}/ exists but is NOT in .vercelignore, so it would ship')
