@@ -109,6 +109,7 @@
     var contact = { firstName: '', lastName: '', email: '', phone: '' };
     var answers = {};
     var token = null;
+    var postedContact = '';
     var step = 0;
     var total = offer.steps.length + 1;
     var busy = false;
@@ -284,12 +285,23 @@
       busy = true; next.disabled = true; err.textContent = '';
 
       if (step === 0) {
+        /* Back to step one and on again with the same details: nothing to
+           save, and a second post would only repeat the potential card.
+           Re-posted only when the details changed or step one never got
+           a token back. */
+        var now = JSON.stringify(contact);
+        if (token && now === postedContact) {
+          busy = false; next.disabled = false;
+          step = 1; render(); focusTitle();
+          return;
+        }
         /* A failed save here does not stop the visitor: step two saves
            the same contact again, and the calendar asks for it anyway. */
         post(payload('contact')).then(function (res) {
           if (res.status === 400 && res.fields) { fail('Please check the highlighted fields.'); markInvalid(res.fields); return; }
           if (res.status === 429) { fail(res.error || 'Too many tries. Please wait a few minutes.'); return; }
           token = res.token || null;
+          postedContact = token ? now : '';
           busy = false; next.disabled = false;
           step = 1; render(); focusTitle();
         }, function () {

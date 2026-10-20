@@ -210,19 +210,41 @@ function parseBody(req) {
 }
 
 // ── step one ──────────────────────────────────────────────────────────
-async function stepContact(offerKey, offer, contact, attribution) {
+/* The contact's open Sales opportunity still at "Started form", newest
+   first, so going back to step one, or starting a second offer's form,
+   reuses it rather than opening another. Never a Disqualified one: a
+   lead turned away on one offer who starts another (the /next-step
+   Sprint call) gets a fresh deal for it. */
+async function openStartedForm(contactId) {
+  const list = await ghl.findOpportunities(contactId);
+  return ghl.newestFirst(list.filter((o) => (!o.status || o.status === 'open') &&
+    ghl.stageName(o.pipelineStageId) === 'Started form'))[0] || null;
+}
+
+async function stepContact(offerKey, offer, contact, attribution, priorToken) {
   let token = null;
+  /* One potential card per lead per sitting. Already carded when the
+     browser holds a valid step-one token for this email (six hours), or
+     when the contact already carries stage:potential from an unfinished
+     form. */
+  let carded = Boolean(verify(priorToken, contact.email));
   if (ghl.configured()) {
     try {
-      const contactId = await ghl.upsertContact({
+      const saved = await ghl.upsertContact({
         ...contact,
         fields: { ...attribution, ntc_offer: offerKey }
       });
+      const contactId = saved.id;
+      if (saved.tags.includes('stage:potential')) carded = true;
       await quietly('tags', offerKey, () =>
         ghl.addTags(contactId, ['src:ghl', `offer:${offerKey}`, 'stage:potential']));
       let opportunityId = '';
       try {
-        opportunityId = await ghl.createOpportunity({
+        const existing = await openStartedForm(contactId).catch((e) => {
+          console.error('book-intake: opportunity search failed', offerKey, (e && e.message) || e);
+          return null;
+        });
+        opportunityId = existing ? String(existing.id) : await ghl.createOpportunity({
           contactId, stage: 'Started form',
           name: `${fullName(contact)} · ${offer.label}`, monetaryValue: 0
         });
@@ -237,6 +259,10 @@ async function stepContact(offerKey, offer, contact, attribution) {
     console.warn('book-intake: GHL not configured, contact not saved', offerKey);
   }
 
+  if (carded) {
+    console.log('book-intake: contact step', offerKey, 'card', 'skipped (already sent)');
+    return { ok: true, token: token || (verify(priorToken, contact.email) ? priorToken : null) };
+  }
   const card = await sendLeadCard({
     type: 'potential', offer: offerKey,
     contact: { name: fullName(contact), email: contact.email, phone: contact.phone },
@@ -256,7 +282,7 @@ async function stepAnswers(offerKey, offer, contact, answers, attribution, token
     try {
       const fields = { ...attribution, ...answers, ntc_offer: offerKey };
       if (dq) { fields.ntc_fit = 'Disqualified'; fields.ntc_dq_reason = reasons.join('; ').slice(0, 300); }
-      const contactId = await ghl.upsertContact({ ...contact, fields });
+      const contactId = (await ghl.upsertContact({ ...contact, fields })).id;
       await quietly('tags', offerKey, () =>
         ghl.addTags(contactId, ['src:ghl', `offer:${offerKey}`, ...(dq ? [`dq:${offerKey}`] : [])]));
       await quietly('tag removal', offerKey, () => ghl.removeTags(contactId, ['stage:potential']));
@@ -326,7 +352,7 @@ export default async function handler(req, res) {
   const attribution = readAttribution(d.attribution);
 
   if (d.step === 'contact') {
-    return res.status(200).json(await stepContact(offerKey, offer, contact, attribution));
+    return res.status(200).json(await stepContact(offerKey, offer, contact, attribution, d.token));
   }
   if (d.step === 'answers') {
     const { answers, errors } = readAnswers(offer, d.answers);

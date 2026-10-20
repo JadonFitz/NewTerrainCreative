@@ -110,20 +110,41 @@ async function call(method, path, body) {
    rather than the upsert body, because the upsert replaces the tag list
    and the contract says to keep existing tags. */
 
-/** POST /contacts/upsert. Resolves to the contact id. */
+/* POST /contacts/upsert, twice at most.
+
+   The form is public, so an email alone must never let a stranger
+   rewrite someone's record. The first call carries the email and the
+   custom fields only. Name and phone follow in a second call only for a
+   contact this created (response new: true), or to fill a field the
+   existing contact does not have yet; a name or phone already on file is
+   never overwritten from the website.
+
+   Resolves to { id, isNew, tags }. */
 export async function upsertContact({ firstName, lastName, email, phone, fields }) {
   const { locationId } = config();
-  const body = {
-    locationId,
-    firstName, lastName, email, phone,
-    customFields: Object.entries(fields || {})
-      .filter(([, v]) => v !== undefined && v !== null && v !== '')
-      .map(([key, value]) => ({ key, field_value: value }))
-  };
-  const out = await call('POST', '/contacts/upsert', body);
-  const id = out && ((out.contact && out.contact.id) || out.id);
+  const customFields = Object.entries(fields || {})
+    .filter(([, v]) => v !== undefined && v !== null && v !== '')
+    .map(([key, value]) => ({ key, field_value: value }));
+  const out = await call('POST', '/contacts/upsert', { locationId, email, customFields });
+  const c = (out && out.contact) || {};
+  const id = c.id || (out && out.id);
   if (!id) throw new Error('ghl upsert returned no contact id');
-  return String(id);
+  const isNew = Boolean(out && out.new === true);
+
+  const fill = {};
+  if (firstName && (isNew || !c.firstName)) fill.firstName = firstName;
+  if (lastName && (isNew || !c.lastName)) fill.lastName = lastName;
+  if (phone && (isNew || !c.phone)) fill.phone = phone;
+  if (Object.keys(fill).length) {
+    await call('POST', '/contacts/upsert', { locationId, email, ...fill });
+  }
+  return { id: String(id), isNew, tags: Array.isArray(c.tags) ? c.tags.map(String) : [] };
+}
+
+/** Newest first, by updatedAt then createdAt. */
+export function newestFirst(list) {
+  const t = (o) => Date.parse(o.updatedAt || o.dateUpdated || o.createdAt || o.dateAdded || '') || 0;
+  return list.slice().sort((a, b) => t(b) - t(a));
 }
 
 /** POST /contacts/{id}/tags. Adds, never replaces. */

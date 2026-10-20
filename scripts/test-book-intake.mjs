@@ -13,6 +13,13 @@ process.env.LEAD_CARD_SECRET = 'stub-card-secret';
 
 const calls = [];
 let ghlStatus = 200;
+// What GHL's upsert says about the contact, and what its search returns.
+let upsertNew = true;
+let onFile = {};
+let searchOpps = [];
+const SALES = 'gVWhpLqxgmOyTgyrGeKJ';
+const STARTED = 'cf946fe5-8597-4fe7-b8f2-8f4c6db47894';
+const DQ = '67599a1a-08ed-43f3-a98a-43f7442da375';
 let cardStatus = 200;
 globalThis.fetch = async (url, opts = {}) => {
   let body;
@@ -20,7 +27,8 @@ globalThis.fetch = async (url, opts = {}) => {
   const u = String(url);
   calls.push({ url: u, method: opts.method, body, headers: opts.headers || {} });
   if (/leadconnectorhq/.test(u)) {
-    const out = /\/contacts\/upsert$/.test(u) ? { contact: { id: 'c_123' } }
+    const out = /\/contacts\/upsert$/.test(u) ? { new: upsertNew, contact: { id: 'c_123', ...onFile } }
+      : /\/opportunities\/search/.test(u) ? { opportunities: searchOpps, meta: {} }
       : /\/opportunities\/$/.test(u) ? { opportunity: { id: 'o_456' } } : {};
     return { ok: ghlStatus < 300, status: ghlStatus, json: async () => out, text: async () => 'echoes person@example.com' };
   }
@@ -103,8 +111,11 @@ const fields = Object.fromEntries((upsert?.body?.customFields || []).map((f) => 
 check('answers 200 with a token', res.statusCode === 200 && res.payload.ok && typeof res.payload.token === 'string');
 check('upserts into the NTC location, never MASTER', upsert?.body?.locationId === 'kzOVdsNR0ozcoyyaag0a');
 check('with the GHL headers', upsert?.headers?.Version === '2021-07-28' && upsert?.headers?.Authorization === 'Bearer stub-ghl-token');
-check('name, email (lowercased) and phone', upsert?.body?.firstName === 'Ada' && upsert?.body?.lastName === 'Lovelace' &&
-  upsert?.body?.email === 'person@example.com' && upsert?.body?.phone === '(310) 555-0100');
+const named = ghl(made).filter((c) => /\/contacts\/upsert$/.test(c.url))[1];
+check('first by email and fields only, no name or phone', upsert?.body?.email === 'person@example.com' &&
+  upsert?.body?.firstName === undefined && upsert?.body?.phone === undefined);
+check('a new contact then gets its name and phone', named?.body?.firstName === 'Ada' && named?.body?.lastName === 'Lovelace' &&
+  named?.body?.email === 'person@example.com' && named?.body?.phone === '(310) 555-0100');
 check('attribution lands on the contract keys', fields.utm_source === 'meta' && fields.ntc_fbclid === 'IwAR0abc' &&
   fields.ntc_fbp === 'fb.1.1759.123' && fields.ntc_session === 's_abc123' &&
   fields.ntc_landing_page === 'https://www.newterraincreative.com/grow' && fields.ntc_offer === 'growth');
@@ -122,7 +133,60 @@ check('sends the potential card with the shared key', card?.body?.type === 'pote
   card?.headers?.['x-ntc-key'] === 'stub-card-secret' && card?.body?.contact?.email === 'person@example.com');
 const token = res.payload.token;
 
+console.info('\n\x1b[1mBACK TO STEP ONE · NO SECOND DEAL, NO SECOND CARD\x1b[0m');
+mod._resetRateLimit();
+// The browser comes back to step one with the token it already holds.
+searchOpps = [
+  { id: 'o_other', contactId: 'c_999', pipelineId: SALES, pipelineStageId: STARTED, status: 'open' },
+  { id: 'o_old', contactId: 'c_123', pipelineId: SALES, pipelineStageId: STARTED, status: 'open', updatedAt: '2026-10-19T10:00:00Z' },
+  { id: 'o_456', contactId: 'c_123', pipelineId: SALES, pipelineStageId: STARTED, status: 'open', updatedAt: '2026-10-20T10:00:00Z' }
+];
+n = calls.length;
+res = await post({ step: 'contact', offer: 'growth', contact, attribution, token: res.payload.token });
+made = since(n);
+check("reuses the contact's newest Started form deal", !ghl(made).some((c) => c.method === 'POST' && /\/opportunities\/$/.test(c.url)));
+check('no second potential card', cards(made).length === 0);
+check('and still answers with a token', typeof res.payload.token === 'string');
+n = calls.length;
+await post({ step: 'contact', offer: 'growth', contact, attribution, token: 'forged.token' });
+check('a forged token does not suppress the card', cards(since(n)).length === 1);
+onFile = { tags: ['stage:potential'] };
+n = calls.length;
+await post({ step: 'contact', offer: 'growth', contact, attribution });
+check('a contact already tagged stage:potential gets no second card', cards(since(n)).length === 0);
+onFile = {};
+searchOpps = [{ id: 'o_dq', contactId: 'c_123', pipelineId: SALES, pipelineStageId: DQ, status: 'open' }];
+n = calls.length;
+await post({ step: 'contact', offer: 'ad-sprint', contact, attribution: { from: 'next-step' } });
+check('a Disqualified deal is never reused: a new offer gets a new deal', ghl(since(n)).some((c) =>
+  c.method === 'POST' && /\/opportunities\/$/.test(c.url) && c.body.pipelineStageId === STARTED));
+searchOpps = [];
+
+console.info('\n\x1b[1mAN EMAIL ALONE NEVER REWRITES A RECORD\x1b[0m');
+mod._resetRateLimit();
+upsertNew = false;
+onFile = { firstName: 'Real', lastName: 'Owner', phone: '+13105559999' };
+n = calls.length;
+res = await post({ step: 'contact', offer: 'growth', contact: { ...contact, firstName: 'Mallory', phone: '3105550000' }, attribution });
+made = since(n);
+const ups = ghl(made).filter((c) => /\/contacts\/upsert$/.test(c.url));
+check('an existing contact: one upsert, no name or phone in it', ups.length === 1 &&
+  ups[0].body.firstName === undefined && ups[0].body.lastName === undefined && ups[0].body.phone === undefined);
+check('but the session and attribution still land', (ups[0]?.body?.customFields || []).some((f) => f.key === 'ntc_session'));
+check('and the tags still go on', ghl(made).some((c) => c.method === 'POST' && /tags$/.test(c.url)));
+n = calls.length;
+await post({ step: 'answers', offer: 'growth', contact: { ...contact, firstName: 'Mallory' }, answers: strong });
+check('step two does not overwrite them either', !ghl(since(n)).some((c) => /upsert$/.test(c.url) && c.body.firstName));
+onFile = { firstName: 'Real', lastName: 'Owner' };
+n = calls.length;
+await post({ step: 'contact', offer: 'growth', contact, attribution });
+const fillCall = ghl(since(n)).filter((c) => /upsert$/.test(c.url))[1];
+check('an existing contact with no phone on file gets only the phone', fillCall?.body?.phone === '(310) 555-0100' &&
+  fillCall?.body?.firstName === undefined && fillCall?.body?.lastName === undefined);
+upsertNew = true; onFile = {};
+
 console.info('\n\x1b[1mSTEP TWO · READY\x1b[0m');
+mod._resetRateLimit();
 n = calls.length;
 res = await post({ step: 'answers', offer: 'growth', contact, attribution, answers: { ...strong, sneaky: 'x' }, token });
 made = since(n);
@@ -169,6 +233,7 @@ check('and with no token opens a fresh opportunity at Disqualified', ghl(since(n
   /\/opportunities\/$/.test(c.url) && c.body.pipelineStageId === '67599a1a-08ed-43f3-a98a-43f7442da375'));
 
 console.info('\n\x1b[1mVALIDATION AND THE TOKEN\x1b[0m');
+mod._resetRateLimit();
 res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_ad_budget: 'Under $1,500.' } });
 check('an option that differs by one character is refused', res.statusCode === 400 && res.payload.fields.includes('ntc_ad_budget'));
 res = await post({ step: 'answers', offer: 'growth', contact, answers: { ntc_company: 'x' } });

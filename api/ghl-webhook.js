@@ -50,6 +50,7 @@
    AUTHENTICATION: the URL carries GHL_WEBHOOK_SECRET as ?key=, exactly
    as the iClosed webhook does, and fails closed without it.
    ══════════════════════════════════════════════════════════════════════ */
+import { createHash, timingSafeEqual } from 'node:crypto';
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, configured } from './_supabase.js';
 import { sendLeadCard } from './_lead-card.js';
@@ -127,7 +128,9 @@ function eventOf(d, query) {
 
 const appointmentIdOf = (d) => pick(d, 'customData.appointment_id', 'customData.appointmentId',
   'appointment_id', 'appointmentId', 'calendar.appointmentId', 'calendar.appointment_id',
-  'appointment.id', 'calendar.id');
+  'appointment.id');
+// Never calendar.id: in some GHL payloads that is the CALENDAR, and keying
+// on it would dedupe every booking on a calendar after the first.
 
 /* The offer: named outright, or the booked calendar's name matched to
    the contract's calendar names, or the ntc_offer field the booking form
@@ -202,11 +205,19 @@ async function markBooked({ contactId, offer, fullName, field }) {
   try {
     const all = await ghl.findOpportunities(contactId);
     const open = all.filter((o) => !o.status || o.status === 'open');
-    const stages = open.map((o) => ghl.stageName(o.pipelineStageId));
-    if (stages.some((s) => PAST_BOOKED.has(s))) return 'kept (already past Booked)';
-    if (stages.includes('Booked')) return 'kept (already Booked)';
-    if (open.length) {
-      await ghl.moveOpportunity(open[0].id, 'Booked');
+    const at = (name) => ghl.newestFirst(open.filter((o) => ghl.stageName(o.pipelineStageId) === name));
+    /* Which deal this booking belongs to: the newest at Started form (the
+       form that led here), else one already Booked (nothing to do), else
+       the newest of the rest. A Disqualified deal is only ever chosen
+       when no Started form one exists, so a Growth lead turned away who
+       books the /next-step Sprint call moves the Sprint deal, not the
+       Growth one. */
+    const target = at('Started form')[0] || at('Booked')[0] || ghl.newestFirst(open)[0];
+    if (target) {
+      const name = ghl.stageName(target.pipelineStageId);
+      if (name === 'Booked') return 'kept (already Booked)';
+      if (PAST_BOOKED.has(name)) return 'kept (already past Booked)';
+      await ghl.moveOpportunity(target.id, 'Booked');
       return 'moved';
     }
     const label = (OFFERS[offer] && OFFERS[offer].label) || 'Strategy call';
@@ -247,8 +258,10 @@ export default async function handler(req, res) {
     console.error('ghl-webhook: GHL_WEBHOOK_SECRET unset or too short');
     return res.status(503).json({ error: 'not configured' });
   }
-  const key = (req.query && req.query.key) || req.headers['x-webhook-key'];
-  if (key !== SECRET) {
+  // Constant time, on digests so the lengths match, as owner.js does.
+  const key = String((req.query && req.query.key) || req.headers['x-webhook-key'] || '');
+  const sha = (v) => createHash('sha256').update(v).digest();
+  if (!timingSafeEqual(sha(key), sha(SECRET))) {
     console.warn('ghl-webhook: rejected, bad key');
     return res.status(401).json({ error: 'unauthorized' });
   }
@@ -310,6 +323,13 @@ export default async function handler(req, res) {
   }
 
   let sent = false;
+  /* Without the session the server's event id cannot match the browser
+     copy /call-booked fires, and Meta counts the booking twice. Loud in
+     the logs, appointment id only, so a workflow missing the
+     ntc_session Custom Data is found quickly. */
+  if (counted && !SESSION.test(session)) {
+    console.error('ghl-webhook: booked with no usable ntc_session, Meta may double count', appointmentId);
+  }
   if (counted) {
     try {
       const { userAgent } = requestIdentity(req);

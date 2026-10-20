@@ -183,10 +183,12 @@ console.log('\n\x1b[1mHYGIENE\x1b[0m');
 for (const p of ['assets/booking-forms.js', 'assets/booking-form.js', 'assets/book-button.js',
                  'api/book-intake.js', 'api/ghl-webhook.js', 'api/_ghl.js', 'api/_lead-card.js']) {
   const src = await read(p);
-  check(`${p}: no em dashes`, !src.includes('—'));
+  check(`${p}: no em dashes`, !src.includes('\u2014'));
 }
 const form = await read('assets/booking-form.js');
 check('the form renders text with textContent, never innerHTML', !/innerHTML|insertAdjacentHTML|outerHTML/.test(form));
+check('step one is re-posted only when the details changed or no token came back',
+  /if \(token && now === postedContact\)/.test(form) && /postedContact = token \? now : ''/.test(form));
 check('lead-facing copy names neither founder', !/Jadon|Meghan/.test(form + bb));
 
 console.log(`\n${failures === 0

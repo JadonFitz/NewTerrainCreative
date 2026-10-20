@@ -186,8 +186,15 @@ check('the row is tagged from next-step', supa(made)[0]?.body?.metadata?.from ==
 console.info('\n\x1b[1mNO SESSION\x1b[0m');
 n = calls.length;
 const bare = appt(); delete bare.customData.ntc_session;
+let before = logged.length;
 await request(bare);
 check('falls back to the appointment id', meta(calls.slice(n))[0]?.body?.data?.[0]?.event_id === `schedule_ghl_${bare.calendar.appointmentId}`);
+const loud = logged.slice(before).find((l) => /no usable ntc_session/.test(l)) || '';
+check('and says so loudly, with the appointment id and nothing personal',
+  loud.includes(bare.calendar.appointmentId) && !/person@example|Lovelace|3105550100/.test(loud));
+before = logged.length;
+await request(appt({ calendar: { calendarName: 'Rescheduled Call', appointmentId: `appt_${++seq}` } }, { ntc_session: undefined }));
+check('not for a rebooking, which sends no Schedule', !logged.slice(before).some((l) => /no usable ntc_session/.test(l)));
 n = calls.length;
 await request(appt({}, { ntc_session: 'bad id with spaces' }));
 check('a malformed session is never used as the id', /^schedule_ghl_/.test(meta(calls.slice(n))[0]?.body?.data?.[0]?.event_id || ''));
@@ -201,6 +208,18 @@ console.info('\n\x1b[1mWHAT MUST NOT RUN\x1b[0m');
 n = calls.length;
 res = await request(appt(), 'wrong-key');
 check('a bad key is refused and does nothing', res.statusCode === 401 && calls.length === n);
+n = calls.length;
+res = await request(appt(), 'g'.repeat(39) + 'h');
+check('a same-length wrong key is refused too (constant-time compare)', res.statusCode === 401 && calls.length === n);
+const src = await (await import('node:fs/promises')).readFile(new URL('../api/ghl-webhook.js', import.meta.url), 'utf8');
+check('the key is compared with timingSafeEqual on digests', /timingSafeEqual\(sha\(key\), sha\(SECRET\)\)/.test(src) &&
+  !/key !== SECRET/.test(src));
+n = calls.length;
+let errs = logged.length;
+res = await request({ calendar: { id: 'cal_EdeZLdlKq7Y3Qa9Q1JU8', calendarName: 'Growth Strategy Consultation' },
+  email: 'person@example.com', customData: { event: 'booked' } });
+check('calendar.id is never taken as the appointment id', res.payload.noted === false && calls.length === n);
+check('and the miss is logged', logged.slice(errs).some((l) => /missing event or appointment id/.test(l)));
 const saved = process.env.GHL_WEBHOOK_SECRET; process.env.GHL_WEBHOOK_SECRET = 'short';
 res = await request(appt(), 'short');
 check('a short secret fails closed', res.statusCode === 503);
@@ -288,6 +307,38 @@ check('only the matching deal moves, read from contact.id too',
 ghlOpps = [{ id: 'o_other_won', contactId: 'c_999', pipelineId: SALES, pipelineStageId: STAGE.won, status: 'open' }];
 res = await request(appt());
 check("another lead's later stage never blocks this lead", res.payload.opportunity === 'created');
+
+// Growth disqualified, then the /next-step Ad Sprint call: the Sprint
+// form opened its own Started form deal, and the booking must move that
+// one, never the Growth deal at Disqualified, whatever order GHL lists.
+ghlOpps = [
+  own({ id: 'o_growth_dq', pipelineStageId: STAGE.dq, status: 'open', updatedAt: '2026-10-20T12:00:00Z' }),
+  own({ id: 'o_sprint', pipelineStageId: STAGE.started, status: 'open', updatedAt: '2026-10-20T11:00:00Z' })
+];
+n = calls.length;
+res = await request(appt({ calendar: { calendarName: 'Ad Sprint Call', appointmentId: `appt_${++seq}` } }, { ntc_from: 'next-step' }));
+made = calls.slice(n);
+check('Growth turned away, then the next-step Sprint booked: the Sprint deal moves',
+  puts(made).length === 1 && /\/opportunities\/o_sprint$/.test(puts(made)[0].url));
+ghlOpps = [
+  own({ id: 'o_sf_old', pipelineStageId: STAGE.started, status: 'open', createdAt: '2026-10-18T09:00:00Z' }),
+  own({ id: 'o_sf_new', pipelineStageId: STAGE.started, status: 'open', createdAt: '2026-10-20T09:00:00Z' })
+];
+n = calls.length;
+await request(appt());
+check('of two Started form deals, the newest moves', /\/opportunities\/o_sf_new$/.test(puts(calls.slice(n))[0]?.url || ''));
+ghlOpps = [
+  own({ id: 'o_dq2', pipelineStageId: STAGE.dq, status: 'open', updatedAt: '2026-10-20T12:00:00Z' }),
+  own({ id: 'o_bk', pipelineStageId: STAGE.booked, status: 'open', updatedAt: '2026-10-19T12:00:00Z' })
+];
+n = calls.length;
+res = await request(appt());
+check('a deal already Booked wins over a Disqualified one: nothing moves',
+  res.payload.opportunity === 'kept (already Booked)' && puts(calls.slice(n)).length === 0);
+ghlOpps = [own({ id: 'o_dq3', pipelineStageId: STAGE.dq, status: 'open' })];
+n = calls.length;
+await request(appt());
+check('only a Disqualified deal: that one moves', /\/opportunities\/o_dq3$/.test(puts(calls.slice(n))[0]?.url || ''));
 
 ghlOpps = [];
 n = calls.length;
