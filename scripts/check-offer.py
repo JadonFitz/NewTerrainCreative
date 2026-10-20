@@ -129,12 +129,13 @@ if m_field:
     _pilot = _pilot | {fmt(int(m_field.group(1)))}
 PAGE_EXTRA = {'brand-builder.html': _pilot, 'brand-builder-pro.html': _pilot, 'about.html': _pilot}
 
-# /production-inquiry asks for a one-off project budget, so it may show
-# its own survey bands and nothing else: no retainer or pilot figure.
-# Deliberately NOT added to the survey band loop above, which would make
-# these figures legal on every form page too.
+# /next-step (was /production-inquiry) asks for a one-off project budget,
+# so it may show its own survey bands and nothing else: no retainer, pilot
+# or Sprint figure (Stripe checkout shows the Sprint price, the page does
+# not). Deliberately NOT added to the survey band loop above, which would
+# make these figures legal on every form page too.
 _pib = re.search(r'productionInquiryBudgetBands:\s*\[([^\]]+)\]', offer)
-PAGE_EXTRA['production-inquiry.html'] = (
+PAGE_EXTRA['next-step.html'] = (
     {fmt(int(x)) for x in re.findall(r'\d+', _pib.group(1))} if _pib else set())
 
 # The 5-day trial fee (12 Oct 2026, assets/offer.js trial) may appear on
@@ -157,6 +158,21 @@ for _f in sorted(root.glob('*.html')):
             mirror_fail.append('call-booked.html carries a Stripe link that is not offer.js trial.stripePaymentLink')
     elif _trial_link in _links:
         mirror_fail.append(f'{_f.name} links the trial checkout; only /call-booked may')
+
+# 20 Oct 2026: the Sprint's Stripe links (assets/offer.js
+# products.adSprintEight/adSprintFifteen.stripePaymentLink) may appear on
+# /next-step only, and /next-step must carry exactly those two.
+_sprint_links = set(re.findall(
+    r"adSprint(?:Eight|Fifteen):\s*\{[^}]*?stripePaymentLink:\s*'([^']+)'", offer))
+if len(_sprint_links) != 2:
+    mirror_fail.append('assets/offer.js must declare a stripePaymentLink on adSprintEight and adSprintFifteen')
+for _f in sorted(root.glob('*.html')):
+    _links = set(re.findall(r'https://buy\.stripe\.com/[A-Za-z0-9]+', _f.read_text(encoding='utf-8')))
+    if _f.name == 'next-step.html':
+        if _links != _sprint_links:
+            mirror_fail.append('next-step.html Stripe links differ from offer.js adSprint stripePaymentLink')
+    elif _links & _sprint_links:
+        mirror_fail.append(f'{_f.name} links a Sprint checkout; only /next-step may')
 
 print(f'Declared or derived from assets/offer.js:')
 print('  ' + '  '.join('$' + a for a in sorted(allowed, key=lambda x: int(x.replace(',','')))))

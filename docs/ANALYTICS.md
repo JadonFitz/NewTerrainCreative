@@ -14,6 +14,15 @@
 | `vsl_play` | The click that starts a VSL | First party + Meta custom `VSLPlay` |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
+| (none) | `/next-step` Sprint Stripe button clicked | Meta custom `NextStepSprintCheckout` only (`package`, `source` = the `?from=` form) |
+| (none) | `/next-step` "Book a short Sprint call" clicked | Meta custom `NextStepSprintCall` only. `/strategy-call?from=next-step` then fires no `ViewContent` |
+| `schedule` | Sprint call booked from `/next-step` | First party row tagged `metadata.from = next-step`; Meta gets custom `NextStepSprintBooked` (browser and webhook, same booking id) **instead of** `Schedule` |
+| (none) | `/next-step` project form sent | Meta custom `ProductionInquiry` only; the lead row is `form_type = production_inquiry` |
+
+`/next-step` (was `/production-inquiry`) is where the iClosed booking forms
+send leads under their floor. Nothing from it reaches Meta as a standard
+event, so turned-away leads never train the campaigns. Stripe payments
+started there carry `client_reference_id = next-step_<from>`.
 
 Browser and server copies of `Lead` and `SubmitApplication` share the same
 event ID for Meta deduplication. Neither conversion fires unless Supabase or

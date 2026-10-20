@@ -675,6 +675,30 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                        // The 5-Day Trial Call, same name the webhook files it under.
                        'pest-control-trial': 'trial_pest_control' };
 
+      /* A Sprint call booked from /next-step, the bridge page for leads a
+         booking form turned away (20 Oct 2026). Known by ?from=next-step
+         if iClosed forwards it, or by the marker /next-step sets on the
+         click, honoured for a day. It fires the custom
+         NextStepSprintBooked instead of Schedule, the same choice
+         /api/iclosed-webhook makes server side, so a turned-away lead
+         never trains a campaign on Schedule. */
+      var nextStep = (params.get('from') || '').toLowerCase() === 'next-step';
+      if (!nextStep && offer === 'sprint') {
+        try {
+          var mark = Number(localStorage.getItem('ntc_next_step') || 0);
+          nextStep = mark > 0 && Date.now() - mark < 24 * 60 * 60 * 1000;
+        } catch (e) {}
+      }
+      if (nextStep) {
+        try { localStorage.removeItem('ntc_next_step'); } catch (e) {}
+        ntc.track('NextStepSprintBooked', {
+          offer: OFFER_ID[offer] || 'ad_sprint',
+          content_name: params.get('event_type_name') || 'Sprint call',
+          booking_id: bookingId
+        }, { eventId: bookingId });
+        return;
+      }
+
       ntc.track('Schedule', {
         offer: OFFER_ID[offer] || 'paid_retainer',
         content_name: params.get('event_type_name') || 'Strategy call',

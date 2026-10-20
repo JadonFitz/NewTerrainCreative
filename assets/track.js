@@ -199,11 +199,16 @@
 
     if (typeof w.fbq === 'function') {
       try {
-        // ProductionInquiry is custom on purpose: /production-inquiry takes
-        // leads the Brand Builder application turned away, and a standard
-        // Lead from there would teach that campaign to find more of them.
+        // ProductionInquiry and the NextStep* events are custom on purpose:
+        // /next-step (was /production-inquiry) takes leads a booking form
+        // turned away, and a standard Lead, Schedule or InitiateCheckout
+        // from there would teach that campaign to find more of them.
+        //   NextStepSprintCheckout  a Stripe Sprint button on /next-step
+        //   NextStepSprintCall      the "Book a short Sprint call" link
+        //   NextStepSprintBooked    that call booked (/call-booked), in
+        //                           place of Schedule
         var custom = eventName === 'CTAClick' || eventName === 'ProductionInquiry' ||
-                     /^VSL/.test(eventName);
+                     /^NextStep/.test(eventName) || /^VSL/.test(eventName);
         w.fbq(custom ? 'trackCustom' : 'track', eventName, payload, { eventID: eventId });
         log('fbq', eventName, eventId, payload);
       } catch (e) {

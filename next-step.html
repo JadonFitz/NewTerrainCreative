@@ -3,28 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>One-Time Production Inquiry · New Terrain Creative</title>
-<meta name="description" content="Have a specific video or content project in mind? Tell New Terrain Creative about it and our team will review the opportunity.">
+<title>Your Next Step · New Terrain Creative</title>
+<meta name="description" content="Start with an Ad Sprint: one fixed price, no monthly commitment, and creative you own outright. Or tell New Terrain Creative about a specific project.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 
 <!--
   ══════════════════════════════════════════════════════════════════════
-  UNLISTED · reached from the Brand Builder application in iClosed
+  UNLISTED · the bridge page for leads under a booking form's floor
   ──────────────────────────────────────────────────────────────────────
-  iClosed redirects here when an applicant's monthly budget is under the
-  Brand Builder floor. Nothing in the navigation links here, and the
-  page carries no booking link or calendar: good projects are invited
-  to a call by hand.
+  Was /production-inquiry until 20 Oct 2026; vercel.json redirects the
+  old path here and keeps the query string. iClosed sends a lead here
+  when a qualification answer is under the floor (annual revenue $2M,
+  service investment $5K a month, ad budget $5K a month), so they are
+  not dropped onto the cold /sprint sales page. ?from= says which form:
 
-  The page states no price, deliverable count or package. The budget
-  options are the visitor's own project budget, declared in
-  assets/offer.js as productionInquiryBudgetBands.
+    bb-apply           Brand Builder Story Session
+    growth             Growth Strategy Consultation
+    signature          legacy spelling of growth (the old redirect)
+    signature-project  Signature Project budget "Under $10,000"
+    anything else      the default copy
 
-  No standard Lead fires from here. These are leads the retainer
-  application turned away, and a Lead would teach the Brand Builder
-  campaign to find more of them. Success fires the custom
-  ProductionInquiry event instead.
+  Two paths, both without a sales call: buy a Sprint outright through
+  Stripe, or send the one-off project form below. The only booking
+  link is the small "Questions first?" line to the Sprint fit call,
+  tagged from=next-step so /strategy-call, /call-booked and the iClosed
+  webhook can keep it out of the standard conversions.
+
+  Never says "disqualified", a budget floor or "you can't afford us".
+  No price on the page: Stripe checkout shows it (assets/offer.js,
+  products.adSprintEight/adSprintFifteen.stripePaymentLink).
+
+  No standard Meta event fires from here. These are leads a retainer
+  form turned away, and a Lead, Schedule or InitiateCheckout would
+  teach that campaign to find more of them. Custom events only:
+  NextStepSprintCheckout, NextStepSprintCall and ProductionInquiry.
   ══════════════════════════════════════════════════════════════════════
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,17 +84,58 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .bar-link { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .3s; }
   .bar-link:hover { color:var(--gold); }
 
-  /* Mobile first: one column, intro then form. */
-  .inquiry { flex:1; width:100%; max-width:1180px; margin:0 auto; padding:40px 20px 64px; }
-  .inquiry__intro { margin-bottom:36px; }
+  main { flex:1; width:100%; }
+
+  /* ── Stage framing · copy tuned by ?from= in the script below ── */
+  .stage { max-width:1180px; margin:0 auto; padding:44px 20px 8px; }
+  .eyebrow { font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
 
   h1 {
     font-family:var(--display); font-weight:300;
     font-size:clamp(40px,10vw,64px); line-height:1.02;
     color:var(--parchment); margin-bottom:20px; text-wrap:balance;
   }
-  h1 em { font-style:italic; color:var(--gold); }
-  .lede { font-size:15px; line-height:1.85; color:var(--soft); max-width:46ch; }
+  h1 em, h2 em { font-style:italic; color:var(--gold); }
+  .lede { font-size:15px; line-height:1.85; color:var(--soft); max-width:52ch; }
+
+  /* ── The two paths. Sprint first; for a Brand Builder applicant the
+     project card leads and both carry a gold button. ── */
+  .paths { max-width:1180px; margin:0 auto; padding:28px 20px 48px; display:grid; grid-template-columns:1fr; gap:16px; }
+  .path { border:1px solid var(--line); background:var(--raised); padding:28px 22px 26px; display:flex; flex-direction:column; }
+  .path--sprint { border-color:var(--edge); }
+  .kicker { font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+  .path h2 {
+    font-family:var(--display); font-weight:300; font-size:clamp(30px,7vw,40px);
+    line-height:1.08; color:var(--parchment); margin-bottom:14px; text-wrap:balance;
+  }
+  .path > p { font-size:14px; line-height:1.8; color:var(--soft); }
+  .points { list-style:none; margin:4px 0 0; }
+  .points li { font-size:13.5px; line-height:1.75; color:var(--soft); padding:9px 0 9px 16px; position:relative; border-top:1px solid var(--line); }
+  .points li::before { content:''; position:absolute; left:0; top:20px; width:6px; height:1px; background:var(--gold); }
+  .points b { color:var(--parchment); font-weight:500; }
+  .actions { display:flex; flex-direction:column; align-items:flex-start; gap:14px; margin-top:24px; }
+  .actions .btn { text-align:center; text-decoration:none; display:block; }
+  .text-link {
+    font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--parchment);
+    text-decoration:none; border-bottom:1px solid var(--gold); padding-bottom:3px; transition:color .3s;
+  }
+  .text-link:hover { color:var(--gold); }
+  .fine { font-size:12px; line-height:1.75; color:var(--muted); margin-top:18px; }
+  .fine a { color:var(--parchment); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; }
+  .fine a:hover { color:var(--gold); }
+  .actions .bb-only { display:none; }
+  [data-from="bb-apply"] .path--project { order:-1; border-color:var(--edge); }
+  [data-from="bb-apply"] .actions .bb-only { display:block; }
+  [data-from="bb-apply"] .actions .bb-hide { display:none; }
+
+  /* ── The project form. Mobile first: one column, intro then form. ── */
+  .inquiry { width:100%; max-width:1180px; margin:0 auto; padding:40px 20px 64px; border-top:1px solid var(--line); }
+  .inquiry__intro { margin-bottom:36px; }
+  .inquiry__intro h2 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(36px,8vw,52px); line-height:1.04;
+    color:var(--parchment); margin-bottom:18px; text-wrap:balance;
+  }
 
   form { display:flex; flex-direction:column; gap:22px; }
   .row { display:grid; grid-template-columns:1fr; gap:22px; }
@@ -154,14 +208,21 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   @media (min-width:640px) {
     .row--2 { grid-template-columns:1fr 1fr; }
     .btn { width:auto; align-self:flex-start; }
+    .path { padding:34px 32px 30px; }
   }
 
-  /* Desktop: intro left, form right, so the whole thing fits one screen. */
+  @media (min-width:860px) {
+    .paths { grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+  }
+
+  /* Desktop: intro left, form right, so the form fits one screen. */
   @media (min-width:980px) {
     .bar, footer { padding-left:6vw; padding-right:6vw; }
+    .stage { padding:56px 6vw 8px; }
+    .paths { padding:32px 6vw 64px; }
     .inquiry {
       display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr);
-      gap:72px; align-items:start; padding:40px 6vw 40px;
+      gap:72px; align-items:start; padding:56px 6vw 48px;
     }
     .inquiry__intro { position:sticky; top:40px; margin-bottom:0; padding-top:4px; }
     input[type="text"], input[type="email"], input[type="tel"], textarea { font-size:14px; padding:10px 14px; }
@@ -183,10 +244,48 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <a class="bar-link" href="mailto:business@newterraincreative.com">Contact</a>
 </div>
 
-<main class="inquiry">
+<main>
+<!-- The default copy. COPY in the script swaps these three lines for a
+     known ?from= value. -->
+<section class="stage">
+  <p class="eyebrow" id="stage-eyebrow">Your next step</p>
+  <h1 id="stage-h1">Start with a <em>Sprint.</em></h1>
+  <p class="lede" id="stage-lede">At your stage, a Sprint gets you the creative without the monthly commitment. One fixed price, ads you own outright, and when they help you grow, a clear path to working with us every month.</p>
+</section>
+
+<section class="paths" aria-label="Ways to start">
+  <article class="path path--sprint" id="sprint">
+    <p class="kicker">The Ad Sprint</p>
+    <h2>Ads you own, <em>no monthly commitment.</em></h2>
+    <ul class="points">
+      <li><b>One fixed price, paid once.</b> No retainer and nothing that rolls into a monthly bill.</li>
+      <li><b>The Eight or The Fifteen:</b> 8 or 15 ready-to-run ad creatives, shot on location with you.</li>
+      <li><b>Yours outright.</b> You own the footage and every cut.</li>
+      <li><b>A path to more.</b> Sprint clients who run the ads, follow up their leads and grow are the first we invite into an ongoing partnership.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn" id="buy-eight" data-pkg="eight" href="https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f">Get The Eight</a>
+      <a class="text-link" id="buy-fifteen" data-pkg="fifteen" href="https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g">Or get The Fifteen</a>
+    </div>
+    <p class="fine">Secure checkout through Stripe shows the price before you pay, and our team is in touch within one business day to plan the shoot. Ad spend is yours, paid to the platforms directly. Campaign management is not part of the Sprint, and no result is guaranteed. Travel outside Los Angeles or Tampa is quoted separately.</p>
+    <p class="fine">Questions first? <a id="sprint-call" href="/strategy-call?offer=ad-sprint&amp;from=next-step">Book a short Sprint call</a></p>
+  </article>
+
+  <article class="path path--project">
+    <p class="kicker">A one-off project</p>
+    <h2>Have a specific <em>project</em> in mind?</h2>
+    <p id="project-lede">A commercial, a brand video, social content or a podcast. Tell us about it and our team will review it and reach out if it is a fit.</p>
+    <div class="actions">
+      <a class="btn bb-only" href="#project">Tell us about the project</a>
+      <a class="text-link bb-hide" href="#project">Tell us about the project</a>
+    </div>
+  </article>
+</section>
+
+<section class="inquiry" id="project">
   <div class="inquiry__intro">
-    <h1>One-Time <em>Production Inquiry</em></h1>
-    <p class="lede">Our ongoing creative partnerships may not be the right fit for your current budget. But if you have a specific video or content project in mind, we'd love to hear about it. Tell us a little about it and our team will review the opportunity.</p>
+    <h2>Tell us about <em>the project.</em></h2>
+    <p class="lede">One-off productions: a commercial or brand video, social content, a podcast or an interview series. Our team reviews every inquiry and reaches out when the project is a fit.</p>
   </div>
 
   <div id="state-form">
@@ -280,6 +379,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <h2>Got <em>it.</em></h2>
     <p>We review every inquiry and will reach out if the project is a fit.</p>
   </div>
+</section>
 </main>
 
 <footer>
@@ -287,6 +387,99 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
   <a href="/privacy">Privacy</a>
 </footer>
+
+<script>
+/* ── Stage framing and the two Sprint paths ──────────────────────────
+   ?from= picks the copy. Only the values below are recognised; anything
+   else keeps the default markup. The raw value still rides to the form
+   handler as `source` (stored as leads.entry_point), unchanged.
+   ─────────────────────────────────────────────────────────────────── */
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var from = (params.get('from') || '').trim().toLowerCase();
+  // The Growth form's redirect used ?from=signature before 20 Oct 2026.
+  var ALIAS = { 'signature': 'growth' };
+  if (Object.prototype.hasOwnProperty.call(ALIAS, from)) from = ALIAS[from];
+
+  var STAGE = 'At your stage, a Sprint gets you the creative without the monthly commitment.';
+  var COPY = {
+    'bb-apply': {
+      eyebrow: 'Brand Builder · your next step',
+      h1: 'Two ways to <em>start.</em>',
+      lede: 'Thanks for applying. ' + STAGE + ' And if what you had in mind is a show or a ' +
+            'specific project, tell us about it below: our team reads every one.',
+      project: 'A show, a brand film, a commercial or a podcast. Tell us what you want to make ' +
+               'and our team will review it and reach out if it is a fit.'
+    },
+    'growth': {
+      eyebrow: 'Growth strategy · your next step',
+      h1: 'Start with a <em>Sprint.</em>',
+      lede: STAGE + ' One fixed price, ads you own outright, and when they help you grow, ' +
+            'a clear path to working with us every month.'
+    },
+    'signature-project': {
+      eyebrow: 'Signature Work · your next step',
+      h1: 'Start with a <em>Sprint.</em>',
+      lede: STAGE + ' One fixed price and ads you own outright. Or, if what you need is a ' +
+            'one-off production, tell us about the project below.'
+    }
+  };
+
+  if (Object.prototype.hasOwnProperty.call(COPY, from)) {
+    var c = COPY[from];
+    document.documentElement.setAttribute('data-from', from);
+    document.getElementById('stage-eyebrow').textContent = c.eyebrow;
+    document.getElementById('stage-h1').innerHTML = c.h1;
+    document.getElementById('stage-lede').textContent = c.lede;
+    if (c.project) document.getElementById('project-lede').textContent = c.project;
+  }
+
+  var source = Object.prototype.hasOwnProperty.call(COPY, from) ? from : 'other';
+
+  function track(name, data) {
+    // Custom events only (assets/track.js routes these to trackCustom).
+    // Never a standard Lead, Schedule or InitiateCheckout from this page.
+    if (window.ntc) ntc.track(name, data, { once: false });
+    else if (typeof fbq === 'function') fbq('trackCustom', name, data);
+  }
+
+  /* Buy a Sprint. Stripe's client_reference_id tags the payment with
+     this page and the form that sent the lead, so a Sprint bought here
+     can be told apart in Stripe. Letters, digits, - and _ only. */
+  ['buy-eight', 'buy-fifteen'].forEach(function (id) {
+    var a = document.getElementById(id);
+    if (!a) return;
+    try {
+      var u = new URL(a.href);
+      u.searchParams.set('client_reference_id', 'next-step_' + source);
+      a.href = u.toString();
+    } catch (e) {}
+    a.addEventListener('click', function (e) {
+      track('NextStepSprintCheckout', {
+        content_name: 'Ad Sprint checkout', offer: 'ad_sprint',
+        package: a.getAttribute('data-pkg'), source: source
+      });
+      // Give the pixel a moment before leaving, unless the visitor opened
+      // the link in a new tab, in which case this page stays put anyway.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      setTimeout(function () { window.location.href = a.href; }, 250);
+    });
+  });
+
+  /* The Sprint call. /strategy-call forwards from=next-step to iClosed,
+     and the marker below lets /call-booked recognise the booking even if
+     iClosed drops the parameter on its redirect. Both then fire the
+     custom NextStepSprintBooked instead of Schedule. */
+  var call = document.getElementById('sprint-call');
+  if (call) {
+    call.addEventListener('click', function () {
+      try { localStorage.setItem('ntc_next_step', String(Date.now())); } catch (e) {}
+      track('NextStepSprintCall', { content_name: 'Sprint call click', offer: 'ad_sprint', source: source });
+    });
+  }
+})();
+</script>
 
 <script>
 /* ── CONFIG ──────────────────────────────────────────────────────────
@@ -388,7 +581,7 @@ var PRODUCTION_INQUIRY_ENDPOINT = '/api/production-inquiry';
   function showDone() {
     document.getElementById('state-form').hidden = true;
     document.getElementById('state-done').hidden = false;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('project').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   form.addEventListener('submit', function (e) {

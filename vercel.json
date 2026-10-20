@@ -25,6 +25,16 @@
       "permanent": false
     },
     {
+      "source": "/production-inquiry",
+      "destination": "/next-step",
+      "permanent": false
+    },
+    {
+      "source": "/production-inquiry.html",
+      "destination": "/next-step",
+      "permanent": false
+    },
+    {
       "source": "/book",
       "destination": "/strategy-call",
       "permanent": false
