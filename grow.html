@@ -1931,6 +1931,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <!-- ══════════════════════════════════════════════════════════════════
      iClosed Lift widget · floating "Book a Call" launcher
      ──────────────────────────────────────────────────────────────────
+     Loaded through assets/book-button.js since the GHL migration: with
+     the Growth provider flag at 'iclosed' (today) it injects exactly the
+     tag below; at 'ghl' it shows our own button to /strategy-call
+     instead. The notes that follow describe the iClosed behaviour.
+
      Books the Growth Strategy Consultation, the same event /grow and
      /strategy-call send people to. It is not a second funnel: iClosed
      asks its own qualification questions and fires its own
@@ -1949,6 +1954,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      /booked, /call-booked and /onboarding. scripts/preflight.py fails
      if it turns up on one of those.
      ══════════════════════════════════════════════════════════════════ -->
-<script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="_H-7V8fHVTuw" async></script>
+<script src="/assets/book-button.js" async></script>
 </body>
 </html>

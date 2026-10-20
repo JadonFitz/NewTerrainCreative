@@ -165,6 +165,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .call-details-widget iframe { width:100%; height:100%; border:0; display:block; }
   @media (max-width:520px) { .call-details-widget { height:460px; } }
 
+  .ghl-confirm { font-size:14px; line-height:1.85; color:var(--soft); max-width:56ch; }
+
   .reschedule {
     margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
     font-size:13px; color:var(--muted); max-width:56ch;
@@ -257,6 +259,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <!-- iClosed widget end -->
   </section>
 
+  <!-- GHL BOOKING CONFIRMATION · provider=ghl only. GoHighLevel has no
+       call-details widget to embed, so this says plainly what happens
+       next instead. The invitation and reminders come from GHL. -->
+  <section class="booking" id="booking-ghl" hidden aria-label="Your appointment">
+    <h2>Your appointment</h2>
+    <p class="ghl-confirm">The time you picked is held for you. The calendar invitation, with the
+       video link, is on its way to the email you gave us, and we will send a reminder before
+       the call.</p>
+  </section>
+
   <p class="reschedule">Need to reschedule? Use the link in your confirmation email. Anything else, reply to that email, reach us at <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>, or call or text <a href="tel:+18182668213">(818) 266-8213</a>.</p>
 </main>
 
@@ -312,6 +324,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                 'trial_pest_control': 'pest-control-trial', 'trial': 'pest-control-trial' };
 
   var params = new URLSearchParams(window.location.search);
+
+  /* GoHighLevel bookings arrive with provider=ghl (the redirect set on
+     every GHL calendar). If GHL navigated its own iframe rather than the
+     page, this confirmation would render inside the calendar box on
+     /strategy-call: lift it out to the whole window. Same origin, so
+     allowed; if it ever is not, the page still reads correctly framed. */
+  var ghl = (params.get('provider') || '').trim().toLowerCase() === 'ghl';
+  if (ghl && window.top !== window.self) {
+    try { window.top.location.href = window.location.href; return; } catch (e) {}
+  }
+
   var offer = (params.get('offer') || '').trim().toLowerCase();
   if (Object.prototype.hasOwnProperty.call(ALIAS, offer)) offer = ALIAS[offer];
   var note = document.getElementById('offer-note');
@@ -533,11 +556,60 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var hasBookingContext = (function () {
     var n = 0;
-    params.forEach(function (_, k) { if (k !== 'offer' && k !== 'vsl') n++; });
+    params.forEach(function (_, k) { if (k !== 'offer' && k !== 'vsl' && k !== 'provider') n++; });
     return n > 0;
   })();
 
-  if (booking && widget && hasBookingContext) {
+  /* ── GHL · confirmation and Schedule ───────────────────────────────
+     provider=ghl skips the iClosed card entirely: there is no iClosed
+     booking to show. The plain confirmation above replaces it.
+
+     The browser Schedule fires keyed schedule_<ntc_session>, the session
+     track.js keeps in localStorage and the booking form wrote onto the
+     GHL contact. /api/ghl-webhook sends the server copy with the same
+     id, so Meta counts one conversion.
+
+     What stands in for iClosed's "the card rendered" check: the booking
+     form leaves a marker (ntc_ghl_booking) when it hands over to the GHL
+     calendar, and only a visit carrying one, less than a day old, fires.
+     A bare URL fires nothing. The marker is spent on use, and a reload
+     resolves to the same event id regardless. */
+  if (ghl) {
+    var ghlCard = document.getElementById('booking-ghl');
+    if (ghlCard) ghlCard.hidden = false;
+
+    (function () {
+      if (offer === 'reschedule' || offer === 'follow-up') return;
+      if (!window.ntc || !ntc.sessionId) return;
+      var mark = null;
+      try { mark = JSON.parse(localStorage.getItem('ntc_ghl_booking') || 'null'); } catch (e) {}
+      if (!mark || !(Date.now() - Number(mark.t || 0) < 24 * 60 * 60 * 1000)) {
+        console.warn('call-booked: no GHL booking marker, Schedule not fired');
+        return;
+      }
+      try { localStorage.removeItem('ntc_ghl_booking'); } catch (e) {}
+
+      var sid = String(ntc.sessionId() || '');
+      if (!/^[A-Za-z0-9_-]{6,120}$/.test(sid)) return;
+      var eventId = 'schedule_' + sid;
+      var OFFER = { 'growth': 'paid_retainer', 'sprint': 'ad_sprint', 'signature': 'signature_work',
+                    'brand-builder': 'brand_builder', 'pest-control-trial': 'trial_pest_control' };
+      var nextStep = (params.get('from') || '').toLowerCase() === 'next-step' ||
+                     String(mark.from || '').toLowerCase() === 'next-step';
+      if (nextStep) {
+        try { localStorage.removeItem('ntc_next_step'); } catch (e) {}
+        ntc.track('NextStepSprintBooked', {
+          offer: OFFER[offer] || 'ad_sprint', content_name: 'Sprint call', booking_id: eventId
+        }, { eventId: eventId });
+        return;
+      }
+      ntc.track('Schedule', {
+        offer: OFFER[offer] || 'paid_retainer', content_name: 'Strategy call', booking_id: eventId
+      }, { eventId: eventId });
+    })();
+  }
+
+  if (booking && widget && hasBookingContext && !ghl) {
     var settled = false;
     var reveal = function () {
       if (settled) return;
