@@ -19,6 +19,8 @@ const STAGE = { started: 'cf946fe5-8597-4fe7-b8f2-8f4c6db47894', dq: '67599a1a-0
   noshow: '9c73f2ae-511a-4db6-ac2d-7cf2900340a3', plan: '1cad566a-54d9-45b1-8316-358addf6c7db',
   won: 'bb538a91-4b20-4bbd-9664-2ab1bf068370', lost: '840782d0-59e3-4d34-ba1a-7bb08187550a' };
 let ghlOpps = [];
+const SALES = 'gVWhpLqxgmOyTgyrGeKJ';
+const own = (o) => ({ contactId: 'c_123', pipelineId: SALES, ...o });
 let ghlStatus = 200;
 
 const calls = [];
@@ -224,15 +226,17 @@ const ghlCalls = (list) => list.filter((c) => /leadconnectorhq/.test(c.url));
 const puts = (list) => ghlCalls(list).filter((c) => c.method === 'PUT');
 const creates = (list) => ghlCalls(list).filter((c) => c.method === 'POST' && /\/opportunities\/$/.test(c.url));
 
-ghlOpps = [{ id: 'o_open', pipelineId: 'gVWhpLqxgmOyTgyrGeKJ', pipelineStageId: STAGE.started, status: 'open' }];
+ghlOpps = [own({ id: 'o_open', pipelineStageId: STAGE.started, status: 'open' })];
 n = calls.length;
 const bookIt = appt();
 res = await request(bookIt);
 made = calls.slice(n);
 const search = ghlCalls(made).find((c) => /\/opportunities\/search/.test(c.url));
 const sq = search && new URL(search.url).searchParams;
-check('searches the contact in the Sales pipeline', sq?.get('contact_id') === 'c_123' &&
-  sq?.get('pipeline_id') === 'gVWhpLqxgmOyTgyrGeKJ' && sq?.get('location_id') === 'kzOVdsNR0ozcoyyaag0a');
+check('filters by contact and pipeline in both spellings',
+  sq?.get('contactId') === 'c_123' && sq?.get('contact_id') === 'c_123' &&
+  sq?.get('pipelineId') === SALES && sq?.get('pipeline_id') === SALES &&
+  sq?.get('locationId') === 'kzOVdsNR0ozcoyyaag0a' && sq?.get('location_id') === 'kzOVdsNR0ozcoyyaag0a');
 check('Started form moves to Booked', res.payload.opportunity === 'moved' && puts(made).length === 1 &&
   /\/opportunities\/o_open$/.test(puts(made)[0].url) && puts(made)[0].body.pipelineStageId === STAGE.booked);
 check('stage only: name and value untouched', puts(made)[0]?.body?.name === undefined &&
@@ -241,24 +245,49 @@ n = calls.length;
 res = await request(bookIt);
 check('a redelivery touches GHL not at all', res.payload.duplicate === true && ghlCalls(calls.slice(n)).length === 0);
 
-ghlOpps = [{ id: 'o_dq', pipelineStageId: STAGE.dq, status: 'open' }];
+ghlOpps = [own({ id: 'o_dq', pipelineStageId: STAGE.dq, status: 'open' })];
 n = calls.length;
 await request(appt());
 check('Disqualified who booked anyway moves to Booked', puts(calls.slice(n))[0]?.body?.pipelineStageId === STAGE.booked);
 
-ghlOpps = [{ id: 'o_b', pipelineStageId: STAGE.booked, status: 'open' }];
+ghlOpps = [own({ id: 'o_b', pipelineStageId: STAGE.booked, status: 'open' })];
 n = calls.length;
 res = await request(appt());
 check('already Booked is left alone', res.payload.opportunity === 'kept (already Booked)' && puts(calls.slice(n)).length === 0);
 
 for (const [name, id] of [['Showed', STAGE.showed], ['No-show', STAGE.noshow], ['Plan sent', STAGE.plan],
                           ['Won', STAGE.won], ['Lost', STAGE.lost]]) {
-  ghlOpps = [{ id: 'o_past', pipelineStageId: id, status: 'open' }];
+  ghlOpps = [own({ id: 'o_past', pipelineStageId: id, status: 'open' })];
   n = calls.length;
   res = await request(appt({ calendar: { calendarName: 'Rescheduled Call', appointmentId: `appt_${++seq}` } }));
   check(`never backward from ${name}`, /past Booked/.test(res.payload.opportunity) &&
     puts(calls.slice(n)).length === 0 && creates(calls.slice(n)).length === 0);
 }
+
+// The API ignored the filters and answered with the whole location:
+// other leads' deals, and this lead's deal in another pipeline. None of
+// them may be moved; with nothing of ours left, a new one is created.
+ghlOpps = [
+  { id: 'o_other_lead', contactId: 'c_999', pipelineId: SALES, pipelineStageId: STAGE.started, status: 'open' },
+  { id: 'o_other_nested', contact: { id: 'c_998' }, pipelineId: SALES, pipelineStageId: STAGE.dq, status: 'open' },
+  { id: 'o_other_pipe', contactId: 'c_123', pipelineId: 'pipe_other', pipelineStageId: STAGE.started, status: 'open' },
+  { id: 'o_no_contact', pipelineId: SALES, pipelineStageId: STAGE.started, status: 'open' },
+  { id: 'o_no_pipe', contactId: 'c_123', pipelineStageId: STAGE.started, status: 'open' }
+];
+n = calls.length;
+res = await request(appt());
+made = calls.slice(n);
+check("filters ignored by the API: no other lead's or pipeline's deal is touched",
+  puts(made).length === 0 && res.payload.opportunity === 'created');
+ghlOpps.push({ id: 'o_nested_ok', contact: { id: 'c_123' }, pipelineId: SALES, pipelineStageId: STAGE.started, status: 'open' });
+n = calls.length;
+res = await request(appt());
+made = calls.slice(n);
+check('only the matching deal moves, read from contact.id too',
+  puts(made).length === 1 && /\/opportunities\/o_nested_ok$/.test(puts(made)[0].url));
+ghlOpps = [{ id: 'o_other_won', contactId: 'c_999', pipelineId: SALES, pipelineStageId: STAGE.won, status: 'open' }];
+res = await request(appt());
+check("another lead's later stage never blocks this lead", res.payload.opportunity === 'created');
 
 ghlOpps = [];
 n = calls.length;
@@ -269,12 +298,12 @@ check('none open: one is created at Booked', res.payload.opportunity === 'create
   cr?.pipelineStageId === STAGE.booked && cr?.pipelineId === 'gVWhpLqxgmOyTgyrGeKJ' && cr?.contactId === 'c_123');
 check('named and valued like the form does it', cr?.name === 'Ada Lovelace · Growth Strategy Consultation' &&
   cr?.monetaryValue === 8000);
-ghlOpps = [{ id: 'o_won_old', pipelineStageId: STAGE.won, status: 'won' }];
+ghlOpps = [own({ id: 'o_won_old', pipelineStageId: STAGE.won, status: 'won' })];
 n = calls.length;
 res = await request(appt());
 check('a closed (won or lost) opportunity does not block a new booking', res.payload.opportunity === 'created');
 
-ghlOpps = [{ id: 'o_open', pipelineStageId: STAGE.started, status: 'open' }];
+ghlOpps = [own({ id: 'o_open', pipelineStageId: STAGE.started, status: 'open' })];
 n = calls.length;
 res = await request(appt({}, { event: 'cancelled' }));
 check('a cancellation does not touch the pipeline', ghlCalls(calls.slice(n)).length === 0);

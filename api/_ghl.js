@@ -175,15 +175,28 @@ export async function moveOpportunity(id, stage) {
 }
 
 /* GET /opportunities/search, the contact's opportunities in the Sales
-   pipeline. ASSUMPTION (noted in the PR): query names location_id,
-   contact_id and pipeline_id, and a body of { opportunities: [...] }
-   each carrying id, pipelineStageId and status. */
+   pipeline. The catalogue documents camelCase filters (locationId,
+   contactId, pipelineId); older docs used snake_case. Both are sent,
+   because a filter the API ignores would return every opportunity in the
+   location. And the answer is filtered again here, strictly: only an
+   opportunity whose contact AND pipeline match is ever returned, so a
+   wrong lead's deal can never be moved whatever the API did with the
+   query. Response: { opportunities: [{ id, contactId, pipelineId,
+   pipelineStageId, status }], meta }. */
 export async function findOpportunities(contactId) {
   const { locationId, pipelineId } = config();
-  const q = new URLSearchParams({ location_id: locationId, contact_id: contactId, pipeline_id: pipelineId });
+  if (!contactId || !pipelineId) return [];
+  const q = new URLSearchParams({
+    locationId, location_id: locationId,
+    contactId, contact_id: contactId,
+    pipelineId, pipeline_id: pipelineId
+  });
   const out = await call('GET', `/opportunities/search?${q}`);
   const list = (out && (out.opportunities || out.data)) || [];
-  return Array.isArray(list) ? list.filter((o) => o && o.id && (!o.pipelineId || o.pipelineId === pipelineId)) : [];
+  if (!Array.isArray(list)) return [];
+  return list.filter((o) => o && o.id &&
+    String(o.contactId || (o.contact && o.contact.id) || '') === String(contactId) &&
+    String(o.pipelineId || '') === String(pipelineId));
 }
 
 /** The stage name for a stage id, or '' when it is not one of ours. */
