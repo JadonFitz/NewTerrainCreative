@@ -12,7 +12,8 @@
      booked       one `schedule` row in funnel_events (booking_source
                   'ghl'), one Meta Schedule (or NextStepSprintBooked for
                   a lead that came through /next-step), one Speed-to-Lead
-                  card type=booked. A Rescheduled Call or Quick Follow-Up
+                  card type=booked, and the contact's Sales opportunity
+                  moved to Booked (markBooked, never backward). A Rescheduled Call or Quick Follow-Up
                   booking is a lead already counted: noted, carded, never
                   a second Schedule and never a second schedule row.
      rescheduled  noted in funnel_events, nothing else. Same booking,
@@ -52,9 +53,11 @@
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, configured } from './_supabase.js';
 import { sendLeadCard } from './_lead-card.js';
+import * as ghl from './_ghl.js';
 import '../assets/booking-forms.js';
 
-const { OFFERS } = globalThis.NTCBookingForms;
+const FORMS = globalThis.NTCBookingForms;
+const { OFFERS } = FORMS;
 
 /* The funnel name each offer reports under, the same names
    /api/iclosed-webhook and the owner dashboard use. */
@@ -183,6 +186,43 @@ function answersFrom(offerKey, field) {
   return { answers, labels };
 }
 
+/* ── the opportunity, moved to Booked ─────────────────────────────
+   So the GHL workflow needs nothing but this webhook. The contact's open
+   Sales opportunity moves to Booked; with none open, one is created at
+   Booked. Never backward: an opportunity already at Showed or beyond
+   (No-show, Plan sent, Won, Lost) stays where the team put it, which is
+   also what keeps a rebooking after a no-show from rewinding it.
+   Already at Booked is left alone, so a redelivery changes nothing.
+   Never throws: a pipeline hiccup must not cost the conversion. */
+const PAST_BOOKED = new Set(['Showed', 'No-show', 'Plan sent', 'Won', 'Lost']);
+
+async function markBooked({ contactId, offer, fullName, field }) {
+  if (!ghl.configured()) return 'skipped (GHL not configured)';
+  if (!contactId) return 'skipped (no contact id)';
+  try {
+    const all = await ghl.findOpportunities(contactId);
+    const open = all.filter((o) => !o.status || o.status === 'open');
+    const stages = open.map((o) => ghl.stageName(o.pipelineStageId));
+    if (stages.some((s) => PAST_BOOKED.has(s))) return 'kept (already past Booked)';
+    if (stages.includes('Booked')) return 'kept (already Booked)';
+    if (open.length) {
+      await ghl.moveOpportunity(open[0].id, 'Booked');
+      return 'moved';
+    }
+    const label = (OFFERS[offer] && OFFERS[offer].label) || 'Strategy call';
+    const { answers } = answersFrom(offer, field);
+    await ghl.createOpportunity({
+      contactId, stage: 'Booked',
+      name: `${fullName || 'New lead'} · ${label}`,
+      monetaryValue: FORMS.opportunityValue(offer, answers)
+    });
+    return 'created';
+  } catch (e) {
+    console.error('ghl-webhook: opportunity not moved', (e && e.message) || e);
+    return 'failed';
+  }
+}
+
 /** Write the event row. Resolves true (new), false (seen before), or null (unknown). */
 async function record(row) {
   if (!configured) { console.warn('ghl-webhook: supabase not configured, event not stored'); return null; }
@@ -300,6 +340,13 @@ export default async function handler(req, res) {
     }
   }
 
+  const opportunity = event === 'booked'
+    ? await markBooked({
+        contactId: pick(d, 'contact_id', 'contactId', 'contact.id', 'customData.contact_id'),
+        offer, fullName: full, field
+      })
+    : 'not touched';
+
   let card = 'not sent';
   if (event === 'booked' || event === 'cancelled') {
     const { answers, labels } = answersFrom(offer, field);
@@ -310,6 +357,6 @@ export default async function handler(req, res) {
     });
   }
 
-  console.log('ghl-webhook:', event, offer || '(unknown offer)', 'stored', fresh, 'card', card);
-  return res.status(200).json({ ok: true, event, stored: fresh === true, sent, card });
+  console.log('ghl-webhook:', event, offer || '(unknown offer)', 'stored', fresh, 'opportunity', opportunity, 'card', card);
+  return res.status(200).json({ ok: true, event, stored: fresh === true, sent, opportunity, card });
 }

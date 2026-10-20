@@ -11,6 +11,15 @@ process.env.META_CAPI_TOKEN = 'stub-meta-token';
 process.env.GHL_WEBHOOK_SECRET = 'g'.repeat(40);
 process.env.LEAD_CARD_URL = 'https://speed-to-lead.example/api/lead-card';
 process.env.LEAD_CARD_SECRET = 'stub-card-secret';
+process.env.GHL_API_TOKEN = 'stub-ghl-token';
+
+// The contact's opportunities as GHL's search would return them.
+const STAGE = { started: 'cf946fe5-8597-4fe7-b8f2-8f4c6db47894', dq: '67599a1a-08ed-43f3-a98a-43f7442da375',
+  booked: '11653ab6-34fd-4b39-858f-1393fe1f07f3', showed: 'e6098816-7bc3-4550-a76c-9dddfffac2e6',
+  noshow: '9c73f2ae-511a-4db6-ac2d-7cf2900340a3', plan: '1cad566a-54d9-45b1-8316-358addf6c7db',
+  won: 'bb538a91-4b20-4bbd-9664-2ab1bf068370', lost: '840782d0-59e3-4d34-ba1a-7bb08187550a' };
+let ghlOpps = [];
+let ghlStatus = 200;
 
 const calls = [];
 const seen = new Set();
@@ -30,6 +39,11 @@ globalThis.fetch = async (url, opts = {}) => {
              json: async () => (dup ? [] : [body]), text: async () => 'stub' };
   }
   if (/lead-card/.test(u)) return { ok: cardStatus < 300, status: cardStatus, json: async () => ({}) };
+  if (/leadconnectorhq/.test(u)) {
+    const out = /\/opportunities\/search/.test(u) ? { opportunities: ghlOpps }
+      : /\/opportunities\/$/.test(u) ? { opportunity: { id: 'o_new' } } : {};
+    return { ok: ghlStatus < 300, status: ghlStatus, json: async () => out, text: async () => '' };
+  }
   return { ok: true, status: 200, json: async () => ({}), text: async () => '' };
 };
 
@@ -204,6 +218,80 @@ supabaseStatus = 201; cardStatus = 500;
 res = await request(appt());
 check('a failed card does not fail the webhook', res.statusCode === 200 && res.payload.sent === true);
 cardStatus = 200;
+
+console.info('\n\x1b[1mTHE OPPORTUNITY MOVES TO BOOKED\x1b[0m');
+const ghlCalls = (list) => list.filter((c) => /leadconnectorhq/.test(c.url));
+const puts = (list) => ghlCalls(list).filter((c) => c.method === 'PUT');
+const creates = (list) => ghlCalls(list).filter((c) => c.method === 'POST' && /\/opportunities\/$/.test(c.url));
+
+ghlOpps = [{ id: 'o_open', pipelineId: 'gVWhpLqxgmOyTgyrGeKJ', pipelineStageId: STAGE.started, status: 'open' }];
+n = calls.length;
+const bookIt = appt();
+res = await request(bookIt);
+made = calls.slice(n);
+const search = ghlCalls(made).find((c) => /\/opportunities\/search/.test(c.url));
+const sq = search && new URL(search.url).searchParams;
+check('searches the contact in the Sales pipeline', sq?.get('contact_id') === 'c_123' &&
+  sq?.get('pipeline_id') === 'gVWhpLqxgmOyTgyrGeKJ' && sq?.get('location_id') === 'kzOVdsNR0ozcoyyaag0a');
+check('Started form moves to Booked', res.payload.opportunity === 'moved' && puts(made).length === 1 &&
+  /\/opportunities\/o_open$/.test(puts(made)[0].url) && puts(made)[0].body.pipelineStageId === STAGE.booked);
+check('stage only: name and value untouched', puts(made)[0]?.body?.name === undefined &&
+  puts(made)[0]?.body?.monetaryValue === undefined);
+n = calls.length;
+res = await request(bookIt);
+check('a redelivery touches GHL not at all', res.payload.duplicate === true && ghlCalls(calls.slice(n)).length === 0);
+
+ghlOpps = [{ id: 'o_dq', pipelineStageId: STAGE.dq, status: 'open' }];
+n = calls.length;
+await request(appt());
+check('Disqualified who booked anyway moves to Booked', puts(calls.slice(n))[0]?.body?.pipelineStageId === STAGE.booked);
+
+ghlOpps = [{ id: 'o_b', pipelineStageId: STAGE.booked, status: 'open' }];
+n = calls.length;
+res = await request(appt());
+check('already Booked is left alone', res.payload.opportunity === 'kept (already Booked)' && puts(calls.slice(n)).length === 0);
+
+for (const [name, id] of [['Showed', STAGE.showed], ['No-show', STAGE.noshow], ['Plan sent', STAGE.plan],
+                          ['Won', STAGE.won], ['Lost', STAGE.lost]]) {
+  ghlOpps = [{ id: 'o_past', pipelineStageId: id, status: 'open' }];
+  n = calls.length;
+  res = await request(appt({ calendar: { calendarName: 'Rescheduled Call', appointmentId: `appt_${++seq}` } }));
+  check(`never backward from ${name}`, /past Booked/.test(res.payload.opportunity) &&
+    puts(calls.slice(n)).length === 0 && creates(calls.slice(n)).length === 0);
+}
+
+ghlOpps = [];
+n = calls.length;
+res = await request(appt());
+made = calls.slice(n);
+const cr = creates(made)[0]?.body;
+check('none open: one is created at Booked', res.payload.opportunity === 'created' &&
+  cr?.pipelineStageId === STAGE.booked && cr?.pipelineId === 'gVWhpLqxgmOyTgyrGeKJ' && cr?.contactId === 'c_123');
+check('named and valued like the form does it', cr?.name === 'Ada Lovelace · Growth Strategy Consultation' &&
+  cr?.monetaryValue === 8000);
+ghlOpps = [{ id: 'o_won_old', pipelineStageId: STAGE.won, status: 'won' }];
+n = calls.length;
+res = await request(appt());
+check('a closed (won or lost) opportunity does not block a new booking', res.payload.opportunity === 'created');
+
+ghlOpps = [{ id: 'o_open', pipelineStageId: STAGE.started, status: 'open' }];
+n = calls.length;
+res = await request(appt({}, { event: 'cancelled' }));
+check('a cancellation does not touch the pipeline', ghlCalls(calls.slice(n)).length === 0);
+
+ghlStatus = 500;
+n = calls.length;
+res = await request(appt());
+made = calls.slice(n);
+check('GHL down: still 200, Meta and the card still go', res.statusCode === 200 && res.payload.opportunity === 'failed' &&
+  meta(made).length === 1 && cards(made).length === 1);
+ghlStatus = 200;
+const savedToken = process.env.GHL_API_TOKEN; delete process.env.GHL_API_TOKEN;
+n = calls.length;
+res = await request(appt());
+check('no GHL token: the pipeline is skipped, nothing else changes', ghlCalls(calls.slice(n)).length === 0 &&
+  res.payload.sent === true);
+process.env.GHL_API_TOKEN = savedToken;
 
 check('no log line carries a contact detail',
   !/person@example|Lovelace|3105550100|IwAR0/.test(logged.join('\n')));

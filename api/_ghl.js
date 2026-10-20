@@ -165,6 +165,33 @@ export async function updateOpportunity(id, { stage, name, monetaryValue }) {
   });
 }
 
+/** PUT /opportunities/{id} with the stage only: name and value stay as set. */
+export async function moveOpportunity(id, stage) {
+  const { pipelineId, stages } = config();
+  if (!stages[stage]) throw new Error(`ghl stage "${stage}" not configured`);
+  await call('PUT', `/opportunities/${encodeURIComponent(id)}`, {
+    pipelineId, pipelineStageId: stages[stage]
+  });
+}
+
+/* GET /opportunities/search, the contact's opportunities in the Sales
+   pipeline. ASSUMPTION (noted in the PR): query names location_id,
+   contact_id and pipeline_id, and a body of { opportunities: [...] }
+   each carrying id, pipelineStageId and status. */
+export async function findOpportunities(contactId) {
+  const { locationId, pipelineId } = config();
+  const q = new URLSearchParams({ location_id: locationId, contact_id: contactId, pipeline_id: pipelineId });
+  const out = await call('GET', `/opportunities/search?${q}`);
+  const list = (out && (out.opportunities || out.data)) || [];
+  return Array.isArray(list) ? list.filter((o) => o && o.id && (!o.pipelineId || o.pipelineId === pipelineId)) : [];
+}
+
+/** The stage name for a stage id, or '' when it is not one of ours. */
+export function stageName(id) {
+  const { stages } = config();
+  return Object.keys(stages).find((k) => stages[k] === id) || '';
+}
+
 /** The booking URL for an offer, or '' when it is not set. https only. */
 export function calendarUrl(offerKey) {
   const url = String(config().calendars[offerKey] || '');
