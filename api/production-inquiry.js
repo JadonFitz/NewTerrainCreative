@@ -1,10 +1,12 @@
 /* ══════════════════════════════════════════════════════════════════════
    POST /api/production-inquiry  ·  one-time production inquiry
    ──────────────────────────────────────────────────────────────────────
-   The form at /production-inquiry, where the Brand Builder application in
-   iClosed sends anyone under its monthly budget floor. A one-off project,
-   not a retainer, so it is stored as its own form_type and never counted
-   with retainer leads.
+   The project form on /next-step (was /production-inquiry until 20 Oct
+   2026, which now redirects there), where the iClosed booking forms send
+   anyone under their floor. A one-off project, not a retainer, so it is
+   stored as its own form_type and never counted with retainer leads.
+   The endpoint, the form id and the payload kept their old names on
+   purpose: renaming them would only break in-flight submissions.
 
    Store first. Unlike /api/project, a failed write is an error here: the
    page then shows the fallback email, so nothing depends on the alert

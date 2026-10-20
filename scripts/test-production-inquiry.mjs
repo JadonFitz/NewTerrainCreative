@@ -55,7 +55,7 @@ const VALID = {
   project_description: 'A 60 second spot for the new Pasadena office opening.',
   source: 'bb-apply', utm_source: 'facebook', utm_medium: 'paid',
   utm_campaign: 'bb-oct', utm_content: 'story-01',
-  page_url: 'https://www.newterraincreative.com/production-inquiry?from=bb-apply',
+  page_url: 'https://www.newterraincreative.com/next-step?from=bb-apply',
   referrer: 'https://app.iclosed.io/', submitted_at: '2026-10-11T20:00:00.000Z'
 };
 

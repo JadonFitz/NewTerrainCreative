@@ -159,6 +159,17 @@ function offerFrom(d) {
   return 'paid_retainer';
 }
 
+/* A booking that started on /next-step, the bridge page for leads a
+   booking form turned away (20 Oct 2026). /strategy-call forwards
+   from=next-step to iClosed, which hands it back under `tracking`. Such a
+   booking is still stored, tagged, but Meta gets the custom
+   NextStepSprintBooked instead of Schedule: ad sets optimise for
+   Schedule, and a turned-away lead must not teach them to find more. */
+function isNextStep(d) {
+  return String(pick(d, 'tracking.from', 'contact.from', 'from') || '')
+    .trim().toLowerCase() === 'next-step';
+}
+
 /* A booking of the Rescheduled Call event, matched on its name or its
    slug (rescheduled-call) the same loose way offerFrom matches. */
 function isRebooking(d) {
@@ -258,7 +269,8 @@ async function storeBooking(d, bookingId) {
         ...attributionFrom(d),
         offer,
         booking_id: String(bookingId).slice(0, 200),
-        booking_source: 'iclosed'
+        booking_source: 'iclosed',
+        ...(isNextStep(d) ? { from: 'next-step' } : {})
       }
     }, { ignoreConflict: true });
     return true;
@@ -365,8 +377,9 @@ export default async function handler(req, res) {
        payload carries no better one. */
     const { ip: callerIp, userAgent } = requestIdentity(req);
     const { fbp, fbc, ip } = metaIdsFrom(d, callerIp);
+    const nextStep = isNextStep(d);
     const result = await sendMetaConversion({
-      eventName: 'Schedule',
+      eventName: nextStep ? 'NextStepSprintBooked' : 'Schedule',
       // The booking id, which is what /call-booked uses in the browser.
       // That shared id is the whole deduplication story.
       eventId: String(bookingId),
@@ -387,7 +400,8 @@ export default async function handler(req, res) {
     });
     // Which match keys went out, so attribution gaps are diagnosable
     // from the logs. Flags only, never the values.
-    console.log('iclosed-webhook: Schedule sent', bookingId, JSON.stringify(result),
+    console.log(`iclosed-webhook: ${nextStep ? 'NextStepSprintBooked' : 'Schedule'} sent`,
+      bookingId, JSON.stringify(result),
       'ids', JSON.stringify({ fbp: !!fbp, fbc: !!fbc, ip: !!ip }));
     return res.status(200).json({ ok: true, sent: true, stored });
   } catch (e) {

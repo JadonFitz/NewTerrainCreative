@@ -260,6 +260,26 @@ n = calls.length;
 res = await request(booking({ event: { callPreviewId: 'call_follow5678' }, event_type: { name: 'Renamed', slug: 'quick-follow-up' } }));
 check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
 
+// A Sprint call booked from /next-step (20 Oct 2026): stored and tagged,
+// but Meta gets the custom NextStepSprintBooked, never Schedule.
+console.info('\n\x1b[1mBOOKED FROM /next-step\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_nextstep01' },
+  tracking: { utm_source: 'meta', utm_campaign: 'bb-oct', offer: 'ad-sprint', from: 'next-step' } }));
+made = calls.slice(n);
+check('a next-step booking still stores one schedule row',
+  supa(made).length === 1 && supa(made)[0]?.body?.event_name === 'schedule');
+check('tagged from next-step', supa(made)[0]?.body?.metadata?.from === 'next-step');
+check('Meta gets NextStepSprintBooked, not Schedule',
+  meta(made).length === 1 && meta(made)[0].body.data[0].event_name === 'NextStepSprintBooked');
+check('keyed on the booking id', meta(made)[0]?.body.data[0].event_id === 'call_nextstep01');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_nextstep02' },
+  tracking: { from: 'somewhere-else' } }));
+made = calls.slice(n);
+check('any other from still sends Schedule',
+  meta(made)[0]?.body.data[0].event_name === 'Schedule' && supa(made)[0]?.body?.metadata?.from === undefined);
+
 // The public endpoint must still refuse the name this handler now writes.
 const trackSource = await (await import('node:fs/promises')).readFile(
   new URL('../api/track.js', import.meta.url), 'utf8');

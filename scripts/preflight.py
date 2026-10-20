@@ -291,12 +291,12 @@ for page in PARKED:
 # the moment someone adds one and forgets.
 # /call-booked is reached only by an iClosed redirect after a booking, so
 # nothing on the site should link it and nothing should index it.
-# /production-inquiry is reached only by the Brand Builder application's
-# budget redirect in iClosed.
+# /next-step (was /production-inquiry) is reached only by the booking
+# forms' disqualifier redirects in iClosed.
 # /pest-control-trial is live (assets/offer.js trial.live) and in the
 # sitemap, but no other page links it: it is offered to pest control
 # only, so it stays on the link check and off the sitemap check.
-UNLISTED = ['call-booked', 'owner', 'production-inquiry', 'pest-control-trial']
+UNLISTED = ['call-booked', 'owner', 'next-step', 'pest-control-trial']
 IN_SITEMAP_OK = {'pest-control-trial'}
 sitemap = ROOT / 'sitemap.xml'
 if sitemap.exists():
@@ -319,20 +319,29 @@ for u in UNLISTED:
     bad(f'/{u} is linked from ' + ', '.join(linkers)) if linkers \
         else ok(f'/{u} is not linked from any public page')
 
-# /production-inquiry takes leads the Brand Builder application turned
-# away. A standard Lead from there would feed them back into that
-# campaign, and a booking link would skip the manual review.
-_pi = ROOT / 'production-inquiry.html'
+# /next-step takes leads a booking form turned away. A standard Meta
+# event from there would feed them back into that campaign. Its one
+# booking link is the Sprint call, tagged from=next-step so the booking
+# fires a custom event instead of Schedule; any other booking link or a
+# calendar embed is a mistake. Prices are check-offer.py's job.
+_pi = ROOT / 'next-step.html'
 if _pi.exists():
     _t = _pi.read_text(encoding='utf-8')
     _t_code = re.sub(r'<!--[\s\S]*?-->', '', _t)
-    problems = [label for label, pat in (
-        ('a standard Lead event', r"fbq\(\s*'track'\s*,\s*'Lead'|track\(\s*'Lead'"),
-        ('a booking link',
-         r'href="[^"]*(iclosed|calendar\.app\.google|calendly|/strategy-call|/booked)'),
-    ) if re.search(pat, _t_code, re.I)]
-    bad('production-inquiry.html carries ' + ', '.join(problems)) if problems \
-        else ok('/production-inquiry fires no Lead and links no booking')
+    _hrefs = re.findall(r'href="([^"]*)"', _t_code)
+    _booking = [h for h in _hrefs
+                if re.search(r'iclosed|calendar\.app\.google|calendly|/strategy-call|/booked', h, re.I)
+                and h != '/strategy-call?offer=ad-sprint&amp;from=next-step']
+    problems = []
+    if re.search(r"fbq\(\s*'track'\s*,\s*'(?!PageView')|"
+                 r"track\(\s*'(Lead|Schedule|InitiateCheckout|Purchase|ViewContent)'", _t_code):
+        problems.append('a standard Meta event')
+    if _booking:
+        problems.append('a booking link other than the tagged Sprint call: ' + ', '.join(_booking))
+    if '/strategy-call?offer=ad-sprint&amp;from=next-step' not in _t_code:
+        problems.append('no tagged Sprint call link')
+    bad('next-step.html carries ' + ', '.join(problems)) if problems \
+        else ok('/next-step fires no standard event and books only the tagged Sprint call')
 
 
 # The 5-day trial must stay noindexed until assets/offer.js trial.live.
@@ -353,7 +362,8 @@ if _trial.exists() and not _trial_live:
 import json as _json
 _cfg = _json.loads((ROOT / 'vercel.json').read_text(encoding='utf-8'))
 _redirects = {r['source']: r['destination'] for r in _cfg.get('redirects', [])}
-RETIRED = {'/production-media': '/grow', '/growth-guide': '/grow'}
+RETIRED = {'/production-media': '/grow', '/growth-guide': '/grow',
+           '/production-inquiry': '/next-step'}
 
 for src, dest in RETIRED.items():
     stem = src.lstrip('/')

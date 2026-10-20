@@ -306,7 +306,7 @@
       pilot: {
         name: 'Brand Builder Studio Pilot',
         format: 'studio',
-        pilotFee: 7500,
+        pilotFee: 8500, // was 7500 until 20 Oct 2026 (Jadon)
         oneTime: true,
         noRetainer: true,
         longformEpisodes: 6,
@@ -354,7 +354,7 @@
       fieldPilot: {
         name: 'Brand Builder Field Pilot',
         format: 'field',
-        fieldPilotFee: 8500,
+        fieldPilotFee: 9500, // was 8500 until 20 Oct 2026 (Jadon)
         oneTime: true,
         noRetainer: true,
         // 16 Oct 2026, Jadon: 4 episodes (3 vlog-style, 1 sit-down), same 3 shoot days.
@@ -595,9 +595,17 @@
          15, one-off; then a monthly volume on the retainers.
 
          No price on any of them since 2 Oct 2026. The Sprint is still
-         fixed price; the figure is quoted on the fit call. */
-      adSprintEight:   { name: 'The Eight',   creatives: 8 },
-      adSprintFifteen: { name: 'The Fifteen', creatives: 15 },
+         fixed price; the figure is quoted on the fit call.
+
+         20 Oct 2026, Jadon: /next-step (the bridge page for leads under a
+         booking form's floor) sells the Sprint straight through these
+         Stripe Payment Links, no call. Checkout shows the price; the page
+         does not. scripts/check-offer.py lets these links onto
+         next-step.html only, and fails if the page carries another. */
+      adSprintEight:   { name: 'The Eight',   creatives: 8,
+                         stripePaymentLink: 'https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f' },
+      adSprintFifteen: { name: 'The Fifteen', creatives: 15,
+                         stripePaymentLink: 'https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g' },
       leadFoundation:  { name: 'Lead Foundation' }
     },
 
@@ -727,8 +735,8 @@
     // $10,000 film are not the same conversation.
     projectBudgetBands: [10000, 25000, 50000],
 
-    // /production-inquiry, where the Brand Builder application sends
-    // anyone under its monthly floor. One-off project totals, the
+    // The project form on /next-step (was /production-inquiry), where the
+    // booking forms send anyone under their floor. One-off project totals, the
     // visitor's budget and not our price. Declared here so check-offer.py
     // can trace the figures that page shows.
     productionInquiryBudgetBands: [3000, 5000, 10000],

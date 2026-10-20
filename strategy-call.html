@@ -462,6 +462,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   var offerId = SCHEDULER.slug ||
     (Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug) ? offerSlug : '');
 
+  /* Sent here from /next-step, the bridge page for leads a booking form
+     turned away. Those leads must not reach Meta as a standard event. */
+  var fromNextStep = (new URLSearchParams(window.location.search).get('from') || '')
+                       .trim().toLowerCase() === 'next-step';
+
   /* Attribution passthrough. iClosed reads fbp/fbc from the browser on
      its own; what it cannot know is which offer sent the visitor or what
      the FIRST touch was, because that lives in our localStorage. We hand
@@ -483,6 +488,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     var pkg = (new URLSearchParams(window.location.search).get('pkg') || '')
                 .trim().toLowerCase();
     if (pkg === 'eight' || pkg === 'fifteen') u.searchParams.set('pkg', pkg);
+
+    /* /next-step's "Book a short Sprint call" (20 Oct 2026). Forwarded so
+       it lands in the webhook's `tracking` object, which then sends the
+       custom NextStepSprintBooked instead of Schedule. Only this value. */
+    if (fromNextStep) u.searchParams.set('from', 'next-step');
 
     if (window.ntc && ntc.attribution) {
       var a = ntc.attribution() || {};
@@ -696,6 +706,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      No Lead. Deliberately. See the note above.
      ─────────────────────────────────────────────────────────────── */
   if (!window.ntc) return;
+  /* From /next-step: no ViewContent. The click there already fired the
+     custom NextStepSprintCall, and a standard event here would credit
+     the ad that brought a turned-away lead. */
+  if (fromNextStep) return;
   ntc.track('ViewContent', {
     content_name: document.title,
     // The recognised slug, for the same reason the URL above carries only

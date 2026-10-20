@@ -63,6 +63,16 @@ check('creates stable event ids', Boolean(viewId && clickId && viewId !== clickI
 check('ViewContent uses a standard Meta event', pixel[0]?.[0] === 'track' && pixel[0]?.[1] === 'ViewContent');
 check('CTAClick uses a custom Meta event', pixel[1]?.[0] === 'trackCustom' && pixel[1]?.[1] === 'CTAClick');
 check('first-party-only events never reach Meta', pixel.length === beforeInternal);
+{
+  // /next-step (20 Oct 2026): every event from the bridge page is custom.
+  const before = pixel.length;
+  for (const name of ['NextStepSprintCheckout', 'NextStepSprintCall', 'NextStepSprintBooked', 'ProductionInquiry']) {
+    window.ntc.track(name, { offer: 'ad_sprint' }, { once: false });
+  }
+  const sent = pixel.slice(before);
+  check('/next-step events are all custom Meta events',
+    sent.length === 4 && sent.every((p) => p[0] === 'trackCustom'));
+}
 
 const view = requests.find((r) => r.body.event_name === 'view_content')?.body;
 const click = requests.find((r) => r.body.event_name === 'cta_click')?.body;
