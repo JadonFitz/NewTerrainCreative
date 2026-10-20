@@ -44,7 +44,8 @@ const check = (label, cond, detail = '') => {
   if (!cond) failures++;
 };
 
-// Exactly what the page sends.
+// What an older tab of the page sends (business name and timeline were
+// asked until 20 Oct 2026). PAGE below is what the page sends now.
 const VALID = {
   form: 'production-inquiry',
   full_name: 'Dana Reyes', email: 'dana@ntc-test.invalid', phone: '(310) 555-0143',
@@ -58,6 +59,8 @@ const VALID = {
   page_url: 'https://www.newterraincreative.com/next-step?from=bb-apply',
   referrer: 'https://app.iclosed.io/', submitted_at: '2026-10-11T20:00:00.000Z'
 };
+
+const { business_name: _b, timeline: _t, ...PAGE } = VALID;
 
 console.log('\n\x1b[1mPRODUCTION INQUIRY · stored\x1b[0m');
 let n = calls.length;
@@ -108,9 +111,31 @@ check('no Meta event', hit(calls, 'facebook.com').length === 0);
 check('no iClosed or calendar call', hit(calls, 'iclosed').length === 0 && hit(calls, 'google').length === 0);
 check('no funnel_events row', inserts(calls, '/funnel_events').length === 0);
 
+console.log('\n\x1b[1mWITHOUT BUSINESS NAME OR TIMELINE (the page today)\x1b[0m');
+n = calls.length;
+r = await post({ ...PAGE, project_description: 'No business name, no timeline.' });
+made = since(n);
+check('accepted with 200', r.statusCode === 200 && r.payload.ok === true, JSON.stringify(r.payload));
+const bare = inserts(made, '/leads')[0]?.body;
+check('stored, business and desired_start null',
+  bare?.form_type === 'production_inquiry' && bare?.business === null && bare?.desired_start === null);
+const bareMail = hit(made, 'sendgrid.com')[0]?.body;
+check('subject falls back to the website or Instagram',
+  bareMail?.subject === '[HIGH] Production inquiry · Dana Reyes · @reyesdental', bareMail?.subject);
+const bareHtml = bareMail?.content?.[0]?.value || '';
+check('no empty Business or Timeline rows',
+  !bareHtml.includes('>Business<') && !bareHtml.includes('>Timeline<') && bareHtml.includes('>Budget<'));
+check('priority banner has no empty timeline slot', !/· <\/p>|·\s*·/.test(bareHtml));
+n = calls.length;
+r = await post({ ...PAGE, website_or_instagram: '', project_description: 'Name only.' });
+const nameOnly = hit(since(n), 'sendgrid.com')[0]?.body?.subject;
+check('subject falls back to the name alone', nameOnly === '[HIGH] Production inquiry · Dana Reyes', nameOnly);
+r = await post({ ...PAGE, timeline: 'Someday' });
+check('a timeline that is sent must still be a page label', r.statusCode === 400 && r.payload.fields?.includes('timeline'));
+
 console.log('\n\x1b[1mVALIDATION\x1b[0m');
-for (const f of ['full_name', 'email', 'phone', 'business_name', 'production_type',
-                 'budget_range', 'timeline', 'project_description']) {
+for (const f of ['full_name', 'email', 'phone', 'production_type',
+                 'budget_range', 'project_description']) {
   r = await post({ ...VALID, [f]: undefined });
   check(`missing ${f} rejected`, r.statusCode === 400 && r.payload.fields?.includes(f));
 }
