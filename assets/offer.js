@@ -740,6 +740,13 @@
     // visitor's budget and not our price. Declared here so check-offer.py
     // can trace the figures that page shows.
     productionInquiryBudgetBands: [3000, 5000, 10000],
+
+    // /breakdown, the free show or ad breakdown. The visitor's own annual
+    // revenue and what they already spend a month on creative and ads
+    // services, never our price. The page shows them as $1M, $5K and so
+    // on; the keys it posts to the agent are under_1m, 5k_10k and so on.
+    breakdownRevenueBands: [1000000, 2000000, 5000000, 10000000],
+    breakdownInvestmentBands: [5000, 10000],
     projectTypes: [
       // First, because /sprint routes here and an Ad Sprint is the most
       // common single thing this form is asked for.

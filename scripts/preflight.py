@@ -382,6 +382,38 @@ for src, dest in _redirects.items():
 ok(f'{len(_redirects)} redirect(s) resolve to real pages') if _redirects else None
 
 
+# Agent proxies. /d/ (direction decks) and /b/ (the free breakdown) are
+# served by the agent on Railway through a rewrite. Each must sit before
+# the catch-all, or the catch-all answers with the homepage, and each must
+# be noindexed with no referrer, because its URLs carry private tokens.
+AGENT = 'https://ntc-agent-production.up.railway.app'
+_rewrites = _cfg.get('rewrites', [])
+_catch = next((i for i, r in enumerate(_rewrites) if r['source'].startswith('/((?!')), len(_rewrites))
+_hdrs = {h['source']: {x['key']: x['value'] for x in h['headers']} for h in _cfg.get('headers', [])}
+for prefix in ('d', 'b'):
+    i = next((i for i, r in enumerate(_rewrites) if r['source'] == f'/{prefix}/:path*'), None)
+    h = _hdrs.get(f'/{prefix}/(.*)', {})
+    if i is None or _rewrites[i]['destination'] != f'{AGENT}/{prefix}/:path*':
+        bad(f'/{prefix}/ is not rewritten to the agent')
+    elif i > _catch:
+        bad(f'/{prefix}/ rewrite sits after the catch-all, so it never matches')
+    elif 'noindex' not in h.get('X-Robots-Tag', '') or h.get('Referrer-Policy') != 'no-referrer':
+        bad(f'/{prefix}/ is missing its noindex or no-referrer header')
+    else:
+        ok(f'/{prefix}/ proxies to the agent, noindexed, no referrer')
+
+# /breakdown renders model-written text. It must only ever do so as text.
+_bd = [ROOT / 'breakdown.html', ROOT / 'assets' / 'breakdown.js']
+if all(f.exists() for f in _bd):
+    _src = ''.join(f.read_text(encoding='utf-8') for f in _bd)
+    bad('/breakdown assigns HTML from a string (innerHTML and the like)') \
+        if re.search(r'innerHTML\s*=|outerHTML\s*=|insertAdjacentHTML|document\.write', _src) \
+        else ok('/breakdown renders model text with textContent only')
+    # Its Sprint card links /next-step, which PR #35 creates by renaming
+    # /production-inquiry. Until that lands the link is a known 404.
+    if '/next-step' in _src and not (ROOT / 'next-step.html').exists():
+        warn('/breakdown links /next-step, which does not exist yet (PR #35)')
+
 # ── 5b · published claims must trace to canonical terms ───────────────
 head('5b · Risk-reversal claims')
 r = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'check-claims.py')],
@@ -406,6 +438,7 @@ for test, label in (
     ('test-iclosed-webhook.mjs', 'booking webhook'),
     ('test-meta-sync.mjs', 'Meta spend sync'),
     ('test-welcome.mjs', 'welcome booking link'),
+    ('test-breakdown.mjs', 'free breakdown page'),
 ):
     r = subprocess.run(['node', str(ROOT / 'scripts' / test)],
                        capture_output=True, text=True)

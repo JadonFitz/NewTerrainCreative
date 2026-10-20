@@ -107,6 +107,20 @@ check('milestones carry offer, video and percent',
   half[0]?.body.metadata?.offer === 'ad_sprint' && half[0]?.body.metadata?.video_name === 'ad_sprint_vsl' &&
   half[0]?.body.metadata?.percent === 50 && pixelVsl[2]?.[2]?.video_name === 'ad_sprint_vsl');
 
+// /breakdown: its own funnel, and its start and view events are custom
+// so neither can be mistaken for the standard Lead a qualified result fires.
+check('assigns the breakdown funnel from /breakdown',
+  funnelAt('/breakdown') === 'breakdown' && funnelAt('/breakdown.html') === 'breakdown');
+window.ntc.track('BreakdownStart', { kind: 'show' });
+window.ntc.track('BreakdownView', { kind: 'show', qualified: false });
+await new Promise((resolve) => setTimeout(resolve, 0));
+const pixelBd = pixel.filter((a) => /^Breakdown/.test(a[1]));
+check('BreakdownStart and BreakdownView are custom Meta events',
+  pixelBd.length === 2 && pixelBd.every((a) => a[0] === 'trackCustom'));
+check('breakdown events are stored first party',
+  requests.some((r) => r.body.event_name === 'breakdown_start') &&
+  requests.some((r) => r.body.event_name === 'breakdown_view'));
+
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · browser events are attributable and correctly routed'
   : `\x1b[31mFAIL\x1b[0m · ${failures} check(s) failed`}`);
