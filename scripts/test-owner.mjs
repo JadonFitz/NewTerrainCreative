@@ -213,6 +213,8 @@ res = await request({ method: 'POST', body: { ...goodCall, outcome: 'no_show', o
 check('a no-show with no objection is fine', res.statusCode === 200);
 res = await request({ method: 'POST', body: { ...goodCall, outcome: 'follow_up', objection: 'timing', offer: '' }, cookie });
 check('a follow-up may carry an objection and no offer', res.statusCode === 200);
+res = await request({ method: 'POST', body: { ...goodCall, offer: 'trial_pest_control' }, cookie });
+check('a 5-Day Trial call can be logged with its offer', res.statusCode === 200, res.payload.error);
 res = await request({ method: 'POST', body: { ...goodCall, note: '$7,500 pilot, 10 episodes, 50 clips' }, cookie });
 check('ordinary deal numbers in a note are allowed', res.statusCode === 200, res.payload.error);
 
