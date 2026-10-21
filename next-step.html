@@ -36,6 +36,12 @@
   No price on the page: Stripe checkout shows it (assets/offer.js,
   products.adSprintEight/adSprintFifteen.stripePaymentLink).
 
+  21 Oct 2026, Jadon: The Thirty has no Payment Link yet
+  (products.adSprintThirty.stripePaymentLink is null), so there is no
+  checkout for it here; the "Questions?" line points to the Sprint call
+  instead. When the link exists, add a buy-thirty link beside
+  buy-fifteen and add 'buy-thirty' to the list in the script below.
+
   No standard Meta event fires from here. These are leads a retainer
   form turned away, and a Lead, Schedule or InitiateCheckout would
   teach that campaign to find more of them. Custom events only:
@@ -235,7 +241,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <p class="pitch">Ads you own, made in one shoot, with no monthly commitment.</p>
     <a class="btn" id="buy-eight" data-pkg="eight" href="https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f">Get The Eight</a>
     <p class="links">
-      <a id="buy-fifteen" data-pkg="fifteen" href="https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g">or get The Fifteen</a><span class="dot" aria-hidden="true">·</span>Questions? <a id="sprint-call" href="/strategy-call?offer=ad-sprint&amp;from=next-step">Book a short Sprint call</a>
+      <a id="buy-fifteen" data-pkg="fifteen" href="https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g">or get The Fifteen</a><span class="dot" aria-hidden="true">·</span>Questions, or after The Thirty? <a id="sprint-call" href="/strategy-call?offer=ad-sprint&amp;from=next-step">Book a short Sprint call</a>
     </p>
     <p class="fine">Checkout through Stripe. Ad spend is paid to the platforms directly.</p>
   </section>
