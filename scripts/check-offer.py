@@ -16,7 +16,7 @@ looks like a price fails, which is the point.
 
 Monthly deliverable counts came off the same day and are guarded the
 same way: "N deliverables" may not appear on a page or in offer.js. The
-Ad Sprint's 8 and 15 are "creatives", on purpose, and are not caught.
+Ad Sprint's 8, 15 and 30 are "creatives", on purpose, and are not caught.
 
     python3 scripts/check-offer.py
 """
@@ -162,9 +162,13 @@ for _f in sorted(root.glob('*.html')):
 # 20 Oct 2026: the Sprint's Stripe links (assets/offer.js
 # products.adSprintEight/adSprintFifteen.stripePaymentLink) may appear on
 # /next-step only, and /next-step must carry exactly those two.
+# 21 Oct 2026, Jadon: The Thirty added with stripePaymentLink null until
+# its Payment Link exists. A null link is not matched, so /next-step must
+# not carry one for it; once the link is set in offer.js, /next-step must.
 _sprint_links = set(re.findall(
-    r"adSprint(?:Eight|Fifteen):\s*\{[^}]*?stripePaymentLink:\s*'([^']+)'", offer))
-if len(_sprint_links) != 2:
+    r"adSprint(?:Eight|Fifteen|Thirty):\s*\{[^}]*?stripePaymentLink:\s*'([^']+)'", offer))
+if not re.search(r"adSprintEight:\s*\{[^}]*?stripePaymentLink:\s*'", offer) or \
+   not re.search(r"adSprintFifteen:\s*\{[^}]*?stripePaymentLink:\s*'", offer):
     mirror_fail.append('assets/offer.js must declare a stripePaymentLink on adSprintEight and adSprintFifteen')
 for _f in sorted(root.glob('*.html')):
     _links = set(re.findall(r'https://buy\.stripe\.com/[A-Za-z0-9]+', _f.read_text(encoding='utf-8')))

@@ -46,6 +46,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     BB: Field        /welcome?plan=brand-builder-monthly-field&session_id={CHECKOUT_SESSION_ID}
     The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
     The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
+    The Thirty       /welcome?plan=thirty&session_id={CHECKOUT_SESSION_ID}
+                     (21 Oct 2026: Payment Link not created yet)
     5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
 
   A link without session_id still lands on a complete page; only the
@@ -651,6 +653,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
                intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
     },
+    // 21 Oct 2026, Jadon: The Thirty, same shape as the other two.
+    'thirty': function () {
+      var p = prod.adSprintThirty;
+      return { name: (p && p.name) || 'The Thirty', label: 'Ad Sprint',
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
+    },
     'eight-priority': function () {
       var p = prod.adSprintEight;
       return { name: ((p && p.name) || 'The Eight') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
@@ -662,12 +670,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return { name: ((p && p.name) || 'The Fifteen') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
                intro: priorityIntro, steps: sprintPrioritySteps,
                incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
+    },
+    'thirty-priority': function () {
+      var p = prod.adSprintThirty;
+      return { name: ((p && p.name) || 'The Thirty') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
+               intro: priorityIntro, steps: sprintPrioritySteps,
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
     }
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
-    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen',
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen', 'the-thirty': 'thirty',
+    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen', 'sprint-thirty': 'thirty',
     '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };
 

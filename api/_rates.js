@@ -107,7 +107,8 @@ export const RETAINER = {
       // sit-downs), 40 clips, 1 Signature Hero Ad a month (was 2), up to 3
       // (Studio) or 4 (Field) shoot days. Never fewer than 6 episodes.
       // 15 Oct 2026: Field 7 (3 vlogs, 4 sit-downs), up to 5 shoot days.
-      totalAssets: 51, totalAssetsField: 48, productionDays: 3,
+      // 21 Oct 2026: Field 10 (3 vlogs, 7 sit-downs), so both formats are 51.
+      totalAssets: 51, totalAssetsField: 51, productionDays: 3,
       heroAds: 1, longform: true,
       includesCampaignManagement: true,
       includesConversionInfrastructure: true,
@@ -119,9 +120,13 @@ export const RETAINER = {
   customFrom: 18000,
 
   // One-time, paid in full upfront. Creative production only.
+  // 21 Oct 2026, Jadon: The Thirty added, 30 creatives at $7,500. Also
+  // sold as the monthly content-only option when the client's own agency
+  // runs the media: one Sprint bought each month, no recurring billing.
   sprints: [
     { name: 'The Eight', creatives: 8, oneTime: 3000 },
-    { name: 'The Fifteen', creatives: 15, oneTime: 5500 }
+    { name: 'The Fifteen', creatives: 15, oneTime: 5500 },
+    { name: 'The Thirty', creatives: 30, oneTime: 7500 }
   ],
 
   // Retired 2 Oct 2026. Kept as fields so nothing reads undefined.
