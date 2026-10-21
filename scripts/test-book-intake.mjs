@@ -81,7 +81,7 @@ const attribution = { utm_source: 'meta', utm_campaign: 'grow-la', fbclid: 'IwAR
 const strong = {
   ntc_company: 'Analytical Engines', ntc_site_or_ig: 'engines.example',
   ntc_priority_90d: 'Generate more qualified leads', ntc_running_ads: 'Yes, actively',
-  ntc_start_timing: 'Within 30 days', ntc_monthly_revenue: '$100K–$250K',
+  ntc_start_timing: 'Within 30 days', ntc_annual_revenue: '$2M–$5M',
   ntc_service_investment: '$8K–$12K', ntc_ad_budget: '$3,000–$5,000',
   ntc_decision_role: "I'm the decision-maker"
 };
@@ -202,7 +202,7 @@ n = calls.length;
 res = await post({ step: 'answers', offer: 'growth', contact, attribution,
   answers: { ...strong, ntc_ad_budget: 'Under $1,500' }, token });
 made = since(n);
-check('redirected, as iClosed does today', res.payload.next === 'redirect' && res.payload.url === '/production-inquiry?from=signature');
+check('redirected, as iClosed does today', res.payload.next === 'redirect' && res.payload.url === '/next-step?from=growth');
 check('no calendar for a disqualified lead', res.payload.calendarUrl === undefined);
 const up3 = Object.fromEntries((ghl(made).find((c) => /upsert$/.test(c.url))?.body?.customFields || []).map((f) => [f.key, f.field_value]));
 check('marked Disqualified with the reason', up3.ntc_fit === 'Disqualified' && /ntc_ad_budget = Under \$1,500/.test(up3.ntc_dq_reason || ''));
@@ -217,8 +217,8 @@ n = calls.length;
 res = await post({ step: 'answers', offer: 'brand-builder', contact, attribution, answers: {
   ntc_company: 'x', ntc_show_format: 'A mix of both', ntc_location: 'Los Angeles', ntc_site_or_ig: 'x',
   ntc_selling_status: 'Yes, with customers', ntc_on_camera: 'Yes', ntc_brand_goal: 'x',
-  ntc_content_volume: 'Everywhere, every day (30+)', ntc_bb_investment: 'Under $5K/month' } });
-check('Story Session under $5K goes to bb-apply', res.payload.url === '/production-inquiry?from=bb-apply');
+  ntc_bb_investment: 'Under $5K/month' } });
+check('Story Session under $5K goes to bb-apply', res.payload.url === '/next-step?from=bb-apply');
 check('and with no token opens a fresh opportunity at Disqualified', ghl(since(n)).some((c) =>
   /\/opportunities\/$/.test(c.url) && c.body.pipelineStageId === '67599a1a-08ed-43f3-a98a-43f7442da375'));
 
@@ -227,11 +227,12 @@ mod._resetRateLimit();
 res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_ad_budget: 'Under $1,500.' } });
 check('an option that differs by one character is refused', res.statusCode === 400 && res.payload.fields.includes('ntc_ad_budget'));
 res = await post({ step: 'answers', offer: 'growth', contact, answers: { ntc_company: 'x' } });
-check('missing required answers are named', res.statusCode === 400 && res.payload.fields.length === 8);
+check('missing required answers are named (annual revenue is optional)', res.statusCode === 400 &&
+  res.payload.fields.length === 7 && !res.payload.fields.includes('ntc_annual_revenue'));
 n = calls.length;
 res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: {
-  ntc_site_or_ig: 'x', ntc_sprint_package: 'Not sure', ntc_sprint_promote: 'x', ntc_sprint_goal: 'Generate Leads',
-  ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP', ntc_sprint_budget: '$5,500-$8,000' } });
+  ntc_site_or_ig: 'x', ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_promote: 'x', ntc_sprint_goal: 'Generate Leads',
+  ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP', ntc_sprint_budget: '$5,500–$8,000' } });
 check('optional notes may be left out', res.payload.next === 'calendar');
 n = calls.length;
 res = await post({ step: 'answers', offer: 'growth', contact: { ...contact, email: 'other@example.com' }, answers: strong, token });
@@ -249,8 +250,8 @@ check('GHL down at step one: still 200, no token', res.statusCode === 200 && res
 n = calls.length;
 res = await post({ step: 'answers', offer: 'growth', contact, attribution, answers: strong });
 check('GHL down at step two: the calendar still comes back', res.payload.next === 'calendar' && /EdeZLdlKq7Y3Qa9Q1JU8/.test(res.payload.calendarUrl));
-res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_monthly_revenue: 'Under $25K' } });
-check('and the disqualify rule still runs locally', res.payload.url === '/production-inquiry?from=signature');
+res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_annual_revenue: '$1M–$2M' } });
+check('and the disqualify rule still runs locally', res.payload.url === '/next-step?from=growth');
 ghlStatus = 200; cardStatus = 500;
 res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_service_investment: 'Under $5K' } });
 check('a failed Slack card does not fail the lead', res.statusCode === 200 && res.payload.next === 'redirect');

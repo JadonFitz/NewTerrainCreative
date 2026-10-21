@@ -1,7 +1,7 @@
 /* GHL booking form contract.
 
    assets/booking-forms.js must say exactly what the shared contract
-   (GHL booking contract v1, 20 Oct 2026) says: the same field keys, the
+   (GHL booking contract v2, 21 Oct 2026, from the live iClosed audit) says: the same field keys, the
    same option labels to the character, the same disqualifiers. The agent,
    the Speed-to-Lead bot (lib/rules.js) and GHL read those words, so a
    "tidied" label is a silent break three systems away.
@@ -28,18 +28,22 @@ const DECISION = ["I'm the decision-maker",
   'I decide with a partner or team (they can join the call)',
   'Someone else makes the final decision'];
 
-// key: [label, options|null]. null options = free text.
+// key: [label, options|null, optional?]. null options = free text.
+// Copied from the live iClosed audit (agent/docs/iclosed-audit.md, 21 Oct
+// 2026), which contract v2 follows. Curly apostrophes and en dashes are
+// the live characters.
+const REVENUE = ['Under $1M', '$1M–$2M', '$2M–$5M', '$5M–$10M', '$10M+'];
 const CONTRACT = {
   'brand-builder': {
     ntc_company: ['Your company, and what it does', null],
-    ntc_show_format: ['What kind of show do you picture?', ['Sit-down or podcast', 'Hands-on, behind the scenes (vlog style)', 'A mix of both', 'Not sure yet']],
     ntc_location: ['Where is the business based?', ['Los Angeles', 'Elsewhere in California', 'Outside California']],
     ntc_site_or_ig: ['Your website or Instagram', null],
     ntc_selling_status: ['Is the business already selling?', ['Yes, with customers', 'Pre-launch']],
     ntc_on_camera: ['Are you willing to be on camera?', ['Yes', 'Nervous, but willing', 'No']],
     ntc_brand_goal: ['What should the brand do for the business?', null],
-    ntc_content_volume: ['How much content do you picture each month?', ['A few strong pieces (under 10)', 'Steady weekly presence (10 to 30)', 'Everywhere, every day (30+)']],
-    ntc_bb_investment: ['Brand Builder is an ongoing creative partnership: production, longform and paid media management. Ad spend is separate. What monthly investment are you planning for this?', ['Under $5K/month', '$5K to $10K/month', '$10K to $15K/month', '$15K+/month']]
+    ntc_annual_revenue: ["What is your business's annual revenue?", REVENUE, true],
+    ntc_bb_investment: ['Brand Builder is an ongoing creative partnership: production, longform and paid media management. Ad spend is separate. What monthly investment are you planning for this?', ['Under $5K/month', '$5K to $10K/month', '$10K to $15K/month', '$15K+/month']],
+    ntc_show_format: ['What kind of show do you picture?', ['Sit-down or podcast', 'Hands-on, behind the scenes (vlog style)', 'A mix of both', 'Not sure yet']]
   },
   'growth': {
     ntc_company: ['Business Name', null],
@@ -47,51 +51,53 @@ const CONTRACT = {
     ntc_priority_90d: ['What do you need most to improve over the next 90 days?', ['Generate more qualified leads', 'Build a stronger, more consistent content presence', 'Improve an existing paid-ad campaign', 'Launch or promote a specific offer', 'A mix of the above']],
     ntc_running_ads: ['Are you currently running paid advertising?', ['Yes, actively', 'Not currently', 'We have in the past', 'Preparing to start']],
     ntc_start_timing: ['How soon would you like to start?', ['As soon as possible', 'Within 30 days', 'Within 1-3 months', 'Just researching for now']],
-    ntc_monthly_revenue: ["Roughly what is your business's monthly revenue?", ['Under $25K', '$25K–$50K', '$50K–$100K', '$100K–$250K', '$250K–$500K', '$500K+', 'Prefer to discuss on the call']],
-    ntc_service_investment: ["Every retainer includes creative production and paid media management, with a three-month minimum commitment. Ad spend is separate. What monthly investment in New Terrain's services are you planning?", ['Under $5K', '$5K–$8K', '$8K–$12K', '$12K–$18K', '$18K+', 'Not sure yet']],
+    ntc_annual_revenue: ["What is your business's annual revenue?", REVENUE, true],
+    ntc_service_investment: ["Every retainer includes creative production and paid media management, with a three-month minimum commitment. Ad spend is separate. What monthly investment in New Terrain's services are you planning?", ['Under $5K', '$5K–$8K', '$8K–$12K', '$12K–$18K', '$18K+']],
     ntc_ad_budget: ['Separately, what monthly advertising budget can you fund, paid directly to the advertising platforms?', ['Under $1,500', '$1,500–$3,000', '$3,000–$5,000', '$5,000–$10,000', '$10,000+', 'Not sure yet']],
     ntc_decision_role: ['Who is involved in deciding on this?', DECISION]
   },
   'ad-sprint': {
-    ntc_site_or_ig: ['Business website or Instagram', null],
-    ntc_sprint_package: ['Which Ad Sprint?', ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'Not sure']],
-    ntc_sprint_promote: ['What are you promoting?', null],
-    ntc_sprint_goal: ['Main goal', ['Generate Leads', 'Book Appointments', 'Sell a Product', 'Build Awareness']],
-    ntc_location_text: ['Business location', null],
-    ntc_sprint_launch: ['Launch date', ['ASAP', 'Within 30 days', '1-3 months', 'Flexible']],
-    ntc_sprint_budget: ['One-time production budget (the Sprint is one-time creative production, paid in full upfront; ad spend and ongoing campaign management are not included)', ['Under $3,000', '$3,000-$5,500', '$5,500-$8,000', '$8,000+', 'Not sure yet']],
-    ntc_notes: ['Anything we should review before the call?', null]
+    ntc_site_or_ig: ['Business Website or Instagram', null],
+    ntc_sprint_package: ['Which Ad Sprint are you considering?', ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'Not sure, help me choose']],
+    ntc_sprint_promote: ['What are you trying to promote or sell?', null],
+    ntc_sprint_goal: ['What’s the main goal of the campaign?', ['Generate Leads', 'Book Appointments', 'Sell a Product', 'Build Awareness']],
+    ntc_location_text: ['Where is your business located?', null],
+    ntc_sprint_launch: ['Do you have a launch date or deadline?', ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date']],
+    ntc_sprint_budget: ['Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?', ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+']],
+    ntc_notes: ['Anything you’d like us to review before the call?', null, true]
   },
-  // Labels from agent-v1 ICLOSED-TRIAL.md questions 2 to 10.
   'pest-control-trial': {
-    ntc_company: ['Business name', null],
-    ntc_site_or_ig: ['Website or Instagram', null],
+    ntc_company: ['Business Name', null],
+    ntc_site_or_ig: ['Business Website or Instagram', null],
     ntc_decision_role: ['Who is involved in deciding on this?', DECISION],
-    ntc_trial_metro: ['Which metro do you serve?', ['Los Angeles', 'Tampa', 'Elsewhere']],
+    ntc_trial_metro_text: ['Which metro do you serve?', null],
     ntc_trial_recurring: ['Do you offer recurring service plans (monthly or quarterly)?', ['Yes', 'No']],
     ntc_trial_footage: ['How much footage do you have of your work?', ['10+ minutes of video or 20+ photos', 'Some', 'None']],
     ntc_trial_ad_account: ['Do you have a Meta (Facebook and Instagram) ad account?', ['Yes, I have admin access', 'Not sure', 'No ad account']],
-    ntc_trial_funded: ['The trial needs at least $500 of ad spend, paid by you directly to Meta. Are you ready to fund that test?', ["Yes, I'm ready to fund the test", 'Not ready to fund a test yet']],
+    ntc_trial_funded: ['The total spend required in the trial is $2,000. Are you able to fund the trial immediately?', ["Yes, I'm ready to fund the trial", 'Not ready to fund the trial yet']],
     ntc_trial_response: ['If a homeowner messages you today, who responds and how fast?', ['I do, within the hour', 'Office staff, same day', 'Whoever gets to it', 'Not sure']]
   },
   'signature': {
-    ntc_company: ['Business or project name', null],
+    ntc_company: ['Business / Project Name', null, true],
     ntc_sig_discussing: ['What are we discussing?', null],
-    ntc_sig_references: ['References or links', null],
-    ntc_sig_fit: ['Fit check', ['Yes, I have a specific project in mind', "No, I'm looking for ongoing content or ads"]],
-    ntc_signature_budget: ['Budget', ['Under $10,000', '$10,000-$25,000', '$25,000-$50,000', '$50,000+', 'Not sure']]
+    ntc_sig_references: ["Any references or links you'd like us to review?", null, true],
+    ntc_sig_fit: ["Signature Work is bespoke production: commercials, brand films, documentaries, launch campaigns and podcast build-outs. Scoped and priced per project rather than sold as a package. Is that what you're looking for?", ['Yes, I have a specific project in mind', "I'm not sure yet, I'd like to talk it through", "No, I'm looking for ongoing content or ads"]],
+    ntc_signature_budget: ["What is your company's budget for this piece?", ['Under $10,000', '$10,000-$25,000', '$25,000-$50,000', '$50,000+']]
   }
 };
 
 const DISQUALIFY = {
-  'brand-builder': [['ntc_bb_investment', 'Under $5K/month']],
-  'growth': [['ntc_service_investment', 'Under $5K'], ['ntc_monthly_revenue', 'Under $25K'], ['ntc_ad_budget', 'Under $1,500']],
-  'pest-control-trial': [['ntc_trial_funded', 'Not ready to fund a test yet']],
-  'ad-sprint': [], 'signature': []
+  'brand-builder': [['ntc_bb_investment', 'Under $5K/month'], ['ntc_annual_revenue', 'Under $1M'], ['ntc_annual_revenue', '$1M–$2M']],
+  'growth': [['ntc_ad_budget', 'Under $1,500'], ['ntc_service_investment', 'Under $5K'],
+             ['ntc_annual_revenue', 'Under $1M'], ['ntc_annual_revenue', '$1M–$2M']],
+  'pest-control-trial': [['ntc_trial_funded', 'Not ready to fund the trial yet']],
+  'signature': [['ntc_signature_budget', 'Under $10,000']],
+  'ad-sprint': []
 };
 const DISQUALIFY_TO = {
-  'brand-builder': '/production-inquiry?from=bb-apply',
-  'growth': '/production-inquiry?from=signature',
+  'brand-builder': '/next-step?from=bb-apply',
+  'growth': '/next-step?from=growth',
+  'signature': '/next-step?from=signature-project',
   'pest-control-trial': '/pest-control-trial?from=trial-unfunded'
 };
 const CALENDAR = {
@@ -114,16 +120,18 @@ for (const [offerKey, qs] of Object.entries(CONTRACT)) {
   const offer = FORMS.OFFERS[offerKey];
   check(`${offerKey}: the contract's keys and no others`,
     same(Object.keys(offer.questions).sort(), Object.keys(qs).sort()));
-  let labelsOk = true; let optsOk = true; const drift = [];
-  for (const [key, [label, options]] of Object.entries(qs)) {
+  let labelsOk = true; let optsOk = true; let reqOk = true; const drift = [];
+  for (const [key, [label, options, optional]] of Object.entries(qs)) {
     const q = offer.questions[key] || {};
     if (q.label !== label) { labelsOk = false; drift.push(`${key} label`); }
+    if (!!q.optional !== !!optional) { reqOk = false; drift.push(`${key} required`); }
     if (options ? !same(q.options, options) || q.type !== 'choice' : q.type === 'choice') {
       optsOk = false; drift.push(`${key} options`);
     }
   }
   check(`${offerKey}: labels match`, labelsOk, drift.filter((x) => /label/.test(x)).join(', '));
   check(`${offerKey}: options match, in order`, optsOk, drift.filter((x) => /options/.test(x)).join(', '));
+  check(`${offerKey}: required flags match iClosed`, reqOk, drift.filter((x) => /required/.test(x)).join(', '));
   const stepped = offer.steps.flat();
   check(`${offerKey}: every question sits in exactly one step`,
     stepped.length === new Set(stepped).size && same(stepped.slice().sort(), Object.keys(qs).sort()));
@@ -142,18 +150,20 @@ for (const [offerKey, rules] of Object.entries(DISQUALIFY)) {
     offer.disqualifyTo === (DISQUALIFY_TO[offerKey] || ''));
 }
 check('a strong Growth lead is not disqualified', FORMS.disqualifiers('growth', {
-  ntc_service_investment: '$8K–$12K', ntc_monthly_revenue: '$100K–$250K', ntc_ad_budget: '$3,000–$5,000'
+  ntc_service_investment: '$8K–$12K', ntc_annual_revenue: '$2M–$5M', ntc_ad_budget: '$3,000–$5,000'
 }).length === 0);
-check('"Prefer to discuss on the call" is not a disqualifier',
-  FORMS.disqualifiers('growth', { ntc_monthly_revenue: 'Prefer to discuss on the call' }).length === 0);
+check('annual revenue left blank is not a disqualifier (it is optional)',
+  FORMS.disqualifiers('growth', { ntc_service_investment: '$8K–$12K', ntc_ad_budget: 'Not sure yet' }).length === 0);
+check('the iClosed redirects are the ones /next-step knows', ['growth', 'brand-builder', 'signature']
+  .every((k) => /^\/next-step\?from=(growth|bb-apply|signature-project)$/.test(FORMS.OFFERS[k].disqualifyTo)));
 
 console.log('\n\x1b[1mOPPORTUNITY VALUE · LOW END OF THE BAND\x1b[0m');
 for (const [label, want] of [['Under $5K', 0], ['$5K–$8K', 5000], ['$18K+', 18000], ['Not sure yet', 0],
-  ['$5K to $10K/month', 5000], ['$15K+/month', 15000], ['$3,000-$5,500', 3000], ['$50,000+', 50000],
+  ['$5K to $10K/month', 5000], ['$15K+/month', 15000], ['$3,000–$5,500', 3000], ['$50,000+', 50000],
   ['Under $10,000', 0], ['', 0]]) {
   check(`${label || '(blank)'} -> ${want}`, FORMS.bandValue(label) === want, String(FORMS.bandValue(label)));
 }
-check('the trial carries no value', FORMS.opportunityValue('pest-control-trial', { ntc_trial_funded: "Yes, I'm ready to fund the test" }) === 0);
+check('the trial carries no value', FORMS.opportunityValue('pest-control-trial', { ntc_trial_funded: "Yes, I'm ready to fund the trial" }) === 0);
 
 console.log('\n\x1b[1mATTRIBUTION FIELDS\x1b[0m');
 check('hidden fields map to the contract keys', same(Object.values(FORMS.ATTRIBUTION).sort(),

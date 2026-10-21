@@ -6,8 +6,9 @@
    and the rules that turn a booking away.
 
    The source of truth above this file is the shared contract (GHL
-   booking contract v1, 20 Oct 2026). The agent, the Speed-to-Lead bot
-   and GHL itself all read these same keys and labels, and lib/rules.js
+   booking contract v2, 21 Oct 2026, which follows the live iClosed
+   audit of the same day). The agent, the Speed-to-Lead bot and GHL
+   itself all read these same keys and labels, and lib/rules.js
    matches the words, the disqualifiers especially. Change the contract
    first, then this file, then scripts/test-booking-forms.mjs, whose
    fixture is a copy of the contract's option lists and fails on drift.
@@ -31,8 +32,14 @@
     'Someone else makes the final decision'
   ];
 
+  /* Annual revenue, asked by Growth and the Story Session (optional on
+     both, as in iClosed). The two bands under $2M turn a booking away. */
+  var ANNUAL_REVENUE = ['Under $1M', '$1M–$2M', '$2M–$5M', '$5M–$10M', '$10M+'];
+  var UNDER_2M = ['Under $1M', '$1M–$2M'];
+
   /* type: text (GHL TEXT), textarea (LARGE_TEXT), choice (SINGLE_OPTIONS).
-     optional: true only where the iClosed question was optional. */
+     iClosed short text renders as text and long text as textarea.
+     optional: true only where the iClosed question is not required. */
   var OFFERS = {
     'growth': {
       label: 'Growth Strategy Consultation',
@@ -48,12 +55,11 @@
           options: ['Yes, actively', 'Not currently', 'We have in the past', 'Preparing to start'] },
         ntc_start_timing: { type: 'choice', label: 'How soon would you like to start?',
           options: ['As soon as possible', 'Within 30 days', 'Within 1-3 months', 'Just researching for now'] },
-        ntc_monthly_revenue: { type: 'choice', label: "Roughly what is your business's monthly revenue?",
-          options: ['Under $25K', '$25K–$50K', '$50K–$100K', '$100K–$250K', '$250K–$500K', '$500K+',
-                    'Prefer to discuss on the call'] },
+        ntc_annual_revenue: { type: 'choice', label: "What is your business's annual revenue?",
+          options: ANNUAL_REVENUE, optional: true },
         ntc_service_investment: { type: 'choice',
           label: "Every retainer includes creative production and paid media management, with a three-month minimum commitment. Ad spend is separate. What monthly investment in New Terrain's services are you planning?",
-          options: ['Under $5K', '$5K–$8K', '$8K–$12K', '$12K–$18K', '$18K+', 'Not sure yet'] },
+          options: ['Under $5K', '$5K–$8K', '$8K–$12K', '$12K–$18K', '$18K+'] },
         ntc_ad_budget: { type: 'choice',
           label: 'Separately, what monthly advertising budget can you fund, paid directly to the advertising platforms?',
           options: ['Under $1,500', '$1,500–$3,000', '$3,000–$5,000', '$5,000–$10,000', '$10,000+', 'Not sure yet'] },
@@ -62,17 +68,17 @@
       steps: [
         ['ntc_company', 'ntc_site_or_ig'],
         ['ntc_priority_90d', 'ntc_running_ads'],
-        ['ntc_start_timing', 'ntc_monthly_revenue'],
+        ['ntc_start_timing', 'ntc_annual_revenue'],
         ['ntc_service_investment', 'ntc_ad_budget'],
         ['ntc_decision_role']
       ],
-      // The live iClosed rules. Any one of them disqualifies.
+      // The live iClosed rules (audit, 21 Oct 2026). Any one disqualifies.
       disqualify: [
+        { key: 'ntc_ad_budget', values: ['Under $1,500'] },
         { key: 'ntc_service_investment', values: ['Under $5K'] },
-        { key: 'ntc_monthly_revenue', values: ['Under $25K'] },
-        { key: 'ntc_ad_budget', values: ['Under $1,500'] }
+        { key: 'ntc_annual_revenue', values: UNDER_2M }
       ],
-      disqualifyTo: '/production-inquiry?from=signature',
+      disqualifyTo: '/next-step?from=growth',
       valueKey: 'ntc_service_investment'
     },
 
@@ -81,8 +87,6 @@
       calendar: 'Brand Builder · Story Session',
       questions: {
         ntc_company:     { type: 'text', label: 'Your company, and what it does' },
-        ntc_show_format: { type: 'choice', label: 'What kind of show do you picture?',
-          options: ['Sit-down or podcast', 'Hands-on, behind the scenes (vlog style)', 'A mix of both', 'Not sure yet'] },
         ntc_location:    { type: 'choice', label: 'Where is the business based?',
           options: ['Los Angeles', 'Elsewhere in California', 'Outside California'] },
         ntc_site_or_ig:  { type: 'text', label: 'Your website or Instagram' },
@@ -91,20 +95,25 @@
         ntc_on_camera:   { type: 'choice', label: 'Are you willing to be on camera?',
           options: ['Yes', 'Nervous, but willing', 'No'] },
         ntc_brand_goal:  { type: 'textarea', label: 'What should the brand do for the business?' },
-        ntc_content_volume: { type: 'choice', label: 'How much content do you picture each month?',
-          options: ['A few strong pieces (under 10)', 'Steady weekly presence (10 to 30)', 'Everywhere, every day (30+)'] },
+        ntc_annual_revenue: { type: 'choice', label: "What is your business's annual revenue?",
+          options: ANNUAL_REVENUE, optional: true },
         ntc_bb_investment: { type: 'choice',
           label: 'Brand Builder is an ongoing creative partnership: production, longform and paid media management. Ad spend is separate. What monthly investment are you planning for this?',
-          options: ['Under $5K/month', '$5K to $10K/month', '$10K to $15K/month', '$15K+/month'] }
+          options: ['Under $5K/month', '$5K to $10K/month', '$10K to $15K/month', '$15K+/month'] },
+        ntc_show_format: { type: 'choice', label: 'What kind of show do you picture?',
+          options: ['Sit-down or podcast', 'Hands-on, behind the scenes (vlog style)', 'A mix of both', 'Not sure yet'] }
       },
+      // The live order: show format comes last, after the investment.
       steps: [
-        ['ntc_company', 'ntc_show_format'],
-        ['ntc_location', 'ntc_site_or_ig', 'ntc_selling_status'],
-        ['ntc_on_camera', 'ntc_brand_goal'],
-        ['ntc_content_volume', 'ntc_bb_investment']
+        ['ntc_company', 'ntc_location', 'ntc_site_or_ig'],
+        ['ntc_selling_status', 'ntc_on_camera', 'ntc_brand_goal'],
+        ['ntc_annual_revenue', 'ntc_bb_investment', 'ntc_show_format']
       ],
-      disqualify: [{ key: 'ntc_bb_investment', values: ['Under $5K/month'] }],
-      disqualifyTo: '/production-inquiry?from=bb-apply',
+      disqualify: [
+        { key: 'ntc_bb_investment', values: ['Under $5K/month'] },
+        { key: 'ntc_annual_revenue', values: UNDER_2M }
+      ],
+      disqualifyTo: '/next-step?from=bb-apply',
       valueKey: 'ntc_bb_investment'
     },
 
@@ -112,19 +121,21 @@
       label: 'Ad Sprint',
       calendar: 'Ad Sprint Call',
       questions: {
-        ntc_site_or_ig:     { type: 'text', label: 'Business website or Instagram' },
-        ntc_sprint_package: { type: 'choice', label: 'Which Ad Sprint?',
-          options: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'Not sure'] },
-        ntc_sprint_promote: { type: 'text', label: 'What are you promoting?' },
-        ntc_sprint_goal:    { type: 'choice', label: 'Main goal',
+        ntc_site_or_ig:     { type: 'text', label: 'Business Website or Instagram' },
+        ntc_sprint_package: { type: 'choice', label: 'Which Ad Sprint are you considering?',
+          options: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'Not sure, help me choose'] },
+        ntc_sprint_promote: { type: 'text', label: 'What are you trying to promote or sell?' },
+        // The live label uses a curly apostrophe; keep it.
+        ntc_sprint_goal:    { type: 'choice', label: 'What’s the main goal of the campaign?',
           options: ['Generate Leads', 'Book Appointments', 'Sell a Product', 'Build Awareness'] },
-        ntc_location_text:  { type: 'text', label: 'Business location' },
-        ntc_sprint_launch:  { type: 'choice', label: 'Launch date',
-          options: ['ASAP', 'Within 30 days', '1-3 months', 'Flexible'] },
+        ntc_location_text:  { type: 'text', label: 'Where is your business located?' },
+        ntc_sprint_launch:  { type: 'choice', label: 'Do you have a launch date or deadline?',
+          options: ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date'] },
         ntc_sprint_budget:  { type: 'choice',
-          label: 'One-time production budget (the Sprint is one-time creative production, paid in full upfront; ad spend and ongoing campaign management are not included)',
-          options: ['Under $3,000', '$3,000-$5,500', '$5,500-$8,000', '$8,000+', 'Not sure yet'] },
-        ntc_notes:          { type: 'textarea', label: 'Anything we should review before the call?', optional: true }
+          label: 'Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?',
+          options: ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+'] },
+        // Short text in iClosed; GHL keeps ntc_notes as LARGE_TEXT.
+        ntc_notes:          { type: 'text', label: 'Anything you’d like us to review before the call?', optional: true }
       },
       steps: [
         ['ntc_site_or_ig', 'ntc_sprint_package', 'ntc_sprint_promote'],
@@ -139,18 +150,16 @@
       valueKey: 'ntc_sprint_budget'
     },
 
-    /* Wording from agent-v1 ICLOSED-TRIAL.md, questions 2 to 10. The
-       decision question reuses the Growth wording and sits third, as the
-       live event was built. */
+    /* The live 5-Day Trial Call form (audit, 21 Oct 2026). The metro is
+       free text now, so it lives in ntc_trial_metro_text. */
     'pest-control-trial': {
       label: '5-Day Trial Call',
       calendar: '5-Day Trial Call',
       questions: {
-        ntc_company:       { type: 'text', label: 'Business name' },
-        ntc_site_or_ig:    { type: 'text', label: 'Website or Instagram' },
+        ntc_company:       { type: 'text', label: 'Business Name' },
+        ntc_site_or_ig:    { type: 'text', label: 'Business Website or Instagram' },
         ntc_decision_role: { type: 'choice', label: 'Who is involved in deciding on this?', options: DECISION_ROLE },
-        ntc_trial_metro:   { type: 'choice', label: 'Which metro do you serve?',
-          options: ['Los Angeles', 'Tampa', 'Elsewhere'] },
+        ntc_trial_metro_text: { type: 'text', label: 'Which metro do you serve?' },
         ntc_trial_recurring: { type: 'choice', label: 'Do you offer recurring service plans (monthly or quarterly)?',
           options: ['Yes', 'No'] },
         ntc_trial_footage: { type: 'choice', label: 'How much footage do you have of your work?',
@@ -158,17 +167,17 @@
         ntc_trial_ad_account: { type: 'choice', label: 'Do you have a Meta (Facebook and Instagram) ad account?',
           options: ['Yes, I have admin access', 'Not sure', 'No ad account'] },
         ntc_trial_funded:  { type: 'choice',
-          label: 'The trial needs at least $500 of ad spend, paid by you directly to Meta. Are you ready to fund that test?',
-          options: ["Yes, I'm ready to fund the test", 'Not ready to fund a test yet'] },
+          label: 'The total spend required in the trial is $2,000. Are you able to fund the trial immediately?',
+          options: ["Yes, I'm ready to fund the trial", 'Not ready to fund the trial yet'] },
         ntc_trial_response: { type: 'choice', label: 'If a homeowner messages you today, who responds and how fast?',
           options: ['I do, within the hour', 'Office staff, same day', 'Whoever gets to it', 'Not sure'] }
       },
       steps: [
         ['ntc_company', 'ntc_site_or_ig', 'ntc_decision_role'],
-        ['ntc_trial_metro', 'ntc_trial_recurring', 'ntc_trial_footage'],
+        ['ntc_trial_metro_text', 'ntc_trial_recurring', 'ntc_trial_footage'],
         ['ntc_trial_ad_account', 'ntc_trial_funded', 'ntc_trial_response']
       ],
-      disqualify: [{ key: 'ntc_trial_funded', values: ['Not ready to fund a test yet'] }],
+      disqualify: [{ key: 'ntc_trial_funded', values: ['Not ready to fund the trial yet'] }],
       disqualifyTo: '/pest-control-trial?from=trial-unfunded',
       valueKey: ''
     },
@@ -177,21 +186,22 @@
       label: 'Signature Project',
       calendar: 'Signature Project',
       questions: {
-        ntc_company:        { type: 'text', label: 'Business or project name' },
+        ntc_company:        { type: 'text', label: 'Business / Project Name', optional: true },
         ntc_sig_discussing: { type: 'textarea', label: 'What are we discussing?' },
-        ntc_sig_references: { type: 'textarea', label: 'References or links', optional: true },
-        // VERIFY: the iClosed event may carry more fit check options.
-        ntc_sig_fit:        { type: 'choice', label: 'Fit check',
-          options: ['Yes, I have a specific project in mind', "No, I'm looking for ongoing content or ads"] },
-        ntc_signature_budget: { type: 'choice', label: 'Budget',
-          options: ['Under $10,000', '$10,000-$25,000', '$25,000-$50,000', '$50,000+', 'Not sure'] }
+        ntc_sig_references: { type: 'text', label: 'Any references or links you\'d like us to review?', optional: true },
+        ntc_sig_fit:        { type: 'choice',
+          label: 'Signature Work is bespoke production: commercials, brand films, documentaries, launch campaigns and podcast build-outs. Scoped and priced per project rather than sold as a package. Is that what you\'re looking for?',
+          options: ['Yes, I have a specific project in mind', "I'm not sure yet, I'd like to talk it through",
+                    "No, I'm looking for ongoing content or ads"] },
+        ntc_signature_budget: { type: 'choice', label: "What is your company's budget for this piece?",
+          options: ['Under $10,000', '$10,000-$25,000', '$25,000-$50,000', '$50,000+'] }
       },
       steps: [
         ['ntc_company', 'ntc_sig_discussing', 'ntc_sig_references'],
         ['ntc_sig_fit', 'ntc_signature_budget']
       ],
-      disqualify: [],
-      disqualifyTo: '',
+      disqualify: [{ key: 'ntc_signature_budget', values: ['Under $10,000'] }],
+      disqualifyTo: '/next-step?from=signature-project',
       valueKey: 'ntc_signature_budget'
     },
 
