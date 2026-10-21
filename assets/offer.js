@@ -593,7 +593,7 @@
 
          The ladder still reads correctly without hours, because the
          packages differ on what you walk away with: 8 creatives, then
-         15, one-off; then a monthly volume on the retainers.
+         15, then 30, one-off; then a monthly volume on the retainers.
 
          No price on any of them since 2 Oct 2026. The Sprint is still
          fixed price; the figure is quoted on the fit call.
@@ -602,11 +602,23 @@
          booking form's floor) sells the Sprint straight through these
          Stripe Payment Links, no call. Checkout shows the price; the page
          does not. scripts/check-offer.py lets these links onto
-         next-step.html only, and fails if the page carries another. */
+         next-step.html only, and fails if the page carries another.
+
+         21 Oct 2026, Jadon: a third tier, The Thirty, 30 creatives. It
+         is also the content-only option when a client's own agency runs
+         the media: a client can buy a Sprint each month, each one a
+         separate one-time purchase. No recurring billing is built. Its
+         Stripe Payment Link does not exist yet, so stripePaymentLink is
+         null and /next-step offers no checkout for it (the Sprint call
+         covers it). When the link is made, set it here and add a
+         buy-thirty link on next-step.html; check-offer.py then requires
+         the page to carry it. */
       adSprintEight:   { name: 'The Eight',   creatives: 8,
                          stripePaymentLink: 'https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f' },
       adSprintFifteen: { name: 'The Fifteen', creatives: 15,
                          stripePaymentLink: 'https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g' },
+      adSprintThirty:  { name: 'The Thirty',  creatives: 30,
+                         stripePaymentLink: null },
       leadFoundation:  { name: 'Lead Foundation' }
     },
 
@@ -623,9 +635,10 @@
        in any form. See neverClaim below.
        ─────────────────────────────────────────────────────────────── */
     adSprintTerms: {
-      fixedScope: true,          // 8 or 15 creatives, agreed before the shoot
+      fixedScope: true,          // 8, 15 or 30 creatives, agreed before the shoot
       fixedPrice: true,          // the price does not move with the day
-      noRetainer: true,          // nothing rolls into a monthly commitment
+      noRetainer: true,          // nothing rolls into a monthly commitment; a
+                                 // client may buy one each month, each on its own
       clientOwnsAssets: true,    // footage and every cut
       campaignManagementIncluded: false,
       resultGuaranteed: false

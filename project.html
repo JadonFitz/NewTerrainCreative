@@ -347,7 +347,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     // Carry the package the visitor clicked, as a starting note they can
     // edit. Never submitted on their behalf beyond what they can see.
     var pkg = q.get('pkg');
-    var LABEL = { eight: 'The Eight', fifteen: 'The Fifteen' };
+    var LABEL = { eight: 'The Eight', fifteen: 'The Fifteen', thirty: 'The Thirty' };
     var scope = document.getElementById('project_scope');
     if (scope && !scope.value && LABEL[pkg]) {
       scope.value = 'Interested in ' + LABEL[pkg] + '. ';
