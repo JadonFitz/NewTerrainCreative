@@ -12,8 +12,10 @@
      step "contact"  first name, last name, email, phone, attribution.
                      Upserts the GHL contact tagged src:ghl, offer:<key>
                      and stage:potential, opens an opportunity in "Sales"
-                     at "Started form", and sends the Speed-to-Lead card
-                     type=potential. Answers { ok, token }.
+                     at "Started form" (or reuses the one already open).
+                     Sends no card: the potential card is sent by the
+                     agent 10 minutes after a form left unfinished
+                     (iClosed parity, agent PR #69). Answers { ok, token }.
 
      step "answers"  the same contact plus every answer. Writes the
                      answers to the contact's custom fields, decides
@@ -221,13 +223,8 @@ async function openStartedForm(contactId) {
     ghl.stageName(o.pipelineStageId) === 'Started form'))[0] || null;
 }
 
-async function stepContact(offerKey, offer, contact, attribution, priorToken) {
+async function stepContact(offerKey, offer, contact, attribution) {
   let token = null;
-  /* One potential card per lead per sitting. Already carded when the
-     browser holds a valid step-one token for this email (six hours), or
-     when the contact already carries stage:potential from an unfinished
-     form. */
-  let carded = Boolean(verify(priorToken, contact.email));
   if (ghl.configured()) {
     try {
       const saved = await ghl.upsertContact({
@@ -235,7 +232,6 @@ async function stepContact(offerKey, offer, contact, attribution, priorToken) {
         fields: { ...attribution, ntc_offer: offerKey }
       });
       const contactId = saved.id;
-      if (saved.tags.includes('stage:potential')) carded = true;
       await quietly('tags', offerKey, () =>
         ghl.addTags(contactId, ['src:ghl', `offer:${offerKey}`, 'stage:potential']));
       let opportunityId = '';
@@ -259,16 +255,7 @@ async function stepContact(offerKey, offer, contact, attribution, priorToken) {
     console.warn('book-intake: GHL not configured, contact not saved', offerKey);
   }
 
-  if (carded) {
-    console.log('book-intake: contact step', offerKey, 'card', 'skipped (already sent)');
-    return { ok: true, token: token || (verify(priorToken, contact.email) ? priorToken : null) };
-  }
-  const card = await sendLeadCard({
-    type: 'potential', offer: offerKey,
-    contact: { name: fullName(contact), email: contact.email, phone: contact.phone },
-    answers: {}, labels: {}, start_at: null
-  });
-  console.log('book-intake: contact step', offerKey, 'card', card);
+  console.log('book-intake: contact step', offerKey);
   return { ok: true, token };
 }
 
@@ -352,7 +339,7 @@ export default async function handler(req, res) {
   const attribution = readAttribution(d.attribution);
 
   if (d.step === 'contact') {
-    return res.status(200).json(await stepContact(offerKey, offer, contact, attribution, d.token));
+    return res.status(200).json(await stepContact(offerKey, offer, contact, attribution));
   }
   if (d.step === 'answers') {
     const { answers, errors } = readAnswers(offer, d.answers);

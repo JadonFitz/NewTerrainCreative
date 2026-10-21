@@ -286,7 +286,7 @@
 
       if (step === 0) {
         /* Back to step one and on again with the same details: nothing to
-           save, and a second post would only repeat the potential card.
+           save, and a second post would only repeat the same writes.
            Re-posted only when the details changed or step one never got
            a token back. */
         var now = JSON.stringify(contact);

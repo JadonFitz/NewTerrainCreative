@@ -128,12 +128,10 @@ check('opens the opportunity in Sales at Started form', opp?.body?.pipelineId ==
   opp?.body?.pipelineStageId === 'cf946fe5-8597-4fe7-b8f2-8f4c6db47894' && opp?.body?.status === 'open' &&
   opp?.body?.contactId === 'c_123');
 check('named "<Full name> · <Offer label>"', opp?.body?.name === 'Ada Lovelace · Growth Strategy Consultation');
-const card = cards(made)[0];
-check('sends the potential card with the shared key', card?.body?.type === 'potential' && card?.body?.offer === 'growth' &&
-  card?.headers?.['x-ntc-key'] === 'stub-card-secret' && card?.body?.contact?.email === 'person@example.com');
+check('sends no potential card: the agent sends it after 10 minutes', cards(made).length === 0);
 const token = res.payload.token;
 
-console.info('\n\x1b[1mBACK TO STEP ONE · NO SECOND DEAL, NO SECOND CARD\x1b[0m');
+console.info('\n\x1b[1mBACK TO STEP ONE · NO SECOND DEAL\x1b[0m');
 mod._resetRateLimit();
 // The browser comes back to step one with the token it already holds.
 searchOpps = [
@@ -145,16 +143,8 @@ n = calls.length;
 res = await post({ step: 'contact', offer: 'growth', contact, attribution, token: res.payload.token });
 made = since(n);
 check("reuses the contact's newest Started form deal", !ghl(made).some((c) => c.method === 'POST' && /\/opportunities\/$/.test(c.url)));
-check('no second potential card', cards(made).length === 0);
 check('and still answers with a token', typeof res.payload.token === 'string');
-n = calls.length;
-await post({ step: 'contact', offer: 'growth', contact, attribution, token: 'forged.token' });
-check('a forged token does not suppress the card', cards(since(n)).length === 1);
-onFile = { tags: ['stage:potential'] };
-n = calls.length;
-await post({ step: 'contact', offer: 'growth', contact, attribution });
-check('a contact already tagged stage:potential gets no second card', cards(since(n)).length === 0);
-onFile = {};
+check('still no card', cards(made).length === 0);
 searchOpps = [{ id: 'o_dq', contactId: 'c_123', pipelineId: SALES, pipelineStageId: DQ, status: 'open' }];
 n = calls.length;
 await post({ step: 'contact', offer: 'ad-sprint', contact, attribution: { from: 'next-step' } });
