@@ -1,4 +1,4 @@
--- Run after 0009. Expect no Brand Builder campaign under '(unclassified)'.
+-- Run after 0011. Expect no Brand Builder campaign under '(unclassified)'.
 select funnel, campaign, count(*) as rows, sum(spend) as spend
   from public.campaign_daily_metrics
  where platform = 'meta'
