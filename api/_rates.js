@@ -119,14 +119,15 @@ export const RETAINER = {
   // Quoted individually. No standard Payment Link unless approved.
   customFrom: 18000,
 
-  // One-time, paid in full upfront. Creative production only.
+  // Creative production only. One time is paid in full upfront.
   // 21 Oct 2026, Jadon: The Thirty added, 30 creatives at $7,500. Also
-  // sold as the monthly content-only option when the client's own agency
-  // runs the media: one Sprint bought each month, no recurring billing.
+  // the content-only option when the client's own agency runs the media.
+  // 21 Oct 2026, Jadon: every Sprint can be bought one time or monthly;
+  // neither is mandatory. Monthly bills the same price each month.
   sprints: [
-    { name: 'The Eight', creatives: 8, oneTime: 3000 },
-    { name: 'The Fifteen', creatives: 15, oneTime: 5500 },
-    { name: 'The Thirty', creatives: 30, oneTime: 7500 }
+    { name: 'The Eight', creatives: 8, oneTime: 3000, monthly: 3000 },
+    { name: 'The Fifteen', creatives: 15, oneTime: 5500, monthly: 5500 },
+    { name: 'The Thirty', creatives: 30, oneTime: 7500, monthly: 7500 }
   ],
 
   // Retired 2 Oct 2026. Kept as fields so nothing reads undefined.
