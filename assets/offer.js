@@ -404,7 +404,8 @@
          to 4 days. 14 Oct 2026: Studio 10 episodes, Field 6 (2 vlogs and 4
          sit-downs), one Signature Hero Ad a month (was 2). 15 Oct 2026:
          Field 7 (3 vlogs and 4 sit-downs), up to 5 shoot days, so it stays
-         ahead of Brand Builder: Field. Never fewer than 6 episodes a month. Counts live here for the /welcome page, which a client
+         ahead of Brand Builder: Field. 21 Oct 2026, Jadon: Field 10 (3 vlogs
+         and 7 sit-downs), the same 10 episodes as Studio, same 5 shoot days. Never fewer than 6 episodes a month. Counts live here for the /welcome page, which a client
          sees after paying. The public pages keep the series unpriced and
          uncounted, like every retainer: they read publicGuideTiers
          'Brand Builder', not this object. Existing signed series clients
@@ -420,11 +421,11 @@
         },
         field: {
           name: 'Brand Builder: Premium · Field',
-          longformEpisodes: 7,
+          longformEpisodes: 10,
           vlogEpisodes: 3,
           shortFormClips: 40,
           shootDaysMax: 5,
-          summary: '7 episodes a month (3 vlog-style episodes of 15 to 25 minutes and 4 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 5 shoot days (3 vlog days, a sit-down day and a hero ad day)'
+          summary: '10 episodes a month (3 vlog-style episodes of 15 to 25 minutes and 7 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 5 shoot days (3 vlog days, a sit-down day and a hero ad day)'
         }
       },
       monthlyPlans: {
