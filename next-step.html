@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Next Step · New Terrain Creative</title>
-<meta name="description" content="Two ways to start: an Ad Sprint with no monthly commitment and creative you own outright, or tell New Terrain Creative about a specific project.">
+<meta name="description" content="Two ways to start: an Ad Sprint, bought one time or monthly, with creative you own outright, or tell New Terrain Creative about a specific project.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 
@@ -34,13 +34,14 @@
 
   Never says "disqualified", a budget floor or "you can't afford us".
   No price on the page: Stripe checkout shows it (assets/offer.js,
-  products.adSprintEight/adSprintFifteen.stripePaymentLink).
+  products.adSprintEight/Fifteen/Thirty.stripePaymentLink).
 
-  21 Oct 2026, Jadon: The Thirty has no Payment Link yet
-  (products.adSprintThirty.stripePaymentLink is null), so there is no
-  checkout for it here; the "Questions?" line points to the Sprint call
-  instead. When the link exists, add a buy-thirty link beside
-  buy-fifteen and add 'buy-thirty' to the list in the script below.
+  21 Oct 2026, Jadon: The Thirty is live for purchase (buy-thirty), and
+  every Sprint can be bought one time or monthly; neither is mandatory,
+  the client picks. The one-time links come first; the "Prefer monthly?"
+  line carries the monthly ones (stripePaymentLinkMonthly). Front of the
+  Line is a one-time add-on and is not sold from this page.
+  scripts/check-offer.py requires exactly these six links here.
 
   No standard Meta event fires from here. These are leads a retainer
   form turned away, and a Lead, Schedule or InitiateCheckout would
@@ -130,6 +131,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .links a { white-space:nowrap; color:var(--parchment); text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; transition:color .3s; }
   .links a:hover { color:var(--gold); }
   .links .dot { color:var(--muted); margin:0 6px; }
+  .links + .links { margin-top:8px; }
   .fine { font-size:12px; line-height:1.7; color:var(--muted); margin-top:10px; }
 
   /* The project: a heading, then the form. */
@@ -238,12 +240,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <div class="choices">
   <section class="choice choice--sprint" id="sprint" aria-label="The Ad Sprint">
     <p class="kicker">The Ad Sprint</p>
-    <p class="pitch">Ads you own, made in one shoot, with no monthly commitment.</p>
-    <a class="btn" id="buy-eight" data-pkg="eight" href="https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f">Get The Eight</a>
+    <p class="pitch">Ads you own, made in one shoot. Buy one time or monthly, your choice.</p>
+    <a class="btn" id="buy-eight" data-pkg="eight" data-billing="one-time" href="https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f">Get The Eight</a>
     <p class="links">
-      <a id="buy-fifteen" data-pkg="fifteen" href="https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g">or get The Fifteen</a><span class="dot" aria-hidden="true">·</span>Questions, or after The Thirty? <a id="sprint-call" href="/strategy-call?offer=ad-sprint&amp;from=next-step">Book a short Sprint call</a>
+      <a id="buy-fifteen" data-pkg="fifteen" data-billing="one-time" href="https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g">or get The Fifteen</a><span class="dot" aria-hidden="true">·</span><a id="buy-thirty" data-pkg="thirty" data-billing="one-time" href="https://buy.stripe.com/aFa8wOfySa1xeEEf801RC0H">or The Thirty</a>
     </p>
-    <p class="fine">Checkout through Stripe. Ad spend is paid to the platforms directly.</p>
+    <p class="links">
+      Prefer monthly? <a id="buy-eight-monthly" data-pkg="eight" data-billing="monthly" href="https://buy.stripe.com/7sY3cueuO3D9cww2le1RC0J">The Eight</a><span class="dot" aria-hidden="true">·</span><a id="buy-fifteen-monthly" data-pkg="fifteen" data-billing="monthly" href="https://buy.stripe.com/4gM4gygCW4Hdcwwgc41RC0K">The Fifteen</a><span class="dot" aria-hidden="true">·</span><a id="buy-thirty-monthly" data-pkg="thirty" data-billing="monthly" href="https://buy.stripe.com/8x228q2M68Xt400aRK1RC0L">The Thirty</a>
+    </p>
+    <p class="links">Questions? <a id="sprint-call" href="/strategy-call?offer=ad-sprint&amp;from=next-step">Book a short Sprint call</a></p>
+    <p class="fine">Checkout through Stripe. Monthly bills each month at the same price. Ad spend is paid to the platforms directly.</p>
   </section>
 
   <p class="or" aria-hidden="true">or</p>
@@ -382,7 +388,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   /* Buy a Sprint. Stripe's client_reference_id tags the payment with
      this page and the form that sent the lead, so a Sprint bought here
      can be told apart in Stripe. Letters, digits, - and _ only. */
-  ['buy-eight', 'buy-fifteen'].forEach(function (id) {
+  ['buy-eight', 'buy-fifteen', 'buy-thirty',
+   'buy-eight-monthly', 'buy-fifteen-monthly', 'buy-thirty-monthly'].forEach(function (id) {
     var a = document.getElementById(id);
     if (!a) return;
     try {
@@ -393,7 +400,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     a.addEventListener('click', function (e) {
       track('NextStepSprintCheckout', {
         content_name: 'Ad Sprint checkout', offer: 'ad_sprint',
-        package: a.getAttribute('data-pkg'), source: source
+        package: a.getAttribute('data-pkg'), billing: a.getAttribute('data-billing'), source: source
       });
       // Give the pixel a moment before leaving, unless the visitor opened
       // the link in a new tab, in which case this page stays put anyway.

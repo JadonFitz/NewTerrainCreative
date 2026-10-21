@@ -67,7 +67,9 @@ check('no result guaranteed',
 print('\nSprint · risk reduction is scope, price, no retainer, ownership')
 check('fixed scope named', 'Eight creatives, fifteen or thirty' in SPR,
       'must match adSprintEight/adSprintFifteen/adSprintThirty creatives')
-check('fixed price', 'One time, fixed' in SPR, 'adSprintTerms.fixedPrice')
+# 21 Oct 2026, Jadon: every Sprint can be bought one time or monthly;
+# neither is mandatory. The fixed-price line says so.
+check('fixed price', 'One time or monthly, fixed' in SPR, 'adSprintTerms.fixedPrice')
 check('no retainer', 'no retainer attached' in SPR, 'adSprintTerms.noRetainer')
 check('client owns the assets', 'footage and every cut are yours' in SPR,
       'adSprintTerms.clientOwnsAssets')

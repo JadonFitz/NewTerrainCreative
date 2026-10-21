@@ -593,7 +593,8 @@
 
          The ladder still reads correctly without hours, because the
          packages differ on what you walk away with: 8 creatives, then
-         15, then 30, one-off; then a monthly volume on the retainers.
+         15, then 30, one time or monthly; then a monthly volume on the
+         retainers.
 
          No price on any of them since 2 Oct 2026. The Sprint is still
          fixed price; the figure is quoted on the fit call.
@@ -607,18 +608,29 @@
          21 Oct 2026, Jadon: a third tier, The Thirty, 30 creatives. It
          is also the content-only option when a client's own agency runs
          the media: a client can buy a Sprint each month, each one a
-         separate one-time purchase. No recurring billing is built. Its
-         Stripe Payment Link does not exist yet, so stripePaymentLink is
-         null and /next-step offers no checkout for it (the Sprint call
-         covers it). When the link is made, set it here and add a
-         buy-thirty link on next-step.html; check-offer.py then requires
-         the page to carry it. */
+         separate one-time purchase. (Superseded below: monthly
+         billing now exists.)
+
+         21 Oct 2026, Jadon: The Thirty is live for purchase, with Front
+         of the Line, and its Stripe Payment Link is set below.
+
+         21 Oct 2026, Jadon: every Sprint can be bought one time or
+         monthly; neither is mandatory. stripePaymentLink is the one-time
+         checkout, stripePaymentLinkMonthly the monthly one, at the same
+         price per month. The client picks. Front of the Line stays a
+         one-time add-on: there is no monthly Front of the Line link.
+         Front of the Line links are not kept in this file (the agent's
+         payment_links table holds them). check-offer.py lets all six
+         Sprint links onto next-step.html only, and requires all six there. */
       adSprintEight:   { name: 'The Eight',   creatives: 8,
-                         stripePaymentLink: 'https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f' },
+                         stripePaymentLink:        'https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/7sY3cueuO3D9cww2le1RC0J' },
       adSprintFifteen: { name: 'The Fifteen', creatives: 15,
-                         stripePaymentLink: 'https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g' },
+                         stripePaymentLink:        'https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/4gM4gygCW4Hdcwwgc41RC0K' },
       adSprintThirty:  { name: 'The Thirty',  creatives: 30,
-                         stripePaymentLink: null },
+                         stripePaymentLink:        'https://buy.stripe.com/aFa8wOfySa1xeEEf801RC0H',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/8x228q2M68Xt400aRK1RC0L' },
       leadFoundation:  { name: 'Lead Foundation' }
     },
 
@@ -637,8 +649,8 @@
     adSprintTerms: {
       fixedScope: true,          // 8, 15 or 30 creatives, agreed before the shoot
       fixedPrice: true,          // the price does not move with the day
-      noRetainer: true,          // nothing rolls into a monthly commitment; a
-                                 // client may buy one each month, each on its own
+      noRetainer: true,          // not a retainer. 21 Oct 2026: bought one time
+                                 // or monthly, the client's choice; neither is required
       clientOwnsAssets: true,    // footage and every cut
       campaignManagementIncluded: false,
       resultGuaranteed: false

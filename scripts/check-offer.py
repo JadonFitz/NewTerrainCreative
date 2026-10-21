@@ -160,21 +160,29 @@ for _f in sorted(root.glob('*.html')):
         mirror_fail.append(f'{_f.name} links the trial checkout; only /call-booked may')
 
 # 20 Oct 2026: the Sprint's Stripe links (assets/offer.js
-# products.adSprintEight/adSprintFifteen.stripePaymentLink) may appear on
-# /next-step only, and /next-step must carry exactly those two.
-# 21 Oct 2026, Jadon: The Thirty added with stripePaymentLink null until
-# its Payment Link exists. A null link is not matched, so /next-step must
-# not carry one for it; once the link is set in offer.js, /next-step must.
-_sprint_links = set(re.findall(
-    r"adSprint(?:Eight|Fifteen|Thirty):\s*\{[^}]*?stripePaymentLink:\s*'([^']+)'", offer))
-if not re.search(r"adSprintEight:\s*\{[^}]*?stripePaymentLink:\s*'", offer) or \
-   not re.search(r"adSprintFifteen:\s*\{[^}]*?stripePaymentLink:\s*'", offer):
-    mirror_fail.append('assets/offer.js must declare a stripePaymentLink on adSprintEight and adSprintFifteen')
+# products.adSprintEight/Fifteen/Thirty.stripePaymentLink) may appear on
+# /next-step only, and /next-step must carry exactly those links.
+# 21 Oct 2026, Jadon: The Thirty is live, and every Sprint can be bought
+# one time or monthly (stripePaymentLinkMonthly), the client's choice.
+# All three tiers must declare both links, and /next-step must carry all
+# six, no more and no fewer. No other page may link any of them.
+_sprint_links = set()
+for _tier in ('Eight', 'Fifteen', 'Thirty'):
+    _block = re.search(r"adSprint" + _tier + r":\s*\{([^}]*)\}", offer)
+    _body = _block.group(1) if _block else ''
+    for _field in ('stripePaymentLink', 'stripePaymentLinkMonthly'):
+        _m = re.search(_field + r":\s*'(https://buy\.stripe\.com/[A-Za-z0-9]+)'", _body)
+        if _m:
+            _sprint_links.add(_m.group(1))
+        else:
+            mirror_fail.append(f'assets/offer.js must declare {_field} on adSprint{_tier}')
+if len(_sprint_links) != 6:
+    mirror_fail.append('assets/offer.js Sprint links must be six distinct Payment Links')
 for _f in sorted(root.glob('*.html')):
     _links = set(re.findall(r'https://buy\.stripe\.com/[A-Za-z0-9]+', _f.read_text(encoding='utf-8')))
     if _f.name == 'next-step.html':
         if _links != _sprint_links:
-            mirror_fail.append('next-step.html Stripe links differ from offer.js adSprint stripePaymentLink')
+            mirror_fail.append('next-step.html Stripe links differ from offer.js adSprint stripePaymentLink/stripePaymentLinkMonthly')
     elif _links & _sprint_links:
         mirror_fail.append(f'{_f.name} links a Sprint checkout; only /next-step may')
 
