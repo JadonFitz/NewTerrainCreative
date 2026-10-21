@@ -219,16 +219,40 @@ bad('page(s) link straight to the scheduler, bypassing qualification: '
 # for something. Two ways in at once is a worse page, /strategy-call
 # would load the vendor script twice, and a booking widget on top of a
 # submitted application or a confirmation is noise, not a CTA.
-LIFT = 'data-cta-widget'
+# Since the GHL migration the Lift tag is injected by assets/book-button.js,
+# which shows our own button instead when the Growth provider is 'ghl'.
+# Either string on a page means the floating launcher is there.
+LIFT_MARKS = ('data-cta-widget', 'book-button.js')
 NO_LIFT = ['apply.html', 'founding.html', 'project.html', 'strategy-call.html',
            'booked.html', 'call-booked.html', 'onboarding.html', 'welcome.html']
+def _has_lift(text):
+    return any(m in text for m in LIFT_MARKS)
+
+
 wrong = [n for n in NO_LIFT
-         if (ROOT / n).exists() and LIFT in (ROOT / n).read_text(encoding='utf-8')]
+         if (ROOT / n).exists() and _has_lift((ROOT / n).read_text(encoding='utf-8'))]
 carriers = sorted(f.stem for f in ROOT.glob('*.html')
-                  if LIFT in f.read_text(encoding='utf-8'))
+                  if _has_lift(f.read_text(encoding='utf-8')))
 bad('the booking widget is on page(s) that already ask for something: '
     + ', '.join(wrong)) if wrong     else ok('the booking widget is on ' + (', '.join('/' + c for c in carriers) or 'no page')
             + ', and nothing with a form')
+
+# Booking embeds come from known hosts only. iClosed is still live and
+# stays allowed until the migration finishes; GoHighLevel serves its
+# calendar widget from api.leadconnectorhq.com and the frame resizer from
+# link.msgsndr.com. Any other scheduler vendor showing up in a page or a
+# page script is a booking path nobody qualified, tracked or carded.
+BOOKING_HOSTS = {'app.iclosed.io', 'api.leadconnectorhq.com', 'link.msgsndr.com'}
+_vendor = re.compile(r'https://([a-z0-9.-]*(?:iclosed|leadconnectorhq|msgsndr|gohighlevel|'
+                     r'calendly|savvycal|cal\.com|acuityscheduling|hubspot\.com/meetings)[a-z0-9.-]*)', re.I)
+_strays = {}
+for f in list(ROOT.glob('*.html')) + list(ROOT.glob('assets/*.js')):
+    for host in set(h.lower() for h in _vendor.findall(f.read_text(encoding='utf-8'))):
+        if host not in BOOKING_HOSTS:
+            _strays.setdefault(f.name, []).append(host)
+bad('booking embed from an unlisted host: ' + '; '.join(
+    f'{n}: {", ".join(sorted(h))}' for n, h in sorted(_strays.items()))) if _strays \
+    else ok('booking embeds only from ' + ', '.join(sorted(BOOKING_HOSTS)))
 
 # Every page a visitor can land on must carry the Meta pixel. /grow had
 # ViewContent and CTAClick handlers written and firing into nothing for
@@ -437,6 +461,9 @@ for test, label in (
     ('test-track-api.mjs', 'first-party event ingestion'),
     ('test-owner.mjs', 'owner dashboard access'),
     ('test-iclosed-webhook.mjs', 'booking webhook'),
+    ('test-booking-forms.mjs', 'GHL booking form contract'),
+    ('test-book-intake.mjs', 'GHL booking intake'),
+    ('test-ghl-webhook.mjs', 'GHL booking webhook'),
     ('test-meta-sync.mjs', 'Meta spend sync'),
     ('test-welcome.mjs', 'welcome booking link'),
     ('test-breakdown.mjs', 'free breakdown page'),

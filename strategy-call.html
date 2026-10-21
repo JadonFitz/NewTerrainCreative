@@ -23,6 +23,10 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
 <script src="/assets/offer.js"></script>
 <script src="/assets/track.js"></script>
+<!-- The GHL booking form. Both inert unless the offer's provider is 'ghl'
+     (or ?provider=ghl is on the URL); see SCHEDULERS below. -->
+<script src="/assets/booking-forms.js"></script>
+<script src="/assets/booking-form.js"></script>
 
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -168,6 +172,41 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .scheduler-pending p { font-size:13.5px; line-height:1.8; color:var(--muted); max-width:38ch; }
   .scheduler-note { margin-top:14px; font-size:12.5px; line-height:1.75; color:var(--muted); max-width:56ch; }
+
+  /* ── GHL booking form (provider 'ghl' only) ──
+     Sits in the scheduler slot, in the reading column rather than the
+     widened slot the vendor widget needs, and reuses the form styles at
+     the top of this sheet. Once the answers are in, the slot switches to
+     the calendar iframe and widens like the iClosed widget did. */
+  .scheduler--form {
+    min-height:0; padding:clamp(22px,4vw,34px); background:var(--black);
+  }
+  @media (min-width:1060px) {
+    .scheduler--form { width:auto; margin-left:0; transform:none; }
+    .scheduler--form + .scheduler-note { margin-left:0; }
+  }
+  .scheduler--ghl iframe { min-height:720px; }
+  .bk { margin-top:0; gap:28px; }
+  .bk fieldset { border:0; min-width:0; }
+  .bk legend { padding:0; margin-bottom:12px; }
+  .bk-progress { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); }
+  .bk-title {
+    font-family:var(--display); font-weight:300; font-size:clamp(26px,4.4vw,34px);
+    line-height:1.15; color:var(--parchment); margin-top:-16px; outline:none;
+  }
+  .bk-body { display:flex; flex-direction:column; gap:28px; }
+  .bk-nav { display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .bk-back {
+    appearance:none; background:none; border:0; cursor:pointer; padding:8px 2px;
+    font-family:var(--body); font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--muted); transition:color .25s;
+  }
+  .bk-back:hover { color:var(--gold); }
+  .bk .err:empty { display:none; }
+  .bk fieldset[aria-invalid="true"] .opts { border-color:var(--bad); }
+  .opt:has(input:focus-visible) { outline:1px solid var(--gold); outline-offset:-1px; }
+  .btn:focus-visible, .bk-back:focus-visible { outline:1px solid var(--gold); outline-offset:3px; }
+  input:focus-visible, textarea:focus-visible { border-color:var(--gold); }
 
   /* ── What you leave with ──
      The call is sold as what the visitor walks away with, and this sits
@@ -341,9 +380,19 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
          traffic to the default calendar with its offer identifier
          stripped, losing the attribution rather than preserving it.
      ─────────────────────────────────────────────────────────────── */
+  /* ── provider, per offer ────────────────────────────────────────
+     'iclosed' (every offer today) mounts the iClosed widget exactly as
+     before. 'ghl' renders our own multi-step form (assets/booking-form.js,
+     questions from assets/booking-forms.js) and then the GoHighLevel
+     calendar, via /api/book-intake. ghlOffer is the contract's offer key
+     for that form. ?provider=ghl switches any offer that has a ghlOffer
+     for testing, without changing what anyone else sees.
+     ─────────────────────────────────────────────────────────────── */
   var SCHEDULERS = {
     'founding-three': {
       ready: true,
+      // Retired after Oct 24 and not migrated: iClosed only, no GHL form.
+      provider: 'iclosed',
       url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
       title: 'Apply to book a Founding Three call with New Terrain Creative',
       content: 'founding',
@@ -357,6 +406,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        drop-out gap we already removed once. */
     'signature': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'signature',
       url:   'https://app.iclosed.io/e/NewTerrain/signature-project',
       title: 'Request a Signature Project consultation with New Terrain Creative',
       content: 'signature',
@@ -366,6 +417,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     // Retired page, retained identifier. See the note above.
     'production-media': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'growth',
       url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
       title: 'Book a Growth strategy consultation with New Terrain Creative'
     },
@@ -377,6 +430,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        it booked the Growth event with this identifier. */
     'brand-builder': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'brand-builder',
       url:   'https://app.iclosed.io/e/NewTerrain/brand-builder-story-session',
       title: 'Book a Brand Builder Story Session with New Terrain Creative',
       content: 'brand',
@@ -385,6 +440,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     'ad-sprint': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'ad-sprint',
       url:   'https://app.iclosed.io/e/NewTerrain/ad-sprint',
       title: 'Book an Ad Sprint fit call with New Terrain Creative',
       content: 'sprint',
@@ -399,13 +456,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     /* /pest-control-trial. Its own iClosed event since 12 Oct 2026, the
        5-Day Trial Call: 20 minutes, ten questions, one disqualifier ("not
-       ready to fund a test yet" goes back to /pest-control-trial
+       ready to fund the trial yet" goes back to /pest-control-trial
        ?from=trial-unfunded), and a redirect to
        /call-booked?offer=pest-control-trial. Nothing on this page or the
        trial page links checkout. /call-booked offers a qualified booker
        the option to reserve before the call (13 Oct 2026). */
     'pest-control-trial': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'pest-control-trial',
       url:   'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
       title: 'Book a 5-Day Trial call with New Terrain Creative',
       content: 'trial',
@@ -419,6 +478,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      pending panel. */
   var DEFAULT_SCHEDULER = {
     ready: true,
+    /* The Growth flag. The floating Book button script in assets/ (on
+       / and /grow) carries the same value, and scripts/test-booking-forms.mjs
+       fails if the two differ. */
+    provider: 'iclosed',
+    ghlOffer: 'growth',
     url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
     title: 'Book a Growth strategy consultation with New Terrain Creative'
   };
@@ -442,6 +506,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   var FOUNDING_LATE = {
     ready: true,
     slug:  'founding-three-late',
+    provider: 'iclosed',
+    ghlOffer: 'growth',
     url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
     title: 'Book a Growth strategy consultation with New Terrain Creative',
     eyebrow: 'Founding Three · applications closed',
@@ -472,15 +538,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      the FIRST touch was, because that lives in our localStorage. We hand
      both over as query parameters so they land in iClosed's integration
      data and survive into the booking record. */
-  function schedulerUrl() {
-    if (!SCHEDULER.url) return '';
-    var u;
-    try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
+  /* The parameters handed to the scheduler, in order. iClosed gets them
+     on its URL (schedulerUrl); the GHL form gets the same values as
+     hidden fields (ghlAttribution), so both providers carry one set. */
+  function passthrough() {
+    var out = [];
+    var set = function (k, v) { out.push([k, v]); };
 
     /* Only a slug we recognise. An unknown ?offer= falls through to the
        default calendar, and forwarding its text would put invented offer
        names into iClosed's booking records and our own reporting. */
-    if (offerId) u.searchParams.set('offer', offerId);
+    if (offerId) set('offer', offerId);
 
     /* /sprint sends pkg=eight, pkg=fifteen or pkg=thirty (The Thirty,
        21 Oct 2026) so the call opens already knowing which package they
@@ -488,21 +556,44 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        confirmed on the call either way. */
     var pkg = (new URLSearchParams(window.location.search).get('pkg') || '')
                 .trim().toLowerCase();
-    if (pkg === 'eight' || pkg === 'fifteen' || pkg === 'thirty') u.searchParams.set('pkg', pkg);
+    if (pkg === 'eight' || pkg === 'fifteen' || pkg === 'thirty') set('pkg', pkg);
 
     /* /next-step's "Book a short Sprint call" (20 Oct 2026). Forwarded so
        it lands in the webhook's `tracking` object, which then sends the
        custom NextStepSprintBooked instead of Schedule. Only this value. */
-    if (fromNextStep) u.searchParams.set('from', 'next-step');
+    if (fromNextStep) set('from', 'next-step');
 
     if (window.ntc && ntc.attribution) {
       var a = ntc.attribution() || {};
       ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid']
-        .forEach(function (k) { if (a[k]) u.searchParams.set(k, a[k]); });
-      if (a.landing_page) u.searchParams.set('landing_page', a.landing_page);
+        .forEach(function (k) { if (a[k]) set(k, a[k]); });
+      if (a.landing_page) set('landing_page', a.landing_page);
     }
-    if (window.ntc && ntc.sessionId) u.searchParams.set('ntc_session', ntc.sessionId());
+    if (window.ntc && ntc.sessionId) set('ntc_session', ntc.sessionId());
+    return out;
+  }
+
+  function schedulerUrl() {
+    if (!SCHEDULER.url) return '';
+    var u;
+    try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
+    passthrough().forEach(function (p) { u.searchParams.set(p[0], p[1]); });
     return u.toString();
+  }
+
+  /* The GHL form's hidden fields: the same set, plus the pixel's _fbp
+     and _fbc cookies, which iClosed's widget read for itself. fbc is
+     derived from fbclid when the pixel has not written it yet, never
+     invented for an organic visit (track.js metaIds). */
+  function ghlAttribution() {
+    var out = {};
+    passthrough().forEach(function (p) { if (p[0] !== 'offer' && p[0] !== 'pkg') out[p[0]] = p[1]; });
+    if (window.ntc && ntc.metaIds) {
+      var m = ntc.metaIds() || {};
+      if (m.fbp) out.fbp = m.fbp;
+      if (m.fbc) out.fbc = m.fbc;
+    }
+    return out;
   }
 
   /* ── What the call is worth, per offer ─────────────────────────────
@@ -673,7 +764,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Height comes from CSS, not the vendor's inline style, so the frame
      can be taller on a narrow screen where the calendar wraps. */
   var slot = document.getElementById('scheduler');
-  if (slot && SCHEDULER.ready) {
+  var providerParam = (new URLSearchParams(window.location.search).get('provider') || '')
+                        .trim().toLowerCase();
+  var useGhl = Boolean(SCHEDULER.ghlOffer) &&
+               (SCHEDULER.provider === 'ghl' || providerParam === 'ghl') &&
+               Boolean(window.NTCBookingForm);
+  if (slot && SCHEDULER.ready && useGhl) {
+    window.NTCBookingForm.mount(slot, {
+      offer: SCHEDULER.ghlOffer,
+      attribution: ghlAttribution()
+    });
+  } else if (slot && SCHEDULER.ready) {
     var href = schedulerUrl();
     if (href) {
       var host = document.createElement('div');

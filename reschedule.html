@@ -250,8 +250,26 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <span>Los Angeles, CA · Tampa, FL</span>
 </footer>
 
+<script src="/assets/booking-forms.js"></script>
+<script src="/assets/booking-form.js"></script>
 <script>
 (function () {
+  /* PROVIDER: 'iclosed' (today) mounts the iClosed widget below, as
+     before. 'ghl' embeds the GoHighLevel calendar directly: this offer
+     asks nothing on the website, so there is no form, just GHL's own
+     name, email and phone. The booking URL comes from /api/book-intake
+     (GHL_CALENDARS). ?provider=ghl previews it. */
+  var PROVIDER = 'iclosed';
+  var q = (new URLSearchParams(window.location.search).get('provider') || '').toLowerCase();
+  var ghlSlot = document.getElementById('scheduler');
+  if (ghlSlot && window.NTCBookingForm && (PROVIDER === 'ghl' || q === 'ghl')) {
+    var title = 'Pick a new time with New Terrain Creative';
+    fetch('/api/book-intake?offer=reschedule').then(function (r) { return r.json(); })
+      .then(function (j) { NTCBookingForm.embedCalendar(ghlSlot, (j && j.calendarUrl) || '', title); },
+            function () { NTCBookingForm.embedCalendar(ghlSlot, '', title); });
+    return;
+  }
+
   /* iClosed's own inline widget, the same way /strategy-call mounts it.
      Only the page's own query string is forwarded (the widget does that
      itself); there is no first-touch attribution to add for a rebooking. */
