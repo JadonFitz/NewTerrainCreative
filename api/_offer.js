@@ -19,7 +19,11 @@ const PAID_OFFERS = {
   // so any ad still carrying ?offer=production-media keeps its offer
   // identifier on the conversion instead of silently losing it.
   'production-media': 'production_media',
-  'ad-sprint': 'ad_sprint'
+  'ad-sprint': 'ad_sprint',
+  // /brand-builder: the Story Session, its one call to action.
+  'brand-builder': 'brand_builder',
+  // /pest-control-trial: the 5-day trial, first niche.
+  'pest-control-trial': 'trial_pest_control'
 };
 
 /**

@@ -8,7 +8,7 @@
 
    ── Why two steps ────────────────────────────────────────────────────
    Step one asks whether this is even the right offer for them. Step two
-   asks for a commitment, and is the first place the optional $3,500
+   asks for a commitment, and is the first place the optional $5,000
    continuation is named. Nobody should have that number sprung on them
    after they have already submitted, and nobody should have to read it
    before we know we can help them.
@@ -68,7 +68,7 @@ const LABELS = {
   lead_sources: 'Current lead sources',
   lead_owner: 'Who answers enquiries',
   lead_response: 'Lead response time',
-  continuation_capacity: 'Could continue at $3,500/mo if it works',
+  continuation_capacity: 'Could continue at $5,000/mo if it works',
   production_window: 'Production availability',
   fit_rationale: 'Why them',
   data_agreement: 'Agreed to share lead, appointment and sale data',

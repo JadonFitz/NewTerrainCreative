@@ -25,6 +25,16 @@
       "permanent": false
     },
     {
+      "source": "/production-inquiry",
+      "destination": "/next-step",
+      "permanent": false
+    },
+    {
+      "source": "/production-inquiry.html",
+      "destination": "/next-step",
+      "permanent": false
+    },
+    {
       "source": "/book",
       "destination": "/strategy-call",
       "permanent": false
@@ -58,12 +68,51 @@
       "source": "/call",
       "destination": "/strategy-call",
       "permanent": false
+    },
+    {
+      "source": "/brandbuilder",
+      "destination": "/brand-builder",
+      "permanent": false
+    },
+    {
+      "source": "/brandbuilder.html",
+      "destination": "/brand-builder",
+      "permanent": false
+    },
+    {
+      "source": "/brand-builder.html",
+      "destination": "/brand-builder",
+      "permanent": false
+    },
+    {
+      "source": "/brandbuilder-pro",
+      "destination": "/brand-builder-pro",
+      "permanent": false
+    },
+    {
+      "source": "/brand-builder-pro.html",
+      "destination": "/brand-builder-pro",
+      "permanent": false
     }
   ],
   "crons": [
     { "path": "/api/meta-sync", "schedule": "0 13 * * *" }
   ],
   "headers": [
+    {
+      "source": "/d/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
+    },
+    {
+      "source": "/b/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
+    },
     {
       "source": "/owner(\\.html)?",
       "headers": [
@@ -74,6 +123,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/d/:path*",
+      "destination": "https://ntc-agent-production.up.railway.app/d/:path*"
+    },
+    {
+      "source": "/b/:path*",
+      "destination": "https://ntc-agent-production.up.railway.app/b/:path*"
+    },
     {
       "source": "/((?!api/).*)",
       "destination": "/index.html"

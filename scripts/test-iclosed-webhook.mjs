@@ -36,9 +36,9 @@ function response() {
     setHeader(k, v) { this.headers[k] = v; }
   };
 }
-async function request(body, key = process.env.ICLOSED_WEBHOOK_SECRET) {
+async function request(body, key = process.env.ICLOSED_WEBHOOK_SECRET, headers = {}) {
   const res = response();
-  await handler({ method: 'POST', body, query: { key }, headers: {} }, res);
+  await handler({ method: 'POST', body, query: { key }, headers }, res);
   return res;
 }
 
@@ -89,6 +89,36 @@ check('a booking with no campaign still stores', supa(made)[0]?.body?.event_name
   && supa(made)[0].body.metadata.utm_campaign === undefined);
 check('and lands on its own offer', supa(made)[0]?.body?.funnel === 'paid_retainer');
 
+console.info('\n\x1b[1mSIGNATURE IS ITS OWN OFFER\x1b[0m');
+// Regression: offerFrom() once had no signature case, so every Signature
+// booking fell through to paid_retainer and the dashboard's Signature tab
+// stayed empty. The slug is fixed in strategy-call.html (signature-project).
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_sigNature01', uuid: 2661132 },
+  event_type: { name: 'Signature Project Consultation', slug: 'signature-project' }
+}));
+made = calls.slice(n);
+check('a Signature booking files under signature_work',
+  supa(made)[0]?.body?.funnel === 'signature_work' && supa(made)[0]?.body?.metadata?.offer === 'signature_work');
+check('and tells Meta it was Signature', meta(made)[0]?.body.data[0].custom_data?.offer === 'signature_work');
+
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_sigNature02', uuid: 2661133 },
+  event_type: { name: 'Project Consultation', slug: 'signature-project' }
+}));
+made = calls.slice(n);
+check('a renamed Signature event still files by its slug', supa(made)[0]?.body?.funnel === 'signature_work');
+
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_sigNature03', uuid: 2661134 },
+  event_type: { name: 'Growth Strategy Consultation', slug: 'growth-strategy-consultation' }
+}));
+made = calls.slice(n);
+check('Growth is unaffected', supa(made)[0]?.body?.funnel === 'paid_retainer');
+
 console.info('\n\x1b[1mWHAT MUST NOT STORE\x1b[0m');
 n = calls.length;
 res = await request(booking(), 'wrong-key');
@@ -106,6 +136,95 @@ n = calls.length;
 res = await request({ hookType: 'CALL_BOOKED', event: {}, invitee: { email: 'person@example.com' } });
 check('a booking with no id writes nothing', res.payload.sent === false && calls.length === n);
 
+console.info('\n\x1b[1mBRAND BUILDER IS ITS OWN OFFER\x1b[0m');
+// The Story Session event (docs/ICLOSED-BRAND-BUILDER.md) must file under
+// brand_builder by name or slug, and never under paid_retainer.
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_brandBuild01', uuid: 2661140 },
+  event_type: { name: 'Brand Builder · Story Session', slug: 'brand-builder-story-session' }
+}));
+made = calls.slice(n);
+check('a Story Session booking files under brand_builder',
+  supa(made)[0]?.body?.funnel === 'brand_builder' && supa(made)[0]?.body?.metadata?.offer === 'brand_builder');
+check('and tells Meta it was Brand Builder', meta(made)[0]?.body.data[0].custom_data?.offer === 'brand_builder');
+
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_brandBuild02', uuid: 2661141 },
+  event_type: { name: 'Story Session', slug: 'brand-builder-story-session' }
+}));
+made = calls.slice(n);
+check('a renamed event still files by its slug', supa(made)[0]?.body?.funnel === 'brand_builder');
+
+console.info('\n\x1b[1mTHE 5-DAY TRIAL IS ITS OWN OFFER\x1b[0m');
+// "5-Day Trial Call" names neither growth nor strategy, and fell through
+// to paid_retainer before it had its own case.
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_trialPest01', uuid: 2661142 },
+  event_type: { name: '5-Day Trial Call', slug: 'pest-control-trial' }
+}));
+made = calls.slice(n);
+check('a 5-Day Trial Call booking files under trial_pest_control',
+  supa(made)[0]?.body?.funnel === 'trial_pest_control' && supa(made)[0]?.body?.metadata?.offer === 'trial_pest_control');
+check('and tells Meta it was the trial', meta(made)[0]?.body.data[0].custom_data?.offer === 'trial_pest_control');
+
+console.info('\n\x1b[1mATTRIBUTION · THE CLICK, NOT JUST THE PERSON\x1b[0m');
+// Regression: until 10 Oct 2026 the server Schedule carried only hashed
+// contact details, so Meta could match the booker but not the click, and
+// Ads Manager attributed one booking in thirty days. The shape log shows
+// iClosed returning _fbp, _fbc and fbclid under `tracking` and the
+// booker's IP as invitee.ip_address; all of it must reach user_data raw.
+const ICLOSED_IP = '203.0.113.9';
+const fromIclosed = { 'x-forwarded-for': `${ICLOSED_IP}, 10.0.0.1`, 'user-agent': 'iClosed-Webhook/1.0' };
+const adClick = (over = {}) => booking({
+  event: { callPreviewId: 'call_attrib0001', uuid: 2661150 },
+  invitee: { email: 'person@example.com', first_name: 'Ada', last_name: 'Lovelace',
+             text_reminder_number: '+13105550100', ip_address: '198.51.100.23' },
+  contact: { email: 'person@example.com', phoneNumber: '+13105550100', ipAddress: '198.51.100.23' },
+  tracking: { utm_source: 'meta', utm_campaign: 'sprint-la', ntc_session: 's_abc',
+              _fbp: 'fb.1.1759900000000.1234567890', fbclid: 'IwAR0abc-DEF_ghi',
+              _fbc: 'fb.1.1759900000001.IwAR0abc-DEF_ghi' },
+  ...over
+});
+n = calls.length;
+res = await request(adClick(), undefined, fromIclosed);
+made = calls.slice(n);
+let ud = meta(made)[0]?.body.data[0].user_data || {};
+check('fbp goes out raw', ud.fbp === 'fb.1.1759900000000.1234567890');
+check('fbc goes out raw when the pixel had set it', ud.fbc === 'fb.1.1759900000001.IwAR0abc-DEF_ghi');
+check("the booker's IP goes out, not iClosed's", ud.client_ip_address === '198.51.100.23');
+check('contact details are still hashed', Array.isArray(ud.em) && /^[0-9a-f]{64}$/.test(ud.em[0]) && ud.ph && ud.fn && ud.ln);
+check('the event id is still the booking id', meta(made)[0]?.body.data[0].event_id === 'call_attrib0001');
+check('the first-party row still holds none of it',
+  !/198\.51\.100\.23|fb\.1\.|IwAR0/.test(JSON.stringify(supa(made)[0]?.body || {})));
+
+n = calls.length;
+res = await request(adClick({ tracking: { _fbp: 'fb.1.1759900000000.1234567890', fbclid: 'IwAR0abc-DEF_ghi' } }), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check('fbc is derived from fbclid when the pixel had not written _fbc',
+  /^fb\.1\.[0-9]{13}\.IwAR0abc-DEF_ghi$/.test(ud.fbc || ''), ud.fbc);
+
+n = calls.length;
+res = await request(adClick({ tracking: { utm_source: 'instagram' } }), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check('an organic booking gets no invented fbc or fbp', ud.fbc === undefined && ud.fbp === undefined);
+check('but still carries the booker IP', ud.client_ip_address === '198.51.100.23');
+
+n = calls.length;
+res = await request(adClick({
+  invitee: { email: 'person@example.com', ip_address: ICLOSED_IP },
+  contact: { email: 'person@example.com', ipAddress: 'not-an-ip' }
+}), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check("iClosed's own IP or junk is never sent as the booker's", ud.client_ip_address === undefined);
+
+n = calls.length;
+res = await request(adClick({ tracking: { _fbp: 'javascript:alert(1)', _fbc: '<script>', fbclid: 'bad id with spaces' } }), undefined, fromIclosed);
+ud = meta(calls.slice(n))[0]?.body.data[0].user_data || {};
+check('malformed ids are dropped rather than forwarded', ud.fbp === undefined && ud.fbc === undefined);
+
 console.info('\n\x1b[1mFAILURE ISOLATION\x1b[0m');
 supabaseStatus = 409;
 n = calls.length;
@@ -120,6 +239,46 @@ res = await request(booking());
 made = calls.slice(n);
 check('a database failure still answers 200', res.statusCode === 200 && res.payload.stored === false);
 check('and does not cost the Meta conversion', meta(made).length === 1 && res.payload.sent === true);
+
+supabaseStatus = 201;
+console.info('\n\x1b[1mREBOOKING · RESCHEDULED CALL\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_rebook1234' }, event_type: { name: 'Rescheduled Call' } }));
+made = calls.slice(n);
+check('a rebooking answers 200', res.statusCode === 200 && res.payload.noted === 'rebooking');
+check('it stores no second row', supa(made).length === 0);
+check('it sends Meta no second Schedule', meta(made).length === 0);
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_rebook5678' }, event_type: { name: 'Renamed', slug: 'rescheduled-call' } }));
+check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
+
+console.info('\n\x1b[1mQUICK FOLLOW-UP\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_follow1234' }, event_type: { name: 'Quick Follow-Up' } }));
+check('a follow-up is noted, not counted', res.payload.noted === 'rebooking' && calls.length === n);
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_follow5678' }, event_type: { name: 'Renamed', slug: 'quick-follow-up' } }));
+check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
+
+// A Sprint call booked from /next-step (20 Oct 2026): stored and tagged,
+// but Meta gets the custom NextStepSprintBooked, never Schedule.
+console.info('\n\x1b[1mBOOKED FROM /next-step\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_nextstep01' },
+  tracking: { utm_source: 'meta', utm_campaign: 'bb-oct', offer: 'ad-sprint', from: 'next-step' } }));
+made = calls.slice(n);
+check('a next-step booking still stores one schedule row',
+  supa(made).length === 1 && supa(made)[0]?.body?.event_name === 'schedule');
+check('tagged from next-step', supa(made)[0]?.body?.metadata?.from === 'next-step');
+check('Meta gets NextStepSprintBooked, not Schedule',
+  meta(made).length === 1 && meta(made)[0].body.data[0].event_name === 'NextStepSprintBooked');
+check('keyed on the booking id', meta(made)[0]?.body.data[0].event_id === 'call_nextstep01');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_nextstep02' },
+  tracking: { from: 'somewhere-else' } }));
+made = calls.slice(n);
+check('any other from still sends Schedule',
+  meta(made)[0]?.body.data[0].event_name === 'Schedule' && supa(made)[0]?.body?.metadata?.from === undefined);
 
 // The public endpoint must still refuse the name this handler now writes.
 const trackSource = await (await import('node:fs/promises')).readFile(

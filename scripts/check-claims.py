@@ -50,7 +50,7 @@ check('months two and three optional',
       'Months two and three are optional' in FND,
       'continuationRequired is false')
 check('continuation PRICE not in this page\'s copy',
-      '3,500' not in FND,
+      '5,000' not in FND and '3,500' not in FND,
       'disclosed on the iClosed booking form and in the VSL, not in the copy here')
 check('client funds own ad spend',
       'own ad account' in FND or 'pay the platform directly' in FND,
@@ -65,8 +65,8 @@ check('no result guaranteed',
 # or remedy may be ADDED to the Founding copy beyond the waived month.
 
 print('\nSprint · risk reduction is scope, price, no retainer, ownership')
-check('fixed scope named', 'Eight creatives or fifteen' in SPR,
-      'must match adSprintEight/adSprintFifteen creatives')
+check('fixed scope named', 'Eight creatives, fifteen or thirty' in SPR,
+      'must match adSprintEight/adSprintFifteen/adSprintThirty creatives')
 check('fixed price', 'One time, fixed' in SPR, 'adSprintTerms.fixedPrice')
 check('no retainer', 'no retainer attached' in SPR, 'adSprintTerms.noRetainer')
 check('client owns the assets', 'footage and every cut are yours' in SPR,
@@ -116,6 +116,37 @@ for phrase in BANNED:
     hits = [p.name for p in root.glob('*.html')
             if phrase in p.read_text(encoding='utf-8').lower()]
     check(f'"{phrase}"', not hits, f'found in {hits}')
+
+# The application window is one date in two files, and the counter is gone.
+print('\nFounding · application window (5 Oct 2026)')
+close_at = term(r"applicationsCloseAt:\s*'([^']+)'")
+page_close = re.search(r"var CLOSE_AT = '([^']+)'", (root / 'founding.html').read_text(encoding='utf-8'))
+check('applicationsCloseAt is set', bool(close_at), 'founding.applicationsCloseAt in assets/offer.js')
+check('founding.html counts down to the same instant',
+      bool(page_close) and page_close.group(1) == close_at,
+      'CLOSE_AT in founding.html must equal applicationsCloseAt')
+apply_close = re.search(r"var CLOSE_AT = '([^']+)'", (root / 'apply.html').read_text(encoding='utf-8'))
+check('apply.html counts down to the same instant',
+      bool(apply_close) and apply_close.group(1) == close_at,
+      'CLOSE_AT in apply.html must equal applicationsCloseAt')
+# The booking page has to agree with the timer, or the form outlives it.
+sc_raw = (root / 'strategy-call.html').read_text(encoding='utf-8')
+sc_close = re.search(r"var CLOSE_AT = '([^']+)'", sc_raw)
+check('strategy-call.html closes the Founding form at the same instant',
+      bool(sc_close) and sc_close.group(1) == close_at,
+      'CLOSE_AT in strategy-call.html must equal applicationsCloseAt')
+check('a late Founding arrival is routed to the Growth calendar',
+      re.search(r"FOUNDING_LATE = \{.*?growth-strategy-consultation", sc_raw, re.S) is not None
+      and 'foundingClosed' in sc_raw,
+      'past the date ?offer=founding-three must not load the Founding event')
+check('the date is stated as a deadline to apply', 'is the deadline to apply' in FND,
+      'October 24 closes applications; the call and the decision can follow it')
+check('the closing date is written on the page', 'October 24' in FND,
+      'the countdown block names the date in words, not only as a timer')
+check('no open-slots counter', re.search(r'\b\d of \d open\b', FND) is None,
+      'the "N of 3 open" counter came off on 5 Oct 2026; the dated window is the urgency')
+check('no "spots are limited" hedge', 'spots are limited' not in FND.lower(),
+      'replaced by the date on 5 Oct 2026')
 
 # The canonical terms these checks read must themselves still exist.
 print('\nCanonical terms are present to check against')

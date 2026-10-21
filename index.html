@@ -1948,12 +1948,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <div class="result-row reveal">
       <div>
         <div class="result-number">58K+</div>
-        <div class="result-label">Followers Built</div>
+        <div class="result-label">Followers on his feed</div>
       </div>
       <div>
         <span class="result-tier">Longform · Short-form</span>
         <div class="result-client">Mike Alder</div>
-        <p class="result-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into a personal brand people actually follow.</p>
+        <p class="result-desc">We shot and edited the high-end content behind an attorney's personal brand: educational short-form and documentary-style work for the lawyer behind $3.1B+ in settlements.</p>
       </div>
     </div>
     <div class="result-row reveal">
@@ -2096,11 +2096,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <section id="engage">
   <div class="section-eyebrow reveal">Ways to Work</div>
   <div class="section-title reveal">Three ways in.</div>
+  <p class="engage-lede reveal"><b>We make video ads that book calls, and we run them.</b></p>
   <p class="engage-lede reveal">Rather than hundreds of AI clips that get buried, every piece we make is designed to earn attention. Wherever your brand is right now, there's a door that fits.</p>
   <div class="engage-cols">
     <div class="engage-col reveal">
       <div class="engage-tag">Launch Package · One-Time</div>
       <div class="engage-name">Ad Sprint</div>
+      <p class="engage-body"><b>A tested batch of ads to find what makes your phone ring.</b> Fresh concepts and variants, test-ready for your ad account.</p>
       <p class="engage-body">One shoot on location. A full testing arsenal of ready-to-run ads, delivered in three weeks. Fixed price, fixed scope, no surprises.</p>
       <ul class="engage-list">
         <li>Director-led shoot built around proven ad concepts</li>
@@ -2111,10 +2113,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div class="engage-tiers">
         <div class="engage-tier"><span><strong>The Eight</strong> · 8 creatives</span></div>
         <div class="engage-tier"><span><strong>The Fifteen</strong> · 15 creatives</span></div>
+        <div class="engage-tier"><span><strong>The Thirty</strong> · 30 creatives</span></div>
       </div>
       <p class="engage-guarantee">One time, fixed price, quoted before anything is booked. No retainer. You own the footage and every cut.</p>
       <div class="engage-actions">
-        <a class="engage-book" data-cta="engage-sprint" href="/strategy-call?offer=ad-sprint">Book a fit call</a>
+        <a class="engage-book" data-cta="engage-sprint" href="/strategy-call?offer=ad-sprint">Get my ad plan</a>
         <a class="engage-link" href="/sprint">See the full breakdown &rarr;</a>
       </div>
     </div>
@@ -2124,19 +2127,20 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <p class="engage-body">Production, campaign launch, management and reporting under one roof, month after month. Scaled from a single monthly media day to a full production engine with paid media managed alongside it.</p>
       <ul class="engage-list">
         <li>Short-form edits, cutdowns &amp; talking-head clips: captioned, formatted for every platform</li>
+        <li>Static and carousel ads for paid placements, designed from production-day photos</li>
         <li>Organic distribution of your campaign creative</li>
         <li>Paid media management, built from your own creative</li>
         <li>Funnel, tracking &amp; automation support, from click to booked call</li>
         <li>Monthly analytics &amp; creative direction</li>
         <li>A defined monthly volume of deliverables, all cut from your own shoot days</li>
-        <li>Longform on Brand Builder: founder interviews, YouTube episodes &amp; podcasts</li>
+        <li>Longform on Brand Builder: founder interviews, podcasts &amp; hands-on, vlog-style episodes shot where the work happens</li>
       </ul>
       <div class="engage-tiers">
         <div class="engage-tier"><span>Three packages, each with paid media management and conversion infrastructure included, scaled to the creative volume a business actually needs.</span></div>
       </div>
       <p class="engage-guarantee">Scope and fee are set after a strategy call, once we understand what you sell and what you are trying to grow.</p>
       <div class="engage-actions">
-        <a class="engage-book" data-cta="engage-growth" href="/strategy-call">Request a strategy call</a>
+        <a class="engage-book" data-cta="engage-growth" href="/strategy-call">Get my growth read</a>
         <a class="engage-link" href="grow.html">See how it works &rarr;</a>
       </div>
     </div>
@@ -2191,6 +2195,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   </div>
 </footer>
 
+<script src="/assets/book-button.js" data-manual></script>
 <script>
   // ── Booking widget · mounted only once the intro is out of the way ──
   //    See the note above the </body> tag for why this is not a plain
@@ -2200,12 +2205,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   function mountBookingWidget() {
     if (bookingMounted) return;
     bookingMounted = true;
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = 'https://app.iclosed.io/assets/widget.js';
-    s.setAttribute('data-cta-widget', '_H-7V8fHVTuw');
-    s.async = true;
-    document.body.appendChild(s);
+    // iClosed Lift or our own button, per the Growth provider flag.
+    // assets/book-button.js is loaded with data-manual just above.
+    if (window.ntcBookButton) window.ntcBookButton.mount();
   }
 
   // ── Intro animation ──
@@ -2463,6 +2465,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <!-- ══════════════════════════════════════════════════════════════════
      iClosed Lift widget · floating "Book a Call" launcher
      ──────────────────────────────────────────────────────────────────
+     Loaded through assets/book-button.js since the GHL migration: with
+     the Growth provider flag at 'iclosed' (today) it injects exactly the
+     tag below; at 'ghl' it shows our own button to /strategy-call
+     instead. The notes that follow describe the iClosed behaviour.
+
      Books the Growth Strategy Consultation, the same event /grow and
      /strategy-call send people to. It is not a second funnel: iClosed
      asks its own qualification questions and fires its own

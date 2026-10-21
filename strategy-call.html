@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Request a Strategy Call · New Terrain Creative</title>
-<meta name="description" content="Tell us what you sell and what you are trying to grow. Thirty minutes, and we will tell you what we would do, what it would cost, and whether it is worth doing.">
+<meta name="description" content="Thirty minutes. Leave with a clear read on what is slowing growth, three creative angles worth testing, and a straight answer on whether it is worth doing.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -23,6 +23,10 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
 <script src="/assets/offer.js"></script>
 <script src="/assets/track.js"></script>
+<!-- The GHL booking form. Both inert unless the offer's provider is 'ghl'
+     (or ?provider=ghl is on the URL); see SCHEDULERS below. -->
+<script src="/assets/booking-forms.js"></script>
+<script src="/assets/booking-form.js"></script>
 
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -54,7 +58,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .eyebrow { font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
   h1 {
     font-family:var(--display); font-weight:300;
-    font-size:clamp(38px,7vw,58px); line-height:1.05;
+    font-size:clamp(34px,6.2vw,52px); line-height:1.06;
     color:var(--parchment); margin-bottom:20px; text-wrap:balance;
   }
   h1 em { font-style:italic; color:var(--gold); }
@@ -168,6 +172,79 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .scheduler-pending p { font-size:13.5px; line-height:1.8; color:var(--muted); max-width:38ch; }
   .scheduler-note { margin-top:14px; font-size:12.5px; line-height:1.75; color:var(--muted); max-width:56ch; }
+
+  /* ── GHL booking form (provider 'ghl' only) ──
+     Sits in the scheduler slot, in the reading column rather than the
+     widened slot the vendor widget needs, and reuses the form styles at
+     the top of this sheet. Once the answers are in, the slot switches to
+     the calendar iframe and widens like the iClosed widget did. */
+  .scheduler--form {
+    min-height:0; padding:clamp(22px,4vw,34px); background:var(--black);
+  }
+  @media (min-width:1060px) {
+    .scheduler--form { width:auto; margin-left:0; transform:none; }
+    .scheduler--form + .scheduler-note { margin-left:0; }
+  }
+  .scheduler--ghl iframe { min-height:720px; }
+  .bk { margin-top:0; gap:28px; }
+  .bk fieldset { border:0; min-width:0; }
+  .bk legend { padding:0; margin-bottom:12px; }
+  .bk-progress { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); }
+  .bk-title {
+    font-family:var(--display); font-weight:300; font-size:clamp(26px,4.4vw,34px);
+    line-height:1.15; color:var(--parchment); margin-top:-16px; outline:none;
+  }
+  .bk-body { display:flex; flex-direction:column; gap:28px; }
+  .bk-nav { display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .bk-back {
+    appearance:none; background:none; border:0; cursor:pointer; padding:8px 2px;
+    font-family:var(--body); font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--muted); transition:color .25s;
+  }
+  .bk-back:hover { color:var(--gold); }
+  .bk .err:empty { display:none; }
+  .bk fieldset[aria-invalid="true"] .opts { border-color:var(--bad); }
+  .opt:has(input:focus-visible) { outline:1px solid var(--gold); outline-offset:-1px; }
+  .btn:focus-visible, .bk-back:focus-visible { outline:1px solid var(--gold); outline-offset:3px; }
+  input:focus-visible, textarea:focus-visible { border-color:var(--gold); }
+
+  /* ── What you leave with ──
+     The call is sold as what the visitor walks away with, and this sits
+     ABOVE the calendar so it is read before the ask, not after it. Every
+     line is a promise kept on every call: do not add one here that the
+     call does not deliver. Bullets, not paragraphs: a bold lead that
+     reads on its own, and a few words after it at most. */
+  .leave { margin-top:34px; border:1px solid var(--line); padding:clamp(22px,3vw,28px); }
+  .leave h2, .below h2 {
+    font-family:var(--body); font-size:12px; font-weight:500; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:16px;
+  }
+  .ticks { list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .ticks li { font-size:14.5px; line-height:1.55; padding-left:18px; position:relative; color:var(--soft); }
+  .ticks li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:1px; background:var(--gold); }
+  .ticks li b { color:var(--parchment); font-weight:500; }
+  .leave-deadline { font-size:13px; line-height:1.6; color:var(--gold); margin-bottom:16px; }
+  .leave-recap {
+    margin-top:18px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:14.5px; line-height:1.55; color:var(--soft);
+  }
+  .leave-recap b { color:var(--parchment); font-weight:500; }
+
+  /* ── Below the calendar: who it is for, results ── */
+  .below { margin-top:56px; }
+  /* Five tiles: three across, then two, with the feature film taking the
+     wider slot in the second row. On a phone, two across and the same
+     last tile on a row of its own. */
+  .proof { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .proof > div:last-child { grid-column:span 2; }
+  .proof > div { background:var(--black); padding:18px 16px 16px; }
+  .proof-num { font-family:var(--display); font-weight:300; font-size:32px; line-height:1; color:var(--parchment); }
+  .proof-label { margin-top:8px; font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); line-height:1.5; }
+  .proof-client { margin-top:6px; font-size:12px; color:var(--muted); line-height:1.5; }
+  @media (max-width:620px) { .proof { grid-template-columns:repeat(2,1fr); } }
+
+  .back { margin-top:44px; }
+  .back .btn { display:inline-block; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -180,8 +257,25 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <div class="wrap">
 
   <div class="eyebrow">Strategy call</div>
-  <h1>Tell us what you're <em>trying to grow.</em></h1>
-  <p class="lede">Thirty minutes. We will tell you what we would actually do, roughly what it would cost, and whether it is worth doing. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.</p>
+  <h1>Leave with a clear read on what is slowing growth, <em>and what we would do next.</em></h1>
+  <p class="lede">Thirty minutes. <b>If it is not a fit, we say so on the call.</b></p>
+
+  <!-- WHAT YOU LEAVE WITH · the markup here is the Growth version and the
+       default. An offer with a CONTENT entry in the script at the foot of
+       this page replaces the lines it names. The written recap is part of
+       the promise: it is sent after every call, not when there is time. -->
+  <section class="leave" aria-labelledby="leave-h">
+    <h2 id="leave-h">What you leave with</h2>
+    <p class="leave-deadline" id="leave-deadline" hidden></p>
+    <ul class="ticks" id="leave-list">
+      <li><b>Where growth is stuck:</b> offer, creative, media, funnel or follow-up</li>
+      <li><b>What to change first</b> in how you get customers now</li>
+      <li><b>Three creative angles</b> worth testing</li>
+      <li><b>Your first 30 days,</b> mapped</li>
+      <li><b>What to spend,</b> and whether the opportunity justifies it</li>
+    </ul>
+    <p class="leave-recap" id="leave-recap"><b>Then all of it in writing.</b> A short recap after every call.</p>
+  </section>
 
   <!-- ══════════════════════════════════════════════════════════════════
        iCLOSED SCHEDULER
@@ -210,7 +304,33 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     </div>
   </div>
 
-  <p class="scheduler-note">A few questions first, so the thirty minutes is useful rather than spent catching up. You will see available times as soon as you are through them.</p>
+  <p class="scheduler-note">A few questions first, then you pick a time.</p>
+
+  <section class="below" aria-labelledby="fit-h">
+    <h2 id="fit-h">Who this is for</h2>
+    <ul class="ticks" id="fit-list">
+      <li><b>Established businesses</b> in health and wellness, legal, dental, and construction or contracting</li>
+      <li><b>Already selling,</b> with capacity to take on more customers</li>
+      <li><b>Leads answered</b> the day they arrive</li>
+      <li><b>Ready to fund advertising</b> alongside the production</li>
+    </ul>
+  </section>
+
+  <!-- The four figures /grow publishes under Proof, plus the Off Rip
+       streaming figure from /signature. Change them there first; nothing
+       here may say more than those pages do. -->
+  <section class="below" aria-labelledby="proof-h">
+    <h2 id="proof-h">Results</h2>
+    <div class="proof">
+      <div><div class="proof-num">58K+</div><div class="proof-label">Followers on his feed</div><div class="proof-client">Mike Alder</div></div>
+      <div><div class="proof-num">101K+</div><div class="proof-label">Combined following</div><div class="proof-client">Gina Zapanta</div></div>
+      <div><div class="proof-num">338K+</div><div class="proof-label">Organic reach · 9 days</div><div class="proof-client">Bot or Not · Short film</div></div>
+      <div><div class="proof-num">460K</div><div class="proof-label">Trailer views</div><div class="proof-client">FOUR</div></div>
+      <div><div class="proof-num">1M+</div><div class="proof-label">Streaming minutes · Amazon, Apple TV, Tubi</div><div class="proof-client">Off Rip · Feature film</div></div>
+    </div>
+  </section>
+
+  <p class="back"><a class="btn" id="back-cta" href="#scheduler">Get my growth read</a></p>
 
 </div>
 
@@ -250,6 +370,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Reached here as:
        /founding           -> ?offer=founding-three
        /sprint             -> ?offer=ad-sprint
+       /brand-builder      -> ?offer=brand-builder
+       /pest-control-trial -> ?offer=pest-control-trial
        / and /signature    -> ?offer=signature
        /grow               -> no parameter
        ?offer=production-media -> kept although /production-media is
@@ -258,11 +380,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
          traffic to the default calendar with its offer identifier
          stripped, losing the attribution rather than preserving it.
      ─────────────────────────────────────────────────────────────── */
+  /* ── provider, per offer ────────────────────────────────────────
+     'iclosed' (every offer today) mounts the iClosed widget exactly as
+     before. 'ghl' renders our own multi-step form (assets/booking-form.js,
+     questions from assets/booking-forms.js) and then the GoHighLevel
+     calendar, via /api/book-intake. ghlOffer is the contract's offer key
+     for that form. ?provider=ghl switches any offer that has a ghlOffer
+     for testing, without changing what anyone else sees.
+     ─────────────────────────────────────────────────────────────── */
   var SCHEDULERS = {
     'founding-three': {
       ready: true,
+      // Retired after Oct 24 and not migrated: iClosed only, no GHL form.
+      provider: 'iclosed',
       url:   'https://app.iclosed.io/e/NewTerrain/FoundingThree',
-      title: 'Apply to book a Founding Three call with New Terrain Creative'
+      title: 'Apply to book a Founding Three call with New Terrain Creative',
+      content: 'founding',
+      eyebrow: 'Founding Three · application',
+      lede:    'This is the application: a few questions, then you pick a time. <b>If it is not a fit, we say so on the call.</b>'
     },
     /* Signature Work. The cinema side's only path, and the one offer
        whose booking form replaced a form of ours rather than sitting
@@ -271,21 +406,45 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        drop-out gap we already removed once. */
     'signature': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'signature',
       url:   'https://app.iclosed.io/e/NewTerrain/signature-project',
       title: 'Request a Signature Project consultation with New Terrain Creative',
+      content: 'signature',
       eyebrow: 'Signature Work',
-      lede:    'Tell us what the project is, who it has to move, and when it has to exist. Thirty minutes to work out whether it is something we should make, and what it would take. <b>If it is not a fit we will say so on the call</b> rather than send you a proposal.'
+      lede:    'Thirty minutes on what the project is, who it has to move and when it has to exist. <b>If it is not a fit, we say so on the call.</b>'
     },
     // Retired page, retained identifier. See the note above.
     'production-media': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'growth',
       url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
       title: 'Book a Growth strategy consultation with New Terrain Creative'
     },
+    /* /brand-builder. One call to action, the Story Session, which has
+       its own iClosed event since 8 Oct 2026 (built from
+       docs/ICLOSED-BRAND-BUILDER.md): its own nine questions, no budget
+       question, and a redirect to /call-booked?offer=brand-builder. The
+       webhook files it as brand_builder on the event name. Before that
+       it booked the Growth event with this identifier. */
+    'brand-builder': {
+      ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'brand-builder',
+      url:   'https://app.iclosed.io/e/NewTerrain/brand-builder-story-session',
+      title: 'Book a Brand Builder Story Session with New Terrain Creative',
+      content: 'brand',
+      eyebrow: 'Brand Builder · Story Session',
+      lede:    'Thirty minutes with Jadon and Meghan. Nothing is due to book. <b>If it is not a fit, we say so on the call.</b>'
+    },
     'ad-sprint': {
       ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'ad-sprint',
       url:   'https://app.iclosed.io/e/NewTerrain/ad-sprint',
       title: 'Book an Ad Sprint fit call with New Terrain Creative',
+      content: 'sprint',
       /* The Sprint is a one-time production buy, not a retainer, and it
          is the one offer that arrives here cold rather than through a
          form. The default heading asks what they are trying to grow,
@@ -293,7 +452,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
          question instead. Scope is confirmed on this call, payment
          follows it, and only then is a shoot booked. */
       eyebrow: 'Ad Sprint',
-      lede:    'Thirty minutes to confirm what we would shoot, which package fits, and what we would test first. <b>Nothing is due to book this call.</b> If the Sprint is not the right move we will say so on it.'
+      lede:    'Thirty minutes. <b>Nothing is due to book this call.</b> If the Sprint is not the right move, we say so on it.'
+    },
+    /* /pest-control-trial. Its own iClosed event since 12 Oct 2026, the
+       5-Day Trial Call: 20 minutes, ten questions, one disqualifier ("not
+       ready to fund the trial yet" goes back to /pest-control-trial
+       ?from=trial-unfunded), and a redirect to
+       /call-booked?offer=pest-control-trial. Nothing on this page or the
+       trial page links checkout. /call-booked offers a qualified booker
+       the option to reserve before the call (13 Oct 2026). */
+    'pest-control-trial': {
+      ready: true,
+      provider: 'iclosed',
+      ghlOffer: 'pest-control-trial',
+      url:   'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
+      title: 'Book a 5-Day Trial call with New Terrain Creative',
+      content: 'trial',
+      eyebrow: '5-Day Trial · pest control',
+      lede:    'Twenty minutes with Jadon and Meghan. <b>Nothing is due to book this call.</b> If the trial is not the right start, we say so on it.'
     }
   };
 
@@ -302,48 +478,267 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      pending panel. */
   var DEFAULT_SCHEDULER = {
     ready: true,
+    /* The Growth flag. The floating Book button script in assets/ (on
+       / and /grow) carries the same value, and scripts/test-booking-forms.mjs
+       fails if the two differ. */
+    provider: 'iclosed',
+    ghlOffer: 'growth',
     url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
     title: 'Book a Growth strategy consultation with New Terrain Creative'
   };
 
+  /* Founding Three applications close at one fixed moment for everyone.
+     Mirrors assets/offer.js founding.applicationsCloseAt and the timer on
+     /founding (scripts/check-claims.py fails if they differ).
+
+     The date closes the APPLICATION, not the sale: anyone who applied
+     before it finishes the call and the decision afterwards. Past it,
+     ?offer=founding-three no longer loads the Founding event. A late
+     arrival is not turned away; they get the Growth calendar, on the
+     standard engagement, with the heading saying why. Their booking
+     carries offer=founding-three-late so it can be told apart from /grow
+     traffic.
+
+     This page can only stop sending people to the Founding event. The
+     event's own iClosed link still answers until it is switched off in
+     iClosed, which has to happen at the same moment. */
+  var CLOSE_AT = '2026-10-24T23:59:59-07:00';
+  var FOUNDING_LATE = {
+    ready: true,
+    slug:  'founding-three-late',
+    provider: 'iclosed',
+    ghlOffer: 'growth',
+    url:   'https://app.iclosed.io/e/NewTerrain/growth-strategy-consultation',
+    title: 'Book a Growth strategy consultation with New Terrain Creative',
+    eyebrow: 'Founding Three · applications closed',
+    lede:    'Founding Three applications closed on October 24, and the waived first month closed with them. This books a regular growth strategy call, on our standard engagement. <b>If it is not a fit, we say so on the call.</b>'
+  };
+
   var offerSlug = (new URLSearchParams(window.location.search).get('offer') || '')
                     .trim().toLowerCase();
-  var SCHEDULER = Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)
-    ? SCHEDULERS[offerSlug]
-    : DEFAULT_SCHEDULER;
+  var foundingClosed = offerSlug === 'founding-three' &&
+                       Date.now() > new Date(CLOSE_AT).getTime();
+  var SCHEDULER = foundingClosed
+    ? FOUNDING_LATE
+    : Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)
+      ? SCHEDULERS[offerSlug]
+      : DEFAULT_SCHEDULER;
+  // The identifier forwarded to iClosed and to our own events. Only ever
+  // a slug we recognise, or the late-Founding one set just above.
+  var offerId = SCHEDULER.slug ||
+    (Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug) ? offerSlug : '');
+
+  /* Sent here from /next-step, the bridge page for leads a booking form
+     turned away. Those leads must not reach Meta as a standard event. */
+  var fromNextStep = (new URLSearchParams(window.location.search).get('from') || '')
+                       .trim().toLowerCase() === 'next-step';
 
   /* Attribution passthrough. iClosed reads fbp/fbc from the browser on
      its own; what it cannot know is which offer sent the visitor or what
      the FIRST touch was, because that lives in our localStorage. We hand
      both over as query parameters so they land in iClosed's integration
      data and survive into the booking record. */
-  function schedulerUrl() {
-    if (!SCHEDULER.url) return '';
-    var u;
-    try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
+  /* The parameters handed to the scheduler, in order. iClosed gets them
+     on its URL (schedulerUrl); the GHL form gets the same values as
+     hidden fields (ghlAttribution), so both providers carry one set. */
+  function passthrough() {
+    var out = [];
+    var set = function (k, v) { out.push([k, v]); };
 
     /* Only a slug we recognise. An unknown ?offer= falls through to the
        default calendar, and forwarding its text would put invented offer
        names into iClosed's booking records and our own reporting. */
-    if (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug)) {
-      u.searchParams.set('offer', offerSlug);
-    }
+    if (offerId) set('offer', offerId);
 
-    /* /sprint sends pkg=eight or pkg=fifteen so the call opens already
-       knowing which package they clicked. It is a hint for the call, not
-       a commitment: scope is confirmed on the call either way. */
+    /* /sprint sends pkg=eight, pkg=fifteen or pkg=thirty (The Thirty,
+       21 Oct 2026) so the call opens already knowing which package they
+       clicked. It is a hint for the call, not a commitment: scope is
+       confirmed on the call either way. */
     var pkg = (new URLSearchParams(window.location.search).get('pkg') || '')
                 .trim().toLowerCase();
-    if (pkg === 'eight' || pkg === 'fifteen') u.searchParams.set('pkg', pkg);
+    if (pkg === 'eight' || pkg === 'fifteen' || pkg === 'thirty') set('pkg', pkg);
+
+    /* /next-step's "Book a short Sprint call" (20 Oct 2026). Forwarded so
+       it lands in the webhook's `tracking` object, which then sends the
+       custom NextStepSprintBooked instead of Schedule. Only this value. */
+    if (fromNextStep) set('from', 'next-step');
 
     if (window.ntc && ntc.attribution) {
       var a = ntc.attribution() || {};
       ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid']
-        .forEach(function (k) { if (a[k]) u.searchParams.set(k, a[k]); });
-      if (a.landing_page) u.searchParams.set('landing_page', a.landing_page);
+        .forEach(function (k) { if (a[k]) set(k, a[k]); });
+      if (a.landing_page) set('landing_page', a.landing_page);
     }
-    if (window.ntc && ntc.sessionId) u.searchParams.set('ntc_session', ntc.sessionId());
+    if (window.ntc && ntc.sessionId) set('ntc_session', ntc.sessionId());
+    return out;
+  }
+
+  function schedulerUrl() {
+    if (!SCHEDULER.url) return '';
+    var u;
+    try { u = new URL(SCHEDULER.url); } catch (e) { return ''; }
+    passthrough().forEach(function (p) { u.searchParams.set(p[0], p[1]); });
     return u.toString();
+  }
+
+  /* The GHL form's hidden fields: the same set, plus the pixel's _fbp
+     and _fbc cookies, which iClosed's widget read for itself. fbc is
+     derived from fbclid when the pixel has not written it yet, never
+     invented for an organic visit (track.js metaIds). */
+  function ghlAttribution() {
+    var out = {};
+    passthrough().forEach(function (p) { if (p[0] !== 'offer' && p[0] !== 'pkg') out[p[0]] = p[1]; });
+    if (window.ntc && ntc.metaIds) {
+      var m = ntc.metaIds() || {};
+      if (m.fbp) out.fbp = m.fbp;
+      if (m.fbc) out.fbc = m.fbc;
+    }
+    return out;
+  }
+
+  /* ── What the call is worth, per offer ─────────────────────────────
+     The markup on the page IS the Growth version and the default: /grow,
+     the retired production-media slug and a late Founding arrival all
+     keep it. An offer whose scheduler names a content key replaces the
+     lines listed for it here.
+
+     Every line is [bold lead, the few words after it]. Keep them that
+     short: this page is bullets, not explanation.
+
+     leave    "What you leave with". Each line is delivered on every call
+              for that offer; cut a line before letting it go unkept.
+     fit      "Who this is for". Only what the offer's own page already
+              says about fit.
+     cta      label on the link at the foot, which returns to the calendar. */
+  var CONTENT = {
+    'sprint': {
+      h1:    'Leave with a clear read on your ads, <em>and what we would shoot next.</em>',
+      leave: [
+        ['What is working', 'in your current creative, and what is not'],
+        ['Three angles', 'to build the next campaign around'],
+        ['The Eight, the Fifteen or the Thirty,', 'and why'],
+        ['What we would shoot', ''],
+        ['Your exact price', 'and the next open production window']
+      ],
+      fit: [
+        ['Running ads now, or ready to,', 'and in need of creative built to be tested'],
+        ['One-time production:', 'fixed scope, fixed price, no retainer'],
+        ['You run the campaign.', 'Managing it is not part of the Sprint']
+      ],
+      cta:   'Get my ad plan'
+    },
+    /* The trial call confirms fit and where the ads will send
+       homeowners. No price talk beyond what the page already says, and
+       no promised result: offer.js neverClaim. */
+    'trial': {
+      h1:    'Leave knowing whether your footage is ready, <em>and where your ads would send homeowners.</em>',
+      leave: [
+        ['A straight read', 'on whether what you have meets the minimum'],
+        ['Message or quote form:', 'which one fits how fast you answer'],
+        ['What the five days look like', 'for your business'],
+        ['Whether the trial is the right start,', 'and if not, why']
+      ],
+      fit: [
+        ['Pest control operators', 'serving Los Angeles or Tampa'],
+        ['Recurring plans', 'to sell'],
+        ['A $500 test budget,', 'paid to Meta directly'],
+        ['Footage you already have:', '10 minutes of video or 20 photos']
+      ],
+      cta:   'Apply for a trial slot'
+    },
+    'brand': {
+      h1:    'Leave knowing whether your story carries a brand, <em>and how we would shoot it.</em>',
+      leave: [
+        ['A straight read', 'on where your personal brand stands today'],
+        ['Three story angles', 'worth building the show around'],
+        ['What we would make:', 'longform, short-form and ads'],
+        ['Pilot or series,', 'and why']
+      ],
+      fit: [
+        ['Los Angeles founders and owners', 'whose name is the business'],
+        ['Already selling,', 'with a record worth showing'],
+        ['Willing to be on camera,', 'and to say something real on it']
+      ],
+      cta:   'Claim your Story Session'
+    },
+    'founding': {
+      h1:    'Leave with the campaign we would build <em>for your first 30 days.</em>',
+      leave: [
+        ['Your biggest growth constraint,', 'read from your application'],
+        ['Your first 30-day campaign,', 'mapped'],
+        ['The creative and paid media priorities', 'we would attack first'],
+        ['Whether you qualify', 'for the Founding Three'],
+        ['The full structure', 'and next steps, if we both want to move forward']
+      ],
+      deadline: true,
+      fit: [
+        ['Established businesses', 'in health and wellness, legal, dental, and construction or contracting'],
+        ['In Los Angeles.', 'We shoot on location at your business'],
+        ['Capacity for more customers,', 'and leads answered the day they arrive'],
+        ['Your own ad spend:', 'a minimum of $1,500 for month one, paid directly to the platform']
+      ],
+      cta:   'Apply for a Founding Partner spot'
+    },
+    'signature': {
+      /* An introductory call, so nothing here is treatment-stage work.
+         The concept, the crew and the shoot plan come from the treatment,
+         which follows this call; this call says whether the piece is
+         worth making and roughly what it would take. */
+      h1:    'Leave knowing whether the piece is worth making, <em>and roughly what it would take.</em>',
+      leave: [
+        ['A straight read', 'on whether the piece is worth making, and at what level'],
+        ['The shape we would propose:', 'format, scale and a rough timeline'],
+        ['A realistic budget range', ''],
+        ['What a treatment would cover,', 'if we go on to one'],
+        ['Whether we are the right people', 'to make it']
+      ],
+      fit: [
+        ['The piece carries real weight:', 'a launch, a raise, a rebrand, a film that represents you for years'],
+        ['You want a point of view', 'on the story, not a crew who shoots what they are told'],
+        ['A decision maker in the room,', 'and a date the work has to exist by']
+      ],
+      cta:   'Tell us about the project'
+    }
+  };
+
+  var content = SCHEDULER.content &&
+    Object.prototype.hasOwnProperty.call(CONTENT, SCHEDULER.content)
+      ? CONTENT[SCHEDULER.content] : null;
+  if (content) {
+    var byId = function (id) { return document.getElementById(id); };
+    var fill = function (list, items) {
+      if (!list || !items) return;
+      list.textContent = '';
+      items.forEach(function (pair) {
+        var li = document.createElement('li');
+        var b = document.createElement('b');
+        b.textContent = pair[0];
+        li.appendChild(b);
+        if (pair[1]) li.appendChild(document.createTextNode(' ' + pair[1]));
+        list.appendChild(li);
+      });
+    };
+    var h1 = document.querySelector('.wrap h1');
+    if (h1 && content.h1) h1.innerHTML = content.h1;
+    fill(byId('leave-list'), content.leave);
+    fill(byId('fit-list'), content.fit);
+    if (byId('back-cta') && content.cta) byId('back-cta').textContent = content.cta;
+
+    /* The Founding deadline, read off CLOSE_AT rather than typed again,
+       so this line cannot drift from the instant the form closes. Only
+       reached while the round is open: past it SCHEDULER is the late
+       entry, which names no content key. */
+    var dl = byId('leave-deadline');
+    if (dl && content.deadline) {
+      var close = new Date(CLOSE_AT);
+      var tz = 'America/Los_Angeles';
+      dl.textContent = 'Applications close ' +
+        close.toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: tz }) +
+        ', ' +
+        close.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz }) +
+        ' Pacific. The call can fall after it.';
+      dl.hidden = false;
+    }
   }
 
   /* Per-offer heading, where an offer sets one. Everything else keeps
@@ -369,7 +764,17 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Height comes from CSS, not the vendor's inline style, so the frame
      can be taller on a narrow screen where the calendar wraps. */
   var slot = document.getElementById('scheduler');
-  if (slot && SCHEDULER.ready) {
+  var providerParam = (new URLSearchParams(window.location.search).get('provider') || '')
+                        .trim().toLowerCase();
+  var useGhl = Boolean(SCHEDULER.ghlOffer) &&
+               (SCHEDULER.provider === 'ghl' || providerParam === 'ghl') &&
+               Boolean(window.NTCBookingForm);
+  if (slot && SCHEDULER.ready && useGhl) {
+    window.NTCBookingForm.mount(slot, {
+      offer: SCHEDULER.ghlOffer,
+      attribution: ghlAttribution()
+    });
+  } else if (slot && SCHEDULER.ready) {
     var href = schedulerUrl();
     if (href) {
       var host = document.createElement('div');
@@ -403,12 +808,15 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      No Lead. Deliberately. See the note above.
      ─────────────────────────────────────────────────────────────── */
   if (!window.ntc) return;
+  /* From /next-step: no ViewContent. The click there already fired the
+     custom NextStepSprintCall, and a standard event here would credit
+     the ad that brought a turned-away lead. */
+  if (fromNextStep) return;
   ntc.track('ViewContent', {
     content_name: document.title,
     // The recognised slug, for the same reason the URL above carries only
     // recognised slugs: an unknown one is noise in the dataset.
-    offer: (offerSlug && Object.prototype.hasOwnProperty.call(SCHEDULERS, offerSlug))
-             ? offerSlug : 'paid_retainer'
+    offer: offerId || 'paid_retainer'
   });
 })();
 </script>

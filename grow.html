@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Growth · New Terrain Creative. Content that gets you leads.</title>
-<meta name="description" content="Production Media for established businesses: strategy, production, campaign management, optimisation and reporting under one roof.">
+<meta name="description" content="We make video ads that book calls, and we run them. Monthly plans for established businesses: production, paid media management and conversion support under one roof.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="New Terrain Creative · Social Growth">
 <meta property="og:description" content="Content that gets you leads, not just likes. Creative and paid media under one roof.">
@@ -135,6 +135,8 @@
 
   @media (max-width: 560px) {
     .header-side { display: none; }
+    /* One line, always: the label must not stack beside the wordmark. */
+    .header-cta { white-space: nowrap; padding: 10px 14px; letter-spacing: 0.18em; }
   }
 
   /* ── HERO ── */
@@ -420,6 +422,9 @@
     font-family: var(--display); font-weight: 300; font-size: 26px;
     line-height: 1.1; color: var(--parchment);
   }
+  .tier-headline { font-family: var(--display); font-size: 21px; font-weight: 300; line-height: 1.25; color: var(--parchment); margin: 0; }
+  .tier-sub { font-size: 13.5px; line-height: 1.7; color: var(--soft); margin: 0; }
+  .tier-incl { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
   .tier-line { font-size: 13px; line-height: 1.7; color: var(--soft); }
   .tier-line b { color: var(--parchment); font-weight: 400; }
   .tiers + .invest-note { margin-top: 22px; }
@@ -544,37 +549,6 @@
 
   footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
   footer a:hover { color: var(--gold); }
-
-  /* ── VIDEO SLOT ── */
-  #video { padding-top: 0; padding-bottom: 90px; }
-  .video-frame {
-    max-width: 900px;
-    margin: 0 auto;
-    aspect-ratio: 16 / 9;
-    border: 1px solid var(--line);
-    background: #0d0d0d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; display: block; }
-  .video-ph { text-align: center; padding: 30px; }
-  .video-ph-mark {
-    font-family: var(--display);
-    font-size: 40px;
-    font-style: italic;
-    color: var(--gold);
-    opacity: 0.45;
-  }
-  .video-ph-note {
-    margin-top: 16px;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    line-height: 1.9;
-  }
 
   /* ── THE REEL · horizontal showcase of vertical work ──
      One row of 9:16 cards that loop silently, gloss on the glass,
@@ -997,6 +971,20 @@
     .vmodal-btn { padding: 15px 2px; opacity: 1; }
     .vmodal-close { padding-left: 18px; }
   }
+
+  /* Bold leads. These pages are bullets rather than paragraphs: a line
+     opens on the part worth reading and adds a few words at most. */
+  .hero-sub b, .lede b, .roof-body b, .contrast-list b, .deliver-body b,
+  .speed-body b, .fine b, .qa-a b, .derisk-item p b, .derisk-fine b,
+  .invest-note b, .invest-fit-col b, .invest-cta-note b, .prepay-list b,
+  .found-lede b, .alt-path-copy b, .proof-desc b {
+    color: var(--parchment); font-weight: 500;
+  }
+
+  /* The engagement terms, as a list. Was one italic paragraph. */
+  .prepay-list { list-style: none; margin-top: 26px; display: flex; flex-direction: column; gap: 7px; }
+  .prepay-list li { font-size: 12px; line-height: 1.7; color: var(--muted); padding-left: 16px; position: relative; }
+  .prepay-list li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 1px; background: var(--gold); }
 </style>
 </head>
 <body>
@@ -1006,7 +994,7 @@
   <div class="header-links">
     <a class="header-side" href="/sprint">Ad Sprint</a>
     <a class="header-side" href="index.html">The Cinema Side</a>
-    <a class="header-cta" data-cta="header" href="/strategy-call">Strategy Call</a>
+    <a class="header-cta" data-cta="header" href="/strategy-call">Growth Read</a>
   </div>
 </header>
 
@@ -1014,9 +1002,9 @@
 <section id="hero">
   <div class="eyebrow reveal">The Social Growth Side of New Terrain</div>
   <h1 class="title reveal">Less noise.<br>More <em>leads.</em></h1>
-  <p class="hero-sub reveal">Most agencies hand you content and wish you luck, or run ads on stock footage that looks like everyone else's. We make the creative and we run the media. One team, one roof, judged on one number: what it brings back.</p>
+  <p class="hero-sub reveal">We make the creative and we run the media. <b>One team, judged on one number: what it brings back.</b></p>
   <div class="hero-ctas reveal">
-    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Get my growth read</a>
     <a class="btn btn--ghost" href="#packages">See the Packages</a>
   </div>
   <div class="mail-row reveal" style="margin-top:24px">
@@ -1029,7 +1017,7 @@
 <div class="statbar">
   <div class="stat reveal"><div class="stat-num">338K+</div><div class="stat-label">Organic reach<br>in 9 days · zero spend</div></div>
   <div class="stat reveal"><div class="stat-num">460K</div><div class="stat-label">Views on one<br>trailer campaign</div></div>
-  <div class="stat reveal"><div class="stat-num">101K+</div><div class="stat-label">Following built<br>for one client</div></div>
+  <div class="stat reveal"><div class="stat-num">101K+</div><div class="stat-label">Following around<br>one client</div></div>
   <div class="stat reveal"><div class="stat-num">$3.1B+</div><div class="stat-label">In settlements behind<br>a brand we built</div></div>
 </div>
 
@@ -1041,50 +1029,26 @@
     <div class="reveal">
       <span class="roof-num">I</span>
       <div class="roof-title">Ads that don't look like ads</div>
-      <p class="roof-body">Every piece is cut with the same eye that cuts award-winning films. In a feed full of stock footage and AI filler, yours is the one that earns the stop.</p>
+      <p class="roof-body">Cut with the same eye that cuts award-winning films.</p>
     </div>
     <div class="reveal">
       <span class="roof-num">II</span>
       <div class="roof-title">Media run against revenue</div>
-      <p class="roof-body">We build the campaigns from your own creative and optimize weekly against real revenue, not impressions or vanity metrics. When a hook wins, we scale it. When it dies, we cut it.</p>
+      <p class="roof-body">Built from your own creative, optimized weekly against revenue. Winners scaled, losers cut.</p>
     </div>
     <div class="reveal">
       <span class="roof-num">III</span>
       <div class="roof-title">The path after the click</div>
-      <p class="roof-body">We do not stop at the ad. We connect the landing-page flow, the routing into your CRM, the conversion tracking and the follow-up automations, so a lead actually goes somewhere and you can see which creative produced it.</p>
+      <p class="roof-body">Landing flow, CRM routing, tracking and follow-up, connected.</p>
     </div>
     <div class="reveal">
       <span class="roof-num">IV</span>
       <div class="roof-title">One team accountable</div>
-      <p class="roof-body">No hand-offs between a production company and an ad agency blaming each other. The people who made the ad are the people spending your budget on it.</p>
+      <p class="roof-body">The people who made the ad are the people spending your budget on it.</p>
     </div>
   </div>
 </section>
 
-
-<!-- VIDEO -->
-<section id="video">
-  <div class="video-frame reveal">
-    <!--
-      ════════════════════════════════════════════════════════════
-      VIDEO GOES HERE. Delete the .video-ph div below and drop in:
-
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0"
-                title="New Terrain Creative · The Growth Engine"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-
-      or a self-hosted cut:
-
-        <video src="assets/vsl-growth-engine.mp4" poster="assets/vsl-poster.jpg" controls playsinline></video>
-      ════════════════════════════════════════════════════════════
-    -->
-    <div class="video-ph">
-      <div class="video-ph-mark">NTC</div>
-      <div class="video-ph-note">Watch how Production Media works</div>
-    </div>
-  </div>
-</section>
 
 <!-- THE REEL -->
 <!--
@@ -1173,7 +1137,7 @@
           <h3 class="reel-name">Off Script</h3>
           <div class="reel-figure">5.5M subscribers in the chair<small>NTC Original &middot; shot and cut in-house</small></div>
           <div class="reel-more">
-            <p class="reel-note">Our own show. The short-form format we build for clients, run on ourselves first so there is somewhere to point when we pitch it.</p>
+            <p class="reel-note">Our own show. The format we build for clients, run on ourselves first.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1193,7 +1157,7 @@
           <h3 class="reel-name">Empowered with Gina</h3>
           <div class="reel-figure">Full episode, cut to shorts<small>One session, a run of clips</small></div>
           <div class="reel-more">
-            <p class="reel-note">An episode shot end to end and cut down off the same session. The longform and the short-form come out of one day, which is the only way the math works.</p>
+            <p class="reel-note">One shoot day, one full episode, a run of shorts.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1213,7 +1177,7 @@
           <h3 class="reel-name">Left Hanging</h3>
           <div class="reel-figure">Hook one &middot; Insurance<small>Mike Alder &middot; one shoot day</small></div>
           <div class="reel-more">
-            <p class="reel-note">The insurance angle, opened cold off a ledge. First of the set, and the reason the other two exist: nobody knows which hook wins until all of them run.</p>
+            <p class="reel-note">Hook one of three. Nobody knows which hook wins until they all run.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1233,7 +1197,7 @@
           <h3 class="reel-name">Altadena</h3>
           <div class="reel-figure">Community helping community<small>Filmed on the ground</small></div>
           <div class="reel-more">
-            <p class="reel-note">Coverage of the relief effort after the Altadena fires, and of the room that turned out to honor the people behind it. Cut as a record rather than a promo.</p>
+            <p class="reel-note">The relief effort after the Altadena fires, cut as a record, not a promo.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1253,7 +1217,7 @@
           <h3 class="reel-name">Hamster Wheel</h3>
           <div class="reel-figure">Hook three &middot; Negotiating<small>Mike Alder &middot; one shoot day</small></div>
           <div class="reel-more">
-            <p class="reel-note">The negotiating angle, shot back to back with the other two. Three ready-to-run creatives out of one shoot, captioned and cut for every placement.</p>
+            <p class="reel-note">Hook three. Three ready-to-run ads out of one shoot.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1273,7 +1237,7 @@
           <h3 class="reel-name">Off Script</h3>
           <div class="reel-figure">Full production, end to end<small>NTC Original &middot; booking to final cut</small></div>
           <div class="reel-more">
-            <p class="reel-note">Booked, shot, cut, captioned, and cut down to shorts by the same person. The episode and the clips come out of one pass, not two.</p>
+            <p class="reel-note">Booked, shot, cut and clipped by the same person.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1293,7 +1257,7 @@
           <h3 class="reel-name">Kids Need Space</h3>
           <div class="reel-figure">The room and the mission<small>Gina guest speaking</small></div>
           <div class="reel-more">
-            <p class="reel-note">A Kids Need Space event with Empowered with Gina, Gina guest speaking. Her talk is cut against launch and orbit footage so the idea lands as hard in the edit as it did in the room.</p>
+            <p class="reel-note">Gina's talk at a Kids Need Space event, cut against launch footage.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1313,7 +1277,7 @@
           <h3 class="reel-name">Ping Pong Crash</h3>
           <div class="reel-figure">Hook two &middot; The client call<small>Mike Alder &middot; one shoot day</small></div>
           <div class="reel-more">
-            <p class="reel-note">Same day, same office, a completely different way in. Written to be tested against Left Hanging rather than to replace it.</p>
+            <p class="reel-note">Same day, same office, a different hook to test against Left Hanging.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1333,7 +1297,7 @@
           <h3 class="reel-name">Off Rip</h3>
           <div class="reel-figure">137K organic views<small>1M+ streaming minutes on the film</small></div>
           <div class="reel-more">
-            <p class="reel-note">A vertical cut from the feature, posted organically and left to do its own work. The same footage carried the film from a festival win onto both major storefronts.</p>
+            <p class="reel-note">A vertical cut from the feature, posted organically.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1353,7 +1317,7 @@
           <h3 class="reel-name">AlderTalk</h3>
           <div class="reel-figure">Cut for the feed, captioned in-house<small>One session, a run of shorts</small></div>
           <div class="reel-more">
-            <p class="reel-note">The podcast cut down to the moments that travel. Shot, edited and captioned under one roof, so the episode and the clips come out of the same pass.</p>
+            <p class="reel-note">The podcast cut down to the moments that travel.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1373,7 +1337,7 @@
           <h3 class="reel-name">Empowered with Gina</h3>
           <div class="reel-figure">Guest booked, shot and cut<small>Episode plus the clips off it</small></div>
           <div class="reel-more">
-            <p class="reel-note">Same setup, same shoot day, a different guest and a fresh run of short-form out of it. The format is the point: it repeats without getting cheaper to look at.</p>
+            <p class="reel-note">Same setup, new guest, a fresh run of shorts.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1393,7 +1357,7 @@
           <h3 class="reel-name">The Shoot Day</h3>
           <div class="reel-figure">One room, one afternoon<small>Three creatives &middot; no crew</small></div>
           <div class="reel-more">
-            <p class="reel-note">A table, a fan, a light, and one person filming. No crew standing around is the whole point: it is why people stop performing and start sounding like themselves.</p>
+            <p class="reel-note">One light, one camera, no crew. People stop performing and sound like themselves.</p>
           </div>
         </div>
       </article>
@@ -1415,7 +1379,7 @@
           <h3 class="reel-name">Off Rip</h3>
           <div class="reel-figure">1M+ streaming minutes<small>Grand Jury Award &middot; Gasparilla</small></div>
           <div class="reel-more">
-            <p class="reel-note">Cut for the feed rather than for a trailer. The scene has to work cold, with no setup and nothing to click into first.</p>
+            <p class="reel-note">Cut for the feed, built to work cold.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1435,7 +1399,7 @@
           <h3 class="reel-name">AlderTalk Summit</h3>
           <div class="reel-figure">$650-a-ticket summit<small>Multi-camera, cut for vertical</small></div>
           <div class="reel-more">
-            <p class="reel-note">The keynote pulled out of a paid summit and reframed for the feed. One stage, several cameras, and a run of clips that outlives the day itself.</p>
+            <p class="reel-note">A paid summit keynote, reframed into clips for the feed.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1457,7 +1421,7 @@
           <h3 class="reel-name">Hey Leo</h3>
           <div class="reel-figure">Shot to match the scene<small>Instagram promo for the film</small></div>
           <div class="reel-more">
-            <p class="reel-note">An Instagram reel promoting the film, played as a bit. The tarmac scene from Inception sets it up, and the new footage was written, shot and graded to match closely enough that the joke lands.</p>
+            <p class="reel-note">A promo bit for the film, shot and graded to match a famous movie scene.</p>
             <span class="reel-play">Play &#8599;</span>
           </div>
         </div>
@@ -1466,7 +1430,7 @@
     </div>
   </div>
 
-  <p class="reel-fine reveal">Organic and paid, cut for the feed rather than trimmed down from a horizontal edit. Hover for what each one was for and what it moved. Click to watch the whole thing.</p>
+  <p class="reel-fine reveal">Organic and paid, cut for the feed. Tap any one to watch.</p>
 </section>
 
 <!-- REEL PLAYER -->
@@ -1486,7 +1450,7 @@
 <section id="packages">
   <div class="eyebrow reveal">The packages</div>
   <h2 class="title reveal">Three ways to <em>work together.</em></h2>
-  <p class="lede reveal">Creative, paid media and conversion infrastructure, managed as one system. Which one fits depends on how much creative volume and testing the business needs. Scope and fee are set on a strategy call, once we understand what you sell and what you are trying to grow. <b>The exact scope is confirmed in writing before anything starts.</b></p>
+  <p class="lede reveal"><b>We make video ads that book calls, and we run them.</b> Creative, paid media and conversion infrastructure, run as one system. Scope and fee are set on the call and confirmed in writing.</p>
 
   <!-- Cards render from assets/offer.js retainer.publicGuideTiers.
        Pricing was withdrawn from the site on 2 Oct 2026 while the rate
@@ -1495,45 +1459,49 @@
        in offer.js to render. Do not hard-code a figure here. -->
   <div class="tiers reveal" id="tiers"></div>
 
-  <p class="invest-note reveal">Three month minimum on all three, because a shorter window cannot tell either of us whether the work is doing anything. Your advertising spend is separate, stays on your own payment method, and is never marked up or held by us.</p>
+  <!-- 14 Oct 2026: the one proof line near the plans. NTC's own
+       campaign, never a client result, and never "we will do the same
+       for you". -->
+  <p class="invest-note reveal"><b>Our own campaign, not a client's:</b> our first campaign booked 10 calls on $266 in ad spend.</p>
+
+  <p class="invest-note reveal"><b>Three month minimum.</b> A handful of retainers at a time, and you work with Jadon and Meghan directly.</p>
 
   <!-- Boutique by design. The claim is paired with its mechanism on
        purpose (offer.js boutique): the person who plans the shoot is the
        person who shoots and cuts it, and there is no account manager.
        "A handful" is unquantified until there is a ceiling we will hold. -->
-  <p class="invest-note invest-note--boutique reveal">We run a handful of retainers at a time, by design. The person who plans your shoot is the person who shoots it and cuts it, and you talk to Jadon and Meghan directly rather than to an account manager.</p>
 
   <div class="invest-fit reveal">
     <div class="invest-fit-col">
       <h3>This fits</h3>
       <ul>
-        <li>Established health and wellness, legal, dental, and construction or contracting businesses</li>
-        <li>A real service, already selling, with capacity to take on more customers</li>
-        <li>Someone who answers a lead the day it arrives</li>
-        <li>Willingness to fund advertising alongside the production</li>
-        <li>Someone who wants a direct line to the people making the work</li>
+        <li><span><b>Established businesses</b> in wellness, legal, dental and contracting</span></li>
+        <li><span><b>Already selling,</b> with room for more customers</span></li>
+        <li><span><b>Ready to fund ads</b> and answer leads same day</span></li>
       </ul>
     </div>
     <div class="invest-fit-col">
       <h3>This does not</h3>
       <ul>
-        <li>A one-off video with no campaign behind it</li>
-        <li>Organic posting alone, with nothing behind the creative</li>
-        <li>Anyone who needs a guaranteed number of leads. We do not sell those</li>
-        <li>Businesses without the capacity to serve more customers yet</li>
+        <li>A one-off video or organic posting alone</li>
+        <li>Guaranteed lead counts. We do not sell those</li>
       </ul>
     </div>
   </div>
 
 
   <div class="invest-cta reveal">
-    <a class="btn btn--gold" data-cta="strategy" href="/strategy-call">Request a strategy call</a>
-    <p class="invest-cta-note">Thirty minutes. We will tell you what we would actually do, what it would cost, and whether we think it is worth doing. If it is not a fit we will say so on the call rather than send a proposal.</p>
+    <a class="btn btn--gold" data-cta="strategy" href="/strategy-call">Get my growth read</a>
+    <p class="invest-cta-note">Thirty minutes. <b>If it is not a fit, we say so on the call.</b></p>
   </div>
 
-  <p class="prepay-note reveal">Advertising spend is separate and always yours: you pay the platforms directly and we never mark up or hold your budget. Admin access to the ad account is part of every engagement, because we do not report on numbers we cannot see. Every engagement includes a standard conversion setup: the landing-page flow, lead routing into your CRM, conversion tracking and the core automations. Where that does not exist yet, building it is the first piece of work. Custom systems work, such as bespoke integrations or dashboards, is scoped separately. Music from our licensed libraries is included; licensing a specific commercial track is quoted separately. Fees exclude ad spend, paid placements, talent, and travel outside Los Angeles or Tampa.</p>
+  <ul class="prepay-list reveal">
+    <li><b>Ad spend is always yours:</b> paid to the platforms directly, never marked up or held</li>
+    <li><b>Standard setup included:</b> landing page, CRM routing and tracking. Custom systems work is scoped separately</li>
+    <li><b>Fees exclude</b> ad spend, talent, and travel outside Los Angeles or Tampa</li>
+  </ul>
 
-  <p class="prepay-note reveal" style="margin-top:14px">Also available, separately from a retainer: <a href="/sprint" style="color:var(--gold)">the Ad Sprint</a> as a one-time production, and event or summit coverage scoped per project. <a href="mailto:business@newterraincreative.com" style="color:var(--gold)">Ask us</a> and we will send detailed rates.</p>
+  <p class="prepay-note reveal" style="margin-top:14px">Need a one-time shoot instead? See <a href="/sprint" style="color:var(--gold)">the Ad Sprint</a>. <a href="mailto:business@newterraincreative.com" style="color:var(--gold)">Ask us</a>.</p>
 </section>
 
 <!-- PROOF -->
@@ -1542,20 +1510,24 @@
   <h2 class="title reveal">Story moves numbers.</h2>
   <div class="proof-rows">
     <div class="proof-row reveal">
-      <div><div class="proof-num">58K+</div><div class="proof-label">Followers Built</div></div>
-      <div><span class="proof-tier">Longform · Short-form</span><div class="proof-client">Mike Alder</div><p class="proof-desc">Educational short-form and documentary-style content that turned the attorney behind $3.1B+ in settlements into a personal brand people actually follow.</p></div>
+      <div><div class="proof-num">58K+</div><div class="proof-label">Followers on his feed</div></div>
+      <div><span class="proof-tier">Longform · Short-form</span><div class="proof-client">Mike Alder</div><p class="proof-desc">Short-form and documentary content for the attorney behind $3.1B+ in settlements.</p></div>
     </div>
     <div class="proof-row reveal">
       <div><div class="proof-num">101K+</div><div class="proof-label">Combined Following</div></div>
-      <div><span class="proof-tier">Podcast · Short-form</span><div class="proof-client">Gina Zapanta</div><p class="proof-desc">A podcast and short-form engine across Instagram, YouTube, and TikTok, built episode by episode around her voice, not a content calendar template. Longform is the piece most studios will not take on.</p></div>
+      <div><span class="proof-tier">Podcast · Short-form</span><div class="proof-client">Gina Zapanta</div><p class="proof-desc">A podcast and short-form engine across Instagram, YouTube and TikTok.</p></div>
     </div>
     <div class="proof-row reveal">
       <div><div class="proof-num">338K+</div><div class="proof-label">Organic Reach · 9 Days</div></div>
-      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">Bot or Not · Launch</div><p class="proof-desc">One upload, one share, zero paid spend. The audience followed the film across platforms. The same hooks-first discipline goes into every ad we cut.</p></div>
+      <div><span class="proof-tier">Signature Work · Short Film</span><div class="proof-client">Bot or Not · Launch</div><p class="proof-desc"><b>One upload, one share, zero paid spend.</b></p></div>
     </div>
     <div class="proof-row reveal">
       <div><div class="proof-num">460K</div><div class="proof-label">Trailer Views</div></div>
-      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">FOUR · Trailer Campaign</div><p class="proof-desc">Just under half a million views and 294 reshares on a trailer cut in-house. When the creative connects, the audience does the distribution for you.</p></div>
+      <div><span class="proof-tier">Signature Work · Film</span><div class="proof-client">FOUR · Trailer Campaign</div><p class="proof-desc">Just under half a million views and <b>294 reshares</b> on a trailer cut in-house.</p></div>
+    </div>
+    <div class="proof-row reveal">
+      <div><div class="proof-num">1M+</div><div class="proof-label">Streaming Minutes</div></div>
+      <div><span class="proof-tier">Signature Work · Feature Film</span><div class="proof-client">Off Rip</div><p class="proof-desc"><b>Grand Jury Award at Gasparilla.</b> Now streaming on Amazon, Apple TV and Tubi.</p></div>
     </div>
   </div>
 </section>
@@ -1564,9 +1536,10 @@
 <section id="close">
   <div class="eyebrow reveal">New Terrain Creative</div>
   <h2 class="title reveal">Let's fill<br>your <em>pipeline.</em></h2>
-  <p class="lede reveal">One call. We'll look at what you're running now, tell you honestly which rung fits, and map the first ninety days.</p>
+  <p class="lede reveal">One call. <b>Leave with a clear read on what is slowing growth,</b> and what we would do next.</p>
   <div class="close-ctas reveal">
-    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Request a strategy call</a>
+    <a class="btn btn--gold" data-cta="close" href="/strategy-call">Get my growth read</a>
+    <a class="btn btn--ghost" data-cta="breakdown" href="/breakdown?for=ads">Free Ad Breakdown</a>
   </div>
   <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
     <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
@@ -1874,7 +1847,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      we already made. It is deliberately not "posting and scheduling",
      which reads as running the client's whole social presence, and
      community management is not part of any retainer. Longform lives
-     on Brand Builder only. The platform is never named: paid media.
+     on Brand Builder only. Organic social posting on the client's own
+     channels came to Brand Builder on 8 Oct 2026 and, as a weekly posting
+     rhythm, to Growth Partner on 14 Oct 2026. The Anchor posts only the
+     campaign creative. The platform is never named: paid media.
 
      "Funnel, tracking and automation support" is on every card and is
      the same line on each, on purpose. How deep it goes per tier is an
@@ -1899,20 +1875,21 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     var SUMMARY = {
       'The Anchor': [
         'A focused monthly ad creative and paid media system.',
-        'Recurring campaign concepts, shot and cut as ads, on a steady monthly volume.',
+        'Recurring campaign concepts, shot and cut as ads, on a steady monthly volume, plus statics and carousels for paid placements.',
         'Paid media management, testing, reporting and organic distribution of campaign creative included.',
         'Funnel, tracking and automation support included.'
       ],
       'Growth Partner': [
         'Everything in The Anchor, at higher volume.',
-        'More concepts and variants in testing, and more ambitious campaign creative.',
+        'More short-form, more concepts and variants in testing, single-image and carousel statics, and a Signature Hero Ad every three months.',
+        'A weekly posting rhythm on your own channels, planned and scheduled from the month\u2019s creative.',
         'Paid media management, testing, reporting and organic distribution of campaign creative included.',
         'Funnel, tracking and automation support included.'
       ],
       'Brand Builder': [
         'Our largest production allocation.',
-        'Premium campaign work and longform: founder interviews, YouTube episodes, case-study pieces.',
-        'Paid media management, testing, reporting and organic distribution of campaign creative included.',
+        'Longform and short-form, in the studio or in the field: founder interviews, podcasts, hands-on vlog-style episodes, the clips cut from them, and statics and carousels for paid placements.',
+        'Organic social posting on your channels, paid media management, testing and reporting included.',
         'Funnel, tracking and automation support included.'
       ]
     };
@@ -1924,6 +1901,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return '<div class="tier' + (i === 1 ? ' tier--mid' : '') + '">' +
                '<div class="tier-label">' + (t.label || '') + '</div>' +
                '<div class="tier-name">' + t.name + '</div>' +
+               (t.headline ? '<p class="tier-headline">' + t.headline + '</p>' : '') +
+               (t.subhead ? '<p class="tier-sub">' + t.subhead + '</p>' : '') +
+               (t.headline ? '<div class="tier-incl">What\u2019s included</div>' : '') +
                lines +
              '</div>';
     }).join('');
@@ -1944,9 +1924,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         }, { once: false });
       });
     });
-
-    var v = document.querySelector('#video video');
-    if (v) ntc.watchVideo(v);
   })();
 </script>
 
@@ -1954,6 +1931,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <!-- ══════════════════════════════════════════════════════════════════
      iClosed Lift widget · floating "Book a Call" launcher
      ──────────────────────────────────────────────────────────────────
+     Loaded through assets/book-button.js since the GHL migration: with
+     the Growth provider flag at 'iclosed' (today) it injects exactly the
+     tag below; at 'ghl' it shows our own button to /strategy-call
+     instead. The notes that follow describe the iClosed behaviour.
+
      Books the Growth Strategy Consultation, the same event /grow and
      /strategy-call send people to. It is not a second funnel: iClosed
      asks its own qualification questions and fires its own
@@ -1972,6 +1954,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      /booked, /call-booked and /onboarding. scripts/preflight.py fails
      if it turns up on one of those.
      ══════════════════════════════════════════════════════════════════ -->
-<script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="_H-7V8fHVTuw" async></script>
+<script src="/assets/book-button.js" async></script>
 </body>
 </html>

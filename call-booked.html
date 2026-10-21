@@ -106,6 +106,24 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .offer-note b { color:var(--parchment); font-weight:400; }
 
+  /* Reserve before the call. Shown only for an offer whose OFFERS entry
+     names a reserve block (the 5-day trial). Secondary to the
+     confirmation above it: an outlined box, one button. */
+  .reserve { margin-top:40px; border:1px solid var(--gold-dim); padding:clamp(22px,3vw,30px); }
+  .reserve h2 {
+    font-family:var(--display); font-weight:300; font-size:clamp(26px,3.6vw,34px);
+    line-height:1.1; color:var(--parchment); margin-bottom:12px;
+  }
+  .reserve h2 em { font-style:italic; color:var(--gold); }
+  .reserve p { font-size:14.5px; line-height:1.75; max-width:54ch; }
+  .reserve p b { color:var(--parchment); font-weight:400; }
+  .reserve .btn {
+    display:inline-block; margin-top:20px; padding:15px 26px; background:var(--gold); color:var(--black);
+    font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; text-decoration:none;
+  }
+  .reserve .btn:hover { background:var(--parchment); }
+  .reserve .fine { margin-top:16px; font-size:12.5px; color:var(--muted); }
+
   /* Post-booking video, one per offer. Hidden until OFFERS below names a
      src for the offer on the URL, so the generic page never shows it. */
   .vsl { margin-top:34px; }
@@ -147,6 +165,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   .call-details-widget iframe { width:100%; height:100%; border:0; display:block; }
   @media (max-width:520px) { .call-details-widget { height:460px; } }
 
+  .ghl-confirm { font-size:14px; line-height:1.85; color:var(--soft); max-width:56ch; }
+
   .reschedule {
     margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
     font-size:13px; color:var(--muted); max-width:56ch;
@@ -185,7 +205,6 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <section class="vsl" id="vsl" hidden aria-label="Watch before the call">
     <h2 id="vsl-label">Watch before the call</h2>
     <p class="vsl-intro" id="vsl-intro" hidden></p>
-    <!-- SPRINT VSL: replace src with final video (the src is in OFFERS below) -->
     <div class="vsl-frame" id="vsl-frame"></div>
   </section>
 
@@ -208,6 +227,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        the round trip working. -->
   <p class="offer-note" id="offer-note" hidden></p>
 
+  <!-- RESERVE BEFORE THE CALL · filled by OFFERS in the script at the
+       foot of this page, and only for an offer that names a reserve
+       block. Hidden for every other offer and for the generic page.
+       iClosed only redirects here after a qualified booking, so this is
+       the one place a checkout link may appear. -->
+  <section class="reserve" id="reserve" hidden aria-label="Reserve before the call">
+    <h2 id="reserve-title"></h2>
+    <p id="reserve-body"></p>
+    <a class="btn" id="reserve-btn" href="#" rel="noopener"></a>
+    <p class="fine" id="reserve-fine"></p>
+  </section>
+
   <!-- ══════════════════════════════════════════════════════════════
        iCLOSED BOOKING CONFIRMATION · DISPLAY ONLY
        ──────────────────────────────────────────────────────────────
@@ -226,6 +257,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     <!-- iClosed widget begin -->
     <div class="call-details-widget" data-url="https://app.iclosed.io/embed"></div>
     <!-- iClosed widget end -->
+  </section>
+
+  <!-- GHL BOOKING CONFIRMATION · provider=ghl only. GoHighLevel has no
+       call-details widget to embed, so this says plainly what happens
+       next instead. The invitation and reminders come from GHL. -->
+  <section class="booking" id="booking-ghl" hidden aria-label="Your appointment">
+    <h2>Your appointment</h2>
+    <p class="ghl-confirm">The time you picked is held for you. The calendar invitation, with the
+       video link, is on its way to the email you gave us, and we will send a reminder before
+       the call.</p>
   </section>
 
   <p class="reschedule">Need to reschedule? Use the link in your confirmation email. Anything else, reply to that email, reach us at <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>, or call or text <a href="tel:+18182668213">(818) 266-8213</a>.</p>
@@ -256,6 +297,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Booked, browser and CAPI, on this dataset before this page loaded.
      See the note in <head>. */
   var NOTES = {
+    'brand-builder':  '<b>Before the Story Session:</b> have a link to anything you have ' +
+                      'already posted, and a sentence on what you want the brand to do for the ' +
+                      'business, whether that is sales, hiring or referrals.',
     'founding-three': '<b>Founding Three applicants:</b> we will read your application and look at ' +
                       'your business before the call, so the time goes on strategy rather than ' +
                       'rehashing the form.',
@@ -276,9 +320,21 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      so a redirect set to either one shows the right line. */
   var ALIAS = { 'ad-sprint': 'sprint', 'production-media': 'growth',
                 'paid_retainer': 'growth', 'founding_three': 'founding-three',
-                'signature-project': 'signature', 'signature_work': 'signature' };
+                'signature-project': 'signature', 'signature_work': 'signature',
+                'trial_pest_control': 'pest-control-trial', 'trial': 'pest-control-trial' };
 
   var params = new URLSearchParams(window.location.search);
+
+  /* GoHighLevel bookings arrive with provider=ghl (the redirect set on
+     every GHL calendar). If GHL navigated its own iframe rather than the
+     page, this confirmation would render inside the calendar box on
+     /strategy-call: lift it out to the whole window. Same origin, so
+     allowed; if it ever is not, the page still reads correctly framed. */
+  var ghl = (params.get('provider') || '').trim().toLowerCase() === 'ghl';
+  if (ghl && window.top !== window.self) {
+    try { window.top.location.href = window.location.href; return; } catch (e) {}
+  }
+
   var offer = (params.get('offer') || '').trim().toLowerCase();
   if (Object.prototype.hasOwnProperty.call(ALIAS, offer)) offer = ALIAS[offer];
   var note = document.getElementById('offer-note');
@@ -302,8 +358,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Display only. Nothing here fires an event. */
   var OFFERS = {
     'sprint': {
-      /* SPRINT VSL: replace src with final video */
-      vsl: { src: '', poster: '', title: 'The Ad Sprint: watch before your call',
+      vsl: { src: 'https://player.vimeo.com/video/1233201170?badge=0&autopause=0&player_id=0&app_id=58479',
+             poster: '', title: 'The Ad Sprint: watch before your call',
              intro: 'Watch this short video before your call. It covers how the Sprint works ' +
                     'so we can use the call on your business instead of the basics.' },
       h1: 'You\'re <em>booked.</em> Here\'s what happens next.',
@@ -323,12 +379,76 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         ] }
       ],
       after: '',
-      note: false
+      note: false,
+      reserve: {
+        title: 'Ready now? <em>Reserve your slot.</em>',
+        body:  'We take four trials a month. If you already know you want one, you can reserve it today: ' +
+               '<b>$1,500, one time.</b> Your call stays on the calendar and becomes your kickoff. ' +
+               'Not sure yet? Do nothing. Come to the call and decide there.',
+        label: 'Reserve my trial slot',
+        href:  'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+        fine:  'Same terms as the trial page. Ad spend is separate and paid to Meta. ' +
+               'If we do not deliver your edit and launch by day 5, the fee is refunded.'
+      }
     },
-    /* GROWTH VSL: replace src with final video */
-    'growth':         { vsl: { src: '', poster: '', title: 'Production Media: what happens after you book' } },
-    /* FOUNDING THREE VSL: replace src with final video */
-    'founding-three': { vsl: { src: '', poster: '', title: 'Founding Three: what happens after you book' } },
+    'growth': {
+      vsl: { src: 'https://player.vimeo.com/video/1233201171?badge=0&autopause=0&player_id=0&app_id=58479',
+             poster: '', title: 'Growth strategy: watch before your call',
+             intro: 'Watch this short video before your call. It covers how we work with a business ' +
+                    'on a retainer so we can use the call on your business instead of the basics.' }
+    },
+    'founding-three': {
+      vsl: { src: 'https://player.vimeo.com/video/1233201172?badge=0&autopause=0&player_id=0&app_id=58479',
+             poster: '', title: 'Founding Three: watch before your call',
+             intro: 'Watch this short video before your call. It covers how the Founding Three works ' +
+                    'so we can use the call on your business instead of the basics.' }
+    },
+    /* BRAND BUILDER: the iClosed Story Session event redirects here with
+       ?offer=brand-builder. The pre-call VSL for the Story Session is
+       not shot yet (Jadon, 8 Oct 2026); it is a different video from the
+       Brand Builder welcome video, so the slot stays hidden until it
+       exists. Paste the player URL into src, and add an intro line, when
+       it does. */
+    'brand-builder':  { vsl: { src: '', poster: '', title: 'Brand Builder: watch before your Story Session' } },
+    /* 5-DAY TRIAL: the iClosed 5-Day Trial Call redirects here with
+       ?offer=pest-control-trial. No video and no promised result here:
+       the page confirms and says what to have handy.
+
+       RESERVE (13 Oct 2026): a qualified booker who is ready can pay
+       before the call. The link is assets/offer.js
+       trial.stripePaymentLink, mirrored here because this page does not
+       load offer.js; scripts/check-offer.py fails if the two differ. The
+       fine print restates the guarantee already on the trial page and
+       promises nothing new. */
+    'pest-control-trial': {
+      h1: 'You\'re <em>booked.</em> Twenty minutes, then you decide.',
+      lede: 'Your 5-Day Trial call with Jadon and Meghan is confirmed. <b>Check your inbox for the ' +
+            'calendar invitation and the video link.</b> If it has not arrived in a few minutes, look in spam.',
+      sections: [
+        { title: 'Have these handy', items: [
+          'Your footage: 10 minutes of video or 20 photos. Trucks, techs on jobs, before and afters. Phone footage is fine.',
+          'Access to your Meta ad account, or the name of whoever has it.',
+          'Your offer: service area, recurring plans and price point.'
+        ] },
+        { title: 'On the call', items: [
+          'We check your footage against the minimum.',
+          'We work out whether your ads should send homeowners to a message or a quote form, based on who answers and how fast.',
+          'If the trial is not the right start, we say so.'
+        ] }
+      ],
+      after: '',
+      note: false,
+      reserve: {
+        title: 'Ready now? <em>Reserve your slot.</em>',
+        body:  'We take four trials a month. If you already know you want one, you can reserve it today: ' +
+               '<b>$1,500, one time.</b> Your call stays on the calendar and becomes your kickoff. ' +
+               'Not sure yet? Do nothing. Come to the call and decide there.',
+        label: 'Reserve my trial slot',
+        href:  'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+        fine:  'Same terms as the trial page. Ad spend is separate and paid to Meta. ' +
+               'If we do not deliver your edit and launch by day 5, the fee is refunded.'
+      }
+    },
     /* SIGNATURE VSL: replace src with final video */
     'signature':      { vsl: { src: '', poster: '', title: 'Signature Work: what happens after you book' } }
   };
@@ -363,6 +483,18 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     if (after && block.after === '') after.hidden = true;
     else set('main .after', block.after);
     if (note && block.note === false) note.hidden = true;
+
+    // Reserve before the call: only when the offer names every part.
+    var rs = block.reserve, box = document.getElementById('reserve');
+    if (box && rs && rs.href && rs.label) {
+      document.getElementById('reserve-title').innerHTML = rs.title;
+      document.getElementById('reserve-body').innerHTML = rs.body;
+      var rb = document.getElementById('reserve-btn');
+      rb.textContent = rs.label;
+      rb.href = rs.href;
+      document.getElementById('reserve-fine').textContent = rs.fine || '';
+      box.hidden = false;
+    }
 
     var vsl = document.getElementById('vsl');
     var frame = document.getElementById('vsl-frame');
@@ -424,11 +556,60 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var hasBookingContext = (function () {
     var n = 0;
-    params.forEach(function (_, k) { if (k !== 'offer' && k !== 'vsl') n++; });
+    params.forEach(function (_, k) { if (k !== 'offer' && k !== 'vsl' && k !== 'provider') n++; });
     return n > 0;
   })();
 
-  if (booking && widget && hasBookingContext) {
+  /* ── GHL · confirmation and Schedule ───────────────────────────────
+     provider=ghl skips the iClosed card entirely: there is no iClosed
+     booking to show. The plain confirmation above replaces it.
+
+     The browser Schedule fires keyed schedule_<ntc_session>, the session
+     track.js keeps in localStorage and the booking form wrote onto the
+     GHL contact. /api/ghl-webhook sends the server copy with the same
+     id, so Meta counts one conversion.
+
+     What stands in for iClosed's "the card rendered" check: the booking
+     form leaves a marker (ntc_ghl_booking) when it hands over to the GHL
+     calendar, and only a visit carrying one, less than a day old, fires.
+     A bare URL fires nothing. The marker is spent on use, and a reload
+     resolves to the same event id regardless. */
+  if (ghl) {
+    var ghlCard = document.getElementById('booking-ghl');
+    if (ghlCard) ghlCard.hidden = false;
+
+    (function () {
+      if (offer === 'reschedule' || offer === 'follow-up') return;
+      if (!window.ntc || !ntc.sessionId) return;
+      var mark = null;
+      try { mark = JSON.parse(localStorage.getItem('ntc_ghl_booking') || 'null'); } catch (e) {}
+      if (!mark || !(Date.now() - Number(mark.t || 0) < 24 * 60 * 60 * 1000)) {
+        console.warn('call-booked: no GHL booking marker, Schedule not fired');
+        return;
+      }
+      try { localStorage.removeItem('ntc_ghl_booking'); } catch (e) {}
+
+      var sid = String(ntc.sessionId() || '');
+      if (!/^[A-Za-z0-9_-]{6,120}$/.test(sid)) return;
+      var eventId = 'schedule_' + sid;
+      var OFFER = { 'growth': 'paid_retainer', 'sprint': 'ad_sprint', 'signature': 'signature_work',
+                    'brand-builder': 'brand_builder', 'pest-control-trial': 'trial_pest_control' };
+      var nextStep = (params.get('from') || '').toLowerCase() === 'next-step' ||
+                     String(mark.from || '').toLowerCase() === 'next-step';
+      if (nextStep) {
+        try { localStorage.removeItem('ntc_next_step'); } catch (e) {}
+        ntc.track('NextStepSprintBooked', {
+          offer: OFFER[offer] || 'ad_sprint', content_name: 'Sprint call', booking_id: eventId
+        }, { eventId: eventId });
+        return;
+      }
+      ntc.track('Schedule', {
+        offer: OFFER[offer] || 'paid_retainer', content_name: 'Strategy call', booking_id: eventId
+      }, { eventId: eventId });
+    })();
+  }
+
+  if (booking && widget && hasBookingContext && !ghl) {
     var settled = false;
     var reveal = function () {
       if (settled) return;
@@ -540,6 +721,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        it does not, turn one of them off rather than counting both. */
     setTimeout(function () {
       if (booking.hidden) return;
+      // A rebooking from /reschedule (iClosed's Rescheduled Call redirects
+      // here with ?offer=reschedule) is the same lead as the call they
+      // missed, which was already counted. Never a second Schedule.
+      if (offer === 'reschedule') return;
+      // A Quick Follow-Up from /follow-up (?offer=follow-up, 15 Oct 2026)
+      // is a lead we already spoke with, already counted. Same rule.
+      if (offer === 'follow-up') return;
       if (getComputedStyle(widget).display === 'none') return;
       if (!window.ntc) return;
 
@@ -553,7 +741,35 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       var OFFER_ID = { 'founding-three': 'founding_three',
                        'growth': 'paid_retainer',
                        'sprint': 'ad_sprint',
-                       'signature': 'signature_work' };
+                       'signature': 'signature_work',
+                       // The Story Session, same name the webhook files it under.
+                       'brand-builder': 'brand_builder',
+                       // The 5-Day Trial Call, same name the webhook files it under.
+                       'pest-control-trial': 'trial_pest_control' };
+
+      /* A Sprint call booked from /next-step, the bridge page for leads a
+         booking form turned away (20 Oct 2026). Known by ?from=next-step
+         if iClosed forwards it, or by the marker /next-step sets on the
+         click, honoured for a day. It fires the custom
+         NextStepSprintBooked instead of Schedule, the same choice
+         /api/iclosed-webhook makes server side, so a turned-away lead
+         never trains a campaign on Schedule. */
+      var nextStep = (params.get('from') || '').toLowerCase() === 'next-step';
+      if (!nextStep && offer === 'sprint') {
+        try {
+          var mark = Number(localStorage.getItem('ntc_next_step') || 0);
+          nextStep = mark > 0 && Date.now() - mark < 24 * 60 * 60 * 1000;
+        } catch (e) {}
+      }
+      if (nextStep) {
+        try { localStorage.removeItem('ntc_next_step'); } catch (e) {}
+        ntc.track('NextStepSprintBooked', {
+          offer: OFFER_ID[offer] || 'ad_sprint',
+          content_name: params.get('event_type_name') || 'Sprint call',
+          booking_id: bookingId
+        }, { eventId: bookingId });
+        return;
+      }
 
       ntc.track('Schedule', {
         offer: OFFER_ID[offer] || 'paid_retainer',

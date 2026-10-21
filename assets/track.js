@@ -136,7 +136,10 @@
     if (p === '/founding' || p === '/apply') return 'founding_three';
     if (p === '/grow' || p === '/strategy-call') return 'paid_retainer';
     if (p === '/sprint' || p === '/booked') return 'ad_sprint';
+    if (p === '/signature') return 'signature_work';
+    if (p === '/brand-builder' || p === '/brand-builder-pro') return 'brand_builder';
     if (p === '/growth-guide') return 'sales_enablement';
+    if (p === '/breakdown') return 'breakdown';
     return 'organic_site';
   }
 
@@ -159,7 +162,9 @@
     VSL25: 'vsl_25', VSL50: 'vsl_50', VSL75: 'vsl_75', VSL90: 'vsl_90',
     // First party only. See trackInternal below: this never reaches Meta.
     InitialFitCompleted: 'initial_fit_completed',
-    SalesDeckView: 'sales_deck_view'
+    SalesDeckView: 'sales_deck_view',
+    // /breakdown, the free brand breakdown. Custom Meta events, see track().
+    BreakdownStart: 'breakdown_start', BreakdownView: 'breakdown_view'
   };
 
   function store(eventName, eventId, data) {
@@ -197,7 +202,19 @@
 
     if (typeof w.fbq === 'function') {
       try {
-        var custom = eventName === 'CTAClick' || /^VSL/.test(eventName);
+        // ProductionInquiry and the NextStep* events are custom on purpose:
+        // /next-step (was /production-inquiry) takes leads a booking form
+        // turned away, and a standard Lead, Schedule or InitiateCheckout
+        // from there would teach that campaign to find more of them.
+        //   NextStepSprintCheckout  a Stripe Sprint button on /next-step
+        //   NextStepSprintCall      the "Book a short Sprint call" link
+        //   NextStepSprintBooked    that call booked (/call-booked), in
+        //                           place of Schedule
+        // BreakdownStart and BreakdownView are custom too: the standard Lead
+        // from /breakdown fires only for a qualified result, so a form
+        // submit or a rendered result must not look like one.
+        var custom = eventName === 'CTAClick' || eventName === 'ProductionInquiry' ||
+                     /^NextStep/.test(eventName) || /^VSL/.test(eventName) || /^Breakdown/.test(eventName);
         w.fbq(custom ? 'trackCustom' : 'track', eventName, payload, { eventID: eventId });
         log('fbq', eventName, eventId, payload);
       } catch (e) {
