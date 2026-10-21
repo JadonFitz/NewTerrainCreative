@@ -24,14 +24,27 @@ const REPORT = {
 const SYNC = { last_synced_at: '2026-10-03T13:00:04Z', window_from: '2026-09-27',
                window_to: '2026-10-03', rows_written: 14 };
 
+const CALL_ROWS = [
+  { id: '3f6c1a2e-0b4d-4c55-9a77-1e2f3a4b5c6d', call_date: '2026-09-14', offer: 'brand_builder',
+    taken_by: 'jadon', outcome: 'lost', objection: 'authority', note: 'wife decides', created_at: '2026-09-14T22:00:00Z' }
+];
+
 const calls = [];
 let failNext = false;
 let syncStatusDown = false;
+let callLogDown = false;
+let deleteFinds = 1;
 globalThis.fetch = async (url, opts = {}) => {
   let body;
   try { body = opts.body ? JSON.parse(opts.body) : undefined; } catch { body = opts.body; }
   calls.push({ url: String(url), method: opts.method, body, headers: opts.headers });
   if (failNext) { failNext = false; return { ok: false, status: 404, text: async () => 'no function' }; }
+  if (/\/rest\/v1\/call_outcomes/.test(String(url))) {
+    if (opts.method === 'POST') return { ok: true, status: 201, json: async () => [{ id: 'new', ...body }], text: async () => '' };
+    if (opts.method === 'DELETE') return { ok: true, status: 200, json: async () => Array(deleteFinds).fill({}), text: async () => '' };
+    if (callLogDown) return { ok: false, status: 404, text: async () => 'relation does not exist' };
+    return { ok: true, status: 200, json: async () => CALL_ROWS, text: async () => '' };
+  }
   if (/sync_status/.test(String(url))) {
     if (syncStatusDown) return { ok: false, status: 404, text: async () => 'no table' };
     return { ok: true, status: 200, json: async () => [SYNC], text: async () => '' };
@@ -144,6 +157,78 @@ failNext = true;
 res = await request({ cookie, query: { from: '2026-09-01', to: '2026-09-30' } });
 check('a database failure is a 502, with no detail leaked',
   res.statusCode === 502 && res.payload.error === 'report unavailable');
+
+console.log('\n\x1b[1mTHE CALL LOG\x1b[0m');
+n = calls.length;
+res = await request({ cookie, query: { from: '2026-09-01', to: '2026-09-30' } });
+made = calls.slice(n);
+const callRead = made.find((c) => /\/rest\/v1\/call_outcomes\?/.test(c.url));
+check('the report carries the calls in range', res.statusCode === 200 && res.payload.calls.length === 1);
+check('the calls are read for the same range',
+  Boolean(callRead) && callRead.url.includes('call_date=gte.2026-09-01') && callRead.url.includes('call_date=lte.2026-09-30'));
+check('the call read never asks for leads or contact columns',
+  Boolean(callRead) && !/email|phone|name=|leads/.test(callRead.url));
+
+callLogDown = true;
+res = await request({ cookie, query: { from: '2026-09-01', to: '2026-09-30' } });
+check('a missing call log (0010 not applied) does not break the report',
+  res.statusCode === 200 && res.payload.calls === null && res.payload.rows.length === 1);
+callLogDown = false;
+
+const goodCall = { action: 'log_call', call_date: '2026-09-15', offer: 'brand_builder',
+                   taken_by: 'meghan', outcome: 'lost', objection: 'budget', note: 'liked it, 3k is the ceiling' };
+
+n = calls.length;
+res = await request({ method: 'POST', body: goodCall });
+check('logging a call without a session is refused', res.statusCode === 401 && calls.length === n);
+
+res = await request({ method: 'POST', body: goodCall, cookie });
+made = calls.slice(n);
+const write = made.find((c) => c.method === 'POST' && /\/rest\/v1\/call_outcomes$/.test(c.url));
+check('a valid call is saved', res.statusCode === 200 && res.payload.ok === true && Boolean(write));
+check('only the call fields are written',
+  Boolean(write) && Object.keys(write.body).sort().join() === 'call_date,note,objection,offer,outcome,taken_by');
+
+for (const [label, patch, expect] of [
+  ['a lost call with no objection', { objection: '' }, /objection/],
+  ['a no-show with an objection', { outcome: 'no_show' }, /no-show/],
+  ['an unknown outcome', { outcome: 'ghosted' }, /outcome/],
+  ['an unknown caller', { taken_by: 'bob' }, /taken_by/],
+  ['an unknown offer', { offer: 'logo_design' }, /offer/],
+  ['an unknown objection', { objection: 'vibes' }, /objection/],
+  ['a malformed date', { call_date: '9/15/26' }, /call_date/],
+  ['a date far in the future', { call_date: '2099-01-01' }, /future/],
+  ['a note with an email in it', { note: 'reach her at jane@example.com' }, /email/],
+  ['a note with a phone number in it', { note: 'call back on 818 555 0100' }, /phone/],
+  ['a note over 280 characters', { note: 'x'.repeat(281) }, /280/]
+]) {
+  n = calls.length;
+  res = await request({ method: 'POST', body: { ...goodCall, ...patch }, cookie });
+  check(`${label} is refused before the database`,
+    res.statusCode === 400 && expect.test(res.payload.error || '') && calls.length === n,
+    res.payload.error);
+}
+
+res = await request({ method: 'POST', body: { ...goodCall, outcome: 'no_show', objection: null, note: '' }, cookie });
+check('a no-show with no objection is fine', res.statusCode === 200);
+res = await request({ method: 'POST', body: { ...goodCall, outcome: 'follow_up', objection: 'timing', offer: '' }, cookie });
+check('a follow-up may carry an objection and no offer', res.statusCode === 200);
+res = await request({ method: 'POST', body: { ...goodCall, note: '$7,500 pilot, 10 episodes, 50 clips' }, cookie });
+check('ordinary deal numbers in a note are allowed', res.statusCode === 200, res.payload.error);
+
+n = calls.length;
+res = await request({ method: 'POST', body: { action: 'delete_call', id: CALL_ROWS[0].id } });
+check('deleting without a session is refused', res.statusCode === 401 && calls.length === n);
+res = await request({ method: 'POST', body: { action: 'delete_call', id: "x' or 1=1" }, cookie });
+check('a malformed id is refused before the database', res.statusCode === 400 && calls.length === n);
+res = await request({ method: 'POST', body: { action: 'delete_call', id: CALL_ROWS[0].id }, cookie });
+made = calls.slice(n);
+check('a call can be deleted by id',
+  res.statusCode === 200 && made.some((c) => c.method === 'DELETE' && c.url.endsWith(`id=eq.${CALL_ROWS[0].id}`)));
+deleteFinds = 0;
+res = await request({ method: 'POST', body: { action: 'delete_call', id: CALL_ROWS[0].id }, cookie });
+check('deleting a call that is gone is a 404', res.statusCode === 404);
+deleteFinds = 1;
 
 console.log('\n\x1b[1mSIGN OUT AND THROTTLE\x1b[0m');
 res = await request({ method: 'POST', body: { action: 'logout' }, cookie });
