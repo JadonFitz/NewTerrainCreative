@@ -550,12 +550,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
        names into iClosed's booking records and our own reporting. */
     if (offerId) set('offer', offerId);
 
-    /* /sprint sends pkg=eight or pkg=fifteen so the call opens already
-       knowing which package they clicked. It is a hint for the call, not
-       a commitment: scope is confirmed on the call either way. */
+    /* /sprint sends pkg=eight, pkg=fifteen or pkg=thirty (The Thirty,
+       21 Oct 2026) so the call opens already knowing which package they
+       clicked. It is a hint for the call, not a commitment: scope is
+       confirmed on the call either way. */
     var pkg = (new URLSearchParams(window.location.search).get('pkg') || '')
                 .trim().toLowerCase();
-    if (pkg === 'eight' || pkg === 'fifteen') set('pkg', pkg);
+    if (pkg === 'eight' || pkg === 'fifteen' || pkg === 'thirty') set('pkg', pkg);
 
     /* /next-step's "Book a short Sprint call" (20 Oct 2026). Forwarded so
        it lands in the webhook's `tracking` object, which then sends the
@@ -615,7 +616,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       leave: [
         ['What is working', 'in your current creative, and what is not'],
         ['Three angles', 'to build the next campaign around'],
-        ['The Eight or the Fifteen,', 'and why'],
+        ['The Eight, the Fifteen or the Thirty,', 'and why'],
         ['What we would shoot', ''],
         ['Your exact price', 'and the next open production window']
       ],

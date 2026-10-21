@@ -12,6 +12,7 @@ Five checks, all local, none of which touch the network:
   4. Routes   · every internal href resolves to a real page
   5. Deploy   · nothing private is missing from .vercelignore
   6. Handlers · both acquisition forms end to end
+  7. Grants   · every new table grants service_role, none grant anon
 
 Exit status is non-zero if any check fails, so this is safe to gate on.
 
@@ -475,6 +476,34 @@ for test, label in (
     else:
         fails = [l.strip() for l in r.stdout.splitlines() if '\u2717' in l]
         bad(f'{test} failed\n      ' + '\n      '.join(fails))
+
+
+# ── 7 · migration grants ──────────────────────────────────────────────
+# From 30 Oct 2026 Supabase no longer grants Data API access to new
+# tables in public. A table created without an explicit grant is
+# unreachable through PostgREST, and the first sign is a production write
+# failing. See supabase/migrations/README.md: service_role only, never anon.
+head('7 · Migration grants')
+# Created before the change, so they keep the grants they were born with.
+PRE_GRANT_TABLES = {'leads', 'funnel_events', 'campaign_daily_metrics'}
+_sql = ''
+for f in sorted((ROOT / 'supabase' / 'migrations').glob('*.sql')):
+    # Comments out first: the files explain grants in prose.
+    _sql += re.sub(r'--[^\n]*', '', f.read_text(encoding='utf-8')) + '\n'
+_created = set(re.findall(
+    r'create\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?"?(\w+)"?', _sql, re.I))
+_granted = set()
+for tables, roles in re.findall(
+        r'grant\s+[\w\s,]+?\s+on\s+(?:table\s+)?([\w.,\s"]+?)\s+to\s+([\w\s,]+?);', _sql, re.I):
+    if 'service_role' in roles.lower():
+        _granted.update(t.strip().strip('"').split('.')[-1]
+                        for t in tables.split(','))
+_missing = sorted(_created - _granted - PRE_GRANT_TABLES)
+bad('table(s) with no service_role grant: ' + ', '.join(_missing)) if _missing \
+    else ok(f'every new table grants service_role ({len(_created)} tables checked)')
+_anon = re.findall(r'grant\s[^;]*?\bto\s[^;]*\b(?:anon|authenticated)\b[^;]*;', _sql, re.I)
+bad('a migration grants to anon or authenticated: ' + _anon[0].strip()[:80]) if _anon \
+    else ok('no migration grants anon or authenticated')
 
 
 # ── verdict ───────────────────────────────────────────────────────────
