@@ -14,6 +14,18 @@
 | `vsl_play` | The click that starts a VSL | First party + Meta custom `VSLPlay` |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
+| `breakdown_start` | `/breakdown` form submitted, after client checks pass | First party + Meta custom `BreakdownStart` |
+| `breakdown_view` | A `/breakdown` result rendered on screen | First party + Meta custom `BreakdownView` |
+| (none) | A `/breakdown` result the agent marks `qualified: true` | Meta `Lead` only, `offer: breakdown_show` or `breakdown_ads`, once per token |
+| (none) | `/next-step` Sprint Stripe button clicked | Meta custom `NextStepSprintCheckout` only (`package`, `source` = the `?from=` form) |
+| (none) | `/next-step` "Book a short Sprint call" clicked | Meta custom `NextStepSprintCall` only. `/strategy-call?from=next-step` then fires no `ViewContent` |
+| `schedule` | Sprint call booked from `/next-step` | First party row tagged `metadata.from = next-step`; Meta gets custom `NextStepSprintBooked` (browser and webhook, same booking id) **instead of** `Schedule` |
+| (none) | `/next-step` project form sent | Meta custom `ProductionInquiry` only; the lead row is `form_type = production_inquiry` |
+
+`/next-step` (was `/production-inquiry`) is where the iClosed booking forms
+send leads under their floor. Nothing from it reaches Meta as a standard
+event, so turned-away leads never train the campaigns. Stripe payments
+started there carry `client_reference_id = next-step_<from>`.
 
 Browser and server copies of `Lead` and `SubmitApplication` share the same
 event ID for Meta deduplication. Neither conversion fires unless Supabase or
@@ -148,6 +160,30 @@ its own: its one action is the Story Session booking, written by
 `/api/iclosed-webhook` as `brand_builder` once the event in
 `docs/ICLOSED-BRAND-BUILDER.md` exists. Until then it books the Growth
 event and files as `paid_retainer`.
+
+## The free breakdown
+
+`/breakdown?for=show` (Free Show Breakdown, linked from both Brand Builder
+pages) and `/breakdown?for=ads` (Free Ad Breakdown, linked from `/grow`)
+are a lead magnet. The page posts to the agent through the `/b/` rewrite
+in `vercel.json`; the agent stores the lead and the breakdown, and owns
+qualification. Browser events file under the `breakdown` funnel.
+
+- `BreakdownStart` fires on a submit that passed the client checks, with
+  `kind`, `revenue` and `investment`. `BreakdownView` fires when a result
+  renders, with `kind` and `qualified`. Both are custom so neither
+  optimises as a lead.
+- The standard `Lead` fires only when the result says `qualified: true`,
+  once per breakdown token (remembered in `ntc_breakdown_lead`), with the
+  event ID `breakdown-lead-<token>`. If the agent sends a Conversions API
+  copy it must use the same ID to deduplicate. `Lead` is not stored first
+  party from the browser; the agent's records are the source for counts.
+- Build the custom conversion on `offer` = `breakdown_show` or
+  `breakdown_ads`, not on `Lead` alone, for the same reason as the
+  funnels below.
+- A `?t=<token>` link (the agent emails it when a queued breakdown
+  finishes) is lifted out of the address before the pixel loads, so a
+  token never reaches Meta in a page URL.
 
 ## No booking without qualification
 

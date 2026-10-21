@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brand Builder · New Terrain Creative. Is your life a movie?</title>
-<meta name="description" content="Cinematic personal brands for Los Angeles founders, made by an award-winning filmmaker duo: longform, short-form and ads in one production.">
+<meta name="description" content="Your own show, built to bring in clients. Cinematic personal brands for Los Angeles founders: longform, short-form and ads in one production.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="New Terrain Creative · Brand Builder">
 <meta property="og:description" content="Is your life a movie? Cinematic personal brands for Los Angeles founders.">
@@ -1200,6 +1200,22 @@
   .show-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
   .show-body { font-size: 13.5px; line-height: 1.85; color: #A09890; max-width: 640px; }
   .show-body b { color: var(--parchment); font-weight: 500; }
+  .show-note, .show-lead + .show-body { margin-top: 12px; grid-column: 2; }
+  @media (max-width: 860px) { .show-note, .show-lead + .show-body { grid-column: auto; margin-top: 0; } }
+  div.show-body p + p, div.show-body p + .pilot-cards, div.show-body .pilot-cards + p { margin-top: 18px; }
+  /* ── THE PILOT · two formats, studio and field (13 Oct 2026) ── */
+  .pilot-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pilot-card { border: 1px solid var(--line); padding: 24px 22px 22px; }
+  .pilot-kicker { display: block; margin-bottom: 10px; font-family: var(--body); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
+  .pilot-name { font-family: var(--display); font-size: 24px; font-weight: 300; color: var(--parchment); line-height: 1.15; margin: 0 0 10px; }
+  .pilot-name em { font-style: italic; color: var(--gold); }
+  .pilot-fit { font-size: 13px; line-height: 1.75; color: #A09890; margin: 0 0 14px; }
+  .pilot-list { list-style: none; padding: 0; margin: 0; }
+  .pilot-list li { font-size: 13px; line-height: 1.7; color: #A09890; padding: 7px 0 7px 16px; position: relative; border-top: 1px solid var(--line); }
+  .pilot-list li::before { content: ''; position: absolute; left: 0; top: 17px; width: 6px; height: 1px; background: var(--gold); }
+  .pilot-list b { color: var(--parchment); font-weight: 500; }
+  .pilot-more { font-size: 12px; line-height: 1.7; color: var(--muted); margin: 14px 0 0; }
+  @media (max-width: 700px) { .pilot-cards { grid-template-columns: 1fr; } }
 
   /* ── CASE STUDIES ── */
   .case-grid {
@@ -1298,11 +1314,27 @@
     <div class="bb-hero-copy">
       <div class="eyebrow reveal">Award-winning filmmakers · For Los Angeles founders</div>
       <h1 class="title reveal">Is your life<br>a <em>movie?</em></h1>
+      <script>
+        /* Ad match: an ad can ask for its own headline with ?utm_content=.
+           Runs inline, before first paint, so there is no flash of the
+           default. Any other value keeps "Is your life a movie?". The same table is on
+           /brand-builder and /brand-builder-pro. */
+        (function () {
+          var heads = {
+            bb17: 'Does your business<br>have <em>a face?</em>'
+          };
+          try {
+            var k = new URLSearchParams(location.search).get('utm_content');
+            var h = k && heads[k.toLowerCase()];
+            if (h) document.currentScript.previousElementSibling.innerHTML = h;
+          } catch (e) {}
+        })();
+      </script>
       <p class="hero-sub reveal">We turn founders into personal brands people actually follow. <b>Shot like film, built to grow the business.</b></p>
       <div class="hero-ctas reveal">
         <a class="btn btn--gold" data-cta="hero" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
       </div>
-      <p class="bb-cta-note reveal">30 minutes with Jadon and Meghan. Nothing is due to book.</p>
+      <p class="bb-cta-note reveal">30 minutes with our team. Nothing is due to book.</p>
     </div>
   </section>
 </div>
@@ -1345,32 +1377,6 @@
   <p class="bb-cite-line reveal"><b>82%</b> of people are more likely to trust a company whose CEO and leadership are active on social media, and 77% are more likely to buy from it. <a href="https://csrwire.com/press-release/brandfog-survey-reveals-that-ceo-engagement-on-social-media-positively-impacts-brand-image-trust-and-purchase-intent/" target="_blank" rel="noopener">BRANDfog survey, 2014</a></p>
 </div>
 
-<!-- PROOF · the two founder brands.
-     Numbers and wording are the ones already published on / and /grow.
-     If one changes there, change it here in the same commit. -->
-<section id="cases">
-  <div class="eyebrow reveal">Proof</div>
-  <h2 class="title reveal">Two attorneys with firms to run.<br>Two <em>followings.</em></h2>
-
-  <div class="case-grid">
-    <article class="case reveal">
-      <span class="case-tier">Longform · Short-form · Documentary</span>
-      <h3 class="case-name">Mike Alder</h3>
-      <div class="case-num">58K+</div>
-      <div class="case-label">Followers on his feed</div>
-      <p class="case-desc"><b>We shot and edited the high-end content behind an attorney's personal brand:</b> educational short-form and documentary-style work for the lawyer behind $3.1B+ in settlements.</p>
-      <a class="case-link" href="https://www.instagram.com/mike.alder/" target="_blank" rel="noopener">See his feed ↗</a>
-    </article>
-    <article class="case reveal">
-      <span class="case-tier">Podcast · Short-form</span>
-      <h3 class="case-name">Gina Zapanta</h3>
-      <div class="case-num">101K+</div>
-      <div class="case-label">Combined following</div>
-      <p class="case-desc">A podcast and short-form engine across Instagram, YouTube and TikTok, <b>built episode by episode around her voice,</b> not a content calendar template.</p>
-      <a class="case-link" href="https://www.instagram.com/ginazapanta_/" target="_blank" rel="noopener">See her feed ↗</a>
-    </article>
-  </div>
-</section>
 
 <!-- THE REEL -->
 <!--
@@ -1777,41 +1783,50 @@
   <div class="eyebrow reveal">Why One Team</div>
   <h2 class="title reveal">One team.<br>Not five <em>freelancers.</em></h2>
   <p class="lede reveal">Everybody knows content is king. What wins now is the mix: <b>film-level polish and raw, real moments,</b> from the same team, to the same standard.</p>
-  <div class="crew-grid">
-    <div class="crew-item reveal"><span class="crew-kicker">Cinema</span><p><b>Founder films and longform.</b> Interviews, episodes and the story behind the business.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Ads</span><p><b>Short cuts built to sell.</b> Cut from your strongest moments, with paid media run for you on the retainer.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Raw</span><p><b>Day in the life.</b> The unpolished, real content that makes people feel like they know you.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Posted</span><p><b>We run your channels.</b> The content goes out on your own accounts, every month, so nothing sits in a folder.</p></div>
-    <div class="crew-item reveal"><span class="crew-kicker">Behind it</span><p><b>The conversion setup.</b> Landing-page flow, lead routing into your CRM and conversion tracking, built and managed with the retainer.</p></div>
-  </div>
   <p class="crew-note reveal">One crew, one standard, one point of contact. <b>Not a videographer, an editor, a social media person and an ads guy who never talk to each other.</b></p>
 </section>
 
-<!-- THE METHOD · Pilot, then Series.
-     The Pilot's price and scope are declared in assets/offer.js
-     brandBuilder.pilot, and scripts/check-offer.py lets that one figure
-     onto this page. Change it there first. It appears here ONCE, as a
-     filter before the call, and carries no button of its own.
-
-     Brand Builder carries no price and no counts, like every retainer
-     on the site, and every line restates offer.js publicGuideTiers
-     'Brand Builder'. -->
+<!-- THE METHOD · Pilot, then Series. Slimmed Oct 16, 2026 (Jadon): no
+     prices on the page, short cards, the call does the rest. Counts restate
+     assets/offer.js brandBuilder.pilot and brandBuilder.fieldPilot. -->
 <section id="method">
   <div class="eyebrow reveal">How It Works</div>
   <h2 class="title reveal">Pilot, then <em>series.</em></h2>
-  <p class="lede reveal">Nobody greenlights a show without a pilot. <b>You should not have to either.</b></p>
   <div class="show-rows">
     <div class="show-row reveal">
       <div class="show-part"><span class="show-kicker">Step one · 30 minutes</span>The <em>story</em></div>
       <p class="show-body"><b>The Story Session.</b> We find what only you can say, and tell you straight whether it carries a brand.</p>
     </div>
     <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Step two · $7,500, one time</span>The <em>pilot</em></div>
-      <p class="show-body"><b>10 longform episodes and 49 short-form clips</b> cut from them. Plus one Signature Hero Ad, premium playbook content, organic posting on your channels for the month, and a 90-day gameplan. <b>Hire us to run it, or run it without us. It is yours either way.</b></p>
+      <div class="show-part"><span class="show-kicker">Step two · one month</span>The <em>pilot</em></div>
+      <div class="show-body">
+        <p><b>Try a month of your show before you commit.</b></p>
+        <div class="pilot-cards">
+          <div class="pilot-card">
+            <span class="pilot-kicker">Studio</span>
+            <h3 class="pilot-name">Across a <em>table</em></h3>
+            <ul class="pilot-list">
+              <li><b>6 sit-down or podcast episodes</b></li>
+              <li><b>24 short-form clips</b></li>
+              <li><b>1 Signature Hero Ad</b></li>
+            </ul>
+          </div>
+          <div class="pilot-card">
+            <span class="pilot-kicker">Field</span>
+            <h3 class="pilot-name">Where the <em>work</em> happens</h3>
+            <ul class="pilot-list">
+              <li><b>4 episodes:</b> 3 vlog-style, 1 sit-down</li>
+              <li><b>30 short-form clips</b></li>
+              <li><b>1 Signature Hero Ad</b></li>
+            </ul>
+          </div>
+        </div>
+        <p>Both include posting on your channels and a 90-day gameplan you keep either way.</p>
+      </div>
     </div>
     <div class="show-row reveal">
-      <div class="show-part"><span class="show-kicker">Step three · by application</span>The <em>series</em></div>
-      <p class="show-body"><b>Brand Builder,</b> our flagship monthly production: the same episodes and clips every month, plus the ads, with paid media management and the conversion setup run for you, and your channels posted every month. Scoped on the call, three month minimum.</p>
+      <div class="show-part"><span class="show-kicker">Step three · monthly</span>The <em>series</em></div>
+      <p class="show-body"><b>Your own show, every month,</b> with or without ads run for you. Scoped on the call.</p>
     </div>
   </div>
 </section>
@@ -1859,7 +1874,7 @@
   <div class="qa-list reveal">
     <details class="qa">
       <summary class="qa-q">I am not good on camera.</summary>
-      <p class="qa-a"><b>Almost nobody is on the first take.</b> That is what directing is for. Meghan has spent two decades performing and Jadon directs actors for a living. No crew stands around watching.</p>
+      <p class="qa-a"><b>Almost nobody is on the first take.</b> That is what directing is for. The people directing you have spent decades on both sides of the camera. No crew stands around watching.</p>
     </details>
     <details class="qa">
       <summary class="qa-q">I already post content.</summary>
@@ -1880,13 +1895,14 @@
 <section id="close">
   <figure class="bb-still reveal">
     <img src="assets/brand-builder-onset.jpg" width="1800" height="1200" alt="Meghan Carrasquillo framing a shot with her hands on set while Jadon Cal Fitzpatrick looks on" loading="lazy">
-    <figcaption><b>Meghan Carrasquillo and Jadon Cal Fitzpatrick</b> · on set · you talk to them directly, not an account manager</figcaption>
+    <figcaption><b>Our team on set</b> · you work with the filmmakers, not an account manager</figcaption>
   </figure>
   <h2 class="title reveal" style="margin-top:80px">Let's make<br>your <em>movie.</em></h2>
   <div class="close-ctas reveal">
     <a class="btn btn--gold" data-cta="close" href="/strategy-call?offer=brand-builder">Claim your Story Session</a>
+    <a class="btn btn--ghost" data-cta="breakdown" href="/breakdown?for=show">Free Show Breakdown</a>
   </div>
-  <p class="bb-ps reveal"><b>P.S.</b> The short version: thirty minutes with two award-winning filmmakers. You leave with a straight read on your brand and three story angles, whether or not we ever work together. If it fits, the Pilot is $7,500, one time, and the plan is yours to keep. Your competitors are on camera this week either way.</p>
+  <p class="bb-ps reveal"><b>P.S.</b> Thirty minutes with our team. You leave with a straight read on your brand and three story angles, whether or not we ever work together.</p>
   <div class="mail-row reveal" style="margin-top:28px;justify-content:center">
     <a class="close-mail" href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
     <a class="close-mail" href="tel:+18182668213">Call or text (818) 266-8213</a>

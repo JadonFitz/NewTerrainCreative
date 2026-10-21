@@ -1,10 +1,16 @@
 /* ══════════════════════════════════════════════════════════════════════
    POST /api/production-inquiry  ·  one-time production inquiry
    ──────────────────────────────────────────────────────────────────────
-   The form at /production-inquiry, where the Brand Builder application in
-   iClosed sends anyone under its monthly budget floor. A one-off project,
-   not a retainer, so it is stored as its own form_type and never counted
-   with retainer leads.
+   The project form on /next-step (was /production-inquiry until 20 Oct
+   2026, which now redirects there), where the iClosed booking forms send
+   anyone under their floor. A one-off project, not a retainer, so it is
+   stored as its own form_type and never counted with retainer leads.
+   The endpoint, the form id and the payload kept their old names on
+   purpose: renaming them would only break in-flight submissions.
+   Since 20 Oct 2026 the page no longer asks for business_name or
+   timeline. Both are still accepted, and checked when present, so an
+   older tab can still submit; when empty they are left out of the email
+   and stored as null.
 
    Store first. Unlike /api/project, a failed write is an error here: the
    page then shows the fallback email, so nothing depends on the alert
@@ -37,6 +43,7 @@ const FORM_TYPE = 'production_inquiry';
 const DUPLICATE_WINDOW_MS = 10 * 60 * 1000;
 
 // The page's visible labels, exactly. Anything else is refused.
+// timeline is optional (see OPTIONAL_CHOICES): an empty one is fine.
 export const CHOICES = {
   production_type: ['Commercial or brand video', 'Social media content',
                     'Podcast or interview', 'Other production'],
@@ -51,8 +58,9 @@ export const PRIORITY = {
   '$10,000+': 'high'
 };
 
-const REQUIRED = ['full_name', 'email', 'phone', 'business_name', 'production_type',
-                  'budget_range', 'timeline', 'project_description'];
+const REQUIRED = ['full_name', 'email', 'phone', 'production_type',
+                  'budget_range', 'project_description'];
+const OPTIONAL_CHOICES = new Set(['timeline']);
 
 // Every string the page sends, with its longest acceptable length.
 const CAPS = {
@@ -92,7 +100,8 @@ export function validate(d) {
   if (v.phone.replace(/\D/g, '').length < 7) {
     return { status: 400, error: 'Invalid phone', fields: ['phone'] };
   }
-  const badChoice = Object.keys(CHOICES).filter((k) => !CHOICES[k].includes(v[k]));
+  const badChoice = Object.keys(CHOICES).filter((k) =>
+    !(OPTIONAL_CHOICES.has(k) && !v[k]) && !CHOICES[k].includes(v[k]));
   if (badChoice.length) return { status: 400, error: 'Invalid choice', fields: badChoice };
 
   return { lead: { ...v, priority: PRIORITY[v.budget_range] } };
@@ -132,7 +141,7 @@ function emailBody(lead) {
     ['Production', lead.production_type],
     ['Budget', lead.budget_range],
     ['Timeline', lead.timeline]
-  ];
+  ].filter(([, val]) => val);
   const rest = [
     ['Email', lead.email], ['Phone', lead.phone],
     ['Website or Instagram', lead.website_or_instagram],
@@ -151,7 +160,7 @@ function emailBody(lead) {
 
   return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px">
     <p style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8A6A28;margin:0 0 14px">One-time production inquiry</p>
-    <p style="margin:0 0 18px;padding:11px 15px;background:${tone[0]};border-left:3px solid ${tone[1]};color:${tone[2]};font-size:13px"><b>${esc(PRIORITY_LABEL[lead.priority])} priority</b> · ${esc(lead.budget_range)} · ${esc(lead.timeline)}</p>
+    <p style="margin:0 0 18px;padding:11px 15px;background:${tone[0]};border-left:3px solid ${tone[1]};color:${tone[2]};font-size:13px"><b>${esc(PRIORITY_LABEL[lead.priority])} priority</b> · ${[lead.budget_range, lead.timeline].filter(Boolean).map(esc).join(' · ')}</p>
     <table style="border-collapse:collapse;width:100%">${head.map(row).join('')}</table>
     <hr style="border:0;border-top:1px solid #E6E1DA;margin:14px 0">
     <table style="border-collapse:collapse;width:100%">${rest.filter(([, val]) => val).map(row).join('')}</table>
@@ -217,9 +226,9 @@ export default async function handler(req, res) {
       status: 'new',
       priority: lead.priority,
       name: lead.full_name, email: lead.email, phone: lead.phone,
-      business: lead.business_name, website: lead.website_or_instagram,
+      business: lead.business_name || null, website: lead.website_or_instagram,
       project_type: lead.production_type, project_scope: lead.project_description,
-      desired_start: lead.timeline, budget_band: lead.budget_range,
+      desired_start: lead.timeline || null, budget_band: lead.budget_range,
       entry_point: lead.source,
       utm_source: lead.utm_source, utm_medium: lead.utm_medium,
       utm_campaign: lead.utm_campaign, utm_content: lead.utm_content,
@@ -232,9 +241,13 @@ export default async function handler(req, res) {
   if (!leadId) return res.status(500).json({ error: 'Could not save' });
 
   // ── 3 · after this point nothing can fail the request ────────────────
+  // The subject names the business, else the website or Instagram, else
+  // just the person.
+  const who = lead.business_name || lead.website_or_instagram;
   try {
     await notify(
-      `[${PRIORITY_LABEL[lead.priority]}] Production inquiry · ${lead.full_name.slice(0, 60)} · ${lead.business_name.slice(0, 60)}`,
+      `[${PRIORITY_LABEL[lead.priority]}] Production inquiry · ${lead.full_name.slice(0, 60)}` +
+        (who ? ` · ${who.slice(0, 60)}` : ''),
       emailBody(lead), lead.email);
   } catch (e) {
     console.error('production inquiry notify failed', (e && e.message) || e);

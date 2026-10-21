@@ -157,6 +157,19 @@ res = await request(booking({
 made = calls.slice(n);
 check('a renamed event still files by its slug', supa(made)[0]?.body?.funnel === 'brand_builder');
 
+console.info('\n\x1b[1mTHE 5-DAY TRIAL IS ITS OWN OFFER\x1b[0m');
+// "5-Day Trial Call" names neither growth nor strategy, and fell through
+// to paid_retainer before it had its own case.
+n = calls.length;
+res = await request(booking({
+  event: { callPreviewId: 'call_trialPest01', uuid: 2661142 },
+  event_type: { name: '5-Day Trial Call', slug: 'pest-control-trial' }
+}));
+made = calls.slice(n);
+check('a 5-Day Trial Call booking files under trial_pest_control',
+  supa(made)[0]?.body?.funnel === 'trial_pest_control' && supa(made)[0]?.body?.metadata?.offer === 'trial_pest_control');
+check('and tells Meta it was the trial', meta(made)[0]?.body.data[0].custom_data?.offer === 'trial_pest_control');
+
 console.info('\n\x1b[1mATTRIBUTION · THE CLICK, NOT JUST THE PERSON\x1b[0m');
 // Regression: until 10 Oct 2026 the server Schedule carried only hashed
 // contact details, so Meta could match the booker but not the click, and
@@ -226,6 +239,46 @@ res = await request(booking());
 made = calls.slice(n);
 check('a database failure still answers 200', res.statusCode === 200 && res.payload.stored === false);
 check('and does not cost the Meta conversion', meta(made).length === 1 && res.payload.sent === true);
+
+supabaseStatus = 201;
+console.info('\n\x1b[1mREBOOKING · RESCHEDULED CALL\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_rebook1234' }, event_type: { name: 'Rescheduled Call' } }));
+made = calls.slice(n);
+check('a rebooking answers 200', res.statusCode === 200 && res.payload.noted === 'rebooking');
+check('it stores no second row', supa(made).length === 0);
+check('it sends Meta no second Schedule', meta(made).length === 0);
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_rebook5678' }, event_type: { name: 'Renamed', slug: 'rescheduled-call' } }));
+check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
+
+console.info('\n\x1b[1mQUICK FOLLOW-UP\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_follow1234' }, event_type: { name: 'Quick Follow-Up' } }));
+check('a follow-up is noted, not counted', res.payload.noted === 'rebooking' && calls.length === n);
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_follow5678' }, event_type: { name: 'Renamed', slug: 'quick-follow-up' } }));
+check('matched on the slug too', res.payload.noted === 'rebooking' && calls.length === n);
+
+// A Sprint call booked from /next-step (20 Oct 2026): stored and tagged,
+// but Meta gets the custom NextStepSprintBooked, never Schedule.
+console.info('\n\x1b[1mBOOKED FROM /next-step\x1b[0m');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_nextstep01' },
+  tracking: { utm_source: 'meta', utm_campaign: 'bb-oct', offer: 'ad-sprint', from: 'next-step' } }));
+made = calls.slice(n);
+check('a next-step booking still stores one schedule row',
+  supa(made).length === 1 && supa(made)[0]?.body?.event_name === 'schedule');
+check('tagged from next-step', supa(made)[0]?.body?.metadata?.from === 'next-step');
+check('Meta gets NextStepSprintBooked, not Schedule',
+  meta(made).length === 1 && meta(made)[0].body.data[0].event_name === 'NextStepSprintBooked');
+check('keyed on the booking id', meta(made)[0]?.body.data[0].event_id === 'call_nextstep01');
+n = calls.length;
+res = await request(booking({ event: { callPreviewId: 'call_nextstep02' },
+  tracking: { from: 'somewhere-else' } }));
+made = calls.slice(n);
+check('any other from still sends Schedule',
+  meta(made)[0]?.body.data[0].event_name === 'Schedule' && supa(made)[0]?.body?.metadata?.from === undefined);
 
 // The public endpoint must still refuse the name this handler now writes.
 const trackSource = await (await import('node:fs/promises')).readFile(
