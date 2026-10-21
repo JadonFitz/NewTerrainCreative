@@ -1,0 +1,25 @@
+{
+  "telemetry": false,
+  "detector": {
+    "ignoreRules": [
+      "italic-serif-display",
+      "wide-tracking",
+      "kicker-above-heading",
+      "hero-eyebrow-chip"
+    ],
+    "ignoreFiles": [
+      ".claude/**",
+      "docs/**",
+      "scripts/**",
+      "supabase/**"
+    ],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-17T16:31:40.163Z",
+        "reason": "NTC brand body font"
+      }
+    ]
+  }
+}

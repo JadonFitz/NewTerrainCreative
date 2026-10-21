@@ -63,6 +63,16 @@ check('creates stable event ids', Boolean(viewId && clickId && viewId !== clickI
 check('ViewContent uses a standard Meta event', pixel[0]?.[0] === 'track' && pixel[0]?.[1] === 'ViewContent');
 check('CTAClick uses a custom Meta event', pixel[1]?.[0] === 'trackCustom' && pixel[1]?.[1] === 'CTAClick');
 check('first-party-only events never reach Meta', pixel.length === beforeInternal);
+{
+  // /next-step (20 Oct 2026): every event from the bridge page is custom.
+  const before = pixel.length;
+  for (const name of ['NextStepSprintCheckout', 'NextStepSprintCall', 'NextStepSprintBooked', 'ProductionInquiry']) {
+    window.ntc.track(name, { offer: 'ad_sprint' }, { once: false });
+  }
+  const sent = pixel.slice(before);
+  check('/next-step events are all custom Meta events',
+    sent.length === 4 && sent.every((p) => p[0] === 'trackCustom'));
+}
 
 const view = requests.find((r) => r.body.event_name === 'view_content')?.body;
 const click = requests.find((r) => r.body.event_name === 'cta_click')?.body;
@@ -96,6 +106,20 @@ check('milestones fire once each, up to the point watched',
 check('milestones carry offer, video and percent',
   half[0]?.body.metadata?.offer === 'ad_sprint' && half[0]?.body.metadata?.video_name === 'ad_sprint_vsl' &&
   half[0]?.body.metadata?.percent === 50 && pixelVsl[2]?.[2]?.video_name === 'ad_sprint_vsl');
+
+// /breakdown: its own funnel, and its start and view events are custom
+// so neither can be mistaken for the standard Lead a qualified result fires.
+check('assigns the breakdown funnel from /breakdown',
+  funnelAt('/breakdown') === 'breakdown' && funnelAt('/breakdown.html') === 'breakdown');
+window.ntc.track('BreakdownStart', { kind: 'show' });
+window.ntc.track('BreakdownView', { kind: 'show', qualified: false });
+await new Promise((resolve) => setTimeout(resolve, 0));
+const pixelBd = pixel.filter((a) => /^Breakdown/.test(a[1]));
+check('BreakdownStart and BreakdownView are custom Meta events',
+  pixelBd.length === 2 && pixelBd.every((a) => a[0] === 'trackCustom'));
+check('breakdown events are stored first party',
+  requests.some((r) => r.body.event_name === 'breakdown_start') &&
+  requests.some((r) => r.body.event_name === 'breakdown_view'));
 
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · browser events are attributable and correctly routed'

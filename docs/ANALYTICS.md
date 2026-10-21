@@ -14,6 +14,18 @@
 | `vsl_play` | The click that starts a VSL | First party + Meta custom `VSLPlay` |
 | `vsl_25/50/75/90` | Native VSL playback milestone | First party + matching Meta custom event |
 | `sales_deck_view` | Unlisted growth guide opened | First party only |
+| `breakdown_start` | `/breakdown` form submitted, after client checks pass | First party + Meta custom `BreakdownStart` |
+| `breakdown_view` | A `/breakdown` result rendered on screen | First party + Meta custom `BreakdownView` |
+| (none) | A `/breakdown` result the agent marks `qualified: true` | Meta `Lead` only, `offer: breakdown_show` or `breakdown_ads`, once per token |
+| (none) | `/next-step` Sprint Stripe button clicked | Meta custom `NextStepSprintCheckout` only (`package`, `source` = the `?from=` form) |
+| (none) | `/next-step` "Book a short Sprint call" clicked | Meta custom `NextStepSprintCall` only. `/strategy-call?from=next-step` then fires no `ViewContent` |
+| `schedule` | Sprint call booked from `/next-step` | First party row tagged `metadata.from = next-step`; Meta gets custom `NextStepSprintBooked` (browser and webhook, same booking id) **instead of** `Schedule` |
+| (none) | `/next-step` project form sent | Meta custom `ProductionInquiry` only; the lead row is `form_type = production_inquiry` |
+
+`/next-step` (was `/production-inquiry`) is where the iClosed booking forms
+send leads under their floor. Nothing from it reaches Meta as a standard
+event, so turned-away leads never train the campaigns. Stripe payments
+started there carry `client_reference_id = next-step_<from>`.
 
 Browser and server copies of `Lead` and `SubmitApplication` share the same
 event ID for Meta deduplication. Neither conversion fires unless Supabase or
@@ -32,7 +44,7 @@ Use this URL pattern for every ad:
 https://www.newterraincreative.com/grow?utm_source=meta&utm_medium=paid-social&utm_campaign=<campaign>&utm_content=<ad>
 ```
 
-Use `/founding` instead of `/grow` for the Founding Three campaign. Campaign
+Use `/founding` instead of `/grow` for the Founding Three campaign. Add `&v=contractor` or `&v=dental` to a Founding ad's URL parameters to open the page on that trade's wording; without it the page reads the trade from the ad name in `utm_content` (see the variants script in `founding.html`). `ViewContent` and `CTAClick` carry the variant. Campaign
 and ad names must match the values exported from Ads Manager, or spend and
 website outcomes will not join in `funnel_performance`.
 
@@ -100,10 +112,20 @@ tracker, and is signed in to with `OWNER_DASHBOARD_PASSWORD`.
 - Days are Pacific time, both ends inclusive.
 
 Bookings carry a campaign only if iClosed passes the UTM values through in
-the webhook's `tracking` object. Its inner keys were never recorded, so
-check the first stored `schedule` row: if `utm_campaign` is missing from
-its metadata, read the key names from the `iclosed-webhook shape` log line
-and add them to `attributionFrom()`.
+the webhook's `tracking` object. The production shape log (10 Oct 2026)
+shows it does, with the keys as we send them (`utm_source` and so on),
+plus iClosed's own `first_utm_*` copies, `offer`, `ntc_session`,
+`landing_page`, `_fbp`, `_fbc` and `fbclid`. The booker's IP arrives as
+`invitee.ip_address`.
+
+The Meta ids and the IP are what make a booking attributable to an ad
+rather than just to a person. The webhook forwards `_fbp` as `fbp`, `_fbc`
+as `fbc` (derived from `fbclid` when the pixel had not written the cookie
+yet, the same way `track.js` does) and `invitee.ip_address` as the client
+IP. Until 10 Oct 2026 it sent none of them, and Ads Manager attributed one
+booking in thirty days while Events Manager warned of low fbc coverage
+from the Conversions API. Bookings from before that date stay
+unattributed; judge the fix on a 7-day click window after it.
 
 ## Remaining live verification
 
@@ -138,6 +160,30 @@ its own: its one action is the Story Session booking, written by
 `/api/iclosed-webhook` as `brand_builder` once the event in
 `docs/ICLOSED-BRAND-BUILDER.md` exists. Until then it books the Growth
 event and files as `paid_retainer`.
+
+## The free breakdown
+
+`/breakdown?for=show` (Free Show Breakdown, linked from both Brand Builder
+pages) and `/breakdown?for=ads` (Free Ad Breakdown, linked from `/grow`)
+are a lead magnet. The page posts to the agent through the `/b/` rewrite
+in `vercel.json`; the agent stores the lead and the breakdown, and owns
+qualification. Browser events file under the `breakdown` funnel.
+
+- `BreakdownStart` fires on a submit that passed the client checks, with
+  `kind`, `revenue` and `investment`. `BreakdownView` fires when a result
+  renders, with `kind` and `qualified`. Both are custom so neither
+  optimises as a lead.
+- The standard `Lead` fires only when the result says `qualified: true`,
+  once per breakdown token (remembered in `ntc_breakdown_lead`), with the
+  event ID `breakdown-lead-<token>`. If the agent sends a Conversions API
+  copy it must use the same ID to deduplicate. `Lead` is not stored first
+  party from the browser; the agent's records are the source for counts.
+- Build the custom conversion on `offer` = `breakdown_show` or
+  `breakdown_ads`, not on `Lead` alone, for the same reason as the
+  funnels below.
+- A `?t=<token>` link (the agent emails it when a queued breakdown
+  finishes) is lifted out of the address before the pixel loads, so a
+  token never reaches Meta in a page URL.
 
 ## No booking without qualification
 

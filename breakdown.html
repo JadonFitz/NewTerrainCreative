@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Show Breakdown · New Terrain Creative</title>
+<meta name="description" content="Enter your website or Instagram and see your brand the way a buyer does, in a free breakdown from New Terrain Creative.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  THE FREE BREAKDOWN · a lead magnet, off the main navigation
+  ──────────────────────────────────────────────────────────────────────
+  /breakdown?for=show  Free Show Breakdown, from /brand-builder(-pro)
+  /breakdown?for=ads   Free Ad Breakdown, from /grow
+  /breakdown?t=<token> one breakdown's result, the link the agent emails
+
+  The breakdown is made by the agent, reached through the /b/ rewrite in
+  vercel.json. All logic is in assets/breakdown.js, which renders model
+  text with textContent only (preflight.py checks that).
+
+  Tracking: custom BreakdownStart on submit and BreakdownView when a
+  result renders. The standard Lead fires only for a result the agent
+  marks qualified, once per token. See docs/ANALYTICS.md.
+
+  No prices on this page. The revenue and investment bands are the
+  visitor's own figures, declared in assets/offer.js.
+  ══════════════════════════════════════════════════════════════════════
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- A ?t= link carries a breakdown token. Lift it out of the address
+     before the pixel reads the page URL, so the token never reaches Meta.
+     assets/breakdown.js picks it up from window.NTC_BREAKDOWN_LINKED. -->
+<script>
+(function () {
+  try {
+    var m = location.search.match(/[?&]t=([0-9a-fA-F]{48})(?:&|$)/);
+    if (!m) return;
+    window.NTC_BREAKDOWN_LINKED = m[1];
+    var p = new URLSearchParams(location.search);
+    p.delete('t');
+    var q = p.toString();
+    history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);
+  } catch (e) {}
+})();
+</script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1634935111618929');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
+<script src="/assets/track.js"></script>
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --black:#0A0A0A; --raised:#101010;
+    --gold:#C8A96E;
+    --parchment:#F5F0E8; --soft:#A09890; --muted:#8B847D;
+    --line:#1e1e1e; --edge:#2c2c2c; --bad:#B4655A;
+    --display:'Cormorant Garamond',Georgia,serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  html, body { min-height:100%; }
+  body {
+    background:var(--black); color:var(--soft);
+    font-family:var(--body); font-weight:300; font-size:14px; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; min-height:100vh;
+  }
+  [hidden] { display:none !important; }
+
+  .bar {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 16px; border-bottom:1px solid var(--line);
+  }
+  .wordmark { font-size:11px; letter-spacing:.34em; text-transform:uppercase; color:var(--parchment); text-decoration:none; }
+  .wordmark span { color:var(--gold); }
+  .bar-link { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .3s; }
+  .bar-link:hover { color:var(--gold); }
+
+  /* Mobile first: one column, 16px gutters. */
+  .breakdown { flex:1; width:100%; max-width:1180px; margin:0 auto; padding:40px 16px 64px; }
+  .breakdown__intro { margin-bottom:36px; }
+
+  .eyebrow { font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  h1 {
+    font-family:var(--display); font-weight:300;
+    font-size:clamp(40px,10vw,64px); line-height:1.02;
+    color:var(--parchment); margin-bottom:20px; text-wrap:balance;
+  }
+  .lede { font-size:15px; line-height:1.85; color:var(--soft); max-width:46ch; }
+  .reassure { margin-top:18px; font-size:12.5px; color:var(--muted); }
+
+  form { display:flex; flex-direction:column; gap:22px; }
+  .row { display:grid; grid-template-columns:1fr; gap:22px; }
+  .q { display:flex; flex-direction:column; gap:8px; min-width:0; border:0; }
+  .q > label, .q legend { font-size:12.5px; color:var(--parchment); font-weight:400; letter-spacing:.02em; }
+  .q legend { margin-bottom:8px; }
+  .opt-tag { color:var(--muted); font-weight:300; }
+  .or { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin:-8px 0; }
+
+  /* 16px on mobile so iOS does not zoom the page on focus. */
+  input[type="text"], input[type="email"], input[type="tel"], input[type="url"] {
+    background:var(--raised); border:1px solid var(--line); color:var(--parchment);
+    font-family:var(--body); font-size:16px; font-weight:300;
+    padding:12px 14px; width:100%; border-radius:0; transition:border-color .25s;
+  }
+  input:focus { outline:none; border-color:var(--gold); }
+  input::placeholder { color:#4a4540; }
+  input[aria-invalid="true"] { border-color:var(--bad); }
+
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { position:relative; }
+  .chip input { position:absolute; opacity:0; width:1px; height:1px; }
+  .chip span {
+    display:block; padding:10px 14px; border:1px solid var(--edge);
+    font-size:13px; color:var(--soft); cursor:pointer; transition:border-color .2s, color .2s;
+  }
+  .chip span:hover { border-color:var(--muted); color:var(--parchment); }
+  .chip input:checked + span { border-color:var(--gold); color:var(--parchment); }
+  .chip input:focus-visible + span { outline:1px solid var(--gold); outline-offset:2px; }
+  .chips[aria-invalid="true"] .chip span { border-color:var(--bad); }
+
+  .check { display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--soft); cursor:pointer; }
+  .check input { margin-top:4px; width:16px; height:16px; accent-color:var(--gold); flex:none; }
+  .legal { font-size:12px; color:var(--muted); }
+  .legal a { color:var(--soft); }
+  .legal a:hover { color:var(--gold); }
+
+  .field-err { font-size:12px; color:var(--bad); }
+  .field-err:empty { display:none; }
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+  .btn {
+    appearance:none; cursor:pointer; border:0; display:inline-block; text-align:center;
+    background:var(--gold); color:var(--black); font-weight:500; text-decoration:none;
+    font-family:var(--body); font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; padding:17px 34px; width:100%;
+    transition:background .3s, color .3s, border-color .3s;
+  }
+  .btn:hover { background:var(--parchment); }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+  .btn:disabled:hover { background:var(--gold); }
+  .btn--ghost { background:transparent; color:var(--parchment); border:1px solid var(--edge); }
+  .btn--ghost:hover { background:transparent; border-color:var(--gold); color:var(--gold); }
+
+  .form-err { font-size:13px; color:var(--bad); line-height:1.7; }
+
+  /* Working: one calm line that breathes while it changes. */
+  .bd-progress { padding:24px 0 8px; }
+  .bd-progress__line {
+    font-family:var(--display); font-weight:300; font-style:italic;
+    font-size:clamp(30px,7vw,44px); line-height:1.15; color:var(--parchment);
+    animation:breathe 2.6s ease-in-out infinite;
+  }
+  .bd-progress__bar { margin-top:24px; height:1px; background:var(--line); overflow:hidden; max-width:420px; }
+  .bd-progress__bar span { display:block; height:100%; width:30%; background:var(--gold); animation:sweep 2.6s ease-in-out infinite; }
+  .bd-progress__note { margin-top:18px; font-size:13px; color:var(--muted); }
+  @keyframes breathe { 0%,100% { opacity:.45; } 50% { opacity:1; } }
+  @keyframes sweep { 0% { transform:translateX(-100%); } 100% { transform:translateX(340%); } }
+
+  .bd-notice__title, .bd-result__title {
+    font-family:var(--display); font-weight:300; font-size:clamp(36px,8vw,56px);
+    line-height:1.05; color:var(--parchment); margin-bottom:16px; text-wrap:balance;
+  }
+  .bd-notice .btn { margin-top:24px; }
+  .bd-copy { font-size:15px; line-height:1.85; color:var(--soft); max-width:62ch; white-space:pre-line; }
+
+  /* The result reads as one column, a document rather than a dashboard. */
+  #bd-state-result { max-width:760px; }
+  .bd-result__head { margin-bottom:12px; }
+  .bd-sec { border-top:1px solid var(--line); padding:32px 0; }
+  .bd-swatches { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:24px; }
+  .bd-swatch { display:flex; flex-direction:column; gap:8px; width:64px; }
+  .bd-swatch__chip { display:block; width:64px; height:64px; border:1px solid var(--edge); }
+  .bd-swatch__hex { font-size:11px; letter-spacing:.08em; color:var(--muted); }
+  .bd-fonts { display:grid; grid-template-columns:1fr; gap:14px; }
+  .bd-font { border:1px solid var(--line); padding:16px 18px; display:flex; flex-direction:column; gap:6px; }
+  .bd-font__role { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+  .bd-font__name { font-size:26px; line-height:1.2; color:var(--parchment); overflow-wrap:anywhere; }
+  .bd-idea__title {
+    font-family:var(--display); font-weight:300; font-style:italic;
+    font-size:clamp(28px,6vw,40px); line-height:1.15; color:var(--parchment); margin-bottom:14px;
+  }
+  .bd-clips { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:24px; }
+  .bd-clip img { display:block; width:100%; height:auto; aspect-ratio:9/16; object-fit:cover; background:var(--raised); border:1px solid var(--line); }
+  .bd-clip figcaption { margin-top:8px; font-size:12px; color:var(--muted); line-height:1.5; }
+  .bd-next { border-top:1px solid var(--line); padding:32px 0 0; display:flex; flex-direction:column; gap:20px; }
+  .bd-next--card { border:1px solid var(--line); padding:24px 20px; margin-top:8px; }
+  .bd-next__lead { font-size:16px; line-height:1.8; color:var(--parchment); max-width:52ch; }
+
+  footer {
+    border-top:1px solid var(--line); padding:22px 16px;
+    display:flex; justify-content:space-between; gap:12px 18px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  footer a { color:var(--muted); text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+
+  @media (min-width:640px) {
+    .row--2 { grid-template-columns:1fr 1fr; }
+    .btn { width:auto; align-self:flex-start; }
+    .bd-fonts { grid-template-columns:1fr 1fr; }
+    .bd-clips { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .bd-next--card { padding:28px 32px; }
+  }
+
+  @media (min-width:980px) {
+    .bar, footer { padding-left:6vw; padding-right:6vw; }
+    .breakdown { padding:40px 6vw; }
+    .breakdown.is-form {
+      display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+      gap:72px; align-items:start;
+    }
+    .breakdown.is-form .breakdown__intro { position:sticky; top:40px; margin-bottom:0; padding-top:4px; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="url"] { font-size:14px; padding:10px 14px; }
+    .chip span { padding:9px 14px; }
+    form { gap:16px; }
+    .row { gap:16px; }
+    .q { gap:6px; }
+    .q legend { margin-bottom:6px; }
+  }
+
+  @media (prefers-reduced-motion:reduce) {
+    * { transition:none !important; }
+    .bd-progress__line, .bd-progress__bar span { animation:none; opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="wordmark" href="/">New Terrain <span>Creative</span></a>
+  <a class="bar-link" href="mailto:business@newterraincreative.com">Contact</a>
+</div>
+
+<main class="breakdown is-form" id="breakdown-app">
+  <div class="breakdown__intro" id="bd-intro">
+    <h1 id="bd-title">Free Show Breakdown</h1>
+    <p class="lede" id="bd-sub">See your brand the way a buyer does, and the show we'd build from it.</p>
+    <p class="reassure">One free breakdown per business. It takes about a minute.</p>
+  </div>
+
+  <div id="bd-state-form">
+    <noscript><p class="form-err">This page needs JavaScript. Email business@newterraincreative.com with your website and we will send your breakdown.</p></noscript>
+
+    <form id="bd-form" novalidate>
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="company_website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="q">
+        <label for="site">Your website</label>
+        <input type="url" id="site" name="site" placeholder="yoursite.com" autocomplete="url" autocapitalize="off" spellcheck="false" inputmode="url" aria-describedby="bd-site-err">
+        <p class="field-err" id="bd-site-err"></p>
+      </div>
+      <p class="or">or</p>
+      <div class="q">
+        <label for="instagram">Your Instagram</label>
+        <input type="text" id="instagram" name="instagram" placeholder="@handle" autocapitalize="off" spellcheck="false" aria-describedby="bd-instagram-err">
+        <p class="field-err" id="bd-instagram-err"></p>
+      </div>
+
+      <div class="row row--2">
+        <div class="q">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="bd-name-err">
+          <p class="field-err" id="bd-name-err"></p>
+        </div>
+        <div class="q">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required aria-describedby="bd-email-err">
+          <p class="field-err" id="bd-email-err"></p>
+        </div>
+      </div>
+
+      <div class="q">
+        <label for="phone">Phone <span class="opt-tag">(optional, if you'd like a call back)</span></label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" aria-describedby="bd-phone-err">
+        <p class="field-err" id="bd-phone-err"></p>
+      </div>
+
+      <fieldset class="q">
+        <legend>Annual revenue</legend>
+        <div class="chips" data-group="revenue" aria-describedby="bd-revenue-err">
+          <label class="chip"><input type="radio" name="revenue" value="under_1m"><span>Under $1M</span></label>
+          <label class="chip"><input type="radio" name="revenue" value="1m_2m"><span>$1M to $2M</span></label>
+          <label class="chip"><input type="radio" name="revenue" value="2m_5m"><span>$2M to $5M</span></label>
+          <label class="chip"><input type="radio" name="revenue" value="5m_10m"><span>$5M to $10M</span></label>
+          <label class="chip"><input type="radio" name="revenue" value="10m_plus"><span>$10M+</span></label>
+        </div>
+        <p class="field-err" id="bd-revenue-err"></p>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Monthly investment in creative and ads services</legend>
+        <div class="chips" data-group="investment" aria-describedby="bd-investment-err">
+          <label class="chip"><input type="radio" name="investment" value="under_5k"><span>Under $5K</span></label>
+          <label class="chip"><input type="radio" name="investment" value="5k_10k"><span>$5K to $10K</span></label>
+          <label class="chip"><input type="radio" name="investment" value="10k_plus"><span>$10K+</span></label>
+        </div>
+        <p class="field-err" id="bd-investment-err"></p>
+      </fieldset>
+
+      <label class="check">
+        <input type="checkbox" name="consentEmail" id="consentEmail">
+        <span>Send me ideas and updates from New Terrain Creative. Unsubscribe anytime.</span>
+      </label>
+
+      <div class="q">
+        <button class="btn" type="submit" id="bd-submit">Get my breakdown</button>
+        <p class="form-err" id="bd-form-err" role="alert" hidden></p>
+        <p class="legal">By sending this you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
+      </div>
+    </form>
+  </div>
+
+  <div class="bd-progress" id="bd-state-progress" hidden>
+    <p class="bd-progress__line" id="bd-progress-line" aria-live="polite">Reading your site</p>
+    <div class="bd-progress__bar" aria-hidden="true"><span></span></div>
+    <p class="bd-progress__note">This usually takes a minute or two. You can leave this page open.</p>
+  </div>
+
+  <div id="bd-state-result" hidden></div>
+
+  <div class="bd-notice" id="bd-state-notice" role="status" hidden></div>
+</main>
+
+<footer>
+  <span>New Terrain Creative © 2026</span>
+  <a href="mailto:business@newterraincreative.com">business@newterraincreative.com</a>
+  <a href="/terms">Terms</a>
+  <a href="/privacy">Privacy</a>
+</footer>
+
+<script src="/assets/breakdown.js"></script>
+<script>
+  // The form-and-intro grid only makes sense beside the form. A result
+  // or a notice reads as one column.
+  (function () {
+    var app = document.getElementById('breakdown-app');
+    var form = document.getElementById('bd-state-form');
+    function sync() { app.classList.toggle('is-form', !form.hidden); }
+    new MutationObserver(sync).observe(form, { attributes: true, attributeFilter: ['hidden'] });
+    sync();
+  })();
+</script>
+</body>
+</html>

@@ -164,7 +164,10 @@
     // we do not run the client's social presence. Community management
     // left the offer. Longform is Brand Builder only. EXCEPTION, 8 Oct
     // 2026: Brand Builder includes organic social posting on the client's
-    // own channels; it is the one tier that does. The Brand Builder Pilot
+    // own channels. 14 Oct 2026: Growth Partner gains a weekly posting
+    // rhythm on the client's channels too, planned and scheduled from the
+    // month's short-form; Brand Builder's difference is the longform and
+    // the show. The Anchor still posts nothing of its own. The Brand Builder Pilot
     // (not a tier) also posts on the client's channels, for its one
     // month only: see brandBuilder.pilot below. And the platform
     // is not named in retainer copy: it is paid media, chosen for the
@@ -180,6 +183,10 @@
     // separately and no page may suggest otherwise. The line is the
     // same on every tier in public; depth per tier is internal.
     retainer: {
+      /* 14 Oct 2026, Jadon: outcome-first framing. Each tier leads with
+         a headline and subhead (a direction, never a number), and the
+         includes below stay word for word as "What's included". */
+      companyLine: 'We make video ads that book calls, and we run them.',
       /* No rate and no capacity signal, on purpose. Both were removed
          2 Oct 2026 with the rest of the pricing: the per-tier monthly
          figure, and the single-line signal the homepage engage card and
@@ -190,12 +197,18 @@
       publicGuideTiers: [
         {
           name: 'The Anchor',
+          headline: 'A steady flow of booked calls, with ads made and run for you.',
+          subhead: 'Built to lower your cost per booked call, every month.',
           label: 'Creative + paid media',
+          /* 14 Oct 2026, Jadon: statics on top of the video. Shown on
+             /welcome after payment only; public cards carry no counts. */
+          staticAdsPerMonth: 5,
           scope: 'A focused monthly ad creative and paid media system: recurring campaign concepts, production, testing and management under one roof.',
           includes: [
             'A recurring monthly media day',
             'A steady monthly volume of ad creative, built as ad creative',
             'Directed setups, finished with b-roll, sound design and color',
+            'Static ads and carousels for paid placements, designed from photos taken on the production day',
             'Organic distribution of the campaign creative',
             'Monthly analytics and creative direction',
             'Paid media management, testing and iteration',
@@ -204,14 +217,19 @@
         },
         {
           name: 'Growth Partner',
+          headline: 'Become the obvious choice in your market.',
+          subhead: 'Video ads that book calls, and a presence that earns trust when buyers look you up.',
           label: 'More volume, deeper testing',
+          staticAdsPerMonth: 10,
           scope: 'Higher creative volume, deeper testing and more ambitious campaign concepts, for a business ready to scale what is working.',
           includes: [
             'More shoot time each month than The Anchor',
-            'A higher monthly volume across brand content and ad creative',
+            'A higher monthly volume of short-form ad creative and variants, cut for Instagram, Facebook, TikTok and YouTube Shorts',
             'Dedicated ad concepts and hook variations, not repurposed brand cuts',
+            'Single-image and carousel static ads for paid placements, designed from photos taken on the production days',
+            'A Signature Hero Ad every three months, its own directed shoot within the included shoot days',
             'Event, product and brand-identity coverage within the included shoot days',
-            'Organic distribution of the campaign creative',
+            'A weekly posting rhythm on your own channels, planned and scheduled from the month\u2019s creative',
             'Paid media setup and weekly management',
             'Funnel, tracking and automation support: lead routing, conversion tracking and core automations',
             'Monthly analytics and creative direction'
@@ -219,20 +237,25 @@
         },
         {
           name: 'Brand Builder',
+          headline: 'Your own show, built to bring in clients.',
+          subhead: 'It makes you the go-to name, and ads turn that attention into booked calls.',
           label: 'Flagship partnership',
-          scope: 'Our largest production allocation, with organic posting, paid media and the conversion setup run for you.',
-          /* 8 Oct 2026: Brand Builder is the one tier that runs the
-             client's own channels. "Organic social posting" here means
-             exactly that, and it is a Brand Builder line only: the other
-             tiers keep "organic distribution of the campaign creative". */
+          staticAdsPerMonth: 10,
+          scope: 'Our largest production allocation, in Studio or Field, with organic posting, paid media and the conversion setup run for you.',
+          /* 8 Oct 2026: Brand Builder runs the client's own channels.
+             14 Oct 2026: Growth Partner now has a weekly posting rhythm
+             too, so the difference is the longform and the show, and one
+             Signature Hero Ad every month against Growth Partner's one
+             every three. No counts here: the public cards carry none. */
           includes: [
             'Our largest monthly production allocation',
             'Our highest monthly volume across longform, short-form and ads',
-            'Longform: founder interviews, YouTube episodes, podcasts and case-study pieces',
-            'Short-form cut from every episode, and the ads built from the strongest',
-            'One Signature Hero Ad each month, captured within the included shoot days',
+            'Longform in one of two formats, chosen at kickoff: Studio (sit-down and podcast episodes, recorded in batches) or Field (hands-on, vlog-style episodes shot where the work happens, plus sit-downs)',
+            'Short-form cut from every episode, hero-ad cutdowns and promotional ad content, and the ads built from the strongest',
+            'Static ads and carousels for paid placements, designed from photos taken on the production days',
+            'A Signature Hero Ad every month, its own directed shoot within the included shoot days',
             'Organic social posting: we run the channels the content goes out on',
-            'Everything in Growth Partner, including paid media management',
+            'Everything in Growth Partner, plus the episodes and a Signature Hero Ad every month',
             'Monthly analytics and creative direction'
           ]
         }
@@ -268,18 +291,33 @@
     brandBuilder: {
       page: '/brand-builder',
       geography: 'Los Angeles',
+      /* 13 Oct 2026, Jadon: one Brand Builder, two production formats.
+         The Studio Pilot (this object, offer key brand_builder_pilot) is
+         the original Pilot, slimmed from 10 episodes and 49 clips: batch
+         recorded sit-down episodes are cheap per episode, but ten of them
+         cost more to serve than the fee allows. The Field Pilot (below)
+         is the second format, for episodes shot on location.
+
+         The ladder rule, both Pilots only: a vlog-style episode can
+         become a sit-down, never the other way. The Signature Hero Ad is
+         never traded. Clips are stated as one total, never split.
+         Anyone who bought the Pilot before 13 Oct keeps what they
+         signed. */
       pilot: {
-        name: 'The Pilot',
-        pilotFee: 7500,
+        name: 'Brand Builder Studio Pilot',
+        format: 'studio',
+        pilotFee: 8500, // was 7500 until 20 Oct 2026 (Jadon)
         oneTime: true,
         noRetainer: true,
-        longformEpisodes: 10,
-        shortFormClips: 50,
-        shortFormClipsPerEpisode: 5,
+        longformEpisodes: 6,
+        episodeMinutesMax: 30,
+        shortFormClips: 24,
+        shootDaysMax: 2,
         scope: [
-          '10 longform episodes, shot and finished',
-          '50 short-form clips, five cut from each episode',
-          'Premium playbook content: how we build hooks, formats and a posting rhythm',
+          '6 sit-down or podcast-style episodes, up to 30 minutes each, recorded in batches across two days',
+          '24 short-form clips: the best moments from every episode, plus promotional ad content',
+          'One Signature Hero Ad, its own directed shoot',
+          'Up to 2 shoot days: the episodes are recorded across both, and the hero ad is shot within them',
           'Organic posting on your own channels for the Pilot month',
           'A 90-day gameplan the client can hire us to run, or run without us'
         ],
@@ -289,9 +327,250 @@
            Paid media management and the conversion setup (funnel,
            tracking, CRM and automation) are retainer only: they come
            with the Brand Builder retainer, never with the Pilot. */
+        /* 8 Oct 2026, Jadon: the Pilot includes one Signature Hero Ad. */
+        heroAdIncluded: true,
         organicPostingIncluded: true,
         resultGuaranteed: false
+      },
+      /* 13 Oct 2026, Jadon: the Field Pilot, offer key
+         brand_builder_pilot_field. For founders and makers whose story
+         happens on location rather than at a desk: longer, hands-on,
+         documentary or vlog-style episodes. Vlog episodes cost more to
+         edit than sit-downs (the shooting is about the same), so there are
+         fewer of them, and the fee is higher. Final numbers,
+         13 Oct 2026: 2 vlogs plus 1 sit-down, up to 3 shoot days. Studio
+         is volume, Field is depth. The copy stays
+         broad: no single niche. Travel outside the local area, multi-day
+         events and extra days are quoted separately.
+
+         Second published price, under the same rule as the Studio Pilot:
+         scripts/check-offer.py lets fieldPilotFee onto the two Brand
+         Builder pages and /about only. The page still sells the Story
+         Session, never the Pilot.
+
+         TODO: the Stripe Payment Link for the Field Pilot does not exist
+         yet. Nothing on the site links checkout for either Pilot, and
+         nothing should: the offer is made on the call. */
+      fieldPilot: {
+        name: 'Brand Builder Field Pilot',
+        format: 'field',
+        fieldPilotFee: 9500, // was 8500 until 20 Oct 2026 (Jadon)
+        oneTime: true,
+        noRetainer: true,
+        // 16 Oct 2026, Jadon: 4 episodes (3 vlog-style, 1 sit-down), same 3 shoot days.
+        longformEpisodes: 4,
+        vlogEpisodesMax: 3,
+        vlogMinutes: [15, 25],
+        episodeMinutesMax: 30,
+        shortFormClips: 30,
+        shootDaysMax: 3,
+        scope: [
+          '4 episodes: 3 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
+          '30 short-form clips: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
+          'One Signature Hero Ad, its own directed shoot',
+          'Up to 3 shoot days: the vlog days and the hero ad day, with the sit-down recorded on a vlog day',
+          'Organic posting on your own channels for the Pilot month',
+          'A 90-day gameplan the client can hire us to run, or run without us'
+        ],
+        quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
+        /* 15 Oct 2026, Jadon: no add-on prices in any order form; extras are
+           quoted on request. Was: extra shoot days, event days and edits sold at set rates
+           from the add-on card in the Field Pilot order form
+           (ntc-speed-to-lead). No add-on price is published here. */
+        addOnsAtSetRates: true,
+        gameplanIsClientsToKeep: true,
+        heroAdIncluded: true,
+        organicPostingIncluded: true,
+        resultGuaranteed: false
+      },
+      /* 13 Oct 2026, Jadon: Brand Builder: Studio and Brand Builder: Field
+         (offer keys still say monthly; client-facing names never do), the Pilot as a
+         recurring plan with no paid media. Offer keys
+         brand_builder_monthly_studio and brand_builder_monthly_field.
+         The one production-only plan: no paid media management, no
+         funnel, tracking, CRM or automation work, and no 90-day gameplan
+         (that is the Pilot's). Adding paid media means moving up to the
+         Brand Builder series at its standard fee, never adding ads here.
+
+         NO PRICE IS DECLARED HERE, on purpose. Monthly is a retainer and
+         retainer pricing is withdrawn from the site, so this object
+         carries scope only and scripts/check-offer.py keeps any monthly
+         figure off every page. The pages mention Monthly in one line
+         under the series, with no price. Scope matches the Pilot of the
+         same format, every month. */
+      /* 13 Oct 2026, Jadon: Brand Builder: Premium (offer key
+         brand_builder, the series with paid media) in two formats, the
+         client choosing at kickoff. Replaces 10 episodes, 48 clips and 2
+         to 4 days. 14 Oct 2026: Studio 10 episodes, Field 6 (2 vlogs and 4
+         sit-downs), one Signature Hero Ad a month (was 2). 15 Oct 2026:
+         Field 7 (3 vlogs and 4 sit-downs), up to 5 shoot days, so it stays
+         ahead of Brand Builder: Field. 21 Oct 2026, Jadon: Field 10 (3 vlogs
+         and 7 sit-downs), the same 10 episodes as Studio, same 5 shoot days. Never fewer than 6 episodes a month. Counts live here for the /welcome page, which a client
+         sees after paying. The public pages keep the series unpriced and
+         uncounted, like every retainer: they read publicGuideTiers
+         'Brand Builder', not this object. Existing signed series clients
+         keep their signed scope. */
+      premium: {
+        heroAdsPerMonth: 1,
+        studio: {
+          name: 'Brand Builder: Premium · Studio',
+          longformEpisodes: 10,
+          shortFormClips: 40,
+          shootDaysMax: 3,
+          summary: '10 sit-down or podcast episodes a month (up to 30 minutes), 40 short-form clips (episode cuts, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 3 shoot days (2 recording days and a hero ad day)'
+        },
+        field: {
+          name: 'Brand Builder: Premium · Field',
+          longformEpisodes: 10,
+          vlogEpisodes: 3,
+          shortFormClips: 40,
+          shootDaysMax: 5,
+          summary: '10 episodes a month (3 vlog-style episodes of 15 to 25 minutes and 7 sit-downs), 40 short-form clips (podcast and sit-down cuts, episode moments, event and shoot-day highlights, hero-ad cutdowns and promotional ad content), 1 Signature Hero Ad, up to 5 shoot days (3 vlog days, a sit-down day and a hero ad day)'
+        }
+      },
+      monthlyPlans: {
+        noPaidMedia: true,
+        minimumMonths: 3,
+        noticeDays: 30,
+        gameplanIncluded: false,
+        heroAdEveryMonths: 3,
+        studio: {
+          name: 'Brand Builder: Studio',
+          format: 'studio',
+          longformEpisodes: 6,
+          shortFormClips: 24,
+          shootDaysMax: 2,
+          scope: [
+            '6 sit-down or podcast-style episodes a month, up to 30 minutes each, recorded in batches across two days',
+            '24 short-form clips a month: the best moments from every episode, plus promotional ad content',
+            'One Signature Hero Ad every three months, its own directed shoot',
+            'Up to 2 shoot days a month for the episodes, recorded across both, plus the hero ad day in hero months',
+            'Organic posting on your own channels every month'
+          ]
+        },
+        field: {
+          name: 'Brand Builder: Field',
+          format: 'field',
+          // 15 Oct 2026, Jadon: a weekly episode, one more vlog than the Field Pilot.
+          longformEpisodes: 4,
+          vlogEpisodesMax: 3,
+          shortFormClips: 30,
+          shootDaysMax: 3,
+          scope: [
+            '4 episodes a month, one a week: 3 hands-on, vlog-style episodes of 15 to 25 minutes, shot where the work happens, and 1 sit-down or podcast-style',
+            '30 short-form clips a month: podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content',
+            'One Signature Hero Ad every three months, its own directed shoot',
+            'Up to 3 shoot days a month: the vlog days, with the sit-down recorded on a vlog day, plus the hero ad day in hero months',
+            'Organic posting on your own channels every month'
+          ],
+          quotedSeparately: ['travel outside the local area', 'multi-day events', 'extra shoot days'],
+          addOnsAtSetRates: true
+        }
       }
+    },
+
+    /* ── 5-Day Trial · first niche, pest control ──────────────────────
+       Added 12 Oct 2026 from the trial brief. /pest-control-trial.
+
+       TERMS CONFIRMED 12 Oct 2026 (Jadon): $1,500 rather than the brief's
+       $1,247, which read as a course launch; 6 video ads and 4 statics;
+       Los Angeles and Tampa first; the fee credited to a first Anchor
+       month started within 14 days; 4 slots a month.
+
+       LIVE 12 Oct 2026, once the iClosed trial event, the Stripe link
+       and the order form existed in ntc-speed-to-lead. Indexed and in
+       the sitemap, still linked from no other page: pest control only.
+
+       Positioned as a pilot program, not a deal: structured, limited,
+       a professional intake. The trial is the audition for the Anchor
+       and the number that matters is the upgrade rate, not trial revenue.
+       It is offered to pest control only: the four priority industries'
+       front end is the Ad Sprint, which the trial must not undercut.
+
+       The second published price, after the Brand Builder Pilot, and
+       the same reasoning: a front-end offer with its price hidden is not
+       one. scripts/check-offer.py lets trialFee onto the trial page and
+       nowhere else.
+
+       Template for the next niche: swap the trade, the problem
+       paragraph, the intake examples and the "not for" line. These
+       mechanics stay identical.
+       ─────────────────────────────────────────────────────────────── */
+    trial: {
+      page: '/pest-control-trial',
+      niche: 'Pest control',
+      geography: ['Los Angeles', 'Tampa'],
+      termsConfirmed: true,
+      live: true,
+      /* Wired 12 Oct 2026 in ntc-speed-to-lead. The button books a call,
+         not checkout: /strategy-call?offer=pest-control-trial loads this
+         iClosed event. The Stripe link appears on ONE page only,
+         /call-booked?offer=pest-control-trial, which iClosed shows after
+         a qualified booking (13 Oct 2026, reserveOnConfirmation below):
+         someone who is ready can reserve before the call. Everyone else
+         gets it from the agent after the call. It never appears on the
+         trial page or /strategy-call, which anyone can reach unqualified.
+         scripts/check-offer.py fails if the link on /call-booked differs
+         from this one or turns up on any other page. Its redirect lands on
+         /welcome?plan=trial, and payments carry offer_key
+         trial_pest_control. */
+      iclosedUrl: 'https://app.iclosed.io/e/NewTerrain/pest-control-trial',
+      stripePaymentLink: 'https://buy.stripe.com/00w28qgCW1v1gMM6Bu1RC0q',
+      reserveOnConfirmation: true,
+      offerKey: 'trial_pest_control',
+      welcomePlan: 'trial',
+      days: 5,
+      trialFee: 1500,
+      oneTime: true,
+      isDeposit: false,
+      noRetainer: true,
+      noShootDay: true,
+      videoAds: 6,
+      statics: 4,
+      // Client-funded, paid to the platform, never to us. For the test,
+      // not monthly.
+      minTestAdSpend: 500,
+      // Stated on the page, not in fine print. Either one qualifies.
+      intakeMinimum: {
+        videoMinutes: 10,
+        photos: 20,
+        plus: 'the offer: service area, recurring plans, price point'
+      },
+      intakeFallback: 'A one-hour remote recording session on our shot list',
+      // No landing page or CRM is required, and none is built in the
+      // trial: that is scope creep and the margin. The ads point at a
+      // native Meta destination, picked from the client's answer to "if a
+      // homeowner messages you today, who responds and how fast?". Fast
+      // responders get click-to-message, everyone else instant lead forms.
+      // A website that loses the clicks is day-5 material for the Anchor.
+      adDestination: ['click-to-message', 'instant lead form'],
+      landingPageIncluded: false,
+      // The five days start once footage and ad account access are in.
+      clockStartsOnIntake: true,
+      // What we guarantee is the work, not a result. If we do not deliver
+      // the edit and launch by day 5, the fee is refunded. Excluded: the
+      // client's own delays and Meta's ad review, which we do not control.
+      workGuaranteed: true,
+      refundIfNotDelivered: true,
+      resultGuaranteed: false,
+      // After day 5 the ads keep running, unmanaged, in the client's own
+      // account unless they upgrade. Said on the day-5 call, every time:
+      // an ad spending their money without them knowing is the fastest
+      // way to lose the trust the trial exists to build.
+      afterDay5: 'ads keep running unmanaged in the client account; told on the call',
+      // Same mechanics as the Sprint credit in the Handbook. One per
+      // client, no cash value, does not shorten the 3-month minimum.
+      anchorCredit: { creditsFee: true, windowDays: 14 },
+      // AI is used for cutting, captions, motion graphics, statics,
+      // voiceover and generic illustrative b-roll. Never for imagery
+      // that passes as the client's real operation.
+      aiNever: [
+        "the client's name or logo on generated imagery of a real-looking operation",
+        'generated technicians presented as their team',
+        'generated before and afters',
+        'invented reviews'
+      ],
+      monthlySlots: 4
     },
 
     // ── One-time products ─────────────────────────────────────────────
@@ -314,12 +593,32 @@
 
          The ladder still reads correctly without hours, because the
          packages differ on what you walk away with: 8 creatives, then
-         15, one-off; then a monthly volume on the retainers.
+         15, then 30, one-off; then a monthly volume on the retainers.
 
          No price on any of them since 2 Oct 2026. The Sprint is still
-         fixed price; the figure is quoted on the fit call. */
-      adSprintEight:   { name: 'The Eight',   creatives: 8 },
-      adSprintFifteen: { name: 'The Fifteen', creatives: 15 },
+         fixed price; the figure is quoted on the fit call.
+
+         20 Oct 2026, Jadon: /next-step (the bridge page for leads under a
+         booking form's floor) sells the Sprint straight through these
+         Stripe Payment Links, no call. Checkout shows the price; the page
+         does not. scripts/check-offer.py lets these links onto
+         next-step.html only, and fails if the page carries another.
+
+         21 Oct 2026, Jadon: a third tier, The Thirty, 30 creatives. It
+         is also the content-only option when a client's own agency runs
+         the media: a client can buy a Sprint each month, each one a
+         separate one-time purchase. No recurring billing is built. Its
+         Stripe Payment Link does not exist yet, so stripePaymentLink is
+         null and /next-step offers no checkout for it (the Sprint call
+         covers it). When the link is made, set it here and add a
+         buy-thirty link on next-step.html; check-offer.py then requires
+         the page to carry it. */
+      adSprintEight:   { name: 'The Eight',   creatives: 8,
+                         stripePaymentLink: 'https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f' },
+      adSprintFifteen: { name: 'The Fifteen', creatives: 15,
+                         stripePaymentLink: 'https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g' },
+      adSprintThirty:  { name: 'The Thirty',  creatives: 30,
+                         stripePaymentLink: null },
       leadFoundation:  { name: 'Lead Foundation' }
     },
 
@@ -336,9 +635,10 @@
        in any form. See neverClaim below.
        ─────────────────────────────────────────────────────────────── */
     adSprintTerms: {
-      fixedScope: true,          // 8 or 15 creatives, agreed before the shoot
+      fixedScope: true,          // 8, 15 or 30 creatives, agreed before the shoot
       fixedPrice: true,          // the price does not move with the day
-      noRetainer: true,          // nothing rolls into a monthly commitment
+      noRetainer: true,          // nothing rolls into a monthly commitment; a
+                                 // client may buy one each month, each on its own
       clientOwnsAssets: true,    // footage and every cut
       campaignManagementIncluded: false,
       resultGuaranteed: false
@@ -350,7 +650,9 @@
        performance guarantee, no refund, no open-ended remedy.
 
        continuationPricePublicOnFoundingPage is false on purpose, and
-       stays false. $3,500 must not appear in the COPY of /founding.
+       stays false. The continuation figure (continuationMonthly, $5,000
+       since Oct 2026, previously $3,500) must not appear in the COPY of
+       /founding.
 
        What that rule is protecting has not changed: nobody should meet
        the continuation price before they understand what the waived
@@ -360,7 +662,7 @@
        spoken in the VSL, both before any commitment.
 
        SO: if the VSL is ever embedded on /founding, the page will state
-       $3,500 aloud while this flag says it must not appear. That is
+       the figure aloud while this flag says it must not appear. That is
        fine and it is deliberate. The flag governs the written copy,
        where a number with no context reads as a price list. A figure
        inside a two-minute explanation is the context. Do not "fix" the
@@ -446,6 +748,19 @@
     // retainer's. Do not reuse budgetBands here: a $10,000 month and a
     // $10,000 film are not the same conversation.
     projectBudgetBands: [10000, 25000, 50000],
+
+    // The project form on /next-step (was /production-inquiry), where the
+    // booking forms send anyone under their floor. One-off project totals, the
+    // visitor's budget and not our price. Declared here so check-offer.py
+    // can trace the figures that page shows.
+    productionInquiryBudgetBands: [3000, 5000, 10000],
+
+    // /breakdown, the free show or ad breakdown. The visitor's own annual
+    // revenue and what they already spend a month on creative and ads
+    // services, never our price. The page shows them as $1M, $5K and so
+    // on; the keys it posts to the agent are under_1m, 5k_10k and so on.
+    breakdownRevenueBands: [1000000, 2000000, 5000000, 10000000],
+    breakdownInvestmentBands: [5000, 10000],
     projectTypes: [
       // First, because /sprint routes here and an Ad Sprint is the most
       // common single thing this form is asked for.
@@ -478,7 +793,9 @@
       'production-media': 'production_media',
       'ad-sprint':        'ad_sprint',
       // /brand-builder. One CTA, the Story Session, so one identifier.
-      'brand-builder':    'brand_builder'
+      'brand-builder':    'brand_builder',
+      // /pest-control-trial. Its own iClosed event, the 5-Day Trial Call.
+      'pest-control-trial': 'trial_pest_control'
     },
 
     // ── Things we do not say ──────────────────────────────────────────
@@ -508,7 +825,10 @@
       'a production-only retainer, or ad management as an optional add-on to one',
       'full organic social management or community management as part of a retainer',
       'unlimited or custom systems development as part of a retainer',
-      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided'
+      'the 90-Day Production Promise, on any page, until its terms and eligibility are decided',
+      // Added 12 Oct 2026 with the trial.
+      'leads, booked jobs or "more jobs" from the 5-day trial',
+      'the 5-day trial to anyone outside pest control, or as cheaper than the Ad Sprint'
     ]
   };
 

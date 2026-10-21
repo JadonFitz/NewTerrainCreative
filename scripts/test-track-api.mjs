@@ -109,6 +109,15 @@ for (const name of ['schedule', 'Schedule', ' schedule ']) {
   check(`${label} writes NOTHING to the database`, !wrote);
 }
 
+// /breakdown browser events land under their own funnel.
+n = calls.length;
+res = await request('POST', {
+  event_name: 'breakdown_start', funnel: 'breakdown', metadata: { kind: 'ads' }
+});
+made = calls.slice(n);
+check('breakdown_start is stored under the breakdown funnel',
+  res.payload.stored === true && made[0]?.body?.funnel === 'breakdown');
+
 // The allowlist itself must not contain it.
 const trackSource = await (await import('node:fs/promises')).readFile(
   new URL('../api/track.js', import.meta.url), 'utf8');

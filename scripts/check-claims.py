@@ -65,8 +65,8 @@ check('no result guaranteed',
 # or remedy may be ADDED to the Founding copy beyond the waived month.
 
 print('\nSprint · risk reduction is scope, price, no retainer, ownership')
-check('fixed scope named', 'Eight creatives or fifteen' in SPR,
-      'must match adSprintEight/adSprintFifteen creatives')
+check('fixed scope named', 'Eight creatives, fifteen or thirty' in SPR,
+      'must match adSprintEight/adSprintFifteen/adSprintThirty creatives')
 check('fixed price', 'One time, fixed' in SPR, 'adSprintTerms.fixedPrice')
 check('no retainer', 'no retainer attached' in SPR, 'adSprintTerms.noRetainer')
 check('client owns the assets', 'footage and every cut are yours' in SPR,

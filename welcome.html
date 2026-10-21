@@ -27,19 +27,31 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   ════════════════════════════════════════════════════════════════
   CHECKOUT SUCCESS · /welcome
 
-  Where Stripe sends a client after they pay. Unlinked and noindex:
-  the only way in is a completed checkout.
+  Where Stripe sends a client after they pay. Unlinked and noindex,
+  but anyone can open it, so the booking link is not in this file: the
+  page asks /api/welcome for it, and that answers only for a Stripe
+  Checkout Session that was paid (or completed into a free trial).
 
   STRIPE SETUP · each Payment Link, After payment → "Don't show
-  confirmation page" → redirect to this page with its plan:
+  confirmation page" → redirect to this page with its plan AND the
+  session, which Stripe fills in:
 
-    Founding Three   /welcome?plan=founding
-    The Anchor       /welcome?plan=anchor
-    Growth Partner   /welcome?plan=growth
-    Brand Builder    /welcome?plan=brand-builder
-    Brand Builder Pilot  /welcome?plan=brand-builder-pilot
-    The Eight        /welcome?plan=eight
-    The Fifteen      /welcome?plan=fifteen
+    Founding Three   /welcome?plan=founding&session_id={CHECKOUT_SESSION_ID}
+    The Anchor       /welcome?plan=anchor&session_id={CHECKOUT_SESSION_ID}
+    Growth Partner   /welcome?plan=growth&session_id={CHECKOUT_SESSION_ID}
+    BB: Premium      /welcome?plan=brand-builder&session_id={CHECKOUT_SESSION_ID}
+    Studio Pilot     /welcome?plan=brand-builder-pilot&session_id={CHECKOUT_SESSION_ID}
+    Field Pilot      /welcome?plan=brand-builder-pilot-field&session_id={CHECKOUT_SESSION_ID}
+    BB: Studio       /welcome?plan=brand-builder-monthly-studio&session_id={CHECKOUT_SESSION_ID}
+    BB: Field        /welcome?plan=brand-builder-monthly-field&session_id={CHECKOUT_SESSION_ID}
+    The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
+    The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
+    The Thirty       /welcome?plan=thirty&session_id={CHECKOUT_SESSION_ID}
+                     (21 Oct 2026: Payment Link not created yet)
+    5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
+
+  A link without session_id still lands on a complete page; only the
+  "book your call" step is missing, and the welcome email carries it.
 
   Anything else, or no plan at all, still gets a complete page: the
   welcome, the next steps and the contact block. Only the "what we
@@ -116,6 +128,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   /* video */
   .video { margin-top:48px; }
+  .video-note { margin-top:12px; font-size:13px; line-height:1.7; color:var(--muted); }
   .video-frame {
     position:relative; aspect-ratio:16/9; background:var(--sunk);
     border:1px solid var(--line); overflow:hidden;
@@ -221,6 +234,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <!-- ─────────── WELCOME VIDEO ─────────── -->
   <div class="video" id="video" hidden>
     <div class="video-frame" id="videoFrame"></div>
+    <p class="video-note" id="videoNote" hidden></p>
   </div>
 
   <!-- ─────────── 1 · NEXT FEW DAYS ─────────── -->
@@ -251,7 +265,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
         <a class="btn btn--solid" id="kickoffLink" href="#" target="_blank" rel="noopener">Pick a time &#8599;</a>
       </div>
     </div>
-    <p style="margin-top:34px">Three emails are on their way to the address you checked out with, and should already be there. The welcome email carries the same form links and the link to book your call. Check spam if one is missing.</p>
+    <p style="margin-top:34px" id="afterFirst">Three emails are on their way to the address you checked out with, and should already be there. The welcome email carries the same form links and the link to book your call. Check spam if one is missing.</p>
     <div class="next">
       <div class="next-card">
         <div class="next-when">In your inbox now</div>
@@ -261,7 +275,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       <div class="next-card">
         <div class="next-when">In your inbox now</div>
         <h3>The welcome packet</h3>
-        <p>Who's who, your first week, how shoot days and revisions work, and what we'll ask access to.</p>
+        <p id="packetText">Who's who, your first week, how shoot days and revisions work, and what we'll ask access to.</p>
         <a class="btn" id="packetLink" href="#" target="_blank" rel="noopener">Open the packet &#8599;</a>
       </div>
       <div class="next-card">
@@ -364,7 +378,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     phone: '(818) 266-8213',
     packet: 'https://docs.google.com/document/d/13gIxMpfdawaOHB96og89qXR3ZSzCrOd0VZCEIZpsS0Y/edit?tab=t.0',
     intake: 'https://docs.google.com/forms/d/e/1FAIpQLSc9olRsWj6QBLaG5430pFgxAGKeKgmIzuaWeI0rTDDBJQLcRw/viewform',
-    kickoff: 'https://calendar.app.google/iz1Zwnv9WcLYQg6p8',
+    /* No booking link here: /api/welcome hands it out only for a paid
+       checkout (see the end of this script). */
     crm: 'https://docs.google.com/forms/d/e/1FAIpQLSemCWXxyc1SI0G8fyCm1f9BHG2vbDAgvTjDfmPJWN_96Uo9ow/viewform'
   };
 
@@ -405,23 +420,75 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      Paid media and the conversion setup are retainer only, so no
      ad-account access, no CRM questionnaire and no Friday recaps; the client books a kickoff call like a retainer. Scope lines
      come from NTC_OFFER.brandBuilder.pilot, the same object the
-     /brand-builder pages render, so this page cannot promise more. */
-  var pilotSteps = [
-    ['Day 0 to 1', 'Your two forms',
-      'Client intake and the funnel and CRM questionnaire, both linked at the top of this page. Meghan reads them before kickoff.'],
-    ['Day 1 to 3', 'Kickoff call',
-      'About an hour. What the brand should do for the business, the three story angles worth building on, and the episode plan.'],
-    ['By day 7', 'Production days scheduled, episodes planned',
-      'Your production days go on the calendar. The time between is where topics, formats and locations get planned, so the days run smoothly.'],
-    ['Weeks two and three', 'Production',
-      'About two full production days. Every episode shot in long blocks, with the short-form moments captured as we go.'],
-    ['Through the month', 'Posted on your channels',
-      'We post the finished content on your own channels through the Pilot month. Paid media and the conversion setup come with the series.'],
-    ['Week four', 'The cut, then delivery',
-      'Ten episodes finished, fifty clips cut (five from each), with one revision round in Slack.'],
-    ['On delivery', 'Yours to run',
-      'The playbook and your 90-day gameplan land with the files. Hire us to run it, or run it without us.']
-  ];
+     /brand-builder pages render, so this page cannot promise more.
+
+     13 Oct 2026: two formats. The Studio Pilot (plan brand-builder-pilot)
+     records its sit-down episodes in batches across up to two shoot days, with the hero ad shot within them. The Field Pilot (plan
+     brand-builder-pilot-field, NTC_OFFER.brandBuilder.fieldPilot) shoots
+     longer, hands-on episodes on location. The steps read
+     their counts from the offer object. */
+  /* 13 Oct 2026, Jadon: only Brand Builder: Premium and the Growth
+     Retainers get the funnel and CRM build questionnaire. The four
+     production plans (both Pilots, Brand Builder: Studio and Field) play
+     the Brand Builder welcome video, which asks for both forms, so they
+     carry this line under it. */
+  var ONE_FORM_NOTE = 'The video mentions two forms. Your plan only needs the intake form below.';
+  var pilotSteps = function (p, field) {
+    var eps = p.longformEpisodes || (field ? 3 : 6);
+    var clips = p.shortFormClips || (field ? 30 : 24);
+    var days = p.shootDaysMax || (field ? 3 : 2);
+    return [
+      ['Day 0 to 1', 'Your intake form',
+        'About ten minutes, linked at the top of this page. We read it before kickoff.'],
+      ['Day 1 to 3', 'Kickoff call',
+        'About an hour. What the brand should do for the business, the three story angles worth building on, and the episode plan.'],
+      ['By day 7', 'Shoot days scheduled, episodes planned',
+        field
+          ? 'Your shoot days go on the calendar, around the work worth filming: the build, the session, the event. Topics and locations get planned in between.'
+          : 'Your shoot days go on the calendar. The time between is where topics and formats get planned, so the recording days run smoothly.'],
+      field
+        ? ['Through the month', 'Production',
+            'Up to ' + days + ' shoot days: the hero ad and the episodes, filmed where the work happens, with the short-form moments captured as we go. Travel and multi-day events are quoted separately.']
+        : ['Week two', 'Production',
+            'Up to ' + days + ' shoot days: the episodes are recorded in batches across them and the hero ad is shot within them, with the short-form moments captured as we go.'],
+      ['Through the month', 'Posted on your channels',
+        field
+          ? 'Each episode posted on your own channels as it is finished, with the clips around it. Paid media and the conversion setup come with the series.'
+          : 'We post the finished content on your own channels through the Pilot month. Paid media and the conversion setup come with the series.'],
+      ['Week four', 'The cut, then delivery',
+        eps + ' episodes finished and ' + clips + ' short-form clips' + (field ? ': podcast and sit-down cuts, episode moments, event and shoot-day highlights, and promotional ad content' : ', the best moments from every episode, plus promotional ad content') + ', with one revision round in Slack.'],
+      ['On delivery', 'Yours to run',
+        'Your 90-day gameplan lands with the files, built from your intake form and the kickoff call. Hire us to run it, or run it without us.']
+    ];
+  };
+
+  /* The 5-Day Trial (12 Oct 2026, pest control). No video, no intake
+     form, no CRM questionnaire: the same steps as the trial welcome email
+     (ntc-speed-to-lead migration 051), then the five days as
+     /pest-control-trial shows them. Scope lines come from
+     NTC_OFFER.trial, so this page cannot promise more than the page. */
+  var trialSteps = function (t) {
+    var m = t.intakeMinimum || {};
+    var v = t.videoAds || 6, st = t.statics || 4;
+    return [
+      ['Step 1', 'Book your intake call',
+        'It\u2019s short: we confirm where your ads will send homeowners, start your five days, and book your day-5 review.'],
+      ['Step 2', 'Upload your footage',
+        (m.videoMinutes || 10) + ' minutes of video or ' + (m.photos || 20) + ' photos is enough: trucks, techs on jobs, before and afters. Phone footage is fine. The upload link is in your welcome email.'],
+      ['Step 3', 'Reply with your offer',
+        'Reply to the welcome email with your service area, your recurring plans and your price point, so the ads sell what you actually sell.'],
+      ['Step 4', 'Add us in Meta Business Manager',
+        'Add New Terrain Creative as a partner on your ad account. The ads run in your account and the spend goes from you to Meta, never through us.'],
+      ['Day 1', 'Intake',
+        'Your footage and your offer are in and we confirm access to your ad account. The five days start once both are in.'],
+      ['Days 2 and 3', 'Edit',
+        'We cut, caption and build ' + v + ' video ads and ' + st + ' statics from your footage. You see the cuts as they land.'],
+      ['Day 4', 'Launch',
+        'Your first ads go live. Homeowners message you or fill in a quote form right inside Facebook and Instagram. No website needed.'],
+      ['Day 5', 'Review',
+        'We walk you through what we made and the early numbers, and what the monthly version looks like. Then you decide.']
+    ];
+  };
 
   var sprintSteps = [
     ['Days 1 to 3', 'The Angle Call',
@@ -470,7 +537,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var fromTier = function (t) {
     // Drop add-on price lines: a price list after checkout reads as an upsell.
-    return t ? t.includes.filter(function (s) { return s.indexOf('$') === -1; }) : [];
+    var lines = t ? t.includes.filter(function (s) { return s.indexOf('$') === -1; }) : [];
+    // 14 Oct 2026: the paying client sees the monthly statics count.
+    if (t && t.staticAdsPerMonth) {
+      lines = lines.map(function (s) {
+        return /^(Static ads|Single-image and carousel static ads)/.test(s)
+          ? '+ ' + t.staticAdsPerMonth + ' statics and carousels a month for paid placements, designed from photos taken on the production day'
+          : s;
+      });
+    }
+    return lines;
   };
 
   var foundingSteps = [
@@ -512,15 +588,60 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     },
     'brand-builder': function () {
       var t = tier('Brand Builder');
-      return { name: 'Brand Builder', label: t && t.label, intro: t && t.scope,
-               steps: retainerSteps(true, true), incl: fromTier(t), crm: true, video: 'brand-builder' };
+      // 13 Oct 2026: Premium comes in Studio or Field, chosen at kickoff.
+      // The counts for each format come from NTC_OFFER.brandBuilder.premium.
+      var pr = (O.brandBuilder && O.brandBuilder.premium) || {};
+      var fmt = (pr.studio && pr.field)
+        ? '<b>Your format is set at kickoff.</b> Studio: ' + pr.studio.summary + '. Field: ' + pr.field.summary + '.'
+        : '';
+      return { name: 'Brand Builder: Premium', label: t && t.label, intro: t && t.scope,
+               steps: retainerSteps(true, true), incl: fromTier(t), note: fmt || undefined, crm: true, video: 'brand-builder' };
     },
     'brand-builder-pilot': function () {
       var p = (O.brandBuilder && O.brandBuilder.pilot) || {};
       // Plays the Brand Builder welcome video (Jadon, 8 Oct 2026): the Pilot is a month of the same production.
-      return { name: 'The Brand Builder Pilot', label: 'Brand Builder · Pilot',
-               intro: 'One month of Brand Builder production, bought on its own. Here is how the month runs.',
-               steps: pilotSteps, incl: p.scope || [], crm: true, video: 'brand-builder' };
+      return { name: 'Brand Builder Studio Pilot', label: 'Brand Builder · Studio Pilot',
+               intro: 'One month of Brand Builder production, recorded in the studio and bought on its own. Here is how the month runs.',
+               steps: pilotSteps(p, false), incl: p.scope || [], videoNote: ONE_FORM_NOTE, video: 'brand-builder' };
+    },
+    /* Brand Builder: Studio and Brand Builder: Field (13 Oct 2026; plan
+       slugs say monthly, display names never do): the Pilot's production every
+       month with no paid media. Retainer-style welcome with role-based
+       access to the channels we post to, no ad account, no funnel or CRM
+       questionnaire and no gameplan. Scope from
+       NTC_OFFER.brandBuilder.monthlyPlans, which carries no price. */
+    'brand-builder-monthly-studio': function () {
+      var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
+      var p = m.studio || {};
+      return { name: 'Brand Builder: Studio', label: 'Brand Builder · Studio',
+               intro: 'Sit-down episodes and the clips around them, recorded in the studio and posted on your channels every month, with a Signature Hero Ad every three months. Here is how the first weeks run.',
+               steps: retainerSteps(false, false), incl: p.scope || [], videoNote: ONE_FORM_NOTE, video: 'brand-builder' };
+    },
+    'brand-builder-monthly-field': function () {
+      var m = (O.brandBuilder && O.brandBuilder.monthlyPlans) || {};
+      var p = m.field || {};
+      return { name: 'Brand Builder: Field', label: 'Brand Builder · Field',
+               intro: 'Three episodes a month, shot where your work happens, with the clips around them, posted on your channels every month, with a Signature Hero Ad every three months. Here is how the first weeks run.',
+               steps: retainerSteps(false, false), incl: p.scope || [],
+               note: '<b>Need more in a month?</b> Extra shoot days, event days and edits are quoted on request and agreed in writing first.',
+               videoNote: ONE_FORM_NOTE, video: 'brand-builder' };
+    },
+    'brand-builder-pilot-field': function () {
+      var p = (O.brandBuilder && O.brandBuilder.fieldPilot) || {};
+      return { name: 'Brand Builder Field Pilot', label: 'Brand Builder · Field Pilot',
+               intro: 'One month of Brand Builder production, shot where your work happens and bought on its own. Here is how the month runs. Extra shoot days, event days and edits are quoted on request and agreed in writing first.',
+               steps: pilotSteps(p, true), incl: p.scope || [], videoNote: ONE_FORM_NOTE, video: 'brand-builder' };
+    },
+    'trial': function () {
+      var t = O.trial || {};
+      return { name: 'Your 5-Day Trial', label: '5-Day Trial',
+               intro: 'Here\u2019s what your five days look like. The five days start once your footage and ad account access are in.',
+               steps: trialSteps(t),
+               incl: [(t.videoAds || 6) + ' video ads and ' + (t.statics || 4) + ' statics, cut from your footage',
+                      'Launched on Meta in your own ad account',
+                      'A day-5 review of what we made and the early numbers'],
+               note: '<b>Media spend is yours.</b> You fund it and pay Meta directly. The minimum for the 5-day test is $' + (t.minTestAdSpend || 500) + '.',
+               call: 'intake call', noIntakeForm: true };
     },
     'eight': function () {
       var p = prod.adSprintEight;
@@ -530,6 +651,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'fifteen': function () {
       var p = prod.adSprintFifteen;
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
+    },
+    // 21 Oct 2026, Jadon: The Thirty, same shape as the other two.
+    'thirty': function () {
+      var p = prod.adSprintThirty;
+      return { name: (p && p.name) || 'The Thirty', label: 'Ad Sprint',
                intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
     },
     'eight-priority': function () {
@@ -543,12 +670,19 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       return { name: ((p && p.name) || 'The Fifteen') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
                intro: priorityIntro, steps: sprintPrioritySteps,
                incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
+    },
+    'thirty-priority': function () {
+      var p = prod.adSprintThirty;
+      return { name: ((p && p.name) || 'The Thirty') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
+               intro: priorityIntro, steps: sprintPrioritySteps,
+               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
     }
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'the-eight': 'eight', 'the-fifteen': 'fifteen',
-    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen'
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen', 'the-thirty': 'thirty',
+    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen', 'sprint-thirty': 'thirty',
+    '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };
 
   var q = new URLSearchParams(location.search);
@@ -598,6 +732,7 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     el.src = v.src;
     $('videoFrame').appendChild(el);
     $('video').hidden = false;
+    if (plan.videoNote) { $('videoNote').textContent = plan.videoNote; $('videoNote').hidden = false; }
   } else if (q.get('preview') === '1') {
     $('videoFrame').innerHTML = '<div class="video-empty">Welcome video goes here</div>';
     $('video').hidden = false;
@@ -617,17 +752,57 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     $('firstWhen').textContent = 'Do these first · two forms, about 10 minutes each';
   }
 
-  // The first call, booked after the forms so we have read them by then.
-  if (WELCOME.kickoff) {
-    $('kickoffLink').href = WELCOME.kickoff;
-    if (plan && plan.call) $('kickoffName').textContent = plan.call;
-    $('kickoffN').textContent = (crm ? '3' : '2') + ' · ';
-    $('intakeN').hidden = false;
-    if (crm) $('kickoffText').textContent = $('kickoffText').textContent.replace('Send the form first', 'Send both forms first');
-    $('firstWhen').textContent = crm
-      ? 'Do these first · two forms, about 10 minutes each, then book your call'
-      : 'Do these first · a 10 minute form, then book your call';
-    $('kickoffRow').hidden = false;
+  /* The trial has no intake form: its intake is the call, the footage
+     and a reply with the offer. Its call is the intake call, booked on
+     the kickoff calendar. */
+  var call = null;
+  if (plan && plan.noIntakeForm) {
+    $('intakeLink').closest('.first-row').hidden = true;
+    $('crmRow').hidden = true;
+    crm = false;
+    // No shoot day in the trial, so the packet card does not promise one.
+    $('packetText').textContent = 'Who\u2019s who, how we work together, and what we\u2019ll ask access to.';
+    $('afterFirst').textContent = 'Three emails are on their way to the address you checked out with, and should already be there. ' +
+      'The welcome email carries the link to book your intake call and the footage upload. Check spam if one is missing.';
+    // Nothing else to do first, so the block waits for the booking link.
+    $('firstWhen').closest('.first').hidden = true;
+    call = function () {
+      $('kickoffName').textContent = plan.call;
+      $('kickoffN').textContent = '';
+      $('kickoffText').textContent = 'It\u2019s short: we confirm where your ads will send homeowners, start your five days, and book your day-5 review.';
+      $('firstWhen').textContent = 'Do this first · book your intake call';
+      $('firstWhen').closest('.first').hidden = false;
+    };
+  } else {
+    // The first call, booked after the forms so we have read them by then.
+    call = function () {
+      if (plan && plan.call) $('kickoffName').textContent = plan.call;
+      $('kickoffN').textContent = (crm ? '3' : '2') + ' · ';
+      $('intakeN').hidden = false;
+      if (crm) $('kickoffText').textContent = $('kickoffText').textContent.replace('Send the form first', 'Send both forms first');
+      $('firstWhen').textContent = crm
+        ? 'Do these first · two forms, about 10 minutes each, then book your call'
+        : 'Do these first · a 10 minute form, then book your call';
+    };
+  }
+
+  /* Only a paid checkout sees the booking link. Stripe sends the client
+     here with ?session_id=, /api/welcome confirms with Stripe that the
+     session was paid and answers with the link, which is not in this
+     file. No session, an unpaid one, or any error: the step stays hidden
+     and the welcome email's link stands. The agent also cancels any
+     kickoff booking that matches no paying client. */
+  var sid = q.get('session_id') || '';
+  if (/^cs_(live|test)_[A-Za-z0-9]+$/.test(sid) && window.fetch) {
+    fetch('/api/welcome?session_id=' + encodeURIComponent(sid), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.paid || !/^https:\/\//.test(d.booking || '')) return;
+        call();
+        $('kickoffLink').href = d.booking;
+        $('kickoffRow').hidden = false;
+      })
+      .catch(function () {});
   }
 
   if (WELCOME.phone) {

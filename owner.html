@@ -56,7 +56,7 @@
   .gate { max-width:360px; margin:16vh auto 0; }
   .gate h1 { font-family:var(--display); font-weight:300; font-size:34px; margin-bottom:6px; }
   .gate p { color:var(--soft); margin-bottom:24px; }
-  label.field { display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .field { display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
   input[type=password], input[type=date] {
     width:100%; background:var(--raised); border:1px solid var(--line-strong); color:var(--parchment);
     font:inherit; padding:12px 14px; border-radius:2px; color-scheme:dark;
@@ -159,6 +159,35 @@
   details.notes li { padding:5px 0 0; }
   details.notes li::marker { color:var(--gold-dim); }
 
+  /* ── calls ───────────────────────────────────────────────────────── */
+  .logcall { background:var(--raised); border:1px solid var(--line); border-radius:4px; padding:16px; }
+  .logcall .row { display:grid; grid-template-columns:120px 1fr; gap:10px 16px; align-items:center; padding:6px 0; }
+  .logcall .row > .field { margin:0; }
+  .logcall .hint { color:var(--muted); font-size:12px; grid-column:2; margin-top:-4px; }
+  .logcall input[type=date], .logcall select, .logcall textarea {
+    width:auto; max-width:100%; background:var(--black); border:1px solid var(--line-strong); color:var(--parchment);
+    font:inherit; font-size:14px; padding:8px 10px; border-radius:2px; color-scheme:dark;
+  }
+  .logcall textarea { width:100%; min-height:64px; resize:vertical; }
+  .logcall select:focus-visible, .logcall textarea:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+  .logcall .seg { background:var(--black); justify-self:start; }
+  .logcall input[type=date], .logcall select { justify-self:start; }
+  .logcall .actions { display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding-top:8px; }
+  .logcall .actions .btn { width:auto; margin-top:0; }
+  .saved { color:var(--ok); font-size:13px; }
+  .saved:empty { display:none; }
+  .count-of { color:var(--muted); font-size:12px; }
+
+  .bars .step { grid-template-columns:18px 110px minmax(60px, 1fr) 40px 64px; }
+  h3 { font-family:var(--display); font-weight:300; font-size:19px; margin:28px 0 8px; }
+  table.small { min-width:520px; }
+  table.calllog { min-width:640px; }
+  table.calllog td.note { white-space:normal; text-align:left; color:var(--soft); min-width:180px; }
+  table.calllog th.note { text-align:left; }
+  .pill { font-size:12px; padding:2px 8px; border-radius:2px; border:1px solid var(--line-strong); color:var(--soft); }
+  .pill.won { border-color:var(--ok); color:var(--ok); }
+  .pill.lost { border-color:#E0A08A; color:#E0A08A; }
+
   @media (max-width:860px) {
     .kpis, .kpis.six { grid-template-columns:repeat(2, minmax(0, 1fr)); }
     .health { grid-template-columns:repeat(2, minmax(0, 1fr)); }
@@ -168,6 +197,9 @@
     .custom { justify-content:flex-start; }
     .step { grid-template-columns:18px 84px minmax(24px, 1fr) 46px 74px; gap:8px; }
     .step .name { font-size:13px; }
+    .bars .step { grid-template-columns:18px 84px minmax(24px, 1fr) 32px 52px; }
+    .logcall .row { grid-template-columns:1fr; gap:6px; }
+    .logcall .hint { grid-column:1; margin-top:0; }
     .conv small { display:block; }
     .kpi { padding:14px 14px 12px; }
     .kpi .v { font-size:32px; }
@@ -223,6 +255,79 @@
       <h2>By campaign and ad</h2>
       <div class="sub">Grouped on the UTM values the visitor first arrived with.</div>
       <div class="scroll"><table id="campaigns"></table></div>
+
+      <h2 id="calls-title">Calls</h2>
+      <div class="sub">Log every sales call when it ends. Every lost call names its objection, so the weekly review shows which one costs the most deals and who beats it. All offers, same date range.</div>
+
+      <form class="logcall" id="logcall" autocomplete="off">
+        <div class="row">
+          <label class="field" for="call-date">Date</label>
+          <input type="date" id="call-date" required>
+        </div>
+        <div class="row">
+          <label class="field" for="call-offer">Offer</label>
+          <select id="call-offer">
+            <option value="brand_builder">Brand Builder</option>
+            <option value="paid_retainer">Paid retainer</option>
+            <option value="founding_three">Founding Three</option>
+            <option value="ad_sprint">Ad Sprint</option>
+            <option value="signature_work">Signature Work</option>
+            <option value="production_inquiry">Production inquiry</option>
+            <option value="">Not sure</option>
+          </select>
+        </div>
+        <div class="row">
+          <span class="field">Taken by</span>
+          <div class="seg" id="call-by" role="group" aria-label="Taken by">
+            <button type="button" data-v="jadon">Jadon</button>
+            <button type="button" data-v="meghan">Meghan</button>
+            <button type="button" data-v="other">Other</button>
+          </div>
+        </div>
+        <div class="row">
+          <span class="field">Outcome</span>
+          <div class="seg" id="call-outcome" role="group" aria-label="Outcome">
+            <button type="button" data-v="won">Won</button>
+            <button type="button" data-v="lost">Lost</button>
+            <button type="button" data-v="follow_up">Follow-up</button>
+            <button type="button" data-v="no_show">No-show</button>
+          </div>
+        </div>
+        <div class="row" id="objection-row">
+          <span class="field">Objection</span>
+          <div class="seg" id="call-objection" role="group" aria-label="Objection">
+            <button type="button" data-v="authority">Authority</button>
+            <button type="button" data-v="budget">Budget</button>
+            <button type="button" data-v="needs">Needs</button>
+            <button type="button" data-v="timing">Timing</button>
+          </div>
+          <div class="hint" id="objection-hint">Required when lost. Authority: has to ask a partner. Budget: too much right now. Needs: not sold it solves the problem. Timing: not now.</div>
+        </div>
+        <div class="row">
+          <label class="field" for="call-note">Note</label>
+          <textarea id="call-note" maxlength="280" placeholder="What almost closed it, or what killed it. No names, emails or phone numbers."></textarea>
+        </div>
+        <div class="actions">
+          <button class="btn" type="submit" id="call-save">Save call</button>
+          <span class="saved" id="call-saved" role="status"></span>
+        </div>
+        <div class="error" id="call-error" role="alert"></div>
+      </form>
+
+      <div class="empty" id="calls-missing" hidden>The call log is not set up yet. Apply supabase/migrations/0010_call_outcomes.sql in the Supabase SQL editor.</div>
+      <div id="calls-report">
+        <div class="kpis" id="call-kpis"></div>
+
+        <h3>Lost by objection</h3>
+        <div class="funnel bars" id="objections"></div>
+        <div class="sub" id="objection-move"></div>
+
+        <h3>By who took the call</h3>
+        <div class="scroll"><table class="small" id="callers"></table></div>
+
+        <h3>Every call in this range</h3>
+        <div class="scroll"><table class="calllog" id="calllog"></table></div>
+      </div>
 
       <div class="health" id="health"></div>
 
@@ -297,7 +402,7 @@
     if (a == null || b == null || !b) return null;
     return (100 * a / b);
   }
-  function pctText(v) { return v == null ? DASH : (v >= 10 ? v.toFixed(0) : v.toFixed(1)) + '%'; }
+  function pctText(v) { return v == null ? DASH : (v >= 10 || v === 0 ? v.toFixed(0) : v.toFixed(1)) + '%'; }
 
   // ── data shaping ─────────────────────────────────────────────────────
   var COUNT_KEYS = ['landing_sessions', 'vsl_plays', 'vsl_25', 'vsl_50', 'vsl_75', 'vsl_90',
@@ -584,8 +689,225 @@
     notes.forEach(function (n) { list.appendChild(el('li', { text: n })); });
 
     renderHealth(sync, stale);
+    renderCalls();
     $('report').hidden = false;
   }
+
+  // ── calls ────────────────────────────────────────────────────────────
+  var CALL_OFFER_LABEL = {
+    brand_builder: 'Brand Builder', paid_retainer: 'Paid retainer', founding_three: 'Founding Three',
+    ad_sprint: 'Ad Sprint', signature_work: 'Signature Work', production_inquiry: 'Production inquiry'
+  };
+  var CALLER_LABEL = { jadon: 'Jadon', meghan: 'Meghan', other: 'Other' };
+  var OUTCOME_LABEL = { won: 'Won', lost: 'Lost', follow_up: 'Follow-up', no_show: 'No-show' };
+  var OBJECTIONS = ['authority', 'budget', 'needs', 'timing'];
+  var OBJECTION_LABEL = { authority: 'Authority', budget: 'Budget', needs: 'Needs', timing: 'Timing' };
+  // What to change when this objection leads. Shown under the top objection.
+  var OBJECTION_MOVE = {
+    authority: 'Ask who else is part of the decision in the first five minutes, and get them on the call.',
+    budget: 'Lead with the downsell or a smaller first step before the big number.',
+    needs: 'Spend longer on diagnosis before recommending a package.',
+    timing: 'Set a dated next step on the call instead of "circle back".'
+  };
+
+  /* Close rate counts calls that were actually held: won over won, lost
+     and follow-up. A no-show was never a chance to close. */
+  function tally(calls) {
+    var t = { total: calls.length, won: 0, lost: 0, follow_up: 0, no_show: 0, obj: {} };
+    OBJECTIONS.forEach(function (o) { t.obj[o] = 0; });
+    calls.forEach(function (c) {
+      t[c.outcome] = (t[c.outcome] || 0) + 1;
+      if (c.outcome === 'lost' && c.objection) t.obj[c.objection] += 1;
+    });
+    t.held = t.won + t.lost + t.follow_up;
+    t.close = t.held ? 100 * t.won / t.held : null;
+    t.top = null;
+    OBJECTIONS.forEach(function (o) {
+      if (t.obj[o] && (!t.top || t.obj[o] > t.obj[t.top])) t.top = o;
+    });
+    return t;
+  }
+
+  function renderCalls() {
+    var calls = state.data.calls;
+    $('calls-missing').hidden = calls !== null && calls !== undefined;
+    $('calls-report').hidden = !calls;
+    if (!calls) return;
+
+    var t = tally(calls);
+
+    var kpis = $('call-kpis'); clear(kpis);
+    kpis.appendChild(kpi('Calls held', int.format(t.held),
+      t.no_show ? int.format(t.no_show) + ' no-show' + (t.no_show === 1 ? '' : 's') : 'Excludes no-shows'));
+    kpis.appendChild(kpi('Won', int.format(t.won), t.follow_up ? int.format(t.follow_up) + ' still in follow-up' : 'Closed'));
+    kpis.appendChild(t.close == null
+      ? kpi('Close rate', DASH, 'No calls held yet', true)
+      : kpi('Close rate', pctText(t.close), 'Won / calls held'));
+    kpis.appendChild(t.top
+      ? kpi('Top objection', OBJECTION_LABEL[t.top], int.format(t.obj[t.top]) + ' of ' + int.format(t.lost) + ' lost')
+      : kpi('Top objection', DASH, 'No lost calls yet', true));
+
+    // lost by objection, one bar per bucket
+    var bars = $('objections'); clear(bars);
+    var most = Math.max.apply(null, OBJECTIONS.map(function (o) { return t.obj[o]; }).concat([0]));
+    OBJECTIONS.forEach(function (o) {
+      var n = t.obj[o];
+      var track = el('div', { class: 'track' });
+      if (n && most) {
+        var bar = el('div', { class: 'bar' });
+        bar.style.width = (100 * n / most) + '%';
+        track.appendChild(bar);
+      }
+      var conv = el('div', { class: 'conv' });
+      if (t.lost) conv.appendChild(el('b', { text: pctText(100 * n / t.lost) }));
+      else conv.textContent = DASH;
+      bars.appendChild(el('div', { class: 'step' + (n ? '' : ' blank') }, [
+        el('div', { class: 'dot' }), el('div', { class: 'name', text: OBJECTION_LABEL[o] }), track,
+        el('div', { class: 'num count' + (n ? '' : ' blank'), text: int.format(n) }), conv
+      ]));
+    });
+    $('objection-move').textContent = t.top
+      ? 'Most deals are lost on ' + OBJECTION_LABEL[t.top] + '. ' + OBJECTION_MOVE[t.top]
+      : '';
+
+    // by caller, so whoever beats the top objection can teach the move
+    var table = $('callers'); clear(table);
+    var cols = ['Caller', 'Held', 'Won', 'Close rate', 'Lost'].concat(OBJECTIONS.map(function (o) { return OBJECTION_LABEL[o]; }));
+    table.appendChild(el('thead', {}, [el('tr', {}, cols.map(function (c) { return el('th', { text: c, scope: 'col' }); }))]));
+    var body = el('tbody');
+    Object.keys(CALLER_LABEL).forEach(function (who) {
+      var mine = calls.filter(function (c) { return c.taken_by === who; });
+      if (!mine.length) return;
+      var m = tally(mine);
+      var cells = [el('td', { text: CALLER_LABEL[who] }),
+        textCell(int.format(m.held)), textCell(int.format(m.won)),
+        textCell(m.close == null ? DASH : pctText(m.close)), textCell(int.format(m.lost))];
+      OBJECTIONS.forEach(function (o) { cells.push(textCell(int.format(m.obj[o]))); });
+      body.appendChild(el('tr', {}, cells));
+    });
+    if (!body.children.length) {
+      body.appendChild(el('tr', {}, [el('td', { class: 'empty', colspan: String(cols.length), text: 'No calls logged in this range.' })]));
+    }
+    table.appendChild(body);
+
+    // every call, newest first, with a way to take one back
+    var log = $('calllog'); clear(log);
+    log.appendChild(el('thead', {}, [el('tr', {}, ['Date', 'Offer', 'Caller', 'Outcome', 'Objection', 'Note', ''].map(function (c, i) {
+      return el('th', { text: c, scope: 'col', class: i === 5 ? 'note' : '' });
+    }))]));
+    var lb = el('tbody');
+    calls.forEach(function (c) {
+      var del = el('button', { type: 'button', class: 'linkish', text: 'Delete' });
+      del.addEventListener('click', function () { deleteCall(c.id, del); });
+      lb.appendChild(el('tr', {}, [
+        el('td', { text: shortDay(c.call_date) }),
+        textCell(c.offer ? (CALL_OFFER_LABEL[c.offer] || c.offer) : DASH),
+        textCell(CALLER_LABEL[c.taken_by] || c.taken_by),
+        el('td', {}, [el('span', { class: 'pill ' + c.outcome, text: OUTCOME_LABEL[c.outcome] || c.outcome })]),
+        textCell(c.objection ? OBJECTION_LABEL[c.objection] : DASH),
+        el('td', { class: 'note', text: c.note || '' }),
+        el('td', {}, [del])
+      ]));
+    });
+    if (!calls.length) {
+      lb.appendChild(el('tr', {}, [el('td', { class: 'empty', colspan: '7', text: 'No calls logged in this range.' })]));
+    }
+    log.appendChild(lb);
+  }
+
+  // ── logging a call ───────────────────────────────────────────────────
+  var call = { taken_by: 'jadon', outcome: null, objection: null };
+
+  function pressSeg(id, value) {
+    [].forEach.call($(id).children, function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === value));
+    });
+  }
+  function syncCallForm() {
+    pressSeg('call-by', call.taken_by);
+    pressSeg('call-outcome', call.outcome);
+    // A no-show has no objection, so the choice is hidden rather than ignored.
+    if (call.outcome === 'no_show') call.objection = null;
+    $('objection-row').hidden = call.outcome === 'no_show';
+    pressSeg('call-objection', call.objection);
+  }
+  [['call-by', 'taken_by'], ['call-outcome', 'outcome'], ['call-objection', 'objection']].forEach(function (pair) {
+    [].forEach.call($(pair[0]).children, function (b) {
+      b.addEventListener('click', function () {
+        var v = b.getAttribute('data-v');
+        // Pressing the selected objection again clears it, since it is optional unless lost.
+        call[pair[1]] = (pair[1] === 'objection' && call.objection === v) ? null : v;
+        $('call-saved').textContent = '';
+        syncCallForm();
+      });
+    });
+  });
+
+  function resetCallForm() {
+    call.outcome = null; call.objection = null;
+    $('call-note').value = '';
+    $('call-date').value = dayIn(TZ, new Date());
+    syncCallForm();
+  }
+
+  $('logcall').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('call-error').textContent = '';
+    $('call-saved').textContent = '';
+    if (!call.outcome) { $('call-error').textContent = 'Pick an outcome.'; return; }
+    if (call.outcome === 'lost' && !call.objection) {
+      $('call-error').textContent = 'A lost call needs an objection. Which one killed it?';
+      return;
+    }
+    var date = $('call-date').value;
+    var btn = $('call-save');
+    btn.disabled = true;
+    fetch('/api/owner', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'log_call', call_date: date, offer: $('call-offer').value,
+        taken_by: call.taken_by, outcome: call.outcome, objection: call.objection,
+        note: $('call-note').value
+      })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (body) {
+        btn.disabled = false;
+        if (r.status === 401) { show('gate'); return; }
+        if (!r.ok) {
+          $('call-error').textContent = body.error
+            ? 'Not saved: ' + body.error + '.'
+            : 'Not saved. Try again in a moment.';
+          return;
+        }
+        resetCallForm();
+        $('call-saved').textContent = (date < state.from || date > state.to)
+          ? 'Saved. It falls outside the range shown.'
+          : 'Saved.';
+        var keep = $('call-saved').textContent;
+        load().then(function () { $('call-saved').textContent = keep; });
+      });
+    }).catch(function () {
+      btn.disabled = false;
+      $('call-error').textContent = 'Could not reach the server. Nothing was saved.';
+    });
+  });
+
+  function deleteCall(id, btn) {
+    if (!window.confirm('Delete this call from the log?')) return;
+    btn.disabled = true;
+    fetch('/api/owner', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete_call', id: id })
+    }).then(function (r) {
+      if (r.status === 401) { show('gate'); return; }
+      if (!r.ok && r.status !== 404) { btn.disabled = false; window.alert('Could not delete that call.'); return; }
+      load();
+    }).catch(function () { btn.disabled = false; window.alert('Could not reach the server.'); });
+  }
+
+  resetCallForm();
 
   /* What is known to be flowing, read from the same coverage the report
      uses. "Active" means an event arrived recently; it is never claimed on
