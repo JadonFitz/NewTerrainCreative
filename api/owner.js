@@ -113,7 +113,8 @@ function shiftDay(day, delta) {
 
 // ── the call log ───────────────────────────────────────────────────────
 const OFFERS = ['brand_builder', 'paid_retainer', 'founding_three',
-                'ad_sprint', 'signature_work', 'production_inquiry'];
+                'ad_sprint', 'signature_work', 'production_inquiry',
+                'trial_pest_control'];  // 21 Oct 2026: needs migration 0012
 const CALLERS = ['jadon', 'meghan', 'other'];
 const OUTCOMES = ['won', 'lost', 'follow_up', 'no_show'];
 const OBJECTIONS = ['authority', 'budget', 'needs', 'timing'];

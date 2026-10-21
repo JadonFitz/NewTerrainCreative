@@ -123,7 +123,7 @@
       questions: {
         ntc_site_or_ig:     { type: 'text', label: 'Business Website or Instagram' },
         ntc_sprint_package: { type: 'choice', label: 'Which Ad Sprint are you considering?',
-          options: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'Not sure, help me choose'] },
+          options: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'The Thirty (30 ad creatives)', 'Not sure, help me choose'] },
         ntc_sprint_promote: { type: 'text', label: 'What are you trying to promote or sell?' },
         // The live label uses a curly apostrophe; keep it.
         ntc_sprint_goal:    { type: 'choice', label: 'What’s the main goal of the campaign?',
@@ -142,9 +142,10 @@
         ['ntc_sprint_goal', 'ntc_location_text', 'ntc_sprint_launch'],
         ['ntc_sprint_budget', 'ntc_notes']
       ],
-      // /sprint sends pkg=eight|fifteen; it preselects the package.
+      // /sprint sends pkg=eight|fifteen|thirty; it preselects the package.
       prefill: { pkg: { key: 'ntc_sprint_package',
-        map: { eight: 'The Eight (8 ad creatives)', fifteen: 'The Fifteen (15 ad creatives)' } } },
+        map: { eight: 'The Eight (8 ad creatives)', fifteen: 'The Fifteen (15 ad creatives)',
+               thirty: 'The Thirty (30 ad creatives)' } } },
       disqualify: [],
       disqualifyTo: '',
       valueKey: 'ntc_sprint_budget'
