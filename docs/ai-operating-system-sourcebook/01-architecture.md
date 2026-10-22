@@ -123,7 +123,7 @@ Each component: WHAT, WHY, CONNECTS TO, DATA IN, DATA OUT, IF IT FAILS, CODE, ST
 
 - **WHAT:** one always-on service, `ntc-agent`, built from branch `agent-v1`, root `agent/`, at `https://ntc-agent.onrender.com`. It ran on Railway until Oct 21, 2026 (moved to Render Oct 22, 2026 after Railway's security breach). As of Oct 4, `agent/railway.json` set Nixpacks, `npm start`, healthcheck `/healthz`, restart on failure up to 10 times.
 - **WHY:** the agent needs a long-lived process: Slack Socket Mode holds a WebSocket open, and the agent runs its own interval jobs. Serverless functions are a poor fit for that.
-- **Was also on Railway (00 file, not in either repo):** Postiz, the self-hosted social scheduler for NTC's own accounts at the `post.` subdomain. Elasticsearch and Temporal were stopped to cut cost. Where Postiz runs after the Oct 22 move is not recorded here.
+- **Was also on Railway (00 file, not in either repo):** Postiz, the self-hosted social scheduler for NTC's own accounts at the `post.` subdomain. Elasticsearch and Temporal were stopped to cut cost. Postiz was hosted on Railway and has been down since Railway was shut down on Oct 22, 2026 (status to be decided).
 - **STATUS:** `LIVE` (agent, inferred from README and real Slack output in the 00 file; on Render since Oct 22, 2026).
 
 ### 3.4 Supabase and Postgres

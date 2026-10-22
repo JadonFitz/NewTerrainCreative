@@ -14,7 +14,7 @@ Client names are replaced with `<Client>`. This file contains no secrets.
 | Speed-to-Lead (`JadonFitz/ntc-speed-to-lead`, `main`) | Vercel function. Slack webhook that posts call cards. | Vercel deploys |
 | NTC Agent (`ntc-speed-to-lead`, branch `agent-v1`, `agent/` folder) | Railway (moved to Render Oct 22, 2026 after Railway's security breach). Node 22, Slack Bolt in Socket Mode plus an HTTP server. Postgres `ops` schema, about 36 numbered migrations, RLS enabled with no policies (service role only). Vercel only builds previews of this branch. | Vercel previews, Slack bot output, Launch Readiness doc |
 | Funnel database | Supabase (Vercel marketplace integration; env vars are prefixed `sbdata_`, and lookup matches on suffix) | Env var names, commits |
-| Postiz (own social posting only) | Railway as of Oct 4 (not confirmed after the Oct 21 Railway breach), `post.newterraincreative.com` | Ops manual |
+| Postiz (own social posting only) | Was hosted on Railway, `post.newterraincreative.com`; down since Railway was shut down on Oct 22, 2026 (status to be decided) | Ops manual |
 | Scheduled AI agents | Claude (Cowork) scheduled tasks plus skills, **not in either repo** | Handbook, Slack |
 
 **Env var names seen (names only).** Website: `META_PIXEL_ID`, `META_CAPI_TOKEN`, `META_TEST_EVENT_CODE` (preview only), `META_ADS_TOKEN`, `META_AD_ACCOUNT_ID`, `ICLOSED_WEBHOOK_SECRET`, `CRON_SECRET`, `OWNER_DASHBOARD_PASSWORD`, `SENDGRID_API_KEY`, `sbdata_*` (Supabase URL, keys, Postgres). Speed-to-Lead: `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `ANTHROPIC_API_KEY`.
