@@ -17,7 +17,7 @@ Documentation only. Nothing in production code, config, migrations, env vars or 
 ## Top 10 facts a writer must get right
 
 1. **The website is not Next.js.** It is 16 static HTML pages plus Vercel serverless functions in `api/`, with no build step and no npm dependencies (`vercel.json`: `framework: null`, `buildCommand: null`).
-2. **The "NTC Agent" on Railway makes no AI model calls.** It is a deterministic rule engine with Slack approval buttons. The only model call in either repo is Speed-to-Lead's internal call card (`ntc-speed-to-lead` `api/slack.js`). The scheduled AI work lives in four Claude Cowork tasks outside both repos.
+2. **The "NTC Agent" (on Render since Oct 22, 2026; Railway before that) makes no AI model calls.** It is a deterministic rule engine with Slack approval buttons. The only model call in either repo is Speed-to-Lead's internal call card (`ntc-speed-to-lead` `api/slack.js`). The scheduled AI work lives in four Claude Cowork tasks outside both repos.
 3. **GoHighLevel is in development with an outside builder and is not in either repo.** Never describe an AI-built or deployed CRM.
 4. **Nothing reaches a client without an approval.** Client templates send only when `approved = true`; every wording change resets approval; contracts need Jadon specifically; the agent has no Stripe API client, so it cannot move money.
 5. **Booking is iClosed**, after five designs in ten weeks (04, L1). NTC keeps its own attribution passthrough, its own Meta `Schedule` conversion, and its own copy of every booking.
@@ -55,7 +55,7 @@ order by 1, 2;
 2. Which close-desk texts are currently approved? (Run the query above.) Migrations `023` to `035` reset the MSA, order-form rows, payment links and Sprint-credit clauses to unapproved.
 3. Is there a second iClosed webhook with an old key? Check iClosed's webhook settings and delete or update the extra one.
 4. Is the Founding Stripe checkout a one-time $0 checkout or a trial that auto-charges month two? (Flagged Sep 29, left to check in Stripe.)
-5. Approximate cash spent during the build on tools and contractors (Claude, Vercel, Supabase, Railway, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours (a range is fine). Both are needed before the cost comparison is used publicly.
+5. Approximate cash spent during the build on tools and contractors (Claude, Vercel, Supabase, Railway, Render, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours (a range is fine). Both are needed before the cost comparison is used publicly.
 6. GoHighLevel: the builder's quote is $1,600. What are the final scope and timeline, and when does the pilot sub-account go live?
 7. Timeliner go/no-go on Oct 26: if no, does Clipflow stay, and should the agent's Timeliner steps be switched off?
 8. When will `agent-v1` merge to `main`, and will the merge keep main's kickoff-ignore filter in `api/slack.js`?
@@ -64,7 +64,7 @@ order by 1, 2;
 
 ## Known gaps in the evidence
 
-- **Some production state is still inferred.** Vercel-side checks are done (above). The Railway agent, Supabase `ops` data and vendor settings were not inspected; statuses marked "inferred" in those areas still need a check.
+- **Some production state is still inferred.** Vercel-side checks are done (above). The agent (then on Railway, now on Render), Supabase `ops` data and vendor settings were not inspected; statuses marked "inferred" in those areas still need a check.
 - **The four Cowork tasks are documented only from the 00 file.** Their instructions and run history were not inspected.
 - **No transcript covers** the owner dashboard, the Meta spend sync, the iClosed webhook build or the Vimeo switch. Those are documented from git and code only.
 - **Vendor configuration is invisible to git:** iClosed forms and events, Stripe products and Payment Link redirects, Slack app settings, Meta Events Manager.

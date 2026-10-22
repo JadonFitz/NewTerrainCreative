@@ -78,7 +78,7 @@ Reasoning behind the per-package hours, in brief:
 | S1 | Speed-to-Lead Slack function with Claude call card and prompt | about 210 lines + 1 prompt | AI/LLM engineer | 14 | 24 | 36 | $3,600 |
 | A0 | Agent spec and Handbook governance (approval matrix, autonomy levels) | AGENT_SPEC + HANDBOOK, 755 lines | Product/project manager | 20 | 32 | 48 | $2,880 |
 | A1 | ops schema and 36 migrations (incl. approval-reset pattern) | 2,141 lines SQL | Backend engineer | 30 | 48 | 72 | $4,560 |
-| A2 | Railway service: Bolt Socket Mode, HTTP server, healthz, config, logging | core modules about 900 lines | DevOps/cloud engineer | 20 | 32 | 48 | $4,160 |
+| A2 | Agent service (built on Railway, now Render): Bolt Socket Mode, HTTP server, healthz, config, logging | core modules about 900 lines | DevOps/cloud engineer | 20 | 32 | 48 | $4,160 |
 | A3 | Stripe webhook intake, store-first, offer matching, mismatch and duplicate approvals | stripe.js, offers.js, parts of onboarding | Backend engineer | 30 | 48 | 70 | $4,560 |
 | A4 | Flow A onboarding: Slack Connect, templated email, Drive folder, prefill, template engine | onboarding.js 836+, templates, drive, prefill | Automation/integration engineer | 50 | 80 | 120 | $9,600 |
 | A5 | Billing alerts, Sprint-to-retainer, Sprint credit, Front of the Line | billing.js + offers/onboarding changes | Backend engineer | 20 | 32 | 48 | $3,040 |
@@ -173,7 +173,7 @@ The operating-system work (tracking, booking, agent, dashboard) falls between Se
 |---|---|---|
 | Vercel (Pro, per session 3247d1bf) | `vercel.json`, cron | `[JADON: actual spend]` |
 | Supabase | migrations, `_supabase.js` | `[JADON: actual spend]` |
-| Railway (agent, Postiz) | `agent/railway.json` | `[JADON: actual spend]` |
+| Railway (agent until Oct 21, 2026, Postiz) and Render (agent from Oct 22, 2026) | `agent/railway.json` | `[JADON: actual spend]` |
 | iClosed | widgets, webhook | `[JADON: actual spend]` |
 | Slack (Pro required for Slack Connect, `AGENT_SPEC.md`) | Bolt app | `[JADON: actual spend]` |
 | Stripe | webhooks, Payment Links | per-transaction fees |
@@ -205,7 +205,7 @@ The operating-system work (tracking, booking, agent, dashboard) falls between Se
 
 In body copy prefer "AI-enabled" or "AI-assisted backend" over "AI-powered". The automation engine is deterministic; the AI layer is Speed-to-Lead, the four scheduled Cowork tasks, and Claude Code as the development tool (03, section 0).
 
-**Before the cost comparison is used publicly,** two numbers are needed from Jadon: approximate cash spent on tools and contractors during the build (Claude, Vercel, Supabase, Railway, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours worked (a range such as "120 to 180 hours" is enough). Git commits do not measure labor.
+**Before the cost comparison is used publicly,** two numbers are needed from Jadon: approximate cash spent on tools and contractors during the build (Claude, Vercel, Supabase, Railway, Render, iClosed, Slack, Vimeo and Mux, Timeliner, Google, the GHL builder, other directly related software), and an estimate of personal hours worked (a range such as "120 to 180 hours" is enough). Git commits do not measure labor.
 
 ### Supporting statements
 
@@ -216,7 +216,7 @@ In body copy prefer "AI-enabled" or "AI-assisted backend" over "AI-powered". The
 **Do NOT say:**
 - "We saved $177K" or any savings figure. NTC never had that budget; savings require actual spend, which is unknown.
 - "AI built our CRM" or anything implying GoHighLevel is deployed or validated. It is in development with an outside builder.
-- "Our AI agent runs onboarding / the business." The Railway agent contains no AI model calls; it is rule-based with human approvals. Accurate: "AI coding tools built our automation layer" and "scheduled AI assistants draft briefs and replies for human approval."
+- "Our AI agent runs onboarding / the business." The NTC Agent contains no AI model calls; it is rule-based with human approvals. Accurate: "AI coding tools built our automation layer" and "scheduled AI assistants draft briefs and replies for human approval."
 - "Fully automated." Every client-facing step is template-approved or human-approved.
 - "$500K system." The high agency figure is a ceiling, not an estimate.
 - "Built in 27 days" for the whole thing. The website history spans 117 calendar days; 27 is its active-day count, and the agent adds more.

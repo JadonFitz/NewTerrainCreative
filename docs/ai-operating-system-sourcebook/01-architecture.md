@@ -8,7 +8,7 @@ Status labels used throughout: `LIVE`, `BUILT, NOT LIVE`, `IN DEVELOPMENT`, `PLA
 
 ## 1. The system in one paragraph
 
-New Terrain Creative runs on three deployables and a set of scheduled AI tasks. The **website** is plain static HTML plus a handful of serverless functions on Vercel. It captures attribution, sends conversions to Meta from the browser and the server, stores its own first-party funnel events in Supabase, hands booking to **iClosed**, and gives the owner a password-protected dashboard. **Speed-to-Lead** is one Vercel function that watches iClosed's Slack alerts and asks Claude to write an internal call card. The **NTC Agent** is an always-on Node service on Railway that reacts to Stripe payments, onboards clients through Slack, email, Google Drive and Timeliner, runs the contract-and-payment "close desk", and books shoots, all behind human approval gates. Four **scheduled Claude tasks** (in Claude Cowork, not in either repo) draft lead briefs, a morning brief, inbox replies and Friday recaps. **GoHighLevel** is being built by an outside builder and is not part of the running system yet.
+New Terrain Creative runs on three deployables and a set of scheduled AI tasks. The **website** is plain static HTML plus a handful of serverless functions on Vercel. It captures attribution, sends conversions to Meta from the browser and the server, stores its own first-party funnel events in Supabase, hands booking to **iClosed**, and gives the owner a password-protected dashboard. **Speed-to-Lead** is one Vercel function that watches iClosed's Slack alerts and asks Claude to write an internal call card. The **NTC Agent** is an always-on Node service on Render (Railway until Oct 21, 2026) that reacts to Stripe payments, onboards clients through Slack, email, Google Drive and Timeliner, runs the contract-and-payment "close desk", and books shoots, all behind human approval gates. Four **scheduled Claude tasks** (in Claude Cowork, not in either repo) draft lead briefs, a morning brief, inbox replies and Friday recaps. **GoHighLevel** is being built by an outside builder and is not part of the running system yet.
 
 One surprise worth stating plainly for any writer: **the "NTC Agent" contains no AI model calls.** It is a deterministic rule engine with Slack approval buttons. The only model call in either repo is Speed-to-Lead's call card. The AI work otherwise lives in the scheduled Cowork tasks and in how the code was written (most commits are co-authored by Claude models).
 
@@ -31,7 +31,7 @@ flowchart LR
   subgraph Vercel_STL[Vercel: Speed-to-Lead]
     STL[/api/slack + lib/rules.js/]
   end
-  subgraph Railway
+  subgraph Render
     AGENT[NTC Agent<br/>Bolt Socket Mode + HTTP]
   end
   subgraph Data
@@ -115,16 +115,16 @@ Each component: WHAT, WHY, CONNECTS TO, DATA IN, DATA OUT, IF IT FAILS, CODE, ST
 
 - **WHAT:** hosting for two projects: the website (static files plus Node functions in `api/`) and Speed-to-Lead (`api/slack.js`). The 00 file reports Node 24.x for the website and 88 production deploys between Sep 4 and Oct 4.
 - **WHY:** git push deploys, preview URLs per branch, built-in cron, marketplace Supabase integration.
-- **IF IT FAILS:** both the site and Speed-to-Lead go down; the Railway agent keeps running.
+- **IF IT FAILS:** both the site and Speed-to-Lead go down; the agent on Render keeps running.
 - **Gotchas found the hard way:** env var changes need a redeploy (`ba3360f`, `aac920e`); crons do not run on previews; the Supabase integration prefixes env var names (`c2b6440`).
 - **STATUS:** `LIVE`. There is **no CI**: `preflight.py` and the tests are run by hand and do not gate deploys.
 
-### 3.3 Railway
+### 3.3 Render
 
-- **WHAT:** one always-on service, `ntc-agent`, built from branch `agent-v1`, root `agent/`. `agent/railway.json`: Nixpacks, `npm start`, healthcheck `/healthz`, restart on failure up to 10 times.
+- **WHAT:** one always-on service, `ntc-agent`, built from branch `agent-v1`, root `agent/`, at `https://ntc-agent.onrender.com`. It ran on Railway until Oct 21, 2026 (moved to Render Oct 22, 2026 after Railway's security breach). As of Oct 4, `agent/railway.json` set Nixpacks, `npm start`, healthcheck `/healthz`, restart on failure up to 10 times.
 - **WHY:** the agent needs a long-lived process: Slack Socket Mode holds a WebSocket open, and the agent runs its own interval jobs. Serverless functions are a poor fit for that.
-- **Also on Railway (00 file, not in either repo):** Postiz, the self-hosted social scheduler for NTC's own accounts at the `post.` subdomain. Elasticsearch and Temporal were stopped to cut cost.
-- **STATUS:** `LIVE` (agent, inferred from README and real Slack output in the 00 file).
+- **Was also on Railway (00 file, not in either repo):** Postiz, the self-hosted social scheduler for NTC's own accounts at the `post.` subdomain. Elasticsearch and Temporal were stopped to cut cost. Postiz was hosted on Railway and has been down since Railway was shut down on Oct 22, 2026 (status to be decided).
+- **STATUS:** `LIVE` (agent, inferred from README and real Slack output in the 00 file; on Render since Oct 22, 2026).
 
 ### 3.4 Supabase and Postgres
 
@@ -141,7 +141,7 @@ Two schemas, two owners:
 - **Migrations:** applied by hand in the Supabase SQL editor, no CLI. Website: `0001` to `0008` (1,179 lines) plus verify scripts. Agent: `001` to `036` (2,141 lines). Only `0004` carries an "applied" note in the repo. **Verified in production on Oct 4** from Vercel runtime logs: `0006` is live (signed-in `GET /api/owner` calls return 200, which requires `owner_funnel_report()`), and `0007` and `0008` are live (the 13:00 UTC cron returned `status: ok` through the four-argument `meta_sync_replace()` and wrote `sync_status`). `0005` only redefines the `funnel_performance` view, which nothing in production calls, so it could not be verified from logs; likely applied.
 - **Boundary:** the agent writes only `ops` and reads one thing from `public` (`db.findLeadByEmail` on `public.leads`). That boundary is enforced in code, not by database grants (the service-role key could technically write `public`).
 - **Unused tables:** `ops.deliverables` and `ops.client_messages` exist for planned flows and no code writes them.
-- **IF IT FAILS:** `/api/track` still answers 200 (`stored:false`), so visitors never see an error. The webhook keeps answering iClosed. The agent's `/healthz` returns 503 and Railway restarts it; stuck inbound events are replayed at boot (`recoverStuckEvents`).
+- **IF IT FAILS:** `/api/track` still answers 200 (`stored:false`), so visitors never see an error. The webhook keeps answering iClosed. The agent's `/healthz` returns 503 and the host restarts it (Railway did; on Render since Oct 22, 2026); stuck inbound events are replayed at boot (`recoverStuckEvents`).
 - **STATUS:** `LIVE`.
 
 > KEEP PRIVATE: the Supabase project URL and the Meta pixel id appear in SQL comments and one commit message in the website repo. Neither is a secret, but neither belongs in published material.
@@ -321,7 +321,7 @@ Meta Graph (CAPI, Marketing API insights), iClosed (widgets in, webhook out), Sl
 | System | AI? | Status |
 |---|---|---|
 | Speed-to-Lead call card | Yes: one Claude Messages API call per alert, no tools, internal output only | LIVE |
-| NTC Agent (Railway) | **No model calls**; rule engine with approvals | LIVE (Phase 1) |
+| NTC Agent (Render) | **No model calls**; rule engine with approvals | LIVE (Phase 1) |
 | Four Cowork scheduled tasks | Yes: Claude with the Handbook preamble, drafts and briefs only | LIVE (00 file) |
 | Agent Flow C (classify client messages), reply parsing | Would use Claude (`ANTHROPIC_MODEL_FAST` configured) | PLANNED |
 
