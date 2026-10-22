@@ -971,6 +971,9 @@
         }
         return r.json().then(function (body) {
           show('dash');
+          // Signed in, so this browser is ours: the site's pages read this
+          // flag (assets/track.js) and tag our clicks and checkouts internal.
+          try { localStorage.setItem('ntc_internal', '1'); } catch (e) {}
           if (!r.ok || !body.ok) {
             // Never render stale numbers under a failed request.
             $('report').hidden = true;

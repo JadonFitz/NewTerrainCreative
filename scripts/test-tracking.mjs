@@ -121,6 +121,25 @@ check('breakdown events are stored first party',
   requests.some((r) => r.body.event_name === 'breakdown_start') &&
   requests.some((r) => r.body.event_name === 'breakdown_view'));
 
+// Internal browsers: ?ntc_internal=1 or an /owner sign-in marks ours,
+// events say so, and ?ntc_internal=0 clears it.
+check('a visitor is not internal by default', window.ntc.isInternal() === false);
+window.ntc.track('CTAClick', { position: 'plain' }, { once: false });
+await new Promise((resolve) => setTimeout(resolve, 0));
+check('a visitor\'s events carry no internal tag', requests[requests.length - 1].body.metadata?.internal === undefined);
+const search = window.location.search;
+window.location.search = '?ntc_internal=1';
+check('?ntc_internal=1 marks the browser', window.ntc.isInternal() === true && stored.get('ntc_internal') === '1');
+window.location.search = search;
+check('the mark outlives the page that set it', window.ntc.isInternal() === true);
+window.ntc.track('CTAClick', { position: 'ours' }, { once: false });
+await new Promise((resolve) => setTimeout(resolve, 0));
+check('our events are tagged internal', requests[requests.length - 1].body.metadata?.internal === true);
+window.localStorage.removeItem = (k) => stored.delete(k);
+window.location.search = '?ntc_internal=0';
+check('?ntc_internal=0 clears it', window.ntc.isInternal() === false && !stored.has('ntc_internal'));
+window.location.search = search;
+
 console.log(`\n${failures === 0
   ? '\x1b[32mPASS\x1b[0m · browser events are attributable and correctly routed'
   : `\x1b[31mFAIL\x1b[0m · ${failures} check(s) failed`}`);
