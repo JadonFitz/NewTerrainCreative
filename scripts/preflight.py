@@ -408,10 +408,10 @@ ok(f'{len(_redirects)} redirect(s) resolve to real pages') if _redirects else No
 
 
 # Agent proxies. /d/ (direction decks) and /b/ (the free breakdown) are
-# served by the agent on Railway through a rewrite. Each must sit before
+# served by the agent on Render through a rewrite. Each must sit before
 # the catch-all, or the catch-all answers with the homepage, and each must
 # be noindexed with no referrer, because its URLs carry private tokens.
-AGENT = 'https://ntc-agent-production.up.railway.app'
+AGENT = 'https://ntc-agent.onrender.com'
 _rewrites = _cfg.get('rewrites', [])
 _catch = next((i for i, r in enumerate(_rewrites) if r['source'].startswith('/((?!')), len(_rewrites))
 _hdrs = {h['source']: {x['key']: x['value'] for x in h['headers']} for h in _cfg.get('headers', [])}

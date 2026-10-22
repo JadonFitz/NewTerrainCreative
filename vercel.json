@@ -125,11 +125,11 @@
   "rewrites": [
     {
       "source": "/d/:path*",
-      "destination": "https://ntc-agent-production.up.railway.app/d/:path*"
+      "destination": "https://ntc-agent.onrender.com/d/:path*"
     },
     {
       "source": "/b/:path*",
-      "destination": "https://ntc-agent-production.up.railway.app/b/:path*"
+      "destination": "https://ntc-agent.onrender.com/b/:path*"
     },
     {
       "source": "/((?!api/).*)",

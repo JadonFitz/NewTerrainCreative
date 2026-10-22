@@ -12,7 +12,7 @@ This file documents every AI-assisted or automated system NTC runs. Read section
 | Website automations (Meta sync, webhook, tracking) | No | `NewTerrainCreative/api/` |
 | Build process | Yes, as a coding tool: most commits are co-authored by Claude models (Sonnet 4.6 in June, Fable 5 in July, Opus 5 in September, Fable 5.1 and Opus 5.5 in October; 69 of 71 commits on `agent-v1`) | git trailers |
 
-Writers should not describe the Railway agent as "AI-powered" in the sense of an LLM making decisions. It is the automation layer that AI coding tools built, governed by rules the business wrote.
+Writers should not describe the NTC Agent as "AI-powered" in the sense of an LLM making decisions. It is the automation layer that AI coding tools built, governed by rules the business wrote.
 
 ---
 
@@ -39,7 +39,9 @@ Short teaching excerpt of the prompt's safety posture (paraphrased structure, no
 
 ---
 
-## 2. NTC Agent (Railway)
+## 2. NTC Agent (Render)
+
+The agent ran on Railway until Oct 21, 2026 (moved to Render Oct 22, 2026 after Railway's security breach). It now runs at `https://ntc-agent.onrender.com`; its database was always Supabase.
 
 ### 2.1 Shape
 
@@ -165,5 +167,5 @@ Approval is a SQL `UPDATE ... set approved = true` that Jadon runs himself after
 |---|---|---|---|
 | Custom lead-confirmation + Google Calendar polling + SMS (`feat/lead-booking-automation`, `b182a56`) | Cron polled `events.list`, matched attendee email, unique calendar event id, fixed Meta `event_id` `schedule-<id>`, SMS behind two switches | ABANDONED (never merged) | iClosed adopted two days later (Sep 21) |
 | Notion OS as agent hub (CRM, intake, Agent Inbox approvals) | built Sep 23 | ABANDONED as hub (00 file) | direction changed within days; Handbook v1.15 still names Notion for records and SOPs |
-| `ntc-agents` on Vercel Workflow + AI Gateway + Neon | Autopilot Packet, Sep 23/24 | ABANDONED / REPLACED (00 file) | shipped as a Railway Slack app with an `ops` schema instead |
+| `ntc-agents` on Vercel Workflow + AI Gateway + Neon | Autopilot Packet, Sep 23/24 | ABANDONED / REPLACED (00 file) | shipped as a Railway Slack app (moved to Render Oct 22, 2026 after Railway's security breach) with an `ops` schema instead |
 | iClosed's built-in Meta CAPI | vendor feature | ABANDONED | rejected a token Meta accepts (`f2a9f1c`) |

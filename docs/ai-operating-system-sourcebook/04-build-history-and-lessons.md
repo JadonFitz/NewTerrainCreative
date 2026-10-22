@@ -31,7 +31,7 @@ By month: Jun 12, Jul 28, Aug 0, Sep 160, Oct 23. Lines added 30,262, deleted 7,
 | Phase | Dates | Commits | What was built | Key SHAs |
 |---|---|---|---|---|
 | S1 Speed-to-Lead webhook | Sep 24 | 2 | Vercel function: iClosed Slack alert becomes a Claude call card | `f1b870a`, `cca68df` |
-| S2 Agent Phase 1 | Sep 26 to 29 | 26 | `AGENT_SPEC.md` v2.1, Handbook v1.6, `ops` schema (`001`), Bolt Socket Mode agent on Railway, Flow A + Flow D, offer catalog with metadata-first matching, billing alerts only, live + sandbox Stripe secrets, duplicate-client guard, Drive folders, `/healthz` channel membership | `6af857e`, `f4f52c4`, `a179575`, `ff802aa`, `f74f2d9`, `7c056fd`, `fbbbc5a`, `d3f757a` |
+| S2 Agent Phase 1 | Sep 26 to 29 | 26 | `AGENT_SPEC.md` v2.1, Handbook v1.6, `ops` schema (`001`), Bolt Socket Mode agent on Railway (moved to Render Oct 22, 2026 after Railway's security breach), Flow A + Flow D, offer catalog with metadata-first matching, billing alerts only, live + sandbox Stripe secrets, duplicate-client guard, Drive folders, `/healthz` channel membership | `6af857e`, `f4f52c4`, `a179575`, `ff802aa`, `f74f2d9`, `7c056fd`, `fbbbc5a`, `d3f757a` |
 | S3 Lifecycle automation | Sep 30 to Oct 1 | 21 | Plan changes, annual offers, pilot offer, Timeliner + webhooks, Slack Connect nudge (Sep 30); kickoff calendar sync, HTML emails, close desk with signed PDF, Flow B shoot booking, calendar guest workaround (Oct 1) | `a149bae`, `903b4cb`, `5a205ee`, `2d49a92`, `15a1311`, `cf80cb6`, `716649a`, `31f861c` |
 | S4 Rate card sync | Oct 2 | 10 | Offer v2 lock and rate card (`023`, `024`), Speed-to-Lead card for the new structure, Handbook v1.7/1.8, MSA "No Performance Promise" (`025`), Sprint budget ranges | `47f8757`, `19128c6`, `cb6d622`, `62813ee`, `dedc7bb` |
 | S5 Packages and upgrades | Oct 3 22:36 to Oct 4 00:47 | 16 + 1 on main | Handbook v1.9 to v1.15, Slack reminder wording approved (`026`), Sprint welcome without Friday recaps (`027`), Front of the Line (`028`, `031`, `034`), Eight = 8 distinct angles (`029`), retainers Meta-focused (`030`), annual plans return (`032`), Sprint credit, welcome access by plan (`033`), package-specific contract and welcomes (`035`, `036`) | `7d56496`, `57b38c6`, `b7a4f01`, `f6324df`, `0e43baa`, `c9601e4`, `de01a27` |
@@ -205,7 +205,7 @@ Format for each: **Thought / Happened / Changed / Recommend now.**
 
 **L55. Parallel sessions and machines.** A laptop session edited the phone number and never pushed (session e98aaa81); ten commits from another session landed mid-work (session 95892108); local branches of `ntc-speed-to-lead` were 16 commits behind GitHub on Oct 4. **Recommend:** pull before every session, push at the end of every session.
 
-**L56. Unmerged long-lived branch.** `agent-v1` deploys to Railway from its own branch and has never merged to `main`; its copy of `api/slack.js` lacks main's kickoff filter (`3225303`).
+**L56. Unmerged long-lived branch.** `agent-v1` deploys to Render (Railway until Oct 21, 2026) from its own branch and has never merged to `main`; its copy of `api/slack.js` lacks main's kickoff filter (`3225303`).
 
 ### 2.14 Seemed simple, got complicated
 

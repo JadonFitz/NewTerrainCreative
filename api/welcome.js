@@ -27,7 +27,7 @@
 
 const KEY = process.env.STRIPE_CHECKOUT_READ_KEY || '';
 
-/* The kickoff calendar's booking page. The same link as Railway's
+/* The kickoff calendar's booking page. The same link as Render's
    KICKOFF_BOOKING_LINK and TRIAL_INTAKE_BOOKING_LINK: the 5-Day Trial
    books its intake call there too, and the agent reads a trial client's
    booking as an intake call, not a kickoff. */
