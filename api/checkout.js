@@ -236,7 +236,6 @@ export function sessionBody(link, items, extra) {
       ? link.billing_address_collection : undefined,
     automatic_tax: link.automatic_tax?.enabled ? { enabled: true } : undefined,
     tax_id_collection: link.tax_id_collection?.enabled ? { enabled: true } : undefined,
-    payment_method_collection: link.payment_method_collection || undefined,
     payment_method_types: Array.isArray(link.payment_method_types) && link.payment_method_types.length
       ? link.payment_method_types : undefined,
     consent_collection: consentOf(link.consent_collection),
@@ -251,6 +250,9 @@ export function sessionBody(link, items, extra) {
   };
 
   if (mode === 'subscription') {
+    // Stripe accepts payment_method_collection only with recurring prices,
+    // and "always" is its default, so it is sent only when the link relaxes it.
+    if (link.payment_method_collection === 'if_required') body.payment_method_collection = 'if_required';
     const sd = link.subscription_data || {};
     body.subscription_data = {
       description: sd.description || undefined,
