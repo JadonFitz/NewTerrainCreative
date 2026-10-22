@@ -350,5 +350,17 @@ console.log('\n\x1b[1mBUY BUTTONS GO THROUGH THE ENDPOINT\x1b[0m');
   check('consent auto promotions kept', JSON.stringify(c({ promotions: 'auto' })) === '{"promotions":"auto"}');
 }
 
+// ── payment_method_collection only on subscriptions ──
+{
+  const link = { after_completion: { type: 'redirect', redirect: { url: 'https://www.newterraincreative.com/welcome?plan=x' } }, payment_method_collection: 'always', metadata: {} };
+  const extra = { from: '/next-step', metadata: {} };
+  const one = mod.sessionBody(link, [{ price: { id: 'price_1', type: 'one_time' }, quantity: 1 }], extra);
+  check('one-time: no payment_method_collection', !('payment_method_collection' in one) || one.payment_method_collection === undefined);
+  const sub = mod.sessionBody({ ...link, payment_method_collection: 'if_required' }, [{ price: { id: 'price_2', type: 'recurring', recurring: { interval: 'month' } }, quantity: 1 }], extra);
+  check('subscription: if_required kept', sub.payment_method_collection === 'if_required');
+  const subDefault = mod.sessionBody(link, [{ price: { id: 'price_2', type: 'recurring', recurring: { interval: 'month' } }, quantity: 1 }], extra);
+  check('subscription: always (default) not sent', subDefault.payment_method_collection === undefined);
+}
+
 console.log(failures ? `\n\x1b[31m${failures} failed\x1b[0m\n` : '\n\x1b[32mall checks passed\x1b[0m\n');
 process.exit(failures ? 1 : 0);
