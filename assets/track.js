@@ -57,6 +57,26 @@
     return id;
   }
 
+  // ── our own browsers ─────────────────────────────────────────────────
+  // A browser is internal once someone signs into /owner (owner.html sets
+  // the flag) or opens any page with ?ntc_internal=1. ?ntc_internal=0
+  // clears it. Internal browsers still send events, tagged internal: true,
+  // and their checkouts carry client_reference_id internal_<id>
+  // (assets/checkout.js), so a test click never reads as a buyer.
+  var INTERNAL_KEY = 'ntc_internal';
+
+  function isInternal() {
+    var m = /[?&]ntc_internal=([01])/.exec(w.location.search);
+    if (m) {
+      try {
+        if (m[1] === '1') w.localStorage.setItem(INTERNAL_KEY, '1');
+        else w.localStorage.removeItem(INTERNAL_KEY);
+      } catch (e) {}
+      return m[1] === '1';
+    }
+    return ls(INTERNAL_KEY) === '1';
+  }
+
   // ── attribution, captured on FIRST touch and never overwritten ───────
   // A visitor who lands from an ad then browses to another page must not
   // lose the ad that brought them.
@@ -149,6 +169,7 @@
     UTM_KEYS.forEach(function (k) { if (a[k]) out[k] = a[k]; });
     if (a.fbclid) out.fbclid = a.fbclid;
     if (a.landing_page) out.landing_page = a.landing_page;
+    if (isInternal()) out.internal = true;
     Object.keys(data || {}).forEach(function (k) { out[k] = data[k]; });
     return out;
   }
@@ -282,6 +303,7 @@
   // ── boot ─────────────────────────────────────────────────────────────
   attribution();   // capture first touch immediately, before any navigation
   sessionId();
+  isInternal();    // honour ?ntc_internal= on the page it was opened with
 
   w.ntc = {
     track: track,
@@ -289,6 +311,7 @@
     context: context,
     attribution: attribution,
     sessionId: sessionId,
+    isInternal: isInternal,
     metaIds: metaIds,
     funnelName: funnelName,
     watchVideo: watchVideo,

@@ -65,6 +65,7 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none" alt=""
 src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></noscript>
 <script src="/assets/track.js"></script>
+<script src="/assets/checkout.js"></script>
 
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -387,7 +388,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   /* Buy a Sprint. Stripe's client_reference_id tags the payment with
      this page and the form that sent the lead, so a Sprint bought here
-     can be told apart in Stripe. Letters, digits, - and _ only. */
+     can be told apart in Stripe. Letters, digits, - and _ only.
+     22 Oct 2026: assets/checkout.js then sends the click through
+     /api/checkout, which keeps this tag as metadata ntc_ref (and on the
+     plain link if it falls back) and puts the visitor or lead id in
+     client_reference_id instead. */
   ['buy-eight', 'buy-fifteen', 'buy-thirty',
    'buy-eight-monthly', 'buy-fifteen-monthly', 'buy-thirty-monthly'].forEach(function (id) {
     var a = document.getElementById(id);

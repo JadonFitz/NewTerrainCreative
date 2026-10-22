@@ -137,6 +137,17 @@ for name, why in REQUIRED.items():
     else:
         warn(f'{name} absent here · {why}')
 
+# Optional: absent is a supported state with a safe default, so it is
+# reported but never warned about.
+OPTIONAL = {
+    'STRIPE_CHECKOUT_CREATE_KEY': 'without it /api/checkout sends buyers to the plain Payment Link',
+}
+for name, why in OPTIONAL.items():
+    if resolve(name):
+        ok(f'{name} present (optional)')
+    else:
+        print(f'  - {name} absent here (optional) · {why}')
+
 # ── 4 · routes ────────────────────────────────────────────────────────
 head('4 · Internal links')
 pages = {f.stem for f in ROOT.glob('*.html')}
@@ -466,6 +477,7 @@ for test, label in (
     ('test-ghl-webhook.mjs', 'GHL booking webhook'),
     ('test-meta-sync.mjs', 'Meta spend sync'),
     ('test-welcome.mjs', 'welcome booking link'),
+    ('test-checkout.mjs', 'tracked checkout'),
     ('test-breakdown.mjs', 'free breakdown page'),
 ):
     r = subprocess.run(['node', str(ROOT / 'scripts' / test)],

@@ -60,6 +60,36 @@ a default, for example after a pipeline or calendar is rebuilt.
 | `APPLY_FROM` | `New Terrain Creative <applications@newterraincreative.com>` |
 | `BOOKING_URL` | the Google Calendar booking link |
 | `RESEND_API_KEY` | unset. Fallback if SendGrid is absent. |
+| `STRIPE_CHECKOUT_CREATE_KEY` | unset: buy buttons go to the plain Stripe Payment Link, exactly as before. See below. |
+
+### `STRIPE_CHECKOUT_CREATE_KEY` (optional, `api/checkout.js`)
+
+A Stripe **restricted** live key with exactly two permissions: **Checkout
+Sessions: Write** and **Payment Links: Read**. Nothing else. Create it in
+the Stripe Dashboard under Developers, API keys, Create restricted key,
+and add it to Vercel **Production and Preview**, then redeploy.
+
+With it, every buy button (`/next-step`, the trial reserve on
+`/call-booked`) opens a Checkout Session that mirrors its Payment Link,
+with a back link to the page the buyer came from and the visitor or lead
+id on it. Without it, or if Stripe refuses, `/api/checkout` sends the
+buyer to the plain Payment Link, so unset is the safe state and the
+kill switch: remove it and redeploy to go back to plain links.
+
+It is separate from `STRIPE_CHECKOUT_READ_KEY` (`api/welcome.js`, Checkout
+Sessions: Read only) on purpose: the welcome page never needs to create
+anything.
+
+### Marking our own browsers as internal
+
+Open any page once with `?ntc_internal=1` (for example
+`https://www.newterraincreative.com/?ntc_internal=1`), or sign into
+`/owner`. The browser keeps the mark in localStorage (`ntc_internal`) for
+that address (`www.` and the bare domain count separately), its events are
+stored with `internal: true`, and its checkouts carry
+`client_reference_id` `internal_<visitor id>`. Do it on each browser and
+phone used for testing. `?ntc_internal=0` clears it. Clearing site data or
+a private window starts unmarked.
 
 Confirm the required variables are registered, which prints names and
 never values:
