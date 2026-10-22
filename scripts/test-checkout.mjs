@@ -341,5 +341,14 @@ console.log('\n\x1b[1mBUY BUTTONS GO THROUGH THE ENDPOINT\x1b[0m');
   }
 }
 
+// ── consent: "none" is never sent (Stripe refuses promotions until its terms are accepted) ──
+{
+  const c = mod.consentOf;
+  check('consent none/none is left out', c({ terms_of_service: 'none', promotions: 'none' }) === undefined);
+  check('consent missing is left out', c(null) === undefined);
+  check('consent required terms kept', JSON.stringify(c({ terms_of_service: 'required', promotions: 'none' })) === '{"terms_of_service":"required"}');
+  check('consent auto promotions kept', JSON.stringify(c({ promotions: 'auto' })) === '{"promotions":"auto"}');
+}
+
 console.log(failures ? `\n\x1b[31m${failures} failed\x1b[0m\n` : '\n\x1b[32mall checks passed\x1b[0m\n');
 process.exit(failures ? 1 : 0);

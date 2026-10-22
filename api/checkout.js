@@ -239,12 +239,7 @@ export function sessionBody(link, items, extra) {
     payment_method_collection: link.payment_method_collection || undefined,
     payment_method_types: Array.isArray(link.payment_method_types) && link.payment_method_types.length
       ? link.payment_method_types : undefined,
-    consent_collection: link.consent_collection
-      ? {
-          terms_of_service: link.consent_collection.terms_of_service || undefined,
-          promotions: link.consent_collection.promotions || undefined
-        }
-      : undefined,
+    consent_collection: consentOf(link.consent_collection),
     custom_text: link.custom_text
       ? Object.fromEntries(Object.entries(link.custom_text)
           .filter(([, v]) => v?.message)
@@ -329,6 +324,17 @@ function redirect(res, url) {
   res.setHeader('Location', url);
   res.status(303);
   return res.end();
+}
+
+/* Copy only consent the link actually asks for. "none" is Stripe's
+   default and is left out: sending promotions at all, even "none", is
+   refused until the account accepts Checkout's promotions terms. */
+export function consentOf(c) {
+  if (!c) return undefined;
+  const out = {};
+  if (c.terms_of_service && c.terms_of_service !== 'none') out.terms_of_service = c.terms_of_service;
+  if (c.promotions && c.promotions !== 'none') out.promotions = c.promotions;
+  return Object.keys(out).length ? out : undefined;
 }
 
 export default async function handler(req, res, deps = {}) {
