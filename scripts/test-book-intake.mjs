@@ -191,6 +191,7 @@ check('every answer is written by key', Object.entries(strong).every(([k, v]) =>
 check('a key the offer does not ask is dropped', up2.sneaky === undefined);
 check('stage:potential comes off', ghl(made).some((c) => c.method === 'DELETE' && /tags$/.test(c.url) &&
   JSON.stringify(c.body.tags) === '["stage:potential"]'));
+check('tagged stage:qualified', ghl(made).some((c) => c.method === 'POST' && /tags$/.test(c.url) && c.body.tags.includes('stage:qualified')));
 const put = ghl(made).find((c) => c.method === 'PUT');
 check("moves step one's opportunity rather than opening another", /\/opportunities\/o_456$/.test(put?.url || '') &&
   !ghl(made).some((c) => /\/opportunities\/$/.test(c.url)));
@@ -207,6 +208,7 @@ check('no calendar for a disqualified lead', res.payload.calendarUrl === undefin
 const up3 = Object.fromEntries((ghl(made).find((c) => /upsert$/.test(c.url))?.body?.customFields || []).map((f) => [f.key, f.field_value]));
 check('marked Disqualified with the reason', up3.ntc_fit === 'Disqualified' && /ntc_ad_budget = Under \$1,500/.test(up3.ntc_dq_reason || ''));
 check('tagged dq:growth', ghl(made).some((c) => c.method === 'POST' && /tags$/.test(c.url) && c.body.tags.includes('dq:growth')));
+check('not tagged stage:qualified', !ghl(made).some((c) => c.method === 'POST' && /tags$/.test(c.url) && c.body.tags.includes('stage:qualified')));
 check('opportunity moved to Disqualified', ghl(made).find((c) => c.method === 'PUT')?.body?.pipelineStageId === '67599a1a-08ed-43f3-a98a-43f7442da375');
 const dqCard = cards(made)[0]?.body;
 check('the disqualified card carries answers and question labels', dqCard?.type === 'disqualified' &&

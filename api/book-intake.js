@@ -20,7 +20,9 @@
      step "answers"  the same contact plus every answer. Writes the
                      answers to the contact's custom fields, decides
                      disqualified or ready from the shared rules (never
-                     from the browser), moves the opportunity, and answers
+                     from the browser), tags a ready lead stage:qualified
+                     (the trigger for the GHL qualified-not-booked
+                     follow-up), moves the opportunity, and answers
                        { next: 'calendar', calendarUrl }   prefilled, or
                        { next: 'redirect', url }           disqualified,
                      sending the card type=disqualified for the latter.
@@ -271,7 +273,7 @@ async function stepAnswers(offerKey, offer, contact, answers, attribution, token
       if (dq) { fields.ntc_fit = 'Disqualified'; fields.ntc_dq_reason = reasons.join('; ').slice(0, 300); }
       const contactId = (await ghl.upsertContact({ ...contact, fields })).id;
       await quietly('tags', offerKey, () =>
-        ghl.addTags(contactId, ['src:ghl', `offer:${offerKey}`, ...(dq ? [`dq:${offerKey}`] : [])]));
+        ghl.addTags(contactId, ['src:ghl', `offer:${offerKey}`, ...(dq ? [`dq:${offerKey}`] : ['stage:qualified'])]));
       await quietly('tag removal', offerKey, () => ghl.removeTags(contactId, ['stage:potential']));
 
       const stage = dq ? 'Disqualified' : 'Started form';
