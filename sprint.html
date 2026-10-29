@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js): Google Ads AW-18526060956, loaded on every
+     public page. The only gtag.js on the site: add any GA4 G- id as a
+     second gtag('config') line here, never as a second script. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18526060956"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18526060956');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ad Sprint · New Terrain Creative. Ads that don't look like ads.</title>
@@ -29,20 +39,9 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 <link rel="preconnect" href="https://player.vimeo.com">
 
 <!--
-  ════════════════════════════════════════════════════════════════
-  STILL TO WIRE · GA4 and Google Ads (YouTube conversions)
-  Paste the real IDs and uncomment. Google Ads also needs the
-  conversion label added to fireConversions() on apply.html.
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-    gtag('config', 'AW-XXXXXXXXXX');
-  </script>
-  ════════════════════════════════════════════════════════════════
+  STILL TO WIRE · GA4. The Google tag at the top of <head> already loads
+  gtag.js for Google Ads (AW-18526060956). When a GA4 id exists, add
+  gtag('config', 'G-...') there; do not paste a second gtag.js script.
 -->
 
 <style>
