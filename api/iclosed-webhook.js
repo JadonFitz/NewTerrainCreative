@@ -64,6 +64,7 @@
 import { isIP } from 'node:net';
 import { sendMetaConversion, buildUserData, requestIdentity } from './_meta.js';
 import { insert, configured } from './_supabase.js';
+import { syncToGhl } from './_iclosed-ghl.js';
 
 const SECRET = process.env.ICLOSED_WEBHOOK_SECRET || '';
 
@@ -308,6 +309,12 @@ export default async function handler(req, res) {
   const trigger = eventNameOf(d);
   const bookingId = bookingIdOf(d);
 
+  /* Every delivery, booking or not, goes to the GHL lead bridge first
+     (api/_iclosed-ghl.js). Off unless ICLOSED_GHL_BRIDGE=on and
+     GHL_API_TOKEN are both set; never throws, so nothing below changes
+     whatever GHL does. */
+  const ghlSync = await syncToGhl(d, trigger);
+
   /* Only a booking is a conversion.
 
      Cancelled and rescheduled are logged and nothing else. Meta has no
@@ -320,7 +327,7 @@ export default async function handler(req, res) {
      real value on it, and a decision about which outcomes count. */
   if (!trigger.includes('book')) {
     console.log('iclosed-webhook: noted', trigger || '(unnamed)', bookingId || '(no id)');
-    return res.status(200).json({ ok: true, noted: trigger || null });
+    return res.status(200).json({ ok: true, noted: trigger || null, ghl: ghlSync.ghl });
   }
 
   /* The Rescheduled Call event (13 Oct 2026, booked from /reschedule) is
@@ -329,14 +336,14 @@ export default async function handler(req, res) {
      is neither stored again nor sent to Meta. */
   if (isRebooking(d)) {
     console.log('iclosed-webhook: rebooking noted', bookingId || '(no id)');
-    return res.status(200).json({ ok: true, noted: 'rebooking' });
+    return res.status(200).json({ ok: true, noted: 'rebooking', ghl: ghlSync.ghl });
   }
 
   if (!bookingId) {
     // 200 anyway: a retry would not help, and repeated failures make
     // vendors disable a webhook.
     console.error('iclosed-webhook: booking with no id, Schedule not sent');
-    return res.status(200).json({ ok: true, sent: false, reason: 'no booking id' });
+    return res.status(200).json({ ok: true, sent: false, reason: 'no booking id', ghl: ghlSync.ghl });
   }
 
   // First party first, and independent of Meta: a CAPI outage must not
@@ -403,11 +410,11 @@ export default async function handler(req, res) {
     console.log(`iclosed-webhook: ${nextStep ? 'NextStepSprintBooked' : 'Schedule'} sent`,
       bookingId, JSON.stringify(result),
       'ids', JSON.stringify({ fbp: !!fbp, fbc: !!fbc, ip: !!ip }));
-    return res.status(200).json({ ok: true, sent: true, stored });
+    return res.status(200).json({ ok: true, sent: true, stored, ghl: ghlSync.ghl });
   } catch (e) {
     console.error('iclosed-webhook: Schedule failed', (e && e.message) || e);
     // Still 200. The booking happened regardless, and we would rather
     // lose one conversion than have the webhook switched off.
-    return res.status(200).json({ ok: true, sent: false, stored });
+    return res.status(200).json({ ok: true, sent: false, stored, ghl: ghlSync.ghl });
   }
 }
