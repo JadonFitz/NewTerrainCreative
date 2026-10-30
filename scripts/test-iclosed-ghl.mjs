@@ -119,6 +119,8 @@ check('qualified: keeps the existing deal, makes no second one', created().lengt
 
 res = await request(contact('Disqualified'));
 check('disqualified: dq:iclosed', tagsAdded().includes('dq:iclosed'));
+check('disqualified: dq:growth, which starts Follow-up C', tagsAdded().includes('dq:growth'));
+check('a Story Session dq is dq:brand-builder', bridge.dqTagOf({ event_type: { name: 'Story Session' } }) === 'dq:brand-builder');
 check('disqualified: deal moves to Disqualified', moved().join() === STAGES['Disqualified']);
 
 existingTags = ['iclosed', 'stage:qualified']; deals = [deal('Started form')];

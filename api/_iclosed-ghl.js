@@ -16,7 +16,9 @@
                                       an open deal at Started form
      contact, status Qualified        tags iclosed + stage:qualified,
                                       an open deal at Started form
-     contact, status Disqualified     tags iclosed + dq:iclosed, deal at
+     contact, status Disqualified     tags iclosed + dq:iclosed + the
+                                      offer's dq tag (dq:growth unless
+                                      the event says otherwise), deal at
                                       Disqualified
      Call booked (or status booked)   tag iclosed, stage tags off, deal
                                       at Booked
@@ -105,6 +107,18 @@ export function outcomeOf(d) {
   return outcome || reason ? 'other' : '';
 }
 
+/* The offer's dq tag, which is what the "Follow-up C: Disqualified"
+   workflow triggers on (dq:growth, dq:brand-builder, dq:signature,
+   dq:pest-control-trial, the same keys /api/book-intake uses). iClosed's
+   own strategy call is the Growth offer, so that is the default. */
+export function dqTagOf(d) {
+  const key = norm(`${pick(d, 'event_type.name', 'eventTypeName', 'event_type_name') || ''} ${pick(d, 'event_type.slug') || ''}`);
+  if (key.includes('signature')) return 'dq:signature';
+  if (key.includes('brand') || key.includes('story session')) return 'dq:brand-builder';
+  if (key.includes('trial')) return 'dq:pest-control-trial';
+  return 'dq:growth';
+}
+
 /* What this delivery asks of GHL. Pure, so the tests can read it. */
 export function planFor(d, trigger) {
   const t = norm(trigger);
@@ -123,7 +137,7 @@ export function planFor(d, trigger) {
     return { kind: 'booked', stage: 'Booked', add: ['iclosed'], remove: ['stage:potential', 'stage:qualified'] };
   }
   if (s === 'disqualified') {
-    return { kind: 'disqualified', stage: 'Disqualified', add: ['iclosed', 'dq:iclosed'], remove: ['stage:potential', 'stage:qualified'] };
+    return { kind: 'disqualified', stage: 'Disqualified', add: ['iclosed', 'dq:iclosed', dqTagOf(d)], remove: ['stage:potential', 'stage:qualified'] };
   }
   if (s === 'qualified') {
     return { kind: 'qualified', stage: 'Started form', add: ['iclosed', 'stage:qualified'], remove: ['stage:potential'] };
