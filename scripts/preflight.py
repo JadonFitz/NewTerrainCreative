@@ -308,6 +308,25 @@ for f in ROOT.glob('*.html'):
 bad('more than one pixel id in use: ' + ', '.join(sorted(ids))) if len(ids) > 1 \
     else ok(f'one pixel id across the site ({", ".join(ids) or "none"})')
 
+# The Google tag is site-wide too, owner and the Twilio file aside, and
+# loads gtag.js exactly once per page: a GA4 id is a second config line,
+# not a second script.
+GOOGLE_TAG = 'AW-18526060956'
+NO_GOOGLE_TAG = {'owner', '755b0bb56edaeb4dbe35c2cb512311c2'}
+gt_missing, gt_double = [], []
+for f in sorted(ROOT.glob('*.html')):
+    if f.stem in NO_GOOGLE_TAG:
+        continue
+    _t = f.read_text(encoding='utf-8')
+    if f"gtag('config', '{GOOGLE_TAG}')" not in _t:
+        gt_missing.append(f.name)
+    if len(re.findall(r'<script[^>]*googletagmanager\.com/gtag/js', _t)) > 1:
+        gt_double.append(f.name)
+bad('page(s) carry no Google tag: ' + ', '.join(gt_missing)) if gt_missing \
+    else ok(f'every public page carries the Google tag ({GOOGLE_TAG})')
+bad('page(s) load gtag.js twice: ' + ', '.join(gt_double)) if gt_double \
+    else ok('gtag.js loads once per page')
+
 # Parked pages. Both still work and are deliberately unlinked, for the
 # same reason: an iClosed event now asks what the form asked, and two
 # forms back to back was a place to drop out of rather than a
