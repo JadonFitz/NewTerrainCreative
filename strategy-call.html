@@ -182,8 +182,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   }
   .scheduler-pending p { font-size:13.5px; line-height:1.8; color:var(--muted); max-width:38ch; }
   .scheduler-note { margin-top:14px; font-size:12.5px; line-height:1.75; color:var(--muted); max-width:56ch; }
-  .sms-note { margin-top:8px; font-size:11.5px; }
-  .sms-note a { color:inherit; text-decoration:underline; }
+  .sms-optin { margin-top:34px; padding-top:26px; border-top:1px solid var(--line); max-width:62ch; }
+  .sms-optin h2 { font-family:var(--display); font-weight:400; font-size:24px; color:var(--parchment); margin-bottom:6px; }
+  .sms-lede { font-size:13px; color:var(--soft); margin-bottom:16px; }
+  .sms-form { margin-top:0; gap:14px; }
+  .sms-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  @media (max-width:620px) { .sms-row { grid-template-columns:1fr; } }
+  .sms-consent { display:flex; gap:12px; align-items:flex-start; font-size:12px; line-height:1.7; color:var(--muted); cursor:pointer; }
+  .sms-consent input { accent-color:var(--gold); margin-top:4px; flex-shrink:0; }
+  .sms-consent a { color:inherit; text-decoration:underline; }
+  .sms-status { font-size:12.5px; color:var(--soft); min-height:1em; }
 
   /* ── GHL booking form (provider 'ghl' only) ──
      Sits in the scheduler slot, in the reading column rather than the
@@ -317,7 +325,30 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   </div>
 
   <p class="scheduler-note">A few questions first, then you pick a time.</p>
-  <p class="scheduler-note sms-note">Texts are optional. If you tick the texting box in the booking form, you agree to receive text messages from New Terrain Creative about your booking and your call: confirmations, reminders, rescheduling, and a short follow-up if you start booking and don't finish. Message frequency varies and will be low. Message and data rates may apply. Reply STOP at any time to opt out, or HELP for help. Consent is not a condition of booking. See our <a href="/terms#text-messages">terms</a> and <a href="/privacy">privacy policy</a>.</p>
+  <!-- Text updates. The A2P opt-in URL is this page, and the consent has
+       to be readable in the page's own HTML: the iClosed widget renders
+       in the browser, so a carrier or GHL's compliance scan never sees its
+       texting box. Plain form, unticked optional checkbox, full consent
+       text in the label. Posts to /api/sms-optin, which tags sms:optin in
+       GHL only when the box is ticked. -->
+  <section class="sms-optin" aria-labelledby="sms-h">
+    <h2 id="sms-h">Booking updates by text</h2>
+    <p class="sms-lede">Optional. Leave your mobile number if you would like New Terrain Creative to text you about your booking.</p>
+    <form id="sms-form" class="sms-form" novalidate>
+      <div class="sms-row">
+        <input type="text" name="firstName" autocomplete="given-name" placeholder="First name" aria-label="First name" required>
+        <input type="email" name="email" autocomplete="email" placeholder="Email" aria-label="Email" required>
+        <input type="tel" name="phone" autocomplete="tel" placeholder="Mobile number" aria-label="Mobile number" required>
+      </div>
+      <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+      <label class="sms-consent" for="sms-consent">
+        <input type="checkbox" id="sms-consent" name="consent" value="yes">
+        <span>By checking this box, I agree to receive text messages from New Terrain Creative at the mobile number provided about my booking and my call: appointment confirmations, reminders, rescheduling notices, and a short follow-up if I start booking and don't finish. Message frequency varies. Message and data rates may apply. Reply STOP to opt out at any time. Reply HELP for help. Consent is not a condition of booking or purchase. See our <a href="/privacy">Privacy Policy</a> and <a href="/terms#text-messages">Terms of Service</a>.</span>
+      </label>
+      <button type="submit" class="btn">Save my number</button>
+      <p class="sms-status" id="sms-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
 
   <section class="below" aria-labelledby="fit-h">
     <h2 id="fit-h">Who this is for</h2>
@@ -832,6 +863,48 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     // The recognised slug, for the same reason the URL above carries only
     // recognised slugs: an unknown one is noise in the dataset.
     offer: offerId || 'paid_retainer'
+  });
+})();
+</script>
+<script>
+/* Text updates form. Posts JSON to /api/sms-optin; the checkbox value
+   goes as true/false and is never ticked by script. */
+(function () {
+  var f = document.getElementById('sms-form');
+  if (!f) return;
+  var status = document.getElementById('sms-status');
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var bad = [];
+    ['firstName', 'email', 'phone'].forEach(function (n) {
+      var el = f.elements[n];
+      var ok = n === 'phone' ? el.value.replace(/[^0-9]/g, '').length >= 10 : el.checkValidity() && el.value.trim();
+      el.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      if (!ok) bad.push(n);
+    });
+    if (bad.length) { status.textContent = 'Add your first name, email and a mobile number.'; return; }
+    var btn = f.querySelector('button');
+    btn.disabled = true;
+    status.textContent = 'Saving...';
+    fetch('/api/sms-optin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: f.elements.firstName.value,
+        email: f.elements.email.value,
+        phone: f.elements.phone.value,
+        consent: f.elements.consent.checked,
+        website: f.elements.website.value
+      })
+    }).then(function (r) {
+      status.textContent = r.ok
+        ? (f.elements.consent.checked ? 'Saved. We will text you about your booking.' : 'Saved. Tick the box if you want texts.')
+        : 'That did not go through. Please try again.';
+      btn.disabled = false;
+    }).catch(function () {
+      status.textContent = 'That did not go through. Please try again.';
+      btn.disabled = false;
+    });
   });
 })();
 </script>
