@@ -243,7 +243,10 @@ res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...stro
 check('an old floor from a stale tab still goes to /next-step', res.statusCode === 200 && res.payload.url === '/next-step?from=growth');
 res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
   ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: 'Under $5,000' } });
-check('the Sprint does not turn away Under $5,000', res.payload.next === 'calendar');
+check('the Sprint turns away Under $5,000', res.payload.next === 'redirect' && res.payload.url === '/next-step?from=ad-sprint');
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: 'Under $3,000' } });
+check('an old Sprint floor from a stale tab does not disqualify', res.payload.next === 'calendar');
 res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
   ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: '$3,000-$5,500' } });
 check('a label that was never offered is still refused', res.statusCode === 400 && res.payload.fields.includes('ntc_sprint_budget'));

@@ -65,7 +65,7 @@ const CONTRACT = {
     ntc_sprint_goal: ['What’s the main goal of the campaign?', ['Generate Leads', 'Book Appointments', 'Sell a Product', 'Build Awareness']],
     ntc_location_text: ['Where is your business located?', null],
     ntc_sprint_launch: ['Do you have a launch date or deadline?', ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date']],
-    ntc_sprint_budget: ['Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?', INVESTMENT],
+    ntc_sprint_budget: ['Ad Sprints are creative production, bought one time or monthly. Ad spend and ongoing campaign management are not included. What production budget do you have for this project?', INVESTMENT],
     ntc_notes: ['Anything you’d like us to review before the call?', null, true]
   },
   'pest-control-trial': {
@@ -94,12 +94,13 @@ const DISQUALIFY = {
              ['ntc_annual_revenue', 'Under $1M'], ['ntc_annual_revenue', '$1M–$2M']],
   'pest-control-trial': [['ntc_trial_funded', 'Not ready to fund the trial yet']],
   'signature': [['ntc_signature_budget', 'Under $5,000']],
-  'ad-sprint': []
+  'ad-sprint': [['ntc_sprint_budget', 'Under $5,000']]
 };
 const DISQUALIFY_TO = {
   'brand-builder': '/next-step?from=bb-apply',
   'growth': '/next-step?from=growth',
   'signature': '/next-step?from=signature-project',
+  'ad-sprint': '/next-step?from=ad-sprint',
   'pest-control-trial': '/pest-control-trial?from=trial-unfunded'
 };
 const CALENDAR = {
@@ -156,8 +157,8 @@ check('a strong Growth lead is not disqualified', FORMS.disqualifiers('growth', 
 }).length === 0);
 check('annual revenue left blank is not a disqualifier (it is optional)',
   FORMS.disqualifiers('growth', { ntc_service_investment: '$9,000–$15,000', ntc_ad_budget: 'Not sure yet' }).length === 0);
-check('the iClosed redirects are the ones /next-step knows', ['growth', 'brand-builder', 'signature']
-  .every((k) => /^\/next-step\?from=(growth|bb-apply|signature-project)$/.test(FORMS.OFFERS[k].disqualifyTo)));
+check('the iClosed redirects are the ones /next-step knows', ['growth', 'brand-builder', 'signature', 'ad-sprint']
+  .every((k) => /^\/next-step\?from=(growth|bb-apply|signature-project|ad-sprint)$/.test(FORMS.OFFERS[k].disqualifyTo)));
 
 console.log('\n\x1b[1mOPPORTUNITY VALUE · LOW END OF THE BAND\x1b[0m');
 for (const [label, want] of [['Under $5K', 0], ['$5K–$8K', 5000], ['$18K+', 18000], ['Not sure yet', 0],
@@ -176,7 +177,9 @@ for (const offerKey of ['growth', 'brand-builder', 'ad-sprint', 'signature']) {
   }
 }
 check('the ad budget is not part of the one set', FORMS.OFFERS.growth.questions.ntc_ad_budget.options[0] === 'Under $1,500');
-check('the Sprint has no disqualifier', FORMS.OFFERS['ad-sprint'].disqualify.length === 0 && FORMS.OFFERS['ad-sprint'].disqualifyTo === '');
+for (const label of ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+']) {
+  check(`Sprint: old label ${label} does not disqualify`, FORMS.disqualifiers('ad-sprint', { ntc_sprint_budget: label }).length === 0);
+}
 for (const [offerKey, key, label] of [['growth', 'ntc_service_investment', 'Under $5K'], ['brand-builder', 'ntc_bb_investment', 'Under $5K/month'], ['signature', 'ntc_signature_budget', 'Under $10,000']]) {
   check(`${offerKey}: the old floor from a stale tab is still turned away`, FORMS.disqualifiers(offerKey, { [key]: label }).length === 1);
 }

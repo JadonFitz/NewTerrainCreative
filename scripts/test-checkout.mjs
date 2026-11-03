@@ -27,8 +27,8 @@ const res = () => { const r = { statusCode: 0, payload: null, headers: {}, ended
   r.setHeader = (k, v) => { r.headers[k] = v; }; r.end = () => { r.ended = true; return r; };
   return r; };
 
-const FIFTEEN = 'PENDING_FIFTEEN_ONETIME';
-const FIFTEEN_MONTHLY = 'PENDING_FIFTEEN_MONTHLY';
+const FIFTEEN = '00waEW4UeflR1RS4tm1RC0P';
+const FIFTEEN_MONTHLY = '8x29ASbiC5Lh0NOf801RC0O';
 const LEAD = '11111111-2222-4333-8444-555555555555';
 const OTHER_LEAD = '99999999-2222-4333-8444-555555555555';
 const VISITOR = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';

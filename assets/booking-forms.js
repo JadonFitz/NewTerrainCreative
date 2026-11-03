@@ -39,7 +39,7 @@
 
   /* 2 Nov 2026, Jadon: one budget set across the service-investment
      questions on every form. "Under $5,000" is the disqualifier on every
-     form that has one (the Sprint has none).
+     form, the Ad Sprint included. Its old labels do not disqualify.
 
      legacyOptions: a tab opened before a re-cut still offers only the old
      labels and could never get past a refusal, so api/book-intake.js
@@ -145,7 +145,7 @@
         ntc_sprint_launch:  { type: 'choice', label: 'Do you have a launch date or deadline?',
           options: ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date'] },
         ntc_sprint_budget:  { type: 'choice',
-          label: 'Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?',
+          label: 'Ad Sprints are creative production, bought one time or monthly. Ad spend and ongoing campaign management are not included. What production budget do you have for this project?',
           options: INVESTMENT,
           legacyOptions: ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+'] },
         // Short text in iClosed; GHL keeps ntc_notes as LARGE_TEXT.
@@ -163,8 +163,8 @@
         map: { eight: 'The Fifteen (15 video ads + 10 statics)',
                fifteen: 'The Fifteen (15 video ads + 10 statics)',
                thirty: 'The Thirty (30 video ads + 20 statics)' } } },
-      disqualify: [],
-      disqualifyTo: '',
+      disqualify: [{ key: 'ntc_sprint_budget', values: ['Under $5,000'] }],
+      disqualifyTo: '/next-step?from=ad-sprint',
       valueKey: 'ntc_sprint_budget'
     },
 

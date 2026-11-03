@@ -639,12 +639,12 @@
          holds /sprint and /welcome to this. */
       adSprintFifteen: { name: 'The Fifteen', creatives: 15, statics: 10, vsl: 1,
                          frontOfLineDays: 14,
-                         stripePaymentLink:        'https://buy.stripe.com/PENDING_FIFTEEN_ONETIME',
-                         stripePaymentLinkMonthly: 'https://buy.stripe.com/PENDING_FIFTEEN_MONTHLY' },
+                         stripePaymentLink:        'https://buy.stripe.com/00waEW4UeflR1RS4tm1RC0P',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/8x29ASbiC5Lh0NOf801RC0O' },
       adSprintThirty:  { name: 'The Thirty',  creatives: 30, statics: 20, vsl: 2,
                          frontOfLineFirstAds: 15, frontOfLineFirstAdsDays: 14, frontOfLineRestByDay: 21,
-                         stripePaymentLink:        'https://buy.stripe.com/PENDING_THIRTY_ONETIME',
-                         stripePaymentLinkMonthly: 'https://buy.stripe.com/PENDING_THIRTY_MONTHLY' },
+                         stripePaymentLink:        'https://buy.stripe.com/cNi9ASfyS4HdeEE2le1RC0M',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/dRm4gy3QaehN2VWbVO1RC0N' },
       leadFoundation:  { name: 'Lead Foundation' }
     },
 
