@@ -41,7 +41,8 @@
   outright through Stripe, or send the one-off project form. The only
   booking link is the small "Questions?" line to the Sprint fit call,
   tagged from=next-step so /strategy-call, /call-booked and the iClosed
-  webhook can keep it out of the standard conversions.
+  webhook can keep it out of the standard conversions. It is hidden for
+  from=ad-sprint, since that form's Under $5,000 answer lands back here.
 
   Never says "disqualified", a budget floor or "you can't afford us".
   No price on the page: Stripe checkout shows it (assets/offer.js,
@@ -438,6 +439,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      iClosed drops the parameter on its redirect. Both then fire the
      custom NextStepSprintBooked instead of Schedule. */
   var call = document.getElementById('sprint-call');
+  // 2 Nov 2026: a lead the Sprint form just sent here would only come back.
+  if (call && from === 'ad-sprint') call.parentNode.hidden = true;
   if (call) {
     call.addEventListener('click', function () {
       try { localStorage.setItem('ntc_next_step', String(Date.now())); } catch (e) {}
