@@ -52,13 +52,11 @@ const BUY = 'https://buy.stripe.com/';
    it is not here either. */
 export const ALLOWED = new Set([
   // Ad Sprint, one time (offer.js products.adSprint*.stripePaymentLink)
-  '4gM5kCcmGgpVgMMaRK1RC0f',   // The Eight
-  '4gMcN4fySgpVbss2le1RC0g',   // The Fifteen
-  'aFa8wOfySa1xeEEf801RC0H',   // The Thirty
+  'PENDING_FIFTEEN_ONETIME',   // The Fifteen
+  'PENDING_THIRTY_ONETIME',    // The Thirty
   // Ad Sprint, monthly (stripePaymentLinkMonthly)
-  '7sY3cueuO3D9cww2le1RC0J',   // The Eight
-  '4gM4gygCW4Hdcwwgc41RC0K',   // The Fifteen
-  '8x228q2M68Xt400aRK1RC0L',   // The Thirty
+  'PENDING_FIFTEEN_MONTHLY',   // The Fifteen
+  'PENDING_THIRTY_MONTHLY',    // The Thirty
   // 5-Day Trial reserve, /call-booked?offer=pest-control-trial
   '00w28qgCW1v1gMM6Bu1RC0q'
 ]);

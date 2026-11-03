@@ -84,12 +84,14 @@ sequenceDiagram
 | Close + pay + onboarding | APPROVED then AUTO | Welcome email includes the build questionnaire (funnel + CRM intake) and Meta access asks |
 | Kickoff, monthly production, recaps | HUMAN with AI drafts | Friday recap drafted by Cowork |
 
-### 2.2 Ad Sprint leads (The Eight, The Fifteen)
+### 2.2 Ad Sprint leads (The Fifteen, The Thirty)
+
+Two tiers since Nov 2, 2026, each one time or monthly at the same price per month: The Fifteen, $6,000 (15 video ads, one a long-form VSL cut, plus 10 statics); The Thirty, $10,000 (30 video ads, two of them long-form VSL cuts, plus 20 statics). The Eight is retired.
 
 | Step | Level | Notes / code |
 |---|---|---|
 | Land on `/sprint` | AUTO | `ad_sprint`; Vimeo VSL |
-| CTA to `/strategy-call?offer=ad-sprint[&pkg=eight\|fifteen]` | AUTO | The `?offer=` allowlist exists because Sprint visitors used to be counted as retainer leads (`2eb842f`) |
+| CTA to `/strategy-call?offer=ad-sprint[&pkg=fifteen\|thirty]` | AUTO | The `?offer=` allowlist exists because Sprint visitors used to be counted as retainer leads (`2eb842f`) |
 | iClosed Sprint event, webhook | AUTO | "sprint" maps to `ad_sprint` |
 | Call card | AI | Sprint budget ranges re-cut to new prices on Oct 2 to 4 (`dedc7bb`, `62813ee`) |
 | Close + pay | APPROVED then AUTO | Front of the Line add-on recognised from link metadata or a cross-sell total (`cc0d0b6`, migration `031`) |
@@ -231,7 +233,7 @@ Built Oct 3 (`f6324df`, migration `035`). Status `BUILT, NOT LIVE` until the cla
 
 | Source | Channel | Example (sanitized, from the 00 file) |
 |---|---|---|
-| Agent `opsLine` | `#agent-alerts` | `Payment in from <Client>, $X Ad Sprint (The Eight). Onboarding started.` |
+| Agent `opsLine` | `#agent-alerts` | `Payment in from <Client>, $X Ad Sprint (The Fifteen). Onboarding started.` |
 | Agent `stepProblem` | `#agent-hq` | `*Blocked:* welcome_sent for *<Client>*. Template welcome_email is not approved. [Retry]` |
 | Agent close desk | `#agent-hq` | `*Close link ready* for <Client>. They sign, then go straight to checkout. [Void link]` |
 | Agent nudge | `#agent-hq` | `*No Slack join yet:* <Client> was invited 49 hours ago and hasn't accepted. Send the reminder?` |

@@ -58,7 +58,7 @@ const CONTRACT = {
   },
   'ad-sprint': {
     ntc_site_or_ig: ['Business Website or Instagram', null],
-    ntc_sprint_package: ['Which Ad Sprint are you considering?', ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'The Thirty (30 ad creatives)', 'Not sure, help me choose']],
+    ntc_sprint_package: ['Which Ad Sprint are you considering?', ['The Fifteen (15 video ads + 10 statics)', 'The Thirty (30 video ads + 20 statics)', 'Not sure, help me choose']],
     ntc_sprint_promote: ['What are you trying to promote or sell?', null],
     ntc_sprint_goal: ['What’s the main goal of the campaign?', ['Generate Leads', 'Book Appointments', 'Sell a Product', 'Build Awareness']],
     ntc_location_text: ['Where is your business located?', null],
@@ -169,10 +169,14 @@ console.log('\n\x1b[1mATTRIBUTION FIELDS\x1b[0m');
 check('hidden fields map to the contract keys', same(Object.values(FORMS.ATTRIBUTION).sort(),
   ['ntc_fbc', 'ntc_fbclid', 'ntc_fbp', 'ntc_from', 'ntc_landing_page', 'ntc_session',
    'utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term']));
-check('/sprint pkg=eight preselects The Eight',
-  FORMS.OFFERS['ad-sprint'].prefill.pkg.map.eight === 'The Eight (8 ad creatives)');
+check('pkg=eight falls back to The Fifteen',
+  FORMS.OFFERS['ad-sprint'].prefill.pkg.map.eight === 'The Fifteen (15 video ads + 10 statics)');
+check('/sprint pkg=fifteen preselects The Fifteen',
+  FORMS.OFFERS['ad-sprint'].prefill.pkg.map.fifteen === 'The Fifteen (15 video ads + 10 statics)');
 check('/sprint pkg=thirty preselects The Thirty',
-  FORMS.OFFERS['ad-sprint'].prefill.pkg.map.thirty === 'The Thirty (30 ad creatives)');
+  FORMS.OFFERS['ad-sprint'].prefill.pkg.map.thirty === 'The Thirty (30 video ads + 20 statics)');
+check('every preselect is a real option', Object.values(FORMS.OFFERS['ad-sprint'].prefill.pkg.map)
+  .every((v) => FORMS.OFFERS['ad-sprint'].questions.ntc_sprint_package.options.includes(v)));
 
 console.log('\n\x1b[1mROLLOUT · MERGING CHANGES NOTHING LIVE\x1b[0m');
 const read = (p) => readFile(new URL(`../${p}`, import.meta.url), 'utf8');

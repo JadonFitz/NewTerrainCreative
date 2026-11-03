@@ -54,12 +54,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     Field Pilot      /welcome?plan=brand-builder-pilot-field&session_id={CHECKOUT_SESSION_ID}
     BB: Studio       /welcome?plan=brand-builder-monthly-studio&session_id={CHECKOUT_SESSION_ID}
     BB: Field        /welcome?plan=brand-builder-monthly-field&session_id={CHECKOUT_SESSION_ID}
-    The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
     The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
     The Thirty       /welcome?plan=thirty&session_id={CHECKOUT_SESSION_ID}
                      (21 Oct 2026: The Thirty live; every Sprint also has a
                      monthly link, redirecting to the same plan. Front of
-                     the Line links use plan=<tier>-priority, one time only)
+                     the Line links use plan=<tier>-priority, one time only.
+                     2 Nov 2026: The Eight retired; old plan=eight URLs
+                     still render, as The Fifteen, see ALIASES below)
     5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
 
   A link without session_id still lands on a complete page; only the
@@ -538,7 +539,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var sprintIncl = function (p) {
     return [
-      (p && p.creatives ? p.creatives + ' ready-to-run ad creatives' : 'Your full set of ad creatives'),
+      (p && p.creatives ? p.creatives + ' ready-to-run video ads' +
+        (p.vsl ? ', including ' + (p.vsl === 1 ? 'one long-form VSL cut' : 'two long-form VSL cuts') : '')
+        : 'Your full set of video ads'),
+      (p && p.statics ? p.statics + ' static ads, singles and carousels' : 'Your static ads, singles and carousels'),
       'A shoot on location at your business',
       'The Angle Call and the hook set',
       'Every placement: vertical, square, horizontal',
@@ -655,27 +659,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                note: '<b>Media spend is yours.</b> You fund it and pay Meta directly. The minimum for the 5-day test is $' + (t.minTestAdSpend || 500) + '.',
                call: 'intake call', noIntakeForm: true };
     },
-    'eight': function () {
-      var p = prod.adSprintEight;
-      return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
-    },
     'fifteen': function () {
       var p = prod.adSprintFifteen;
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
                intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
     },
-    // 21 Oct 2026, Jadon: The Thirty, same shape as the other two.
+    // 21 Oct 2026, Jadon: The Thirty, same shape as The Fifteen.
     'thirty': function () {
       var p = prod.adSprintThirty;
       return { name: (p && p.name) || 'The Thirty', label: 'Ad Sprint',
                intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
-    },
-    'eight-priority': function () {
-      var p = prod.adSprintEight;
-      return { name: ((p && p.name) || 'The Eight') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
-               intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
     },
     'fifteen-priority': function () {
       var p = prod.adSprintFifteen;
@@ -692,8 +685,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen', 'the-thirty': 'thirty',
-    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen', 'sprint-thirty': 'thirty',
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-fifteen': 'fifteen', 'the-thirty': 'thirty',
+    'sprint-fifteen': 'fifteen', 'sprint-thirty': 'thirty',
+    // 2 Nov 2026, Jadon: The Eight retired. Stale success URLs and the
+    // agent's onboarding emails can still say eight; keep them rendering.
+    'eight': 'fifteen', 'eight-priority': 'fifteen', 'the-eight': 'fifteen', 'sprint-eight': 'fifteen',
     '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };
 
