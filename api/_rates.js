@@ -128,7 +128,7 @@ export const RETAINER = {
   // both now with static ads on top of the video.
   sprints: [
     { name: 'The Fifteen', creatives: 15, statics: 10, oneTime: 6000, monthly: 6000 },
-    { name: 'The Thirty', creatives: 30, statics: 20, oneTime: 10000, monthly: 10000 }
+    { name: 'The Thirty', creatives: 30, statics: 20, oneTime: 9000, monthly: 9000 }
   ],
 
   // Retired 2 Oct 2026. Kept as fields so nothing reads undefined.

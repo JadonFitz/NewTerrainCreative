@@ -77,7 +77,7 @@ let seq = 0;
 const appt = (over = {}, custom = {}) => ({
   contact_id: 'c_123', first_name: 'Ada', last_name: 'Lovelace', full_name: 'Ada Lovelace',
   email: 'person@example.com', phone: '+13105550100',
-  ntc_company: 'Analytical Engines', ntc_service_investment: '$8K–$12K',
+  ntc_company: 'Analytical Engines', ntc_service_investment: '$9,000–$15,000',
   calendar: { calendarName: 'Growth Strategy Consultation', startTime: '2026-10-22T17:00:00Z',
               appointmentId: `appt_${++seq}` },
   customData: { event: 'booked', ntc_session: 's_abc123', ntc_fbp: 'fb.1.1759900000000.1234567890',
@@ -119,7 +119,7 @@ const card = cards(made)[0];
 check('the booked card goes to Speed-to-Lead', card?.body?.type === 'booked' && card?.body?.offer === 'growth' &&
   card?.headers?.['x-ntc-key'] === 'stub-card-secret');
 check('with the time and the answers on the contact', card?.body?.start_at === '2026-10-22T17:00:00Z' &&
-  card?.body?.answers?.ntc_service_investment === '$8K–$12K' &&
+  card?.body?.answers?.ntc_service_investment === '$9,000–$15,000' &&
   card?.body?.labels?.ntc_company === 'Business Name');
 
 console.info('\n\x1b[1mIDEMPOTENT\x1b[0m');
@@ -348,7 +348,7 @@ const cr = creates(made)[0]?.body;
 check('none open: one is created at Booked', res.payload.opportunity === 'created' &&
   cr?.pipelineStageId === STAGE.booked && cr?.pipelineId === 'gVWhpLqxgmOyTgyrGeKJ' && cr?.contactId === 'c_123');
 check('named and valued like the form does it', cr?.name === 'Ada Lovelace · Growth Strategy Consultation' &&
-  cr?.monetaryValue === 8000);
+  cr?.monetaryValue === 9000);
 ghlOpps = [own({ id: 'o_won_old', pipelineStageId: STAGE.won, status: 'won' })];
 n = calls.length;
 res = await request(appt());

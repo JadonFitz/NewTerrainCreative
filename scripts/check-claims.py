@@ -120,6 +120,36 @@ for _f in sorted(root.glob('*.html')) + [root / 'llms.txt']:
     _bad = sorted({_m.group(0) for _m in _STATIC.finditer(_text) if _num(_m.group(1)) not in _ok})
     check(f'{_f.name} static counts match products.*.statics', not _bad, ', '.join(_bad))
 
+# 2 Nov 2026, Jadon: Front of the Line differs by tier. The Thirty is a
+# priority shoot date plus its first video ads inside 14 days, the rest by
+# day 21, and never a 14-day promise on all of it.
+print('\nFront of the Line · terms by tier')
+_ft = re.search(r'adSprintThirty:\s*\{([^}]*)\}', offer)
+_ft = _ft.group(1) if _ft else ''
+_fv = lambda f: (re.search(f + r':\s*(\d+)', _ft) or [None, ''])[1]
+check('The Thirty declares its terms',
+      (_fv('frontOfLineFirstAds'), _fv('frontOfLineFirstAdsDays'), _fv('frontOfLineRestByDay')) == ('15', '14', '21'),
+      'adSprintThirty.frontOfLine*')
+check('The Fifteen declares 14 days',
+      re.search(r'adSprintFifteen:\s*\{[^}]*frontOfLineDays:\s*14', offer) is not None, 'adSprintFifteen.frontOfLineDays')
+check('/sprint gives The Fifteen fourteen days', 'On The Fifteen, fourteen days instead of twenty-one' in SPR,
+      'adSprintFifteen.frontOfLineDays')
+check('/sprint gives The Thirty its own terms',
+      'a priority shoot date and the first 15 video ads inside fourteen days, the rest by day 21' in SPR,
+      'adSprintThirty.frontOfLine*')
+check('/sprint no longer headlines 14 days for every tier',
+      'speed-price">14 days' not in (root / 'sprint.html').read_text(encoding='utf-8'),
+      'no 14-day promise on all of The Thirty')
+_wel = (root / 'welcome.html').read_text(encoding='utf-8')
+_wb = lambda plan: (re.search(r"'" + plan + r"': function \(\) \{.*?\n    \}", _wel, re.S) or [''])[0]
+check('/welcome thirty-priority uses The Thirty terms',
+      'thirtyPrioritySteps(p)' in _wb('thirty-priority') and
+      not re.search(r"sprintPrioritySteps|priorityIntro\b|priorityNote\b|14-day", _wb('thirty-priority')),
+      'no 14-day promise on all of The Thirty')
+check('/welcome thirty note is not the 14-day note',
+      'thirtyPriorityNote(p)' in _wb('thirty') and not re.search(r'\bpriorityNote\b', _wb('thirty')),
+      'no 14-day promise on all of The Thirty')
+
 print('\nAd Sprint publishes no shoot duration')
 # Sprint is sold on output, not hours. A simple Sprint is often about two
 # hours, so "half-day" or "full day" commits us to a block we do not need

@@ -86,7 +86,7 @@ sequenceDiagram
 
 ### 2.2 Ad Sprint leads (The Fifteen, The Thirty)
 
-Two tiers since Nov 2, 2026, each one time or monthly at the same price per month: The Fifteen, $6,000 (15 video ads, one a long-form VSL cut, plus 10 statics); The Thirty, $10,000 (30 video ads, two of them long-form VSL cuts, plus 20 statics). The Eight is retired.
+Two tiers since Nov 2, 2026, each one time or monthly at the same price per month: The Fifteen, $6,000 (15 video ads, one a long-form VSL cut, plus 10 statics); The Thirty, $9,000 (30 video ads, two of them long-form VSL cuts, plus 20 statics). The Eight is retired.
 
 | Step | Level | Notes / code |
 |---|---|---|
@@ -97,7 +97,7 @@ Two tiers since Nov 2, 2026, each one time or monthly at the same price per mont
 | Close + pay | APPROVED then AUTO | Front of the Line add-on recognised from link metadata or a cross-sell total (`cc0d0b6`, migration `031`) |
 | Onboarding | AUTO (template-gated) | Sprint welcome copy drops Friday recaps and ad-access asks (`templateFlags`, migrations `027`, `033`); Sprints book an "Angle Call" (`035`, `036`) |
 | Shoot window | AUTO enforcement | 7 days after kickoff, 3 days with Front of the Line, enforced in the modal and the DB trigger (`034`) |
-| Delivery | HUMAN | Three-week cadence, 14 days with Front of the Line |
+| Delivery | HUMAN | Three-week cadence. Front of the Line: 14 days on The Fifteen; on The Thirty, a priority shoot date and the first 15 video ads inside 14 days, the rest by day 21 |
 
 ### 2.3 Founding Three leads
 

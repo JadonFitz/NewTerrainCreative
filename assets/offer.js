@@ -629,11 +629,20 @@
          video ads, vsl how many of those are long-form VSL cuts, statics
          the single-image and carousel ads on top. New prices, so new
          Payment Links; four links now, not six. Still no price on any
-         page. */
+         page.
+
+         2 Nov 2026, Jadon: Front of the Line differs by tier. The Fifteen
+         is the whole Sprint inside frontOfLineDays. The Thirty is a
+         priority shoot date plus the first frontOfLineFirstAds video ads
+         inside frontOfLineFirstAdsDays, the rest by frontOfLineRestByDay.
+         Never a 14-day promise on all of The Thirty; scripts/check-claims.py
+         holds /sprint and /welcome to this. */
       adSprintFifteen: { name: 'The Fifteen', creatives: 15, statics: 10, vsl: 1,
+                         frontOfLineDays: 14,
                          stripePaymentLink:        'https://buy.stripe.com/PENDING_FIFTEEN_ONETIME',
                          stripePaymentLinkMonthly: 'https://buy.stripe.com/PENDING_FIFTEEN_MONTHLY' },
       adSprintThirty:  { name: 'The Thirty',  creatives: 30, statics: 20, vsl: 2,
+                         frontOfLineFirstAds: 15, frontOfLineFirstAdsDays: 14, frontOfLineRestByDay: 21,
                          stripePaymentLink:        'https://buy.stripe.com/PENDING_THIRTY_ONETIME',
                          stripePaymentLinkMonthly: 'https://buy.stripe.com/PENDING_THIRTY_MONTHLY' },
       leadFoundation:  { name: 'Lead Foundation' }
