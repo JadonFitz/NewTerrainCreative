@@ -63,7 +63,7 @@ const CONTRACT = {
     ntc_sprint_goal: ['What’s the main goal of the campaign?', ['Generate Leads', 'Book Appointments', 'Sell a Product', 'Build Awareness']],
     ntc_location_text: ['Where is your business located?', null],
     ntc_sprint_launch: ['Do you have a launch date or deadline?', ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date']],
-    ntc_sprint_budget: ['Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?', ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+']],
+    ntc_sprint_budget: ['Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?', ['Under $6,000', '$6,000–$10,000', '$10,000+']],
     ntc_notes: ['Anything you’d like us to review before the call?', null, true]
   },
   'pest-control-trial': {
@@ -159,9 +159,19 @@ check('the iClosed redirects are the ones /next-step knows', ['growth', 'brand-b
 
 console.log('\n\x1b[1mOPPORTUNITY VALUE · LOW END OF THE BAND\x1b[0m');
 for (const [label, want] of [['Under $5K', 0], ['$5K–$8K', 5000], ['$18K+', 18000], ['Not sure yet', 0],
-  ['$5K to $10K/month', 5000], ['$15K+/month', 15000], ['$3,000–$5,500', 3000], ['$50,000+', 50000],
+  ['$5K to $10K/month', 5000], ['$15K+/month', 15000], ['Under $6,000', 0], ['$6,000–$10,000', 6000], ['$10,000+', 10000], ['$50,000+', 50000],
   ['Under $10,000', 0], ['', 0]]) {
   check(`${label || '(blank)'} -> ${want}`, FORMS.bandValue(label) === want, String(FORMS.bandValue(label)));
+}
+for (const [label, want] of [['Under $6,000', 0], ['$6,000–$10,000', 6000], ['$10,000+', 10000], ['$5,500–$8,000', 5500]]) {
+  check(`Sprint value: ${label} -> ${want}`, FORMS.opportunityValue('ad-sprint', { ntc_sprint_budget: label }) === want);
+}
+check('the Sprint budget has no disqualifier', FORMS.OFFERS['ad-sprint'].disqualify.length === 0 && FORMS.OFFERS['ad-sprint'].disqualifyTo === '');
+check('the Sprint budget has no Not sure option', !FORMS.OFFERS['ad-sprint'].questions.ntc_sprint_budget.options.includes('Not sure yet'));
+check('the middle band uses an en dash', FORMS.OFFERS['ad-sprint'].questions.ntc_sprint_budget.options[1] === '$6,000\u2013$10,000');
+for (const key of ['ntc_sprint_budget', 'ntc_sprint_package']) {
+  const q = FORMS.OFFERS['ad-sprint'].questions[key];
+  check(`${key}: a legacy label is never an offered option`, q.legacyOptions.length > 0 && !q.legacyOptions.some((l) => q.options.includes(l)));
 }
 check('the trial carries no value', FORMS.opportunityValue('pest-control-trial', { ntc_trial_funded: "Yes, I'm ready to fund the trial" }) === 0);
 

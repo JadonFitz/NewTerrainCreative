@@ -232,8 +232,16 @@ check('missing required answers are named (annual revenue is optional)', res.sta
 n = calls.length;
 res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: {
   ntc_site_or_ig: 'x', ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_promote: 'x', ntc_sprint_goal: 'Generate Leads',
-  ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP', ntc_sprint_budget: '$5,500–$8,000' } });
+  ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP', ntc_sprint_budget: '$6,000–$10,000' } });
 check('optional notes may be left out', res.payload.next === 'calendar');
+// 2 Nov 2026: a tab opened before the re-cut can only send the old labels.
+const sprintAnswers = { ntc_site_or_ig: 'x', ntc_sprint_promote: 'x', ntc_sprint_goal: 'Generate Leads', ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP' };
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'The Eight (8 ad creatives)', ntc_sprint_budget: '$3,000–$5,500' } });
+check('a tab on the old labels still reaches the calendar', res.statusCode === 200 && res.payload.next === 'calendar');
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: '$3,000-$5,500' } });
+check('a label that was never offered is still refused', res.statusCode === 400 && res.payload.fields.includes('ntc_sprint_budget'));
 n = calls.length;
 res = await post({ step: 'answers', offer: 'growth', contact: { ...contact, email: 'other@example.com' }, answers: strong, token });
 check("a token is bound to its email: someone else's opens a new opportunity",

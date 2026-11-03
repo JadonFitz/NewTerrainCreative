@@ -123,7 +123,9 @@
       questions: {
         ntc_site_or_ig:     { type: 'text', label: 'Business Website or Instagram' },
         ntc_sprint_package: { type: 'choice', label: 'Which Ad Sprint are you considering?',
-          options: ['The Fifteen (15 video ads + 10 statics)', 'The Thirty (30 video ads + 20 statics)', 'Not sure, help me choose'] },
+          options: ['The Fifteen (15 video ads + 10 statics)', 'The Thirty (30 video ads + 20 statics)', 'Not sure, help me choose'],
+          // See ntc_sprint_budget below: a tab opened before 2 Nov 2026 posts these.
+          legacyOptions: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'The Thirty (30 ad creatives)'] },
         ntc_sprint_promote: { type: 'text', label: 'What are you trying to promote or sell?' },
         // The live label uses a curly apostrophe; keep it.
         ntc_sprint_goal:    { type: 'choice', label: 'What’s the main goal of the campaign?',
@@ -133,7 +135,12 @@
           options: ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date'] },
         ntc_sprint_budget:  { type: 'choice',
           label: 'Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?',
-          options: ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+'] },
+          options: ['Under $6,000', '$6,000–$10,000', '$10,000+'],
+          /* 2 Nov 2026, Jadon: bands re-cut to the new Sprint prices. A tab
+             opened before the change still offers only the old labels, and
+             could never get past a refusal, so api/book-intake.js accepts
+             them as sent. Never rendered: the form draws options only. */
+          legacyOptions: ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+'] },
         // Short text in iClosed; GHL keeps ntc_notes as LARGE_TEXT.
         ntc_notes:          { type: 'text', label: 'Anything you’d like us to review before the call?', optional: true }
       },
