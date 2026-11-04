@@ -592,9 +592,9 @@
          claim appears on /sprint at all.
 
          The ladder still reads correctly without hours, because the
-         packages differ on what you walk away with: 8 creatives, then
-         15, then 30, one time or monthly; then a monthly volume on the
-         retainers.
+         packages differ on what you walk away with: 15 video ads and 10
+         statics, then 30 and 20, one time or monthly; then a monthly
+         volume on the retainers.
 
          No price on any of them since 2 Oct 2026. The Sprint is still
          fixed price; the figure is quoted on the fit call.
@@ -620,17 +620,31 @@
          price per month. The client picks. Front of the Line stays a
          one-time add-on: there is no monthly Front of the Line link.
          Front of the Line links are not kept in this file (the agent's
-         payment_links table holds them). check-offer.py lets all six
-         Sprint links onto next-step.html only, and requires all six there. */
-      adSprintEight:   { name: 'The Eight',   creatives: 8,
-                         stripePaymentLink:        'https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f',
-                         stripePaymentLinkMonthly: 'https://buy.stripe.com/7sY3cueuO3D9cww2le1RC0J' },
-      adSprintFifteen: { name: 'The Fifteen', creatives: 15,
-                         stripePaymentLink:        'https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g',
-                         stripePaymentLinkMonthly: 'https://buy.stripe.com/4gM4gygCW4Hdcwwgc41RC0K' },
-      adSprintThirty:  { name: 'The Thirty',  creatives: 30,
-                         stripePaymentLink:        'https://buy.stripe.com/aFa8wOfySa1xeEEf801RC0H',
-                         stripePaymentLinkMonthly: 'https://buy.stripe.com/8x228q2M68Xt400aRK1RC0L' },
+         payment_links table holds them). check-offer.py lets the
+         Sprint links onto next-step.html only, and requires all of them
+         there.
+
+         2 Nov 2026, Jadon: The Eight retired. Two Sprints: The Fifteen
+         and The Thirty. Both now include static ads. creatives counts the
+         video ads, vsl how many of those are long-form VSL cuts, statics
+         the single-image and carousel ads on top. New prices, so new
+         Payment Links; four links now, not six. Still no price on any
+         page.
+
+         2 Nov 2026, Jadon: Front of the Line differs by tier. The Fifteen
+         is the whole Sprint inside frontOfLineDays. The Thirty is a
+         priority shoot date plus the first frontOfLineFirstAds video ads
+         inside frontOfLineFirstAdsDays, the rest by frontOfLineRestByDay.
+         Never a 14-day promise on all of The Thirty; scripts/check-claims.py
+         holds /sprint and /welcome to this. */
+      adSprintFifteen: { name: 'The Fifteen', creatives: 15, statics: 10, vsl: 1,
+                         frontOfLineDays: 14,
+                         stripePaymentLink:        'https://buy.stripe.com/00waEW4UeflR1RS4tm1RC0P',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/8x29ASbiC5Lh0NOf801RC0O' },
+      adSprintThirty:  { name: 'The Thirty',  creatives: 30, statics: 20, vsl: 2,
+                         frontOfLineFirstAds: 15, frontOfLineFirstAdsDays: 14, frontOfLineRestByDay: 21,
+                         stripePaymentLink:        'https://buy.stripe.com/cNi9ASfyS4HdeEE2le1RC0M',
+                         stripePaymentLinkMonthly: 'https://buy.stripe.com/dRm4gy3QaehN2VWbVO1RC0N' },
       leadFoundation:  { name: 'Lead Foundation' }
     },
 
@@ -647,7 +661,7 @@
        in any form. See neverClaim below.
        ─────────────────────────────────────────────────────────────── */
     adSprintTerms: {
-      fixedScope: true,          // 8, 15 or 30 creatives, agreed before the shoot
+      fixedScope: true,          // The Fifteen or The Thirty, agreed before the shoot
       fixedPrice: true,          // the price does not move with the day
       noRetainer: true,          // not a retainer. 21 Oct 2026: bought one time
                                  // or monthly, the client's choice; neither is required

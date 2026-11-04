@@ -25,13 +25,14 @@
   Was /production-inquiry until 20 Oct 2026; vercel.json redirects the
   old path here and keeps the query string. iClosed sends a lead here
   when a qualification answer is under the floor (annual revenue $2M,
-  service investment $5K a month, ad budget $5K a month), so they are
+  service investment Under $5,000, ad budget $5K a month), so they are
   not dropped onto the cold /sprint sales page. ?from= says which form:
 
     bb-apply           Brand Builder Story Session
     growth             Growth Strategy Consultation
     signature          legacy spelling of growth (the old redirect)
-    signature-project  Signature Project budget "Under $10,000"
+    signature-project  Signature Project budget "Under $5,000"
+    ad-sprint          Ad Sprint budget "Under $5,000"
     anything else      the default copy (breakdown lands here too)
 
   One centered column: a short stage, then two choices stacked with an
@@ -40,18 +41,22 @@
   outright through Stripe, or send the one-off project form. The only
   booking link is the small "Questions?" line to the Sprint fit call,
   tagged from=next-step so /strategy-call, /call-booked and the iClosed
-  webhook can keep it out of the standard conversions.
+  webhook can keep it out of the standard conversions. It is hidden for
+  from=ad-sprint, since that form's Under $5,000 answer lands back here.
 
   Never says "disqualified", a budget floor or "you can't afford us".
   No price on the page: Stripe checkout shows it (assets/offer.js,
-  products.adSprintEight/Fifteen/Thirty.stripePaymentLink).
+  products.adSprintFifteen/Thirty.stripePaymentLink).
 
   21 Oct 2026, Jadon: The Thirty is live for purchase (buy-thirty), and
   every Sprint can be bought one time or monthly; neither is mandatory,
   the client picks. The one-time links come first; the "Prefer monthly?"
   line carries the monthly ones (stripePaymentLinkMonthly). Front of the
   Line is a one-time add-on and is not sold from this page.
-  scripts/check-offer.py requires exactly these six links here.
+  scripts/check-offer.py requires exactly these links here.
+
+  2 Nov 2026, Jadon: The Eight retired (buy-eight and buy-eight-monthly
+  are gone). The Fifteen is the entry and leads; four links now.
 
   No standard Meta event fires from here. These are leads a retainer
   form turned away, and a Lead, Schedule or InitiateCheckout would
@@ -252,12 +257,12 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
   <section class="choice choice--sprint" id="sprint" aria-label="The Ad Sprint">
     <p class="kicker">The Ad Sprint</p>
     <p class="pitch">Ads you own, made in one shoot. Buy one time or monthly, your choice.</p>
-    <a class="btn" id="buy-eight" data-pkg="eight" data-billing="one-time" href="https://buy.stripe.com/4gM5kCcmGgpVgMMaRK1RC0f">Get The Eight</a>
+    <a class="btn" id="buy-fifteen" data-pkg="fifteen" data-billing="one-time" href="https://buy.stripe.com/00waEW4UeflR1RS4tm1RC0P">Get The Fifteen</a>
     <p class="links">
-      <a id="buy-fifteen" data-pkg="fifteen" data-billing="one-time" href="https://buy.stripe.com/4gMcN4fySgpVbss2le1RC0g">or get The Fifteen</a><span class="dot" aria-hidden="true">·</span><a id="buy-thirty" data-pkg="thirty" data-billing="one-time" href="https://buy.stripe.com/aFa8wOfySa1xeEEf801RC0H">or The Thirty</a>
+      <a id="buy-thirty" data-pkg="thirty" data-billing="one-time" href="https://buy.stripe.com/cNi9ASfyS4HdeEE2le1RC0M">or get The Thirty</a>
     </p>
     <p class="links">
-      Prefer monthly? <a id="buy-eight-monthly" data-pkg="eight" data-billing="monthly" href="https://buy.stripe.com/7sY3cueuO3D9cww2le1RC0J">The Eight</a><span class="dot" aria-hidden="true">·</span><a id="buy-fifteen-monthly" data-pkg="fifteen" data-billing="monthly" href="https://buy.stripe.com/4gM4gygCW4Hdcwwgc41RC0K">The Fifteen</a><span class="dot" aria-hidden="true">·</span><a id="buy-thirty-monthly" data-pkg="thirty" data-billing="monthly" href="https://buy.stripe.com/8x228q2M68Xt400aRK1RC0L">The Thirty</a>
+      Prefer monthly? <a id="buy-fifteen-monthly" data-pkg="fifteen" data-billing="monthly" href="https://buy.stripe.com/8x29ASbiC5Lh0NOf801RC0O">The Fifteen</a><span class="dot" aria-hidden="true">·</span><a id="buy-thirty-monthly" data-pkg="thirty" data-billing="monthly" href="https://buy.stripe.com/dRm4gy3QaehN2VWbVO1RC0N">The Thirty</a>
     </p>
     <p class="links">Questions? <a id="sprint-call" href="/strategy-call?offer=ad-sprint&amp;from=next-step">Book a short Sprint call</a></p>
     <p class="fine">Checkout through Stripe. Monthly bills each month at the same price. Ad spend is paid to the platforms directly.</p>
@@ -377,6 +382,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'signature-project': {
       eyebrow: 'Signature Work · your next step',
       lede: STAGE
+    },
+    'ad-sprint': {
+      eyebrow: 'Ad Sprint · your next step',
+      lede: STAGE
     }
   };
 
@@ -403,8 +412,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      /api/checkout, which keeps this tag as metadata ntc_ref (and on the
      plain link if it falls back) and puts the visitor or lead id in
      client_reference_id instead. */
-  ['buy-eight', 'buy-fifteen', 'buy-thirty',
-   'buy-eight-monthly', 'buy-fifteen-monthly', 'buy-thirty-monthly'].forEach(function (id) {
+  ['buy-fifteen', 'buy-thirty',
+   'buy-fifteen-monthly', 'buy-thirty-monthly'].forEach(function (id) {
     var a = document.getElementById(id);
     if (!a) return;
     try {
@@ -430,6 +439,8 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
      iClosed drops the parameter on its redirect. Both then fire the
      custom NextStepSprintBooked instead of Schedule. */
   var call = document.getElementById('sprint-call');
+  // 2 Nov 2026: a lead the Sprint form just sent here would only come back.
+  if (call && from === 'ad-sprint') call.parentNode.hidden = true;
   if (call) {
     call.addEventListener('click', function () {
       try { localStorage.setItem('ntc_next_step', String(Date.now())); } catch (e) {}

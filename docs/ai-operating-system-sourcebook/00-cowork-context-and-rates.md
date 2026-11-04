@@ -101,7 +101,7 @@ Verify each against the commit that fixed it, and add the SHA.
 
 **Sanitized Slack formats (real).**
 ```
-Payment in from <Client>, $X Ad Sprint (The Eight). Onboarding started.
+Payment in from <Client>, $X Ad Sprint (The Fifteen). Onboarding started.
 Onboarding for <Client>: 4 of 6 steps done, 2 skipped.
 *Blocked:* welcome_sent for *<Client>*. Template welcome_email is not approved. [Retry]
 *Close link ready* for <Client>. They sign, then go straight to checkout. [Void link]

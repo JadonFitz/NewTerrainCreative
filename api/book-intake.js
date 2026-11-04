@@ -120,7 +120,8 @@ function readContact(c) {
 
 /* Every answer is checked against the shared definition: a choice must
    be one of its options word for word, text is trimmed and capped, and
-   anything the offer does not ask is dropped. */
+   anything the offer does not ask is dropped. legacyOptions are labels a
+   tab opened before a re-cut still posts: kept as sent, not remapped. */
 function readAnswers(offer, a) {
   a = a && typeof a === 'object' ? a : {};
   const answers = {};
@@ -128,7 +129,7 @@ function readAnswers(offer, a) {
   for (const [key, q] of Object.entries(offer.questions)) {
     const raw = a[key];
     let v = '';
-    if (q.type === 'choice') v = q.options.includes(raw) ? raw : '';
+    if (q.type === 'choice') v = q.options.includes(raw) || (q.legacyOptions || []).includes(raw) ? raw : '';
     else v = str(raw, q.type === 'textarea' ? 2000 : 300);
     if (v) answers[key] = v;
     else if (!q.optional) errors.push(key);

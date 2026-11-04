@@ -54,12 +54,13 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     Field Pilot      /welcome?plan=brand-builder-pilot-field&session_id={CHECKOUT_SESSION_ID}
     BB: Studio       /welcome?plan=brand-builder-monthly-studio&session_id={CHECKOUT_SESSION_ID}
     BB: Field        /welcome?plan=brand-builder-monthly-field&session_id={CHECKOUT_SESSION_ID}
-    The Eight        /welcome?plan=eight&session_id={CHECKOUT_SESSION_ID}
     The Fifteen      /welcome?plan=fifteen&session_id={CHECKOUT_SESSION_ID}
     The Thirty       /welcome?plan=thirty&session_id={CHECKOUT_SESSION_ID}
                      (21 Oct 2026: The Thirty live; every Sprint also has a
                      monthly link, redirecting to the same plan. Front of
-                     the Line links use plan=<tier>-priority, one time only)
+                     the Line links use plan=<tier>-priority, one time only.
+                     2 Nov 2026: The Eight retired; old plan=eight URLs
+                     show the generic welcome, never another plan's scope)
     5-Day Trial      /welcome?plan=trial&session_id={CHECKOUT_SESSION_ID}
 
   A link without session_id still lands on a complete page; only the
@@ -515,9 +516,11 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
       'Files in your hands with a one-page testing plan: what to run first, what to spend, and when to call a winner.']
   ];
 
-  // Front of the Line: the priority 14-day schedule. The clock starts at
-  // the Angle Call. Matches the Front of the Line block on /sprint and the
-  // order form ("within 14 days of the kickoff call").
+  // Front of the Line on The Fifteen: the priority 14-day schedule. The
+  // clock starts at the Angle Call. Matches the Front of the Line block on
+  // /sprint and the order form ("within 14 days of the kickoff call").
+  // 2 Nov 2026, Jadon: The Thirty has its own terms, below. Never tell a
+  // Thirty client the whole Sprint lands in 14 days.
   var sprintPrioritySteps = [
     ['Day 1', 'The Angle Call',
       'We lock the creative direction, offers, hooks and angles.'],
@@ -530,6 +533,38 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     ['By day 14', 'Yours to run',
       'Your finished ad creative is delivered and ready to launch.']
   ];
+  // Front of the Line on The Thirty (assets/offer.js products.adSprintThirty).
+  var thirtyFront = function (p) {
+    p = p || {};
+    return { ads: p.frontOfLineFirstAds || 15, days: p.frontOfLineFirstAdsDays || 14, rest: p.frontOfLineRestByDay || 21 };
+  };
+  var thirtyPrioritySteps = function (p) {
+    var f = thirtyFront(p);
+    return [
+      ['Day 1', 'The Angle Call',
+        'We lock the creative direction, offers, hooks and angles.'],
+      ['By day 3', 'Scripts approved',
+        'Concepts are finalized and your production plan is locked.'],
+      ['Priority date', 'The Shoot',
+        'Your production gets priority scheduling. We\u2019ll lock your exact shoot date during your Angle Call.'],
+      ['By day ' + f.days, 'Your first ' + f.ads + ' video ads',
+        'Your first ' + f.ads + ' video ads are delivered and ready to launch.'],
+      ['By day ' + f.rest, 'Yours to run',
+        'The rest of your ad creative is delivered and ready to launch.']
+    ];
+  };
+  var thirtyPriorityIntro = function (p) {
+    var f = thirtyFront(p);
+    return 'Fixed scope, fixed price, no retainer. Front of the Line gives your Sprint a priority shoot date and your first ' + f.ads + ' video ads inside ' + f.days + ' days, counted from your Angle Call, with the rest by day ' + f.rest + '. Here is how it runs.';
+  };
+  var thirtyPriorityIncl = function (p) {
+    var f = thirtyFront(p);
+    return 'Front of the Line: a priority shoot date and your first ' + f.ads + ' video ads inside ' + f.days + ' days, the rest by day ' + f.rest;
+  };
+  var thirtyPriorityNote = function (p) {
+    var f = thirtyFront(p);
+    return '<b>Added Front of the Line?</b> You get a priority shoot date and your first ' + f.ads + ' video ads inside ' + f.days + ' days, with the rest by day ' + f.rest + '. We\u2019ll lock your exact shoot and delivery dates during your Angle Call.';
+  };
   var sprintIntro = 'Fixed scope, fixed price, no retainer. Here is how the three weeks run.';
   var priorityIntro = 'Fixed scope, fixed price, no retainer. Front of the Line puts your Sprint on our priority 14-day schedule, counted from your Angle Call. Here is how it runs.';
   // Shown on the standard Sprint pages: a client who added Front of the Line
@@ -538,7 +573,10 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
 
   var sprintIncl = function (p) {
     return [
-      (p && p.creatives ? p.creatives + ' ready-to-run ad creatives' : 'Your full set of ad creatives'),
+      (p && p.creatives ? p.creatives + ' ready-to-run video ads' +
+        (p.vsl ? ', including ' + (p.vsl === 1 ? 'one long-form VSL cut' : 'two long-form VSL cuts') : '')
+        : 'Your full set of video ads'),
+      (p && p.statics ? p.statics + ' static ads, singles and carousels' : 'Your static ads, singles and carousels'),
       'A shoot on location at your business',
       'The Angle Call and the hook set',
       'Every placement: vertical, square, horizontal',
@@ -655,27 +693,16 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
                note: '<b>Media spend is yours.</b> You fund it and pay Meta directly. The minimum for the 5-day test is $' + (t.minTestAdSpend || 500) + '.',
                call: 'intake call', noIntakeForm: true };
     },
-    'eight': function () {
-      var p = prod.adSprintEight;
-      return { name: (p && p.name) || 'The Eight', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
-    },
     'fifteen': function () {
       var p = prod.adSprintFifteen;
       return { name: (p && p.name) || 'The Fifteen', label: 'Ad Sprint',
                intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
     },
-    // 21 Oct 2026, Jadon: The Thirty, same shape as the other two.
+    // 21 Oct 2026, Jadon: The Thirty, same shape as The Fifteen.
     'thirty': function () {
       var p = prod.adSprintThirty;
       return { name: (p && p.name) || 'The Thirty', label: 'Ad Sprint',
-               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: priorityNote, video: 'sprint', call: 'Angle Call' };
-    },
-    'eight-priority': function () {
-      var p = prod.adSprintEight;
-      return { name: ((p && p.name) || 'The Eight') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
-               intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
+               intro: sprintIntro, steps: sprintSteps, incl: sprintIncl(p), note: thirtyPriorityNote(p), video: 'sprint', call: 'Angle Call' };
     },
     'fifteen-priority': function () {
       var p = prod.adSprintFifteen;
@@ -686,14 +713,14 @@ src="https://www.facebook.com/tr?id=1634935111618929&ev=PageView&noscript=1"></n
     'thirty-priority': function () {
       var p = prod.adSprintThirty;
       return { name: ((p && p.name) || 'The Thirty') + ' with Front of the Line', label: 'Ad Sprint · Front of the Line',
-               intro: priorityIntro, steps: sprintPrioritySteps,
-               incl: sprintIncl(p).concat(['Front of the Line: your 14-day priority schedule']), video: 'sprint', call: 'Angle Call' };
+               intro: thirtyPriorityIntro(p), steps: thirtyPrioritySteps(p),
+               incl: sprintIncl(p).concat([thirtyPriorityIncl(p)]), video: 'sprint', call: 'Angle Call' };
     }
   };
   var ALIASES = {
     'founding-three': 'founding', 'founding3': 'founding', 'the-anchor': 'anchor', 'growth-partner': 'growth', 'brand': 'brand-builder',
-    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-eight': 'eight', 'the-fifteen': 'fifteen', 'the-thirty': 'thirty',
-    'sprint-eight': 'eight', 'sprint-fifteen': 'fifteen', 'sprint-thirty': 'thirty',
+    'brandbuilder': 'brand-builder', 'bb-pilot': 'brand-builder-pilot', 'studio-pilot': 'brand-builder-pilot', 'field-pilot': 'brand-builder-pilot-field', 'monthly-studio': 'brand-builder-monthly-studio', 'monthly-field': 'brand-builder-monthly-field', 'bb-pilot-field': 'brand-builder-pilot-field', 'the-fifteen': 'fifteen', 'the-thirty': 'thirty',
+    'sprint-fifteen': 'fifteen', 'sprint-thirty': 'thirty',
     '5-day-trial': 'trial', 'pest-control-trial': 'trial', 'trial_pest_control': 'trial'
   };
 

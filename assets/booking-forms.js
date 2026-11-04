@@ -37,6 +37,16 @@
   var ANNUAL_REVENUE = ['Under $1M', '$1M–$2M', '$2M–$5M', '$5M–$10M', '$10M+'];
   var UNDER_2M = ['Under $1M', '$1M–$2M'];
 
+  /* 2 Nov 2026, Jadon: one budget set across the service-investment
+     questions on every form. "Under $5,000" is the disqualifier on every
+     form, the Ad Sprint included. Its old labels do not disqualify.
+
+     legacyOptions: a tab opened before a re-cut still offers only the old
+     labels and could never get past a refusal, so api/book-intake.js
+     accepts them as sent. Never rendered: the form draws options only.
+     legacyValues on a disqualify rule keeps those answers turned away. */
+  var INVESTMENT = ['Under $5,000', '$5,000–$9,000', '$9,000–$15,000', '$15,000+'];
+
   /* type: text (GHL TEXT), textarea (LARGE_TEXT), choice (SINGLE_OPTIONS).
      iClosed short text renders as text and long text as textarea.
      optional: true only where the iClosed question is not required. */
@@ -59,7 +69,8 @@
           options: ANNUAL_REVENUE, optional: true },
         ntc_service_investment: { type: 'choice',
           label: "Every retainer includes creative production and paid media management, with a three-month minimum commitment. Ad spend is separate. What monthly investment in New Terrain's services are you planning?",
-          options: ['Under $5K', '$5K–$8K', '$8K–$12K', '$12K–$18K', '$18K+'] },
+          options: INVESTMENT,
+          legacyOptions: ['Under $5K', '$5K–$8K', '$8K–$12K', '$12K–$18K', '$18K+'] },
         ntc_ad_budget: { type: 'choice',
           label: 'Separately, what monthly advertising budget can you fund, paid directly to the advertising platforms?',
           options: ['Under $1,500', '$1,500–$3,000', '$3,000–$5,000', '$5,000–$10,000', '$10,000+', 'Not sure yet'] },
@@ -75,7 +86,7 @@
       // The live iClosed rules (audit, 21 Oct 2026). Any one disqualifies.
       disqualify: [
         { key: 'ntc_ad_budget', values: ['Under $1,500'] },
-        { key: 'ntc_service_investment', values: ['Under $5K'] },
+        { key: 'ntc_service_investment', values: ['Under $5,000'], legacyValues: ['Under $5K'] },
         { key: 'ntc_annual_revenue', values: UNDER_2M }
       ],
       disqualifyTo: '/next-step?from=growth',
@@ -99,7 +110,8 @@
           options: ANNUAL_REVENUE, optional: true },
         ntc_bb_investment: { type: 'choice',
           label: 'Brand Builder is an ongoing creative partnership: production, longform and paid media management. Ad spend is separate. What monthly investment are you planning for this?',
-          options: ['Under $5K/month', '$5K to $10K/month', '$10K to $15K/month', '$15K+/month'] },
+          options: INVESTMENT,
+          legacyOptions: ['Under $5K/month', '$5K to $10K/month', '$10K to $15K/month', '$15K+/month'] },
         ntc_show_format: { type: 'choice', label: 'What kind of show do you picture?',
           options: ['Sit-down or podcast', 'Hands-on, behind the scenes (vlog style)', 'A mix of both', 'Not sure yet'] }
       },
@@ -110,7 +122,7 @@
         ['ntc_annual_revenue', 'ntc_bb_investment', 'ntc_show_format']
       ],
       disqualify: [
-        { key: 'ntc_bb_investment', values: ['Under $5K/month'] },
+        { key: 'ntc_bb_investment', values: ['Under $5,000'], legacyValues: ['Under $5K/month'] },
         { key: 'ntc_annual_revenue', values: UNDER_2M }
       ],
       disqualifyTo: '/next-step?from=bb-apply',
@@ -123,7 +135,8 @@
       questions: {
         ntc_site_or_ig:     { type: 'text', label: 'Business Website or Instagram' },
         ntc_sprint_package: { type: 'choice', label: 'Which Ad Sprint are you considering?',
-          options: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'The Thirty (30 ad creatives)', 'Not sure, help me choose'] },
+          options: ['The Fifteen (15 video ads + 10 statics)', 'The Thirty (30 video ads + 20 statics)', 'Not sure, help me choose'],
+          legacyOptions: ['The Eight (8 ad creatives)', 'The Fifteen (15 ad creatives)', 'The Thirty (30 ad creatives)'] },
         ntc_sprint_promote: { type: 'text', label: 'What are you trying to promote or sell?' },
         // The live label uses a curly apostrophe; keep it.
         ntc_sprint_goal:    { type: 'choice', label: 'What’s the main goal of the campaign?',
@@ -132,8 +145,9 @@
         ntc_sprint_launch:  { type: 'choice', label: 'Do you have a launch date or deadline?',
           options: ['ASAP', 'Within 30 days', '1-3 months', 'Flexible / no fixed date'] },
         ntc_sprint_budget:  { type: 'choice',
-          label: 'Ad Sprints are a one-time creative production engagement, paid in full upfront. Ad spend and ongoing campaign management are not included. What one-time production budget do you have for this project?',
-          options: ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+'] },
+          label: 'Ad Sprints are creative production, bought one time or monthly. Ad spend and ongoing campaign management are not included. What production budget do you have for this project?',
+          options: INVESTMENT,
+          legacyOptions: ['Under $3,000', '$3,000–$5,500', '$5,500–$8,000', '$8,000+'] },
         // Short text in iClosed; GHL keeps ntc_notes as LARGE_TEXT.
         ntc_notes:          { type: 'text', label: 'Anything you’d like us to review before the call?', optional: true }
       },
@@ -142,12 +156,15 @@
         ['ntc_sprint_goal', 'ntc_location_text', 'ntc_sprint_launch'],
         ['ntc_sprint_budget', 'ntc_notes']
       ],
-      // /sprint sends pkg=eight|fifteen|thirty; it preselects the package.
+      // /sprint sends pkg=fifteen|thirty; it preselects the package.
+      // 2 Nov 2026, Jadon: The Eight retired. An old pkg=eight link falls
+      // through to The Fifteen.
       prefill: { pkg: { key: 'ntc_sprint_package',
-        map: { eight: 'The Eight (8 ad creatives)', fifteen: 'The Fifteen (15 ad creatives)',
-               thirty: 'The Thirty (30 ad creatives)' } } },
-      disqualify: [],
-      disqualifyTo: '',
+        map: { eight: 'The Fifteen (15 video ads + 10 statics)',
+               fifteen: 'The Fifteen (15 video ads + 10 statics)',
+               thirty: 'The Thirty (30 video ads + 20 statics)' } } },
+      disqualify: [{ key: 'ntc_sprint_budget', values: ['Under $5,000'] }],
+      disqualifyTo: '/next-step?from=ad-sprint',
       valueKey: 'ntc_sprint_budget'
     },
 
@@ -195,13 +212,14 @@
           options: ['Yes, I have a specific project in mind', "I'm not sure yet, I'd like to talk it through",
                     "No, I'm looking for ongoing content or ads"] },
         ntc_signature_budget: { type: 'choice', label: "What is your company's budget for this piece?",
-          options: ['Under $10,000', '$10,000-$25,000', '$25,000-$50,000', '$50,000+'] }
+          options: INVESTMENT,
+          legacyOptions: ['Under $10,000', '$10,000-$25,000', '$25,000-$50,000', '$50,000+'] }
       },
       steps: [
         ['ntc_company', 'ntc_sig_discussing', 'ntc_sig_references'],
         ['ntc_sig_fit', 'ntc_signature_budget']
       ],
-      disqualify: [{ key: 'ntc_signature_budget', values: ['Under $10,000'] }],
+      disqualify: [{ key: 'ntc_signature_budget', values: ['Under $5,000'], legacyValues: ['Under $10,000'] }],
       disqualifyTo: '/next-step?from=signature-project',
       valueKey: 'ntc_signature_budget'
     },
@@ -230,7 +248,8 @@
     if (!offer) return [];
     var out = [];
     offer.disqualify.forEach(function (rule) {
-      if (rule.values.indexOf(answers && answers[rule.key]) !== -1) {
+      var v = answers && answers[rule.key];
+      if (rule.values.indexOf(v) !== -1 || (rule.legacyValues || []).indexOf(v) !== -1) {
         out.push(rule.key + ' = ' + answers[rule.key]);
       }
     });

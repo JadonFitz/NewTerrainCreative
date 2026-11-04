@@ -27,23 +27,23 @@ const res = () => { const r = { statusCode: 0, payload: null, headers: {}, ended
   r.setHeader = (k, v) => { r.headers[k] = v; }; r.end = () => { r.ended = true; return r; };
   return r; };
 
-const EIGHT = '4gM5kCcmGgpVgMMaRK1RC0f';
-const EIGHT_MONTHLY = '7sY3cueuO3D9cww2le1RC0J';
+const FIFTEEN = '00waEW4UeflR1RS4tm1RC0P';
+const FIFTEEN_MONTHLY = '8x29ASbiC5Lh0NOf801RC0O';
 const LEAD = '11111111-2222-4333-8444-555555555555';
 const OTHER_LEAD = '99999999-2222-4333-8444-555555555555';
 const VISITOR = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
 
 const LINKS = {
-  plink_eight0001: {
-    id: 'plink_eight0001', object: 'payment_link', active: true, url: `https://buy.stripe.com/${EIGHT}`,
-    metadata: { offer_key: 'ad_sprint', plan: 'the-eight' },
+  plink_fifteen01: {
+    id: 'plink_fifteen01', object: 'payment_link', active: true, url: `https://buy.stripe.com/${FIFTEEN}`,
+    metadata: { offer_key: 'ad_sprint', plan: 'the-fifteen' },
     after_completion: { type: 'redirect', redirect: { url: 'https://www.newterraincreative.com/welcome?plan=sprint&session_id={CHECKOUT_SESSION_ID}' } },
     phone_number_collection: { enabled: true }, allow_promotion_codes: true,
     billing_address_collection: 'auto', customer_creation: 'always', submit_type: 'auto',
     custom_fields: [], shipping_address_collection: null
   },
   plink_monthly01: {
-    id: 'plink_monthly01', object: 'payment_link', active: true, url: `https://buy.stripe.com/${EIGHT_MONTHLY}`,
+    id: 'plink_monthly01', object: 'payment_link', active: true, url: `https://buy.stripe.com/${FIFTEEN_MONTHLY}`,
     metadata: { offer_key: 'ad_sprint', billing: 'monthly', addons: '' },
     subscription_data: { metadata: { offer_key: 'ad_sprint' }, trial_period_days: null },
     after_completion: { type: 'redirect', redirect: { url: 'https://www.newterraincreative.com/welcome?plan=sprint-monthly&session_id={CHECKOUT_SESSION_ID}' } },
@@ -51,8 +51,8 @@ const LINKS = {
   }
 };
 const ITEMS = {
-  plink_eight0001: [{ price: { id: 'price_eight', type: 'one_time' }, quantity: 1 }],
-  plink_monthly01: [{ price: { id: 'price_eight_m', type: 'recurring', recurring: { interval: 'month' } }, quantity: 1 }]
+  plink_fifteen01: [{ price: { id: 'price_fifteen', type: 'one_time' }, quantity: 1 }],
+  plink_monthly01: [{ price: { id: 'price_fifteen_m', type: 'recurring', recurring: { interval: 'month' } }, quantity: 1 }]
 };
 
 let leads = [];   // rows the fake Supabase holds
@@ -123,7 +123,7 @@ console.log('\n\x1b[1mALLOWLIST\x1b[0m');
   check('every allowed link is on the site', [...ALLOWED].every(s => onSite.has(s)),
     [...ALLOWED].filter(s => !onSite.has(s)).join(', '));
   check('the trial link is allowed', ALLOWED.has('00w28qgCW1v1gMM6Bu1RC0q'));
-  check('seven links: six Sprints and the trial', ALLOWED.size === 7);
+  check('five links: four Sprints and the trial', ALLOWED.size === 5);
 
   resetCache();
   let { r, calls: c } = await go({ link: 'https://buy.stripe.com/zzzzzzzzzzzzzzzzzzzzzz', from: '/next-step' });
@@ -133,7 +133,7 @@ console.log('\n\x1b[1mALLOWLIST\x1b[0m');
   ({ r } = await go({ link: 'https://evil.example.com/pay', from: '/next-step' }));
   check('a non-Stripe link never becomes a redirect', r.headers.Location === 'https://www.newterraincreative.com/next-step');
 
-  ({ r } = await go({ link: 'https://buy.stripe.com.evil.com/' + EIGHT, from: '/next-step' }));
+  ({ r } = await go({ link: 'https://buy.stripe.com.evil.com/' + FIFTEEN, from: '/next-step' }));
   check('a look-alike host is refused', r.headers.Location === 'https://www.newterraincreative.com/next-step');
 }
 
@@ -142,14 +142,14 @@ console.log('\n\x1b[1mMIRROR OF THE PAYMENT LINK\x1b[0m');
 {
   resetCache();
   const { r, body } = await go({
-    link: `https://buy.stripe.com/${EIGHT}?client_reference_id=next-step_growth`,
+    link: `https://buy.stripe.com/${FIFTEEN}?client_reference_id=next-step_growth`,
     from: '/next-step?from=growth', v: VISITOR
   });
   check('303 to the session', r.statusCode === 303 && r.headers.Location === 'https://checkout.stripe.com/c/pay/cs_test_1');
   check('not cached by the browser', r.headers['Cache-Control'] === 'no-store');
-  check('same price and quantity', body.get('line_items[0][price]') === 'price_eight' && body.get('line_items[0][quantity]') === '1');
+  check('same price and quantity', body.get('line_items[0][price]') === 'price_fifteen' && body.get('line_items[0][quantity]') === '1');
   check('one-time link is payment mode', body.get('mode') === 'payment');
-  check('offer metadata copied', body.get('metadata[offer_key]') === 'ad_sprint' && body.get('metadata[plan]') === 'the-eight');
+  check('offer metadata copied', body.get('metadata[offer_key]') === 'ad_sprint' && body.get('metadata[plan]') === 'the-fifteen');
   check('success URL is the link\'s own redirect',
     body.get('success_url') === 'https://www.newterraincreative.com/welcome?plan=sprint&session_id={CHECKOUT_SESSION_ID}');
   check('phone collected', body.get('phone_number_collection[enabled]') === 'true');
@@ -161,10 +161,10 @@ console.log('\n\x1b[1mMIRROR OF THE PAYMENT LINK\x1b[0m');
   check('the old page tag survives as ntc_ref', body.get('metadata[ntc_ref]') === 'next-step_growth');
   check('no subscription data on a one-time checkout', ![...body.keys()].some(k => k.startsWith('subscription_data')));
 
-  const second = await go({ link: EIGHT, from: '/next-step', v: VISITOR });
+  const second = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR });
   check('payment link lookups are cached', !second.calls.some(x => x.url.includes('/payment_links')));
 
-  const m = await go({ link: `https://buy.stripe.com/${EIGHT_MONTHLY}`, from: '/next-step', v: VISITOR });
+  const m = await go({ link: `https://buy.stripe.com/${FIFTEEN_MONTHLY}`, from: '/next-step', v: VISITOR });
   check('recurring price is subscription mode', m.body.get('mode') === 'subscription');
   check('subscription metadata carries the offer', m.body.get('subscription_data[metadata][offer_key]') === 'ad_sprint' &&
     m.body.get('subscription_data[metadata][billing]') === 'monthly');
@@ -173,14 +173,14 @@ console.log('\n\x1b[1mMIRROR OF THE PAYMENT LINK\x1b[0m');
   check('no promotion codes when the link has none', m.body.get('allow_promotion_codes') === null);
   check('no customer_creation in subscription mode', m.body.get('customer_creation') === null);
 
-  const byId = await go({ link: 'plink_eight0001', from: '/next-step' });
+  const byId = await go({ link: 'plink_fifteen01', from: '/next-step' });
   check('a plink id on the allowlist works', byId.r.headers.Location?.startsWith('https://checkout.stripe.com/'));
 
-  LINKS.plink_eight0001.custom_fields = [{ key: 'company' }];
+  LINKS.plink_fifteen01.custom_fields = [{ key: 'company' }];
   resetCache();
-  const odd = await go({ link: EIGHT, from: '/next-step' });
-  check('a link with features we do not copy goes plain', odd.r.headers.Location === plain(EIGHT) && !odd.body);
-  LINKS.plink_eight0001.custom_fields = [];
+  const odd = await go({ link: FIFTEEN, from: '/next-step' });
+  check('a link with features we do not copy goes plain', odd.r.headers.Location === plain(FIFTEEN) && !odd.body);
+  LINKS.plink_fifteen01.custom_fields = [];
   resetCache();
 }
 
@@ -193,9 +193,9 @@ console.log('\n\x1b[1mBACK LINK STAYS ON THIS SITE\x1b[0m');
   check('a protocol-relative path is refused', safeFrom('//evil.example.com/x') === '/next-step');
   check('a backslash trick is refused', safeFrom('/\\evil.example.com') === '/next-step');
   check('the API is not a back link', safeFrom('/api/checkout?link=x') === '/next-step');
-  const { body } = await go({ link: EIGHT, from: '//evil.example.com', v: VISITOR });
+  const { body } = await go({ link: FIFTEEN, from: '//evil.example.com', v: VISITOR });
   check('cancel_url is on this site', body.get('cancel_url') === 'https://www.newterraincreative.com/next-step');
-  const t = await go({ link: EIGHT, from: '/call-booked?offer=pest-control-trial' });
+  const t = await go({ link: FIFTEEN, from: '/call-booked?offer=pest-control-trial' });
   check('cancel_url returns to the page', t.body.get('cancel_url') === 'https://www.newterraincreative.com/call-booked?offer=pest-control-trial');
 }
 
@@ -211,41 +211,41 @@ console.log('\n\x1b[1mCLIENT REFERENCE ID AND EMAIL\x1b[0m');
   check('within 200 characters, letters digits - and _', long.length === 200 && /^[A-Za-z0-9_-]+$/.test(long));
 
   leads = []; events = [];
-  let { body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR });
+  let { body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR });
   check('anonymous visitor: visitor_<id>', body.get('client_reference_id') === `visitor_${VISITOR}`);
   check('anonymous visitor: no email', body.get('customer_email') === null);
 
   leads = [{ id: LEAD, email: 'Owner@Example.com', session_id: VISITOR }];
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR }));
   check('a visitor who filled a form: lead_<id>', body.get('client_reference_id') === `lead_${LEAD}`);
   check('their email from the server lookup', body.get('customer_email') === 'owner@example.com');
   check('ntc_lead_id set', body.get('metadata[ntc_lead_id]') === LEAD);
 
   leads = [{ id: LEAD, email: 'owner@example.com', session_id: 'someone-else-session' }];
   events = [{ session_id: VISITOR, lead_id: LEAD }];
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR }));
   check('a lead linked through funnel_events is found', body.get('client_reference_id') === `lead_${LEAD}` &&
     body.get('customer_email') === 'owner@example.com');
 
   leads = [{ id: OTHER_LEAD, email: 'stranger@example.com', session_id: 'not-this-visitor' }];
   events = [];
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR, l: OTHER_LEAD }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR, l: OTHER_LEAD }));
   check('a lead id that is not this visitor\'s is ignored', body.get('client_reference_id') === `visitor_${VISITOR}`);
   check('and their email is never filled in', body.get('customer_email') === null);
 
   leads = [{ id: LEAD, email: 'owner@example.com', session_id: VISITOR }];
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR, l: LEAD }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR, l: LEAD }));
   check('a lead id that is this visitor\'s is used', body.get('client_reference_id') === `lead_${LEAD}`);
 
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR, email: 'spoof@example.com', customer_email: 'spoof@example.com' }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR, email: 'spoof@example.com', customer_email: 'spoof@example.com' }));
   check('an email in the query is never used', body.get('customer_email') === 'owner@example.com');
 
   leads = [];
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: VISITOR, i: '1' }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR, i: '1' }));
   check('internal browser: internal_<id>', body.get('client_reference_id') === `internal_${VISITOR}`);
   check('internal browser: ntc_internal true', body.get('metadata[ntc_internal]') === 'true');
 
-  ({ body } = await go({ link: EIGHT, from: '/next-step', v: 'bad id with spaces' }));
+  ({ body } = await go({ link: FIFTEEN, from: '/next-step', v: 'bad id with spaces' }));
   check('a malformed visitor id is dropped', body.get('client_reference_id') === null && body.get('metadata[ntc_visitor_id]') === null);
 }
 
@@ -253,13 +253,13 @@ console.log('\n\x1b[1mCLIENT REFERENCE ID AND EMAIL\x1b[0m');
 console.log('\n\x1b[1mFALLBACK TO THE PLAIN LINK\x1b[0m');
 {
   resetCache();
-  let { r, calls: c } = await go({ link: `https://buy.stripe.com/${EIGHT}?client_reference_id=next-step_growth`, from: '/next-step' }, { key: '' });
-  check('no key: the plain link, as before', r.statusCode === 303 && r.headers.Location === plain(EIGHT, 'next-step_growth'));
+  let { r, calls: c } = await go({ link: `https://buy.stripe.com/${FIFTEEN}?client_reference_id=next-step_growth`, from: '/next-step' }, { key: '' });
+  check('no key: the plain link, as before', r.statusCode === 303 && r.headers.Location === plain(FIFTEEN, 'next-step_growth'));
   check('no key: Stripe is not called', !c.some(x => x.url.includes('api.stripe.com')));
 
   stripeDown = true;
-  ({ r } = await go({ link: EIGHT, from: '/next-step', v: VISITOR }));
-  check('Stripe failing: the plain link', r.statusCode === 303 && r.headers.Location === plain(EIGHT));
+  ({ r } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR }));
+  check('Stripe failing: the plain link', r.statusCode === 303 && r.headers.Location === plain(FIFTEEN));
   stripeDown = false;
 
   resetCache();
@@ -268,24 +268,24 @@ console.log('\n\x1b[1mFALLBACK TO THE PLAIN LINK\x1b[0m');
     if (String(url).endsWith('/checkout/sessions')) return reply({ error: { message: 'Invalid price' } }, 400);
     return realFetch(url, init);
   };
-  ({ r } = await go({ link: EIGHT, from: '/next-step', v: VISITOR }));
-  check('session refused: the plain link', r.headers.Location === plain(EIGHT));
+  ({ r } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR }));
+  check('session refused: the plain link', r.headers.Location === plain(FIFTEEN));
   globalThis.fetch = async (url, init) => {
     if (String(url).endsWith('/checkout/sessions')) throw new Error('network');
     return realFetch(url, init);
   };
-  ({ r } = await go({ link: EIGHT, from: '/next-step', v: VISITOR }));
-  check('network error: the plain link', r.headers.Location === plain(EIGHT));
+  ({ r } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR }));
+  check('network error: the plain link', r.headers.Location === plain(FIFTEEN));
   globalThis.fetch = async (url, init) => {
     if (String(url).includes('stub.supabase.co')) return reply({ message: 'down' }, 500);
     return realFetch(url, init);
   };
-  ({ r } = await go({ link: EIGHT, from: '/next-step', v: VISITOR }));
+  ({ r } = await go({ link: FIFTEEN, from: '/next-step', v: VISITOR }));
   check('database down: still a tracked checkout', r.headers.Location === 'https://checkout.stripe.com/c/pay/cs_test_1');
   globalThis.fetch = realFetch;
 
-  ({ r } = await go({ link: EIGHT, from: '/next-step' }, { ua: 'Googlebot/2.1' }));
-  check('a crawler gets the plain link and opens no session', r.headers.Location === plain(EIGHT));
+  ({ r } = await go({ link: FIFTEEN, from: '/next-step' }, { ua: 'Googlebot/2.1' }));
+  check('a crawler gets the plain link and opens no session', r.headers.Location === plain(FIFTEEN));
 
   const post = res();
   await handler({ method: 'POST', query: {}, headers: {} }, post, { key: 'rk_test_stub' });
@@ -297,7 +297,7 @@ console.log('\n\x1b[1mBUY BUTTONS GO THROUGH THE ENDPOINT\x1b[0m');
 {
   const store = new Map([['ntc_sid', VISITOR]]);
   let clickHandler = null;
-  const attrs = { href: `https://buy.stripe.com/${EIGHT}?client_reference_id=next-step_growth` };
+  const attrs = { href: `https://buy.stripe.com/${FIFTEEN}?client_reference_id=next-step_growth` };
   const a = {
     getAttribute: k => (k in attrs ? attrs[k] : null),
     setAttribute: (k, v) => { attrs[k] = String(v); },
@@ -316,7 +316,7 @@ console.log('\n\x1b[1mBUY BUTTONS GO THROUGH THE ENDPOINT\x1b[0m');
   await import(`../assets/checkout.js?test=${Date.now()}`);
   let u = new URL(attrs.href, 'https://www.newterraincreative.com');
   check('link rewritten on load', u.pathname === '/api/checkout');
-  check('carries the original link and its tag', u.searchParams.get('link') === `https://buy.stripe.com/${EIGHT}?client_reference_id=next-step_growth`);
+  check('carries the original link and its tag', u.searchParams.get('link') === `https://buy.stripe.com/${FIFTEEN}?client_reference_id=next-step_growth`);
   check('carries the page it came from', u.searchParams.get('from') === '/next-step?from=growth');
   check('carries the visitor id', u.searchParams.get('v') === VISITOR);
   check('not internal by default', u.searchParams.get('i') === null);

@@ -65,8 +65,8 @@ check('no result guaranteed',
 # or remedy may be ADDED to the Founding copy beyond the waived month.
 
 print('\nSprint · risk reduction is scope, price, no retainer, ownership')
-check('fixed scope named', 'Eight creatives, fifteen or thirty' in SPR,
-      'must match adSprintEight/adSprintFifteen/adSprintThirty creatives')
+check('fixed scope named', 'Fifteen video ads and ten statics, or thirty and twenty' in SPR,
+      'must match adSprintFifteen/adSprintThirty creatives and statics')
 # 21 Oct 2026, Jadon: every Sprint can be bought one time or monthly;
 # neither is mandatory. The fixed-price line says so.
 check('fixed price', 'One time or monthly, fixed' in SPR, 'adSprintTerms.fixedPrice')
@@ -81,6 +81,74 @@ check('no result guaranteed', 'no result is guaranteed' in SPR,
 check('nothing added on top',
       'not offering a performance guarantee, a free reshoot or a refund' in SPR,
       'no further promise, refund or remedy may be offered')
+
+# 2 Nov 2026, Jadon: The Eight retired, and both Sprints now carry static
+# ads. A count on a page is a promise, so it must be one the offer file
+# declares. products.*.statics is the only source of a static count; the
+# 5-day trial declares its own (trial.statics) and may state it on the
+# trial's own pages.
+print('\nSprint · published counts match assets/offer.js')
+_sprint = {}
+for _tier in ('Fifteen', 'Thirty'):
+    _b = re.search(r'adSprint' + _tier + r':\s*\{([^}]*)\}', offer)
+    check(f'adSprint{_tier} declared', _b is not None, 'missing from assets/offer.js')
+    _body = _b.group(1) if _b else ''
+    for _f in ('creatives', 'statics', 'vsl'):
+        _m = re.search(_f + r':\s*(\d+)', _body)
+        check(f'adSprint{_tier}.{_f} declared', _m is not None, 'missing from assets/offer.js')
+        _sprint.setdefault(_f, set()).add(int(_m.group(1)) if _m else -1)
+check('The Eight is not declared', 'adSprintEight' not in offer, 'retired 2 Nov 2026')
+
+_COUNTS = {'ten': 10, 'fifteen': 15, 'twenty': 20, 'thirty': 30}
+_num = lambda s: int(s) if s.isdigit() else _COUNTS[s.lower()]
+_N = r'(\d+|ten|fifteen|twenty|thirty)'
+_VIDEO = re.compile(_N + r'\s+(?:ready-to-run\s+)?(?:video\s+ads|ad\s+creatives|creatives)\b', re.I)
+for _page in ('sprint.html', 'index.html', 'about.html', 'next-step.html', 'llms.txt'):
+    _text = live(_page)
+    _bad = sorted({_m.group(0) for _m in _VIDEO.finditer(_text)
+                   if _num(_m.group(1)) not in _sprint['creatives']})
+    check(f'{_page} video counts match products.*.creatives', not _bad, ', '.join(_bad))
+
+_STATIC = re.compile(_N + r'\s+static', re.I)
+_trial_statics = re.search(r'\bstatics:\s*(\d+)', offer[offer.index('trial:'):])
+_TRIAL_PAGES = ('pest-control-trial.html', 'call-booked.html', 'welcome.html')
+for _f in sorted(root.glob('*.html')) + [root / 'llms.txt']:
+    _ok = set(_sprint['statics'])
+    if _f.name in _TRIAL_PAGES and _trial_statics:
+        _ok.add(int(_trial_statics.group(1)))
+    _text = live(_f.name)
+    _bad = sorted({_m.group(0) for _m in _STATIC.finditer(_text) if _num(_m.group(1)) not in _ok})
+    check(f'{_f.name} static counts match products.*.statics', not _bad, ', '.join(_bad))
+
+# 2 Nov 2026, Jadon: Front of the Line differs by tier. The Thirty is a
+# priority shoot date plus its first video ads inside 14 days, the rest by
+# day 21, and never a 14-day promise on all of it.
+print('\nFront of the Line · terms by tier')
+_ft = re.search(r'adSprintThirty:\s*\{([^}]*)\}', offer)
+_ft = _ft.group(1) if _ft else ''
+_fv = lambda f: (re.search(f + r':\s*(\d+)', _ft) or [None, ''])[1]
+check('The Thirty declares its terms',
+      (_fv('frontOfLineFirstAds'), _fv('frontOfLineFirstAdsDays'), _fv('frontOfLineRestByDay')) == ('15', '14', '21'),
+      'adSprintThirty.frontOfLine*')
+check('The Fifteen declares 14 days',
+      re.search(r'adSprintFifteen:\s*\{[^}]*frontOfLineDays:\s*14', offer) is not None, 'adSprintFifteen.frontOfLineDays')
+check('/sprint gives The Fifteen fourteen days', 'On The Fifteen, fourteen days instead of twenty-one' in SPR,
+      'adSprintFifteen.frontOfLineDays')
+check('/sprint gives The Thirty its own terms',
+      'a priority shoot date and the first 15 video ads inside fourteen days, the rest by day 21' in SPR,
+      'adSprintThirty.frontOfLine*')
+check('/sprint no longer headlines 14 days for every tier',
+      'speed-price">14 days' not in (root / 'sprint.html').read_text(encoding='utf-8'),
+      'no 14-day promise on all of The Thirty')
+_wel = (root / 'welcome.html').read_text(encoding='utf-8')
+_wb = lambda plan: (re.search(r"'" + plan + r"': function \(\) \{.*?\n    \}", _wel, re.S) or [''])[0]
+check('/welcome thirty-priority uses The Thirty terms',
+      'thirtyPrioritySteps(p)' in _wb('thirty-priority') and
+      not re.search(r"sprintPrioritySteps|priorityIntro\b|priorityNote\b|14-day", _wb('thirty-priority')),
+      'no 14-day promise on all of The Thirty')
+check('/welcome thirty note is not the 14-day note',
+      'thirtyPriorityNote(p)' in _wb('thirty') and not re.search(r'\bpriorityNote\b', _wb('thirty')),
+      'no 14-day promise on all of The Thirty')
 
 print('\nAd Sprint publishes no shoot duration')
 # Sprint is sold on output, not hours. A simple Sprint is often about two

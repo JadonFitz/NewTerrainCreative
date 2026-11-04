@@ -114,7 +114,7 @@
     var total = offer.steps.length + 1;
     var busy = false;
 
-    // Preselected answers from the URL (/sprint's pkg=eight|fifteen).
+    // Preselected answers from the URL (/sprint's pkg=fifteen|thirty).
     Object.keys(offer.prefill || {}).forEach(function (param) {
       var rule = offer.prefill[param];
       var v = (query.get(param) || '').trim().toLowerCase();

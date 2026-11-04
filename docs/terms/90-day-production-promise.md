@@ -12,11 +12,14 @@
 > which is withdrawn and must not be reinstated in any form.
 >
 > **Remedy changed 26 September 2026.** Was one standard production
-> cycle matching the contracted monthly allocation. Now one Ad Sprint at
-> The Eight scope, on top of the retainer. A production cycle at Brand
+> cycle matching the contracted monthly allocation. Now a fixed scope of
+> eight ad creatives, on top of the retainer. A production cycle at Brand
 > Builder rates was a month of four production days given away, and
 > open question 2 below (a cap nobody had set) existed because of it. A
-> defined product bounds the exposure by its published price.
+> defined scope with a documented cap bounds the exposure.
+>
+> **2 Nov 2026: The Eight retired as a product; this scope and cap are now
+> defined here and do not track any published price.**
 
 ## 1 · Public language
 
@@ -39,10 +42,10 @@ terms available alongside it.
 
 ## 2 · What is being promised, in one line
 
-One Ad Sprint at The Eight scope (eight ad creatives from one shoot, in
+A fixed production scope (eight ad creatives from one shoot on location, in
 every placement), at no charge and on top of the contracted monthly
 allocation, if an agreed and measurable campaign benchmark has not
-improved over a complete, properly run 90-day period. The Sprint is
+improved over a complete, properly run 90-day period. The work is
 briefed against the benchmark that was missed.
 
 It is a promise about **our work**, not about the client's business
@@ -126,12 +129,12 @@ period.
 
 ## 5 · The remedy
 
-5.1 One Ad Sprint at The Eight scope as published on `/sprint` (eight ad
-creatives, one shoot on location, every placement, captions, colour and
-licensed music), delivered **on top of** the contracted monthly production
-allocation, not in place of it, and briefed against the missed benchmark.
-Its maximum value is the published price of The Eight, which serves as
-the documented cap.
+5.1 A fixed production scope: eight ad creatives from one shoot on
+location, every placement, captions, colour and licensed music, delivered
+**on top of** the contracted monthly production allocation, not in place of
+it, and briefed against the missed benchmark. Its maximum value is $3,000,
+which is the documented cap. The scope and the cap are defined in this
+clause and do not track any published product or price.
 
 5.2 Includes the defined production component and **one** standard
 revision round.
@@ -169,11 +172,12 @@ signed. A headline on a web page is not the term; it is a pointer to it.
    arguably in bad faith. A stated threshold is fairer and much harder to
    argue about later. This is a commercial decision before it is a legal
    one.
-2. ~~**Maximum value.**~~ **Resolved 26 September 2026.** The remedy is
-   now a defined product, one Ad Sprint at The Eight scope, so its cap is
-   the published Sprint price on every tier. Counsel should confirm the
-   agreement references the scope by name rather than by price, so a
-   later price change does not reopen the term.
+2. ~~**Maximum value.**~~ **Resolved 26 September 2026, restated 2 November
+   2026.** The remedy is a fixed scope with a documented cap of $3,000
+   (clause 5.1), on every tier. Counsel should confirm the agreement
+   states the scope and the cap in its own words rather than by reference
+   to a product or a published price, so a later change to the Sprint
+   line does not reopen the term.
 3. **Who judges.** Nothing says who determines whether conditions 4.1 to
    4.6 were met, or what happens when the parties disagree.
 4. **Qualified.** Two eligible benchmarks turn on "qualified" leads. That

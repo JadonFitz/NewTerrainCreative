@@ -82,7 +82,7 @@ const strong = {
   ntc_company: 'Analytical Engines', ntc_site_or_ig: 'engines.example',
   ntc_priority_90d: 'Generate more qualified leads', ntc_running_ads: 'Yes, actively',
   ntc_start_timing: 'Within 30 days', ntc_annual_revenue: '$2M–$5M',
-  ntc_service_investment: '$8K–$12K', ntc_ad_budget: '$3,000–$5,000',
+  ntc_service_investment: '$9,000–$15,000', ntc_ad_budget: '$3,000–$5,000',
   ntc_decision_role: "I'm the decision-maker"
 };
 
@@ -194,7 +194,7 @@ check('stage:potential comes off', ghl(made).some((c) => c.method === 'DELETE' &
 const put = ghl(made).find((c) => c.method === 'PUT');
 check("moves step one's opportunity rather than opening another", /\/opportunities\/o_456$/.test(put?.url || '') &&
   !ghl(made).some((c) => /\/opportunities\/$/.test(c.url)));
-check('valued at the low end of the band', put?.body?.monetaryValue === 8000);
+check('valued at the low end of the band', put?.body?.monetaryValue === 9000);
 check('no card for a ready lead (the booking webhook sends it)', cards(made).length === 0);
 
 console.info('\n\x1b[1mSTEP TWO · DISQUALIFIED\x1b[0m');
@@ -217,8 +217,8 @@ n = calls.length;
 res = await post({ step: 'answers', offer: 'brand-builder', contact, attribution, answers: {
   ntc_company: 'x', ntc_show_format: 'A mix of both', ntc_location: 'Los Angeles', ntc_site_or_ig: 'x',
   ntc_selling_status: 'Yes, with customers', ntc_on_camera: 'Yes', ntc_brand_goal: 'x',
-  ntc_bb_investment: 'Under $5K/month' } });
-check('Story Session under $5K goes to bb-apply', res.payload.url === '/next-step?from=bb-apply');
+  ntc_bb_investment: 'Under $5,000' } });
+check('Story Session under $5,000 goes to bb-apply', res.payload.url === '/next-step?from=bb-apply');
 check('and with no token opens a fresh opportunity at Disqualified', ghl(since(n)).some((c) =>
   /\/opportunities\/$/.test(c.url) && c.body.pipelineStageId === '67599a1a-08ed-43f3-a98a-43f7442da375'));
 
@@ -232,8 +232,24 @@ check('missing required answers are named (annual revenue is optional)', res.sta
 n = calls.length;
 res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: {
   ntc_site_or_ig: 'x', ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_promote: 'x', ntc_sprint_goal: 'Generate Leads',
-  ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP', ntc_sprint_budget: '$5,500–$8,000' } });
+  ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP', ntc_sprint_budget: '$5,000–$9,000' } });
 check('optional notes may be left out', res.payload.next === 'calendar');
+// 2 Nov 2026: a tab opened before the re-cut can only send the old labels.
+const sprintAnswers = { ntc_site_or_ig: 'x', ntc_sprint_promote: 'x', ntc_sprint_goal: 'Generate Leads', ntc_location_text: 'LA', ntc_sprint_launch: 'ASAP' };
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'The Eight (8 ad creatives)', ntc_sprint_budget: '$3,000–$5,500' } });
+check('a tab on the old labels still reaches the calendar', res.statusCode === 200 && res.payload.next === 'calendar');
+res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_service_investment: 'Under $5K' } });
+check('an old floor from a stale tab still goes to /next-step', res.statusCode === 200 && res.payload.url === '/next-step?from=growth');
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: 'Under $5,000' } });
+check('the Sprint turns away Under $5,000', res.payload.next === 'redirect' && res.payload.url === '/next-step?from=ad-sprint');
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: 'Under $3,000' } });
+check('an old Sprint floor from a stale tab does not disqualify', res.payload.next === 'calendar');
+res = await post({ step: 'answers', offer: 'ad-sprint', contact, answers: { ...sprintAnswers,
+  ntc_sprint_package: 'Not sure, help me choose', ntc_sprint_budget: '$3,000-$5,500' } });
+check('a label that was never offered is still refused', res.statusCode === 400 && res.payload.fields.includes('ntc_sprint_budget'));
 n = calls.length;
 res = await post({ step: 'answers', offer: 'growth', contact: { ...contact, email: 'other@example.com' }, answers: strong, token });
 check("a token is bound to its email: someone else's opens a new opportunity",
@@ -253,7 +269,7 @@ check('GHL down at step two: the calendar still comes back', res.payload.next ==
 res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_annual_revenue: '$1M–$2M' } });
 check('and the disqualify rule still runs locally', res.payload.url === '/next-step?from=growth');
 ghlStatus = 200; cardStatus = 500;
-res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_service_investment: 'Under $5K' } });
+res = await post({ step: 'answers', offer: 'growth', contact, answers: { ...strong, ntc_service_investment: 'Under $5,000' } });
 check('a failed Slack card does not fail the lead', res.statusCode === 200 && res.payload.next === 'redirect');
 cardStatus = 200;
 process.env.GHL_CALENDARS = '{"growth":"javascript:alert(1)"}';
