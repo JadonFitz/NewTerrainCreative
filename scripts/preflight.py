@@ -494,6 +494,7 @@ for test, label in (
     ('test-booking-forms.mjs', 'GHL booking form contract'),
     ('test-book-intake.mjs', 'GHL booking intake'),
     ('test-ghl-webhook.mjs', 'GHL booking webhook'),
+    ('test-ghl-lead-events.mjs', 'GHL lead stage events'),
     ('test-meta-sync.mjs', 'Meta spend sync'),
     ('test-welcome.mjs', 'welcome booking link'),
     ('test-checkout.mjs', 'tracked checkout'),

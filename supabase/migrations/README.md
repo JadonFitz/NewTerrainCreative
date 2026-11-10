@@ -69,6 +69,7 @@ columns are exposed. Not a copied snippet.
 | `0010_call_outcomes.sql` | `call_outcomes`, the post-call log behind the Calls section of `/owner`: date, offer, who took it, outcome, and the objection on every lost call (Authority, Budget, Needs, Timing). No contact details. RLS on, `service_role` only |
 | `0011_brand_builder_classification.sql` | `meta_sync_replace()` also files a campaign named like Brand Builder under `brand_builder` (0008's function plus one line), and refiles stored `(unclassified)` rows. Execute granted to `service_role` only |
 | `0012_call_outcomes_trial.sql` | Widens the `call_outcomes` offer check to take `trial_pest_control`, so 5-Day Trial calls can be logged with their offer. No grant change |
+| `0013_ghl_lead_events.sql` | `ghl_lead_events`, one row per lead event from client GHL sub-accounts (new lead, moved to Contacted, deal Won), written by `/api/ghl-lead-events`. Holds the client's lead (name, email, phone, service, deal value), never shown on a page. Unique `delivery_key` makes a redelivered webhook one row. RLS on, `service_role` only |
 | `0006_owner_dashboard.sql` | `owner_funnel_report()`, the date-ranged read behind `/owner`. Execute granted to `service_role` only |
 
 Verification scripts live one level up in `supabase/`. They are read
