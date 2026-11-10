@@ -5,9 +5,10 @@
 --   https://supabase.com/dashboard/project/ffxemovvxpwejvfswxyn/sql/new
 --
 -- One row per lead event that /api/ghl-lead-events accepts: a new lead,
--- a lead moved to Contacted, a deal marked Won. They come from the
--- Webhook actions in the master snapshot's New Lead, Contacted and Won
--- workflows (MASTER, then each client sub-account built from it).
+-- a lead moved to Contacted, a deal marked Won, Paid / Completed or
+-- Lost. They come from the Webhook actions in the master snapshot's
+-- New Lead, Contacted, Won, Paid / Completed and Lost workflows
+-- (MASTER, then each client sub-account built from it).
 --
 -- ── WHAT IT HOLDS ─────────────────────────────────────────────────────
 -- The client's own lead: GHL ids, name, email, phone, source, service,
@@ -37,7 +38,8 @@ create table if not exists public.ghl_lead_events (
   delivery_key         text not null unique
                        check (char_length(delivery_key) <= 200),
   event                text not null
-                       check (event in ('new_lead', 'stage_contacted', 'won')),
+                       constraint ghl_lead_events_event_check
+                       check (event in ('new_lead', 'stage_contacted', 'won', 'paid', 'lost')),
 
   location_id          text not null check (char_length(location_id) <= 64),
   location_name        text check (char_length(location_name) <= 200),
@@ -60,6 +62,12 @@ create table if not exists public.ghl_lead_events (
   constraint ghl_lead_events_stage_has_opportunity
     check (event = 'new_lead' or opportunity_id is not null)
 );
+
+-- If an earlier copy of this file already made the table with only
+-- three events, widen the check to all five. Harmless on a fresh run.
+alter table public.ghl_lead_events drop constraint if exists ghl_lead_events_event_check;
+alter table public.ghl_lead_events add constraint ghl_lead_events_event_check
+  check (event in ('new_lead', 'stage_contacted', 'won', 'paid', 'lost'));
 
 create index if not exists ghl_lead_events_location_idx
   on public.ghl_lead_events (location_id, received_at desc);

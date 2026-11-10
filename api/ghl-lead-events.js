@@ -4,11 +4,13 @@
    ──────────────────────────────────────────────────────────────────────
    The receiving end of the lead-status webhooks in the master snapshot
    (MASTER, then every client sub-account built from it, SWFL first).
-   A Webhook action in three workflows posts here:
+   A Webhook action in five workflows posts here:
 
-     01 New Lead      event new_lead
-     03 Contacted     event stage_contacted
-     09 Won           event won
+     01 New Lead          event new_lead
+     03 Contacted         event stage_contacted
+     09 Won               event won
+     Paid / Completed     event paid
+     Lost                 event lost
 
    WHAT IT DOES
    Checks the key, normalises the event, and stores one row in
@@ -26,7 +28,7 @@
    PAYLOAD (Custom Data on the Webhook action, snake_case, as in
    /mnt/project-files/ntc-ghl/lead-status-webhooks.md section 1)
      required  event, location_id, contact_id
-               opportunity_id as well for stage_contacted and won
+               opportunity_id as well for every event but new_lead
      optional  location_name, first_name, last_name, email, phone,
                source, service_requested, opportunity_name,
                pipeline_stage, monetary_value, assigned_user_email,
@@ -59,9 +61,11 @@ import { insert, configured } from './_supabase.js';
 const EVENTS = {
   new_lead: 'new_lead', lead_new: 'new_lead', lead_created: 'new_lead', new: 'new_lead',
   stage_contacted: 'stage_contacted', contacted: 'stage_contacted',
-  won: 'won', stage_won: 'won', opportunity_won: 'won'
+  won: 'won', stage_won: 'won', opportunity_won: 'won',
+  paid: 'paid', stage_paid: 'paid', completed: 'paid', paid_completed: 'paid', stage_paid_completed: 'paid',
+  lost: 'lost', stage_lost: 'lost', opportunity_lost: 'lost'
 };
-const NEEDS_OPPORTUNITY = new Set(['stage_contacted', 'won']);
+const NEEDS_OPPORTUNITY = new Set(['stage_contacted', 'won', 'paid', 'lost']);
 
 /* Scalars only, first non-empty wins, dotted paths. The rule the
    booking webhooks learned the hard way: an object is never a value. */

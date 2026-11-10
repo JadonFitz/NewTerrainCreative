@@ -104,6 +104,20 @@ check('"Won" in any case is won', res.payload.event === 'won' && res.payload.sto
 res = await request(contacted({ event: 'contacted', opportunity_id: 'opp_c_2' }));
 check('"contacted" is stage_contacted', res.payload.event === 'stage_contacted');
 
+console.info('\n\x1b[1mPAID AND LOST\x1b[0m');
+n = calls.length;
+res = await request(contacted({ event: 'paid', opportunity_id: 'opp_paid_1', pipeline_stage: 'Paid / Completed' }));
+const pd = supa(calls.slice(n))[0]?.body;
+check('paid is stored', res.payload.event === 'paid' && res.payload.stored === true && pd?.delivery_key === 'paid:Ab12Cd34Ef56Gh78Ij90:opp_paid_1');
+res = await request(contacted({ event: 'Paid Completed', opportunity_id: 'opp_paid_2' }));
+check('"Paid Completed" is paid', res.payload.event === 'paid');
+res = await request(contacted({ event: 'lost', opportunity_id: 'opp_lost_1' }));
+check('lost is stored', res.payload.event === 'lost' && res.payload.stored === true);
+res = await request(contacted({ event: 'lost', opportunity_id: '' }));
+check('lost with no opportunity id is refused', res.payload.reason === 'no opportunity id');
+res = await request(contacted({ event: 'paid', opportunity_id: '' }));
+check('paid with no opportunity id is refused', res.payload.reason === 'no opportunity id');
+
 console.info('\n\x1b[1mUNUSABLE PAYLOADS\x1b[0m');
 n = calls.length;
 res = await request(contacted({ event: 'appointment_booked' }));
