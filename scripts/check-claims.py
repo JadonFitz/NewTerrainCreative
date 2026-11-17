@@ -210,8 +210,8 @@ check('a late Founding arrival is routed to the Growth calendar',
       and 'foundingClosed' in sc_raw,
       'past the date ?offer=founding-three must not load the Founding event')
 check('the date is stated as a deadline to apply', 'is the deadline to apply' in FND,
-      'October 24 closes applications; the call and the decision can follow it')
-check('the closing date is written on the page', 'October 24' in FND,
+      'December 31 closes applications; the call and the decision can follow it')
+check('the closing date is written on the page', 'December 31' in FND,
       'the countdown block names the date in words, not only as a timer')
 check('no open-slots counter', re.search(r'\b\d of \d open\b', FND) is None,
       'the "N of 3 open" counter came off on 5 Oct 2026; the dated window is the urgency')

@@ -40,7 +40,7 @@
     // ── Founding Three ────────────────────────────────────────────────
     founding: {
       slots: 3,
-      applicationsCloseAt: '2026-10-24T23:59:59-07:00',
+      applicationsCloseAt: '2026-12-31T23:59:59-08:00',
       // Month one: our service fee is waived. The client still funds media.
       monthOneServiceFee: 0,
       // What the waived month actually covers. Bounded on purpose: the
@@ -69,6 +69,12 @@
       // it for server-side quoting and scripts/check-offer.py fails if
       // the two ever disagree.
       /* ── application window ─────────────────────────────────────
+         REOPENED 17 Nov 2026, Jadon's call: applications close 31 Dec
+         2026, 11:59 PM Pacific (PST, so -08:00). Only the date moved;
+         price, slots and scope are unchanged. The Founding event in
+         iClosed has to be switched back on for the round to take
+         bookings again; the site cannot do that.
+
          RESTORED 5 Oct 2026: applications close 24 Oct 2026, 11:59 PM
          Pacific. Jadon's call, and a date he will hold: past it the
          page says "Applications closed" and nothing is extended. The
